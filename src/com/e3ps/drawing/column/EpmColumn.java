@@ -25,6 +25,7 @@ public class EpmColumn {
 	private String _3d;
 	private String _2d;
 	private String cadType;
+	private String cadTypeKey;
 	private String number;
 	private String name;
 	private String location;
@@ -49,6 +50,7 @@ public class EpmColumn {
 
 	public EpmColumn(EPMDocument epm) throws Exception {
 		setCadType(epm.getDocType().getDisplay());
+		setCadTypeKey(epm.getDocType().toString());
 //		setLatest(CommonUtil.isLatestVersion(epm));
 		setEpm_oid(epm.getPersistInfo().getObjectIdentifier().getStringValue());
 		set_3d(ThumbnailUtil.thumbnailSmall(epm));

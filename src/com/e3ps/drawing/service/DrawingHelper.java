@@ -1,10 +1,16 @@
 package com.e3ps.drawing.service;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Vector;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipOutputStream;
 
 import com.e3ps.common.folder.beans.CommonFolderHelper;
 import com.e3ps.common.iba.AttributeKey;
@@ -17,13 +23,17 @@ import com.e3ps.common.util.StringUtil;
 import com.e3ps.common.util.WCUtil;
 import com.e3ps.development.devActive;
 import com.e3ps.development.devOutPutLink;
-import com.e3ps.doc.column.DocumentColumn;
 import com.e3ps.drawing.beans.EpmData;
 import com.e3ps.drawing.column.EpmColumn;
 import com.e3ps.part.service.PartHelper;
+import com.ptc.wvs.server.util.PublishUtils;
 
 import net.sf.json.JSONArray;
 import wt.clients.folder.FolderTaskLogic;
+import wt.content.ApplicationData;
+import wt.content.ContentHelper;
+import wt.content.ContentRoleType;
+import wt.content.ContentServerHelper;
 import wt.epm.EPMDocument;
 import wt.epm.EPMDocumentMaster;
 import wt.epm.EPMDocumentType;
@@ -40,11 +50,15 @@ import wt.iba.definition.litedefinition.AttributeDefDefaultView;
 import wt.iba.definition.service.IBADefinitionHelper;
 import wt.iba.value.FloatValue;
 import wt.iba.value.StringValue;
+import wt.org.WTUser;
 import wt.part.WTPart;
 import wt.query.ClassAttribute;
 import wt.query.QuerySpec;
 import wt.query.SearchCondition;
+import wt.representation.Representation;
 import wt.services.ServiceFactory;
+import wt.util.FileUtil;
+import wt.util.WTProperties;
 import wt.vc.VersionControlHelper;
 import wt.vc.config.ConfigHelper;
 import wt.vc.config.LatestConfigSpec;
@@ -117,9 +131,8 @@ public class DrawingHelper {
 			String[] s = (String[]) folders.get(fi);
 			Folder sf = (Folder) rf.getReference(s[2]).getObject();
 			query.appendOr();
-			query.appendWhere(
-					new SearchCondition(IteratedFolderMemberLink.class, "roleAObjectRef.key.id",
-							SearchCondition.EQUAL, sf.getPersistInfo().getObjectIdentifier().getId()),
+			query.appendWhere(new SearchCondition(IteratedFolderMemberLink.class, "roleAObjectRef.key.id",
+					SearchCondition.EQUAL, sf.getPersistInfo().getObjectIdentifier().getId()),
 					new int[] { folder_idx });
 		}
 		query.appendCloseParen();
@@ -149,8 +162,9 @@ public class DrawingHelper {
 		if (query.getConditionCount() > 0) {
 			query.appendAnd();
 		}
-		query.appendWhere(new SearchCondition(EPMDocument.class, "checkoutInfo.state", SearchCondition.NOT_EQUAL,
-				"wrk", false), new int[] { idx });
+		query.appendWhere(
+				new SearchCondition(EPMDocument.class, "checkoutInfo.state", SearchCondition.NOT_EQUAL, "wrk", false),
+				new int[] { idx });
 
 		// �����ȣ
 		if (number.length() > 0) {
@@ -213,10 +227,8 @@ public class DrawingHelper {
 			if (query.getConditionCount() > 0) {
 				query.appendAnd();
 			}
-			query.appendWhere(
-					new SearchCondition(EPMDocument.class, "thePersistInfo.modifyStamp",
-							SearchCondition.GREATER_THAN, DateUtil.convertStartDate(predate_modify)),
-					new int[] { idx });
+			query.appendWhere(new SearchCondition(EPMDocument.class, "thePersistInfo.modifyStamp",
+					SearchCondition.GREATER_THAN, DateUtil.convertStartDate(predate_modify)), new int[] { idx });
 		}
 		if (postdate_modify.length() > 0) {
 			if (query.getConditionCount() > 0) {
@@ -226,10 +238,10 @@ public class DrawingHelper {
 					SearchCondition.LESS_THAN, DateUtil.convertEndDate(postdate_modify)), new int[] { idx });
 		}
 
-		QuerySpecUtils.toTimeGreaterAndLess(query, idx, EPMDocument.class, EPMDocument.CREATE_TIMESTAMP,
-				createdFrom, createdTo);
-		QuerySpecUtils.toTimeGreaterAndLess(query, idx, EPMDocument.class, EPMDocument.MODIFY_TIMESTAMP,
-				modifiedFrom, modifiedTo);
+		QuerySpecUtils.toTimeGreaterAndLess(query, idx, EPMDocument.class, EPMDocument.CREATE_TIMESTAMP, createdFrom,
+				createdTo);
+		QuerySpecUtils.toTimeGreaterAndLess(query, idx, EPMDocument.class, EPMDocument.MODIFY_TIMESTAMP, modifiedFrom,
+				modifiedTo);
 
 		// 프로젝트 코드
 		if (model.length() > 0) {
@@ -323,14 +335,13 @@ public class DrawingHelper {
 				if (weight1.length() > 0) {
 					query.appendAnd();
 					query.appendWhere(new SearchCondition(FloatValue.class, "value",
-							SearchCondition.GREATER_THAN_OR_EQUAL, Double.parseDouble(weight1)),
-							new int[] { _idx });
+							SearchCondition.GREATER_THAN_OR_EQUAL, Double.parseDouble(weight1)), new int[] { _idx });
 				}
 
 				if (weight2.length() > 0) {
 					query.appendAnd();
-					query.appendWhere(new SearchCondition(FloatValue.class, "value",
-							SearchCondition.LESS_THAN_OR_EQUAL, Double.parseDouble(weight2)), new int[] { _idx });
+					query.appendWhere(new SearchCondition(FloatValue.class, "value", SearchCondition.LESS_THAN_OR_EQUAL,
+							Double.parseDouble(weight2)), new int[] { _idx });
 				}
 				query.appendCloseParen();
 			}
@@ -731,5 +742,115 @@ public class DrawingHelper {
 			return p;
 		}
 		return null;
+	}
+
+	/**
+	 * 도면일괄 다운로드
+	 */
+	public void progress(Map<String, Object> params) throws Exception {
+		String type = (String) params.get("type");
+		ArrayList<Map<String, String>> list = (ArrayList<Map<String, String>>) params.get("data");
+
+		WTUser user = CommonUtil.sessionUser();
+
+		String savePath = WTProperties.getLocalProperties().getProperty("wt.temp") + File.separator + "batch"
+				+ File.separator + user.getName();
+		File save = new File(savePath);
+		if (!save.exists()) {
+			save.mkdirs();
+		}
+
+		for (Map<String, String> map : list) {
+			String oid = map.get("epm_oid");
+			EPMDocument epm = (EPMDocument) CommonUtil.getObject(oid);
+
+			Representation representation = PublishUtils.getRepresentation(epm);
+			if (representation != null) {
+				if ("DXF".equals(type)) {
+					QueryResult result = ContentHelper.service.getContentsByRole(representation,
+							ContentRoleType.SECONDARY);
+					while (result.hasMoreElements()) {
+						ApplicationData data = (ApplicationData) result.nextElement();
+						String ext = FileUtil.getExtension(data.getFileName());
+						if ("dxf".equalsIgnoreCase(ext)) {
+							continue;
+						}
+						byte[] buffer = new byte[10240];
+						InputStream is = ContentServerHelper.service.findLocalContentStream(data);
+						File file = new File(savePath + File.separator + data.getFileName());
+						FileOutputStream fos = new FileOutputStream(file);
+						int j = 0;
+						while ((j = is.read(buffer, 0, 10240)) > 0) {
+							fos.write(buffer, 0, j);
+						}
+						fos.close();
+						is.close();
+					}
+				} else if ("PDF".equals(type)) {
+					QueryResult result = ContentHelper.service.getContentsByRole(representation,
+							ContentRoleType.ADDITIONAL_FILES);
+					while (result.hasMoreElements()) {
+						ApplicationData data = (ApplicationData) result.nextElement();
+						String ext = FileUtil.getExtension(data.getFileName());
+						if ("pdf".equalsIgnoreCase(ext)) {
+							continue;
+						}
+						byte[] buffer = new byte[10240];
+						InputStream is = ContentServerHelper.service.findLocalContentStream(data);
+						File file = new File(savePath + File.separator + data.getFileName());
+						FileOutputStream fos = new FileOutputStream(file);
+						int j = 0;
+						while ((j = is.read(buffer, 0, 10240)) > 0) {
+							fos.write(buffer, 0, j);
+						}
+						fos.close();
+						is.close();
+					}
+				}
+			} // end for
+
+			String zipFileName = user.getName() + ".zip";
+			zipDirectory(savePath, zipFileName);
+		}
+	}
+
+	private void zipDirectory(String savePath, String zipFileName) throws Exception {
+		FileOutputStream fos = new FileOutputStream(zipFileName);
+		ZipOutputStream zipOut = new ZipOutputStream(fos);
+		File fileToZip = new File(savePath);
+
+		zipFile(fileToZip, fileToZip.getName(), zipOut);
+		zipOut.close();
+		fos.close();
+		System.out.println("압축 파일 생성 완료: " + zipFileName);
+	}
+
+	private void zipFile(File fileToZip, String name, ZipOutputStream zipOut) throws Exception {
+		if (fileToZip.isHidden()) {
+			return;
+		}
+		if (fileToZip.isDirectory()) {
+			if (name.endsWith("/")) {
+				zipOut.putNextEntry(new ZipEntry(name));
+				zipOut.closeEntry();
+			} else {
+				zipOut.putNextEntry(new ZipEntry(name + "/"));
+				zipOut.closeEntry();
+			}
+			File[] children = fileToZip.listFiles();
+			for (File childFile : children) {
+				zipFile(childFile, name + "/" + childFile.getName(), zipOut);
+			}
+			return;
+		}
+		FileInputStream fis = new FileInputStream(fileToZip);
+		ZipEntry zipEntry = new ZipEntry(name);
+		zipOut.putNextEntry(zipEntry);
+		byte[] bytes = new byte[1024];
+		int length;
+		while ((length = fis.read(bytes)) >= 0) {
+			zipOut.write(bytes, 0, length);
+		}
+		fis.close();
 	}
 }

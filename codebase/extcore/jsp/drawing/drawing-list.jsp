@@ -267,7 +267,7 @@ QuantityUnit[] unitList = (QuantityUnit[]) request.getAttribute("unitList");
 					<img src="/Windchill/extcore/images/save.gif" title="테이블 저장" onclick="saveColumnLayout('drawing-list');">
 					<img src="/Windchill/extcore/images/redo.gif" title="테이블 초기화" onclick="resetColumnLayout('drawing-list');">
 					<input type="button" value="일괄다운" title="일괄다운" class="blue" onclick="batch();">
-					<input type="button" value="선택" title="선택" class="red" onclick="select();">
+					<input type="button" value="선택" title="선택" class="red" onclick="_select();">
 				</td>
 				<td class="right">
 					<select name="_psize" id="_psize">
@@ -459,20 +459,38 @@ QuantityUnit[] unitList = (QuantityUnit[]) request.getAttribute("unitList");
 				});
 			}
 
+			let p;
 			function batch() {
 				const url = getCallUrl("/drawing/download");
-				_popup(url, 1000, 500, "n");
+				p = _popup(url, 1000, 500, "n");
 			}
-			
-			function select() {
+
+			function _select() {
 				const gridData = AUIGrid.getCheckedRowItems(myGridID);
-				if(gridData.length === 0) {
+				if (gridData.length === 0) {
 					return false;
 				}
-				alert("D");
-				window.opener.a();
+
+				let checker = true;
+				for (let i = 0; i < gridData.length; i++) {
+					const cadTypeKey = gridData[i].item.cadTypeKey;
+					if (cadTypeKey !== "CADDRAWING") {
+						checker = false;
+						break;
+					}
+				}
+
+				if (checker) {
+					if (p) {
+						p.setData(gridData);
+					} else {
+						alert('팝업 창이 열려 있지 않습니다.');
+					}
+				} else {
+					alert("2D도면만 추가가 가능합니다.");
+				}
 			}
-			
+
 			document.addEventListener("DOMContentLoaded", function() {
 				const columns = loadColumnLayout("drawing-list");
 				const contenxtHeader = genColumnHtml(columns);

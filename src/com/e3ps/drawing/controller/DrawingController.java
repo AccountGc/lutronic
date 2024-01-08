@@ -63,6 +63,22 @@ import wt.util.WTException;
 @RequestMapping(value = "/drawing/**")
 public class DrawingController extends BaseController {
 
+	@Description(value = "도면 일괄 등록")
+	@ResponseBody
+	@PostMapping(value = "/progress")
+	public Map<String, Object> progress(@RequestBody Map<String, Object> params) throws Exception {
+		Map<String, Object> result = new HashMap<String, Object>();
+		try {
+			DrawingHelper.manager.progress(params);
+			result.put("msg", SAVE_MSG);
+			result.put("result", SUCCESS);
+		} catch (Exception e) {
+			e.printStackTrace();
+			result.put("result", FAIL);
+			result.put("msg", e.toString());
+		}
+		return result;
+	}
 
 	@Description(value = "도면 일괄 다운로드 페이지")
 	@GetMapping(value = "/download")
@@ -73,7 +89,7 @@ public class DrawingController extends BaseController {
 		model.setViewName("popup:/drawing/drawing-batch-download");
 		return model;
 	}
-	
+
 	@Description(value = "도면 검색 페이지")
 	@GetMapping(value = "/list")
 	public ModelAndView list() throws Exception {
