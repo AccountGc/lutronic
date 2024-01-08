@@ -309,19 +309,8 @@ QuantityUnit[] unitList = (QuantityUnit[]) request.getAttribute("unitList");
 			let myGridID;
 			function _layout() {
 				return [ {
-					dataField : "_3d",
+					dataField : "thumb",
 					headerText : "3D",
-					dataType : "string",
-					width : 60,
-					renderer : {
-						type : "ImageRenderer",
-						altField : null,
-						onClick : function(event) {
-						}
-					},
-				}, {
-					dataField : "_2d",
-					headerText : "2D",
 					dataType : "string",
 					width : 60,
 					renderer : {
