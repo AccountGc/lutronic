@@ -335,9 +335,11 @@ public class EChangeUtils {
 
 		int idx = 0;
 
+		WTPartMaster m = (WTPartMaster) next_part.getMaster();
+
 		QuerySpec query = new QuerySpec();
 		int i = query.appendClassList(PartGroupLink.class, true);
-		QuerySpecUtils.toEqualsAnd(query, idx, PartGroupLink.class, "roleAObjectRef.key.id", next_part);
+		QuerySpecUtils.toEqualsAnd(query, idx, PartGroupLink.class, "roleAObjectRef.key.id", m);
 		QuerySpecUtils.toEqualsAnd(query, idx, PartGroupLink.class, "ecoReference.key.id", eco);
 		QueryResult result = PersistenceHelper.manager.find(query);
 //		QueryResult result = PersistenceHelper.manager.navigate(next_part, "ecr", PartGroupLink.class);

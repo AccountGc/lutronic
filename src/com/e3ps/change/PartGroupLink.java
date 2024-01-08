@@ -9,13 +9,13 @@ import com.ptc.windchill.annotations.metadata.MyRole;
 import com.ptc.windchill.annotations.metadata.PropertyConstraints;
 
 import wt.fc.ObjectToObjectLink;
-import wt.org.WTUser;
 import wt.part.WTPart;
+import wt.part.WTPartMaster;
 import wt.util.WTException;
 
 @GenAsBinaryLink(superClass = ObjectToObjectLink.class,
 
-		roleA = @GeneratedRole(name = "part", type = WTPart.class),
+		roleA = @GeneratedRole(name = "part", type = WTPartMaster.class),
 
 		roleB = @GeneratedRole(name = "ecr", type = EChangeRequest.class),
 
@@ -33,7 +33,7 @@ import wt.util.WTException;
 public class PartGroupLink extends _PartGroupLink {
 	static final long serialVersionUID = 1;
 
-	public static PartGroupLink newPartGroupLink(WTPart part, EChangeRequest ecr) throws WTException {
+	public static PartGroupLink newPartGroupLink(WTPartMaster part, EChangeRequest ecr) throws WTException {
 		PartGroupLink instance = new PartGroupLink();
 		instance.initialize(part, ecr);
 		return instance;

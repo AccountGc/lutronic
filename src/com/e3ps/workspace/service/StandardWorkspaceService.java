@@ -571,9 +571,12 @@ public class StandardWorkspaceService extends StandardManager implements Workspa
 				e = (EChangeOrder) PersistenceHelper.manager.modify(e);
 
 				String t = e.getEoType();
+				Hashtable<String, String> hash = new Hashtable<>();
+				hash.put("oid", e.getPersistInfo().getObjectIdentifier().getStringValue());
 				if ("CHANGE".equals(t)) {
 					System.out.println("ECO 결재 완료");
-					EcoHelper.manager.postAfterAction(e);
+//					EcoHelper.manager.postAfterAction(hash);
+					EChangeUtils.afterEcoAction(hash);
 					// EO
 				} else {
 					Map<String, Object> s = EoHelper.manager.checkCheckout(e);
@@ -582,7 +585,8 @@ public class StandardWorkspaceService extends StandardManager implements Workspa
 					}
 
 					System.out.println("EO 결재 완료");
-					EoHelper.manager.postAfterAction(e);
+//					EoHelper.manager.postAfterAction(e);
+					EChangeUtils.afterEoAction(hash);
 				}
 			}
 		}

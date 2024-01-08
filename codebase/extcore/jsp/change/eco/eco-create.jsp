@@ -21,7 +21,6 @@
 				</td>
 				<td class="right">
 					<input type="button" value="등록" title="등록" class="red" onclick="create('false');">
-					<input type="button" value="임시저장" title="임시저장" onclick="create('true');">
 				</td>
 			</tr>
 		</table>
@@ -191,14 +190,12 @@
 			<tr>
 				<td class="center">
 					<input type="button" value="등록" title="등록" class="red" onclick="create('false');">
-					<input type="button" value="임시저장" title="임시저장" class="" onclick="create('true');">
 				</td>
 			</tr>
 		</table>
 		<script type="text/javascript">
 			function create(temp) {
 				const name = document.getElementById("name");
-
 				const eoCommentA = toId("eoCommentA");
 				const eoCommentB = toId("eoCommentB");
 				const eoCommentC = toId("eoCommentC");
@@ -208,7 +205,6 @@
 				const licensing = document.querySelector("input[name=licensing]:checked").value;
 				const rows101 = AUIGrid.getGridDataWithState(myGridID101, "gridState");
 				const rows200 = AUIGrid.getGridDataWithState(myGridID200, "gridState");
-				const temprary = JSON.parse(temp);
 				const sendType = document.querySelector("input[name=sendType]:checked").value;
 
 				for (let i = 0; i < rows200.length; i++) {
@@ -217,48 +213,45 @@
 					const activity_type = AUIGrid.getCellValue(myGridID200, i, "activity_type");
 					const finishDate = AUIGrid.getCellValue(myGridID200, i, "finishDate");
 					const step = AUIGrid.getCellValue(myGridID200, i, "step");
-					// 					if (step === undefined) {
-					// 						AUIGrid.showToastMessage(myGridID200, i, 1, "STEP을 선택하세요.");
-					// 						return false;
-					// 					}
 					if (activity_type === undefined) {
-						AUIGrid.showToastMessage(myGridID200, i, 2, "활동구분을 선택하세요.");
+						AUIGrid.showToastMessage(myGridID200, i, 0, "활동구분을 선택하세요.");
 						return false;
 					}
 					if (activeUser_oid === undefined) {
-						AUIGrid.showToastMessage(myGridID200, i, 3, "담당자를 선택하세요.");
+						AUIGrid.showToastMessage(myGridID200, i, 1, "담당자를 선택하세요.");
 						return false;
 					}
 					if (finishDate === undefined) {
-						AUIGrid.showToastMessage(myGridID200, i, 4, "완료예정일을 선택하세요.");
+						AUIGrid.showToastMessage(myGridID200, i, 2, "완료예정일을 선택하세요.");
 						return false;
 					}
 				}
 
-				if (temprary) {
-					if (!confirm("임시저장하시겠습니까??")) {
+				if (isEmpty(name.value)) {
+					alert("ECO 제목을 입력해주세요.");
+					return;
+				}
+
+				if (sendType.value === "") {
+					alert("ECO 타입을 선택하세요.");
+					return false;
+				}
+
+				if (rows200.length === 0) {
+					alert("설계변경 활동을 하나이상 추가하세요.");
+					popup101();
+					return false;
+				}
+
+				if (sendType === "ECO") {
+					if (rows101.length === 0) {
+						alert("ECO 일 경우 반드시 CR은 하나이상 존재해야합니다.");
 						return false;
 					}
+				}
 
-				} else {
-					if (isEmpty(name.value)) {
-						alert("ECO 제목을 입력해주세요.");
-						return;
-					}
-
-					if (sendType.value === "") {
-						alert("ECO 타입을 선택하세요.");
-						return false;
-					}
-
-					if (rows200.length === 0) {
-						alert("설계변경 활동을 하나이상 추가하세요.");
-						return false;
-					}
-
-					if (!confirm("등록하시겠습니까?")) {
-						return false;
-					}
+				if (!confirm("등록하시겠습니까?")) {
+					return false;
 				}
 
 				const params = {
@@ -273,7 +266,6 @@
 					eoCommentD : eoCommentD,
 					rows101 : rows101, // 관련CR
 					rows200 : rows200, // 설변활동
-					temprary : temprary,
 				};
 				logger(params);
 				const url = getCallUrl("/eco/create");

@@ -904,7 +904,7 @@ public class StandardActivityService extends StandardManager implements Activity
 					String[] groups = group.split(",");
 					for (String s : groups) {
 						EChangeRequest ecr = (EChangeRequest) CommonUtil.getObject(s.trim());
-						PartGroupLink link = PartGroupLink.newPartGroupLink(nextPart, ecr);
+						PartGroupLink link = PartGroupLink.newPartGroupLink((WTPartMaster) nextPart.getMaster(), ecr);
 						link.setEco(eco);
 						PersistenceHelper.manager.save(link);
 					}
