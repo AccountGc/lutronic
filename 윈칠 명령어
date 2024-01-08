@@ -17,9 +17,13 @@
 	- Shell -> xconfmanager -t codebase/wt.properties -s wt.services.service.90000=com.e3ps.org.service.OrgService/com.e3ps.org.service.StandardOrgService -p
 	- Shell -> xconfmanager -t codebase/wt.properties -s wt.services.service.91000=com.e3ps.event.EventService/com.e3ps.event.StandardEventService -p
 
-5. WVS After Service 등록
+5. WVS After Service, FIlter Method 등록
 	- Shell -> src/com/ptc/wvs/util 이동
-	- javac -classpath %CLASSPATH%;%WT_HOME%\srclib\tool\Annotations.jar -d %wt_home%\codebase AfterEDRloader.java 실행	
+	- javac -classpath %CLASSPATH%;%WT_HOME%\srclib\tool\Annotations.jar -d %wt_home%\codebase AfterEDRloader.java 실행
+	- javac -classpath %CLASSPATH%;%WT_HOME%\srclib\tool\Annotations.jar -d %wt_home%\codebase EPMDocumentPublishFilters.java 실행
+	
+	- Shell -> src/com/ptc/wvs/util/queue 이동
+	- javac -classpath %CLASSPATH%;%WT_HOME%\srclib\tool\Annotations.jar -d %wt_home%\codebase PublishJobUtil.java 실행		
 	
 6. Workflow 가져오기
 	- Shell -> xconfmanager -t codebase/wt.properties -s wt.ixb.import.allowCrossReleaseImport=true -p

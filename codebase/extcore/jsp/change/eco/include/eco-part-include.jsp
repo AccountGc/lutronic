@@ -1,3 +1,4 @@
+<%@page import="com.e3ps.common.util.CommonUtil"%>
 <%@page import="com.e3ps.common.util.AUIGridUtil"%>
 <%@page import="com.e3ps.common.util.StringUtil"%>
 <%@page import="com.e3ps.doc.service.DocumentHelper"%>
@@ -34,7 +35,7 @@ String oid = request.getParameter("oid");
 	</tr>
 </table>
 
-<div id="grid500" style="height: 480px; border-top: 1px solid #3180c3; margin: 5px;"></div>
+<div id="grid500" style="height: 240px; border-top: 1px solid #3180c3; margin: 5px;"></div>
 <script type="text/javascript">
 	let myGridID500;
 	const columns500 = [ {
@@ -121,7 +122,7 @@ String oid = request.getParameter("oid");
 			enableSorting : false,
 			selectionMode : "multipleCells",
 			hoverMode : "singleRow",
-// 			autoGridHeight : true,
+			// 			autoGridHeight : true,
 			enableFilter : true,
 			showInlineFilter : true,
 			useContextMenu : true,
@@ -143,12 +144,22 @@ String oid = request.getParameter("oid");
 				<img src="/Windchill/extcore/images/header.png">
 				설계변경 품목
 				<img src="/Windchill/extcore/images/fileicon/file_excel.gif" title="엑셀 다운로드" onclick="exportExcel();">
+				<%
+					if(CommonUtil.isAdmin()) {
+				%>
+				&nbsp;
+				<input type="button" value="도면(DXF)" title="도면(DXF)" class="red" onclick="summaryData('dxf');">
+				&nbsp;
+				<input type="button" value="도면(PDF)" title="도면(PDF)" class="blue" onclick="summaryData('pdf');">
+				<%
+					}
+				%>
 			</div>
 		</td>
 	</tr>
 </table>
 
-<div id="grid510" style="height: 300px; border-top: 1px solid #3180c3; margin: 5px;"></div>
+<div id="grid510" style="height: 520px; border-top: 1px solid #3180c3; margin: 5px;"></div>
 <script type="text/javascript">
 	let myGridID510;
 	const part_result_code = [ {
@@ -446,14 +457,16 @@ String oid = request.getParameter("oid");
 			enableSorting : false,
 			selectionMode : "multipleCells",
 			hoverMode : "singleRow",
-// 			autoGridHeight : true,
+			// 			autoGridHeight : true,
+			showRowCheckColumn : true,
 			enableCellMerge : true,
 			enableFilter : true,
 			showInlineFilter : true,
 			useContextMenu : true,
 			enableRightDownFocus : true,
 			filterLayerWidth : 320,
-			filterItemMoreMessage : "필터링 검색이 너무 많습니다. 검색을 이용해주세요.",			
+			fixedColumnCount : 2,
+			filterItemMoreMessage : "필터링 검색이 너무 많습니다. 검색을 이용해주세요.",
 			cellColMergeFunction : function(rowIndex, columnIndex, item) {
 				if (item.preMerge === true) {
 					return true;
@@ -468,6 +481,28 @@ String oid = request.getParameter("oid");
 		AUIGrid.setGridData(myGridID510,
 <%=AUIGridUtil.include(oid, "part")%>
 	);
+	}
+
+	function summaryData(type) {
+		const gridData = AUIGrid.getCheckedRowItems(myGridID510);
+		if (gridData.length === 0) {
+			alert("하나 이상을 선택해주세요.");
+			return false;
+		}
+		const params = {
+			gridData : gridData,
+			type : type
+		};
+		logger(params);
+		openLayer();
+		const url = getCallUrl("/eco/summaryData");
+		call(url, null, params, function(data) {
+			if (data.result) {
+
+			} else {
+				closeLayer()
+			}
+		});
 	}
 
 	function exportExcel() {

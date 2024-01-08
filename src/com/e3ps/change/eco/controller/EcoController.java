@@ -149,4 +149,20 @@ public class EcoController extends BaseController {
 		}
 		return result;
 	}
+	
+	@Description(value = "ECO 관련 도면 다운로드")
+	@ResponseBody
+	@PostMapping(value = "/summaryData")
+	public Map<String, Object> summaryData(@RequestBody Map<String, Object> params) throws Exception {
+		Map<String, Object> result = new HashMap<String, Object>();
+		try {
+			EcoHelper.manager.summaryData(params);
+			result.put("result", SUCCESS);
+		} catch (Exception e) {
+			e.printStackTrace();
+			result.put("result", FAIL);
+			result.put("msg", e.toString());
+		}
+		return result;
+	}
 }

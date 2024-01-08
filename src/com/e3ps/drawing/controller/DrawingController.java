@@ -63,6 +63,17 @@ import wt.util.WTException;
 @RequestMapping(value = "/drawing/**")
 public class DrawingController extends BaseController {
 
+
+	@Description(value = "도면 일괄 다운로드 페이지")
+	@GetMapping(value = "/download")
+	public ModelAndView download() throws Exception {
+		ModelAndView model = new ModelAndView();
+		boolean isAdmin = CommonUtil.isAdmin();
+		model.addObject("isAdmin", isAdmin);
+		model.setViewName("popup:/drawing/drawing-batch-download");
+		return model;
+	}
+	
 	@Description(value = "도면 검색 페이지")
 	@GetMapping(value = "/list")
 	public ModelAndView list() throws Exception {

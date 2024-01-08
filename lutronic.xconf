@@ -59,6 +59,18 @@
              targetFile="codebase/WEB-INF/wvs/wvs.properties"
              value="ARBORTEXT PROE"/>
              
+	<!-- Publish Filter Method -->
+   <Property name="publish.service.filterepmdocumentpublishmethod" overridable="true"
+             targetFile="codebase/WEB-INF/conf/wvs.properties"
+             value="com.ptc.wvs.util.EPMDocumentPublishFilters/filterEPMDocumentPublish"/>
+   <Property name="publish.service.filterpublishmethod" overridable="true"
+             targetFile="codebase/WEB-INF/conf/wvs.properties"
+             value="com.ptc.wvs.util.EPMDocumentPublishFilters/filterPublish"/>
+   <Property name="publish.service.filterepmdocumentpublishmethod.defaultrule"
+             overridable="true"
+             targetFile="codebase/WEB-INF/conf/wvs.properties"
+             value="include"/>
+             
     <!-- Publish After Service -->
    <Property name="publish.afterloadermethod" overridable="true"
              targetFile="codebase/WEB-INF/conf/wvs.properties"

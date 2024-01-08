@@ -338,7 +338,7 @@ iframe {
 	//내용인쇄
 	function print() {
 		const url = getCallUrl("/doc/print?oid=" + oid);
-		const p = _popup(url, 1200, 600, "n");
+		const p = _popup(url, "", "", "f");
 		const content = DEXT5.getBodyValue("content");
 		p.data = content;
 	}

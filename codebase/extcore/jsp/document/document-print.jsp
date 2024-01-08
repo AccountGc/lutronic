@@ -23,11 +23,17 @@ String submitDate = dateFormat.format(submitLine.getCompleteTime());
 <style type="text/css">
 @page {
 	size: A4;
-	margin: 50px;
+	margin: 30px;
+}
+
+@media print {
+	body {
+		zoom: 70%; 
+	}
 }
 
 html {
-	font-size: 13px;
+	font-size: 11px;
 }
 
 table {
@@ -287,9 +293,10 @@ if (agreeLines.size() > 0) {
 			<col width="80px;">
 		</colgroup>
 		<tr>
-			<td class="left" style="border: none;">&nbsp;&nbsp;asd<%//=DocumentHelper.manager.getFooterNumber(dto.getOid()) %></td>
+			<td class="center" style="border: none;">
+				&nbsp;&nbsp;<%=DocumentHelper.manager.getFooterNumber(dto.getOid())%></td>
 			<td class="center" style="border: none;">LUTRONIC</td>
-			<td class="right" style="border: none;">123</td>
+			<td class="center" style="border: none;">A4(210 X 297)</td>
 		</tr>
 	</table>
 </div>

@@ -151,10 +151,10 @@ public class AsposeUtils {
 		String wordOutpUtPath = savePath + File.separator + doc.getName() + ".docx";
 		word.save(wordOutpUtPath, SaveFormat.DOCX);
 
-		ApplicationData applicationData = ApplicationData.newApplicationData(doc);
-		applicationData.setRole(ContentRoleType.SECONDARY);
-		PersistenceHelper.manager.save(applicationData);
-		ContentServerHelper.service.updateContent(doc, applicationData, wordOutpUtPath);
+//		ApplicationData applicationData = ApplicationData.newApplicationData(doc);
+//		applicationData.setRole(ContentRoleType.SECONDARY);
+//		PersistenceHelper.manager.save(applicationData);
+//		ContentServerHelper.service.updateContent(doc, applicationData, wordOutpUtPath);
 
 		String pdfOutputPath = savePath + File.separator + doc.getName() + ".pdf";
 		Document pdf = new Document(wordOutpUtPath);

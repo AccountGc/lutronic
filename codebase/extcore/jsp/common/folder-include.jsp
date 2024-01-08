@@ -32,6 +32,7 @@ String height = request.getParameter("height");
 			displayTreeOpen : true,
 			forceTreeView : true,
 			useContextMenu : true,
+			showTooltip : true,
 			enableRightDownFocus : true,
 			<%
 				if(isAdmin) {
@@ -48,7 +49,16 @@ String height = request.getParameter("height");
 // 	AUIGrid.bind(_myGridID, "cellDoubleClick", auiCellDoubleClick);
 		AUIGrid.bind(_myGridID, "cellClick", auiCellClick);
 		AUIGrid.bind(_myGridID, "ready", auiReadyHandler);
+		AUIGrid.bind(_myGridID, "cellEditBegin", auiCellEditBeginHandler);
 		tree();
+	}
+
+	function auiCellEditBeginHandler(event) {
+		const item = event.item;
+		if(!item.isNew) {
+			return false;
+		}
+		return true;
 	}
 
 	function auiContextMenuHandler_(event) {
@@ -134,6 +144,9 @@ String height = request.getParameter("height");
 
 	function auiCellClick(event) {
 		const item = event.item;
+		if(item.isNew) {
+			return;
+		}
 		const oid = item.oid;
 		const location = item.location;
 		document.getElementById("oid").value = oid;

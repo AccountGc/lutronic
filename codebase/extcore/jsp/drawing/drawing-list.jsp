@@ -266,7 +266,8 @@ QuantityUnit[] unitList = (QuantityUnit[]) request.getAttribute("unitList");
 					<img src="/Windchill/extcore/images/fileicon/file_excel.gif" title="엑셀 다운로드" onclick="exportExcel();">
 					<img src="/Windchill/extcore/images/save.gif" title="테이블 저장" onclick="saveColumnLayout('drawing-list');">
 					<img src="/Windchill/extcore/images/redo.gif" title="테이블 초기화" onclick="resetColumnLayout('drawing-list');">
-					<input type="button" value="펼치기" title="펼치기" class="red" onclick="spread(this);">
+					<input type="button" value="일괄다운" title="일괄다운" class="blue" onclick="batch();">
+					<input type="button" value="선택" title="선택" class="red" onclick="select();">
 				</td>
 				<td class="right">
 					<select name="_psize" id="_psize">
@@ -275,6 +276,7 @@ QuantityUnit[] unitList = (QuantityUnit[]) request.getAttribute("unitList");
 						<option value="50">50</option>
 						<option value="100">100</option>
 					</select>
+					<input type="button" value="펼치기" title="펼치기" class="red" onclick="spread(this);">
 					<input type="button" value="검색" title="검색" onclick="loadGridData();">
 				</td>
 			</tr>
@@ -457,6 +459,20 @@ QuantityUnit[] unitList = (QuantityUnit[]) request.getAttribute("unitList");
 				});
 			}
 
+			function batch() {
+				const url = getCallUrl("/drawing/download");
+				_popup(url, 1000, 500, "n");
+			}
+			
+			function select() {
+				const gridData = AUIGrid.getCheckedRowItems(myGridID);
+				if(gridData.length === 0) {
+					return false;
+				}
+				alert("D");
+				window.opener.a();
+			}
+			
 			document.addEventListener("DOMContentLoaded", function() {
 				const columns = loadColumnLayout("drawing-list");
 				const contenxtHeader = genColumnHtml(columns);

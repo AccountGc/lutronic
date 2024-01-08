@@ -585,4 +585,13 @@ public class EcoHelper {
 		}
 		return rtn;
 	}
+
+	/**
+	 * ECO 관련 도면 다운로드
+	 */
+	public void summaryData(Map<String, Object> params) throws Exception {
+		String type = (String) params.get("type");
+		
+
+	}
 }

@@ -19,6 +19,7 @@ import wt.content.ContentHolder;
 import wt.content.ContentItem;
 import wt.content.ContentRoleType;
 import wt.content.ContentServerHelper;
+import wt.epm.EPMDocument;
 import wt.fc.QueryResult;
 import wt.fc.ReferenceFactory;
 import wt.representation.Representable;
@@ -100,7 +101,13 @@ public class ContentUtils {
 			primary = new HashMap<>();
 			primary.put("oid", holder.getPersistInfo().getObjectIdentifier().getStringValue());
 			primary.put("aoid", data.getPersistInfo().getObjectIdentifier().getStringValue());
-			primary.put("name", data.getFileName());
+			if (holder instanceof EPMDocument) {
+				EPMDocument d = (EPMDocument) holder;
+				primary.put("name", d.getCADName());
+			} else {
+				primary.put("name", data.getFileName());
+			}
+
 			primary.put("fileSizeKB", data.getFileSizeKB() + "KB");
 			primary.put("fileIcon", fileIcon);
 			primary.put("url", "/Windchill/plm/content/download?oid="
@@ -291,9 +298,10 @@ public class ContentUtils {
 	 * 특정 컨텐트타입의 데이터 가져오기
 	 */
 	public static Map<String, Object> getContentData(String oid, String roleType) throws Exception {
-		ContentHolder holder = (ContentHolder)CommonUtil.getObject(oid);
+		ContentHolder holder = (ContentHolder) CommonUtil.getObject(oid);
 		Map<String, Object> content = null;
-		QueryResult result = ContentHelper.service.getContentsByRole(holder, ContentRoleType.toContentRoleType(roleType));
+		QueryResult result = ContentHelper.service.getContentsByRole(holder,
+				ContentRoleType.toContentRoleType(roleType));
 		if (result.hasMoreElements()) {
 			ApplicationData data = (ApplicationData) result.nextElement();
 			String fileIcon = getFileIcon(data.getFileName());
@@ -309,6 +317,6 @@ public class ContentUtils {
 			content.put("filePath", FILE_PATH);
 		}
 		return content;
-	
+
 	}
 }

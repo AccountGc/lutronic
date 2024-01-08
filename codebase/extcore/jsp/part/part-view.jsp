@@ -1,3 +1,8 @@
+<%@page import="wt.content.ContentRoleType"%>
+<%@page import="wt.content.ContentHelper"%>
+<%@page import="wt.part.WTPartDescribeLink"%>
+<%@page import="wt.fc.PersistenceHelper"%>
+<%@page import="wt.fc.QueryResult"%>
 <%@page import="java.util.Map"%>
 <%@page import="com.e3ps.common.util.CommonUtil"%>
 <%@page import="wt.part.WTPart"%>
@@ -100,7 +105,7 @@ WTUser sessionUser = (WTUser) SessionHelper.manager.getPrincipal();
 				<td class="indent5">
 					<%=dto.getLocation()%>
 				</td>
-				<td class="" align="center" rowspan="8" colspan="2">
+				<td class="" align="center" rowspan="5" colspan="2">
 					<jsp:include page="/extcore/jsp/common/thumbnail-view.jsp">
 						<jsp:param value="<%=dto.getOid()%>" name="oid" />
 					</jsp:include>
@@ -144,60 +149,6 @@ WTUser sessionUser = (WTUser) SessionHelper.manager.getPrincipal();
 					<jsp:include page="/extcore/jsp/common/content/include_primaryFileView.jsp">
 						<jsp:param value="<%=dto.getOid()%>" name="oid" />
 					</jsp:include>
-				</td>
-			</tr>
-			<tr>
-				<th class="lb">STEP</th>
-				<td class="indent5" colspan="4">
-					<%
-					if (step.size() > 0) {
-					%>
-					<a href="<%=step.get("url")%>"><%=step.get("name")%></a>
-					<%
-					} else {
-					%>
-					<font color="red">
-						<b>STEP 파일이 없습니다.</b>
-					</font>
-					<%
-					}
-					%>
-				</td>
-			</tr>
-			<tr>
-				<th class="lb">PDF</th>
-				<td class="indent5" colspan="4">
-					<%
-					if (pdf.size() > 0) {
-					%>
-					<a href="<%=pdf.get("url")%>"><%=pdf.get("name")%></a>
-					<%
-					} else {
-					%>
-					<font color="red">
-						<b>PDF 파일이 없습니다.</b>
-					</font>
-					<%
-					}
-					%>
-				</td>
-			</tr>
-			<tr>
-				<th class="lb">DXF</th>
-				<td class="indent5" colspan="4">
-					<%
-					if (dxf.size() > 0) {
-					%>
-					<a href="<%=dxf.get("url")%>"><%=dxf.get("name")%></a>
-					<%
-					} else {
-					%>
-					<font color="red">
-						<b>DXF 파일이 없습니다.</b>
-					</font>
-					<%
-					}
-					%>
 				</td>
 			</tr>
 		</table>
