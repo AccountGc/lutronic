@@ -12,11 +12,13 @@ import com.e3ps.common.iba.IBAUtil;
 import com.e3ps.common.util.CommonUtil;
 import com.e3ps.common.util.ContentUtils;
 import com.e3ps.common.util.QuerySpecUtils;
+import com.e3ps.doc.DocumentClass;
 import com.e3ps.doc.DocumentClassType;
 
 import lombok.Getter;
 import lombok.Setter;
 import wt.doc.WTDocument;
+import wt.doc.WTDocumentTypeInfo;
 import wt.fc.PersistenceHelper;
 import wt.fc.QueryResult;
 import wt.iba.definition.StringDefinition;
@@ -142,6 +144,22 @@ public class DocumentDTO {
 		setComments(CommentsHelper.manager.comments(doc));
 		setPdf(ContentUtils.getContentData(getOid(), "MERGE"));
 		setNameInfo(doc);
+		setClassTypeInfo(doc);
+	}
+
+	private void setClassTypeInfo(WTDocument doc) throws Exception {
+		WTDocumentTypeInfo info = doc.getTypeInfoWTDocument();
+		if (info != null) {
+
+			if (info.getPtc_ref_2() != null) {
+				DocumentClass classType2 = (DocumentClass) info.getPtc_ref_2().getObject();
+				if (classType2 != null) {
+					setClassType2_name(classType2.getName());
+					setClassType2_oid(classType2.getPersistInfo().getObjectIdentifier().getStringValue());
+					setClassType3_code(classType2.getClazz());
+				}
+			}
+		}
 	}
 
 	private void setNameInfo(WTDocument doc) throws Exception {

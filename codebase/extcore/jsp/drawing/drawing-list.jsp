@@ -66,8 +66,8 @@ QuantityUnit[] unitList = (QuantityUnit[]) request.getAttribute("unitList");
 				</td>
 				<th>등록자</th>
 				<td class="indent5">
-					<input type="text" name="creator" id="creator" value="<%=userName%>" data-multi="false" class="width-200">
-					<input type="hidden" name="creatorOid" id="creatorOid" value="<%=oid%>">
+					<input type="text" name="creator" id="creator" value="<%//=userName%>" data-multi="false" class="width-200">
+					<input type="hidden" name="creatorOid" id="creatorOid" value="<%//=oid%>">
 					<img src="/Windchill/extcore/images/delete.png" class="delete" title="삭제" onclick="clearUser('creator')">
 				</td>
 				<th>등록일</th>

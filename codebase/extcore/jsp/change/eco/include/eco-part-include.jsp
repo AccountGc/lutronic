@@ -34,7 +34,7 @@ String oid = request.getParameter("oid");
 	</tr>
 </table>
 
-<div id="grid500" style="height: 30px; border-top: 1px solid #3180c3; margin: 5px;"></div>
+<div id="grid500" style="height: 480px; border-top: 1px solid #3180c3; margin: 5px;"></div>
 <script type="text/javascript">
 	let myGridID500;
 	const columns500 = [ {
@@ -53,7 +53,7 @@ String oid = request.getParameter("oid");
 				const url = getCallUrl("/part/view?oid=" + oid);
 				_popup(url, 1600, 800, "n");
 			}
-		},		
+		},
 	}, {
 		dataField : "name",
 		headerText : "품목명",
@@ -70,7 +70,7 @@ String oid = request.getParameter("oid");
 				const url = getCallUrl("/part/view?oid=" + oid);
 				_popup(url, 1600, 800, "n");
 			}
-		},		
+		},
 	}, {
 		dataField : "state",
 		headerText : "상태",
@@ -104,7 +104,7 @@ String oid = request.getParameter("oid");
 				const url = getCallUrl("/bom/view?oid=" + oid);
 				_popup(url, 1600, 800, "n");
 			}
-		}		
+		}
 	}, {
 		dataField : "",
 		headerText : "도면",
@@ -121,7 +121,13 @@ String oid = request.getParameter("oid");
 			enableSorting : false,
 			selectionMode : "multipleCells",
 			hoverMode : "singleRow",
-			autoGridHeight : true,
+// 			autoGridHeight : true,
+			enableFilter : true,
+			showInlineFilter : true,
+			useContextMenu : true,
+			enableRightDownFocus : true,
+			filterLayerWidth : 320,
+			filterItemMoreMessage : "필터링 검색이 너무 많습니다. 검색을 이용해주세요.",
 		}
 		myGridID500 = AUIGrid.create("#grid500", columnLayout, props);
 		AUIGrid.setGridData(myGridID500,
@@ -142,7 +148,7 @@ String oid = request.getParameter("oid");
 	</tr>
 </table>
 
-<div id="grid510" style="height: 80px; border-top: 1px solid #3180c3; margin: 5px;"></div>
+<div id="grid510" style="height: 300px; border-top: 1px solid #3180c3; margin: 5px;"></div>
 <script type="text/javascript">
 	let myGridID510;
 	const part_result_code = [ {
@@ -440,8 +446,14 @@ String oid = request.getParameter("oid");
 			enableSorting : false,
 			selectionMode : "multipleCells",
 			hoverMode : "singleRow",
-			autoGridHeight : true,
+// 			autoGridHeight : true,
 			enableCellMerge : true,
+			enableFilter : true,
+			showInlineFilter : true,
+			useContextMenu : true,
+			enableRightDownFocus : true,
+			filterLayerWidth : 320,
+			filterItemMoreMessage : "필터링 검색이 너무 많습니다. 검색을 이용해주세요.",			
 			cellColMergeFunction : function(rowIndex, columnIndex, item) {
 				if (item.preMerge === true) {
 					return true;
@@ -461,7 +473,7 @@ String oid = request.getParameter("oid");
 	function exportExcel() {
 		_export("설변품목 리스트", "설변품목", "설변품목 리스트", [], "");
 	}
-	
+
 	function _export(fileName, headerName, sheetName, exceptColumnFields, creator) {
 		const date = new Date();
 		const year = date.getFullYear();
@@ -470,31 +482,63 @@ String oid = request.getParameter("oid");
 		const today = year + "/" + month + "/" + day;
 		AUIGrid.exportToXlsx(myGridID510, {
 			// 저장하기 파일명
-			fileName: fileName,
-			progressBar: true,
-			sheetName: sheetName,
-			exportWithStyle: true,
-			exceptColumnFields: exceptColumnFields,
+			fileName : fileName,
+			progressBar : true,
+			sheetName : sheetName,
+			exportWithStyle : true,
+			exceptColumnFields : exceptColumnFields,
 			// 헤더 내용
-			headers: [{
-				text: "", height: 20 // 첫행 빈줄
+			headers : [ {
+				text : "",
+				height : 20
+			// 첫행 빈줄
 			}, {
-				text: headerName, height: 36, style:
-					{ fontSize: 20, textAlign: "center", fontWeight: "bold", background: "#DAD9FF" }
+				text : headerName,
+				height : 36,
+				style : {
+					fontSize : 20,
+					textAlign : "center",
+					fontWeight : "bold",
+					background : "#DAD9FF"
+				}
 			}, {
-				text: "작성자 : " + creator, style: { textAlign: "right", fontWeight: "bold" }
+				text : "작성자 : " + creator,
+				style : {
+					textAlign : "right",
+					fontWeight : "bold"
+				}
 			}, {
-				text: "작성일 : " + today, style: { textAlign: "right", fontWeight: "bold" }
+				text : "작성일 : " + today,
+				style : {
+					textAlign : "right",
+					fontWeight : "bold"
+				}
 			}, {
-				text: "", height: 5, style: { background: "#555555" } // 빈줄 색깔 경계 만듬
-			}],
+				text : "",
+				height : 5,
+				style : {
+					background : "#555555"
+				}
+			// 빈줄 색깔 경계 만듬
+			} ],
 			// 푸터 내용
-			footers: [{
-				text: "", height: 5, style: { background: "#555555" } // 빈줄 색깔 경계 만듬
+			footers : [ {
+				text : "",
+				height : 5,
+				style : {
+					background : "#555555"
+				}
+			// 빈줄 색깔 경계 만듬
 			}, {
-				text: "COPYRIGHT 2023 LUTRONIC", height: 24, style:
-					{ textAlign: "right", fontWeight: "bold", color: "#ffffff", background: "#222222" }
-			}]
+				text : "COPYRIGHT 2023 LUTRONIC",
+				height : 24,
+				style : {
+					textAlign : "right",
+					fontWeight : "bold",
+					color : "#ffffff",
+					background : "#222222"
+				}
+			} ]
 		});
 	}
 </script>

@@ -95,5 +95,10 @@
              value="16"/>
    <Property name="wt.series.HarvardSeries.LUTRONIC.level.1" overridable="true" 
              targetFile="codebase/wt.properties" 
-             value="wt.series.IntegerSeries"/>         	         	                  
+             value="wt.series.IntegerSeries"/>
+             
+   <!-- Worker -->
+   <Property name="worker.exe.whitelist.prefixes" overridable="true"
+             targetFile="codebase/WEB-INF/conf/wvs.properties"
+             value="C:\|D:\|E:\|T:\|X:\|U:\|V:\|/|nohup /"/>                      	         	                  
 </Configuration>

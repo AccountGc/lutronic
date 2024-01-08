@@ -66,6 +66,7 @@ import wt.content.ContentServerHelper;
 import wt.doc.DocumentType;
 import wt.doc.WTDocument;
 import wt.doc.WTDocumentMaster;
+import wt.doc.WTDocumentTypeInfo;
 import wt.fc.ObjectReference;
 import wt.fc.PagingQueryResult;
 import wt.fc.PersistenceHelper;
@@ -922,5 +923,37 @@ public class DocumentHelper {
 		style.setBorder(BorderType.LEFT_BORDER, CellBorderType.THIN, Color.getBlack());
 		style.setBorder(BorderType.RIGHT_BORDER, CellBorderType.THIN, Color.getBlack());
 		cell.setStyle(style);
+	}
+	
+	/**
+	 * 프린터물 문서양식번호
+	 * @param oid
+	 * @return
+	 * @throws Exception
+	 */
+	public String getFooterNumber(String oid) throws Exception {
+		WTDocument doc = (WTDocument)CommonUtil.getObject(oid);
+		
+		WTDocumentTypeInfo info = doc.getTypeInfoWTDocument();
+		if(info != null) {
+			DocumentClass classType2 = (DocumentClass) info.getPtc_ref_2().getObject();
+			if(classType2 != null) {
+				String name = classType2.getName();
+				if("제3자검증의뢰서".equals(name)) {
+					
+				}
+			}
+		}
+		
+		
+//		테스트보고서	QF-705-08
+//		제3자 시험의뢰서	P7.3-2-1
+//		산업 디자인 검토 회의록	QF-705-27
+//		설계 계획 검토 회의록	QF-705-17
+//		설계 및 검증 검토 회의록	QF-705-23
+//		PP 완료 여부 검토 회의록	QF-705-25
+
+		
+		return "";
 	}
 }
