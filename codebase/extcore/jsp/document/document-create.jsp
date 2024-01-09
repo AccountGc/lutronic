@@ -32,7 +32,7 @@ iframe {
 <%@include file="/extcore/jsp/common/auigrid.jsp"%>
 
 <!-- 채번스크립트 -->
-<script type="text/javascript" src="/Windchill/extcore/jsp/document/js/genNumber.js?v=0000431"></script>
+<script type="text/javascript" src="/Windchill/extcore/jsp/document/js/genNumber.js?v=01000431"></script>
 </head>
 <body>
 	<form>
@@ -162,7 +162,7 @@ iframe {
 				<th class="lb">내용</th>
 				<td colspan="5" class="indent7 pb8">
 					<script type="text/javascript">
-						new Dext5editor('content');
+						new Dext5editor("content");
 					</script>
 				</td>
 			</tr>

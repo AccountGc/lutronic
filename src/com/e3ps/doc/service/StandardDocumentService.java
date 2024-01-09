@@ -561,13 +561,17 @@ public class StandardDocumentService extends StandardManager implements Document
 		String content = dto.getContent();
 		String lifecycle = dto.getLifecycle();
 		String iterationNote = dto.getIterationNote();
-		boolean temprary = dto.isTemprary();
 
 		Transaction trs = new Transaction();
 		try {
 			trs.start();
 
 			WTDocument doc = (WTDocument) CommonUtil.getObject(oid);
+
+			WorkData wd = WorkDataHelper.manager.getWorkData(doc);
+			if (wd != null) {
+				PersistenceHelper.manager.delete(wd);
+			}
 
 			Folder cFolder = CheckInOutTaskLogic.getCheckoutFolder();
 			CheckoutLink clink = WorkInProgressHelper.service.checkout(doc, cFolder, "문서 수정 체크 아웃");
@@ -617,12 +621,7 @@ public class StandardDocumentService extends StandardManager implements Document
 			// 관련 링크 세팅
 			saveLink(workCopy, dto);
 
-			// 임시저장 하겠다 한 경우
-			if (temprary) {
-				State state = State.toState("TEMPRARY");
-				// 상태값 변경해준다 임시저장 <<< StateRB 추가..
-				LifeCycleHelper.service.setLifeCycleState(workCopy, state);
-			}
+			WorkDataHelper.service.create(workCopy);
 
 			String classType1_code = workCopy.getTypeInfoWTDocument().getPtc_str_2();
 			if (StringUtil.checkString(classType1_code)) {

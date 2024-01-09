@@ -4,9 +4,22 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.PrintWriter;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Vector;
+
+import com.e3ps.common.beans.ResultData;
+import com.e3ps.common.jdf.config.Config;
+import com.e3ps.common.jdf.config.ConfigImpl;
+import com.e3ps.common.message.Message;
+import com.e3ps.common.query.SearchUtil;
+import com.e3ps.common.util.CommonUtil;
+import com.e3ps.common.util.QuerySpecUtils;
+import com.e3ps.common.util.StringUtil;
+import com.e3ps.drawing.REFDWGLink;
+import com.e3ps.drawing.WTDocEPMDocLink;
+import com.e3ps.drawing.util.EpmPublishUtil;
+import com.ptc.wvs.server.util.FileHelper;
+import com.ptc.wvs.server.util.PublishUtils;
 
 import wt.content.ContentRoleType;
 import wt.enterprise.RevisionControlled;
@@ -24,24 +37,6 @@ import wt.query.SearchCondition;
 import wt.representation.Representation;
 import wt.services.StandardManager;
 import wt.vc.VersionControlHelper;
-
-import com.e3ps.common.beans.ResultData;
-import com.e3ps.common.jdf.config.Config;
-import com.e3ps.common.jdf.config.ConfigImpl;
-import com.e3ps.common.message.Message;
-import com.e3ps.common.obj.ObjectUtil;
-import com.e3ps.common.query.SearchUtil;
-import com.e3ps.common.util.CommonUtil;
-import com.e3ps.common.util.QuerySpecUtils;
-import com.e3ps.common.util.StringUtil;
-import com.e3ps.drawing.EpmLocation;
-import com.e3ps.drawing.REFDWGLink;
-import com.e3ps.drawing.WTDocEPMDocLink;
-import com.e3ps.drawing.util.EpmPublishUtil;
-import com.e3ps.migration.service.MigrationHelper;
-import com.e3ps.part.service.PartHelper;
-import com.ptc.wvs.server.util.FileHelper;
-import com.ptc.wvs.server.util.PublishUtils;
 
 @SuppressWarnings("serial")
 public class StandardEpmSearchService extends StandardManager implements EpmSearchService {

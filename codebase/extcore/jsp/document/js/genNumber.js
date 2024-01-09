@@ -269,6 +269,7 @@ function clearValue() {
 	$("#" + classType2Id).bindSelectDisabled(true);
 	$("#" + classType3Id).bindSelectDisabled(true);
 	$("#" + modelId).bindSelectDisabled(true);
+	DEXT5.setBodyValue("", "content");
 }
 
 
@@ -316,7 +317,7 @@ function loadForm(classType2) {
 	parent.openLayer();
 	call(url, null, function(data) {
 		if (data.result) {
-			DEXT5.setBodyValue(data.html, 'content');
+			DEXT5.setBodyValue(data.html, "content");
 		} else {
 			alert(data.msg);
 		}

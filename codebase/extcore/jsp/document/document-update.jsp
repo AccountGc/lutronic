@@ -1,3 +1,4 @@
+<%@page import="com.e3ps.common.util.StringUtil"%>
 <%@page import="net.sf.json.JSONObject"%>
 <%@page import="java.util.Map"%>
 <%@page import="net.sf.json.JSONArray"%>
@@ -19,6 +20,14 @@ if ("modify".equals(mode)) {
 	title = "수정";
 } else if ("revise".equals(mode)) {
 	title = "개정";
+}
+
+String classType1 = dto.getClassType1_code();
+boolean isReq = false;
+if (StringUtil.checkString(classType1)) {
+	if ("DEV".equals(classType1) || "INSTRUCTION".equals(classType1)) {
+		isReq = true;
+	}
 }
 %>
 <style type="text/css">
@@ -142,7 +151,7 @@ iframe {
 		</td>
 	</tr>
 	<tr>
-		<th class="lb req"><%=title%>사유
+		<th class="lb"><%=title%>사유
 		</th>
 		<td class="indent5" colspan="5">
 			<input type="text" name="iterationNote" id="iterationNote" class="width-600">
@@ -167,8 +176,9 @@ iframe {
 			</div>
 		</td>
 	</tr>
+	<!-- 개발문서와 지침서일 경우만 필수이다.. -->
 	<tr>
-		<th class="req lb">주 첨부파일</th>
+		<th class="<%if(isReq) { %>req <%} %> lb">주 첨부파일</th>
 		<td class="indent5" colspan="5">
 			<jsp:include page="/extcore/jsp/common/attach-primary.jsp">
 				<jsp:param value="<%=dto.getOid()%>" name="oid" />
@@ -251,7 +261,7 @@ iframe {
 	}
 
 	// 문서 등록
-	function <%=mode%>(temp) {
+	function <%=mode%>() {
 		// temp 임시저장 여부 처리
 		const oid = document.getElementById("oid").value;
 		const location = document.getElementById("location");
@@ -263,7 +273,6 @@ iframe {
 		const writer = document.getElementById("writer").value;
 		const deptcode = document.getElementById("deptcode").value;
 		const preseration = document.getElementById("preseration").value;
-		const temprary = JSON.parse(temp);
 		const iterationNote = document.getElementById("iterationNote");
 		const preFix = document.getElementById("preFix").value;
 		const suffix = document.getElementById("suffix").value;
@@ -299,34 +308,27 @@ iframe {
 			name = suffix;
 		}
 		
-		if(temprary) {
-			if (!confirm("임시저장하시겠습니까?")){
-				return false;
-			}	
-		} else {
 			
-			
-			
-			if(iterationNote.value === ""){
-				alert("<%=title%>사유를 입력하세요.");
-				iterationNote.focus();
-				return false;
-			}
-			
-			if(preseration === "") {
-				alert("보존기간을 선택하세요.");
-				return false;
-			}
-
-			if (primary == null) {
-				alert("주 첨부파일을 첨부해주세요.");
-				return false;
-			}
-			
-			if (!confirm("<%=title%>하시겠습니까?")) {
-				return false;
-			}	
+		if(preseration === "") {
+			alert("보존기간을 선택하세요.");
+			return false;
 		}
+
+		<%
+			if(isReq) {
+		%>
+		if (primary == null) {
+			alert("주 첨부파일을 첨부해주세요.");
+			return false;
+		}
+		<%
+			}
+		%>
+		
+		
+		if (!confirm("<%=title%>하시겠습니까?")) {
+			return false;
+		}	
 
 		const params = {
 			oid : oid,
@@ -350,7 +352,6 @@ iframe {
 			rows101 : rows101,
 			rows103 : rows103,
 			rows105 : rows105,
-			temprary : temprary
 		};
 		
 		logger(params);
