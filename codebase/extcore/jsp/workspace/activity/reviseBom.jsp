@@ -1,3 +1,4 @@
+<%@page import="com.e3ps.change.EChangeOrder"%>
 <%@page import="wt.session.SessionHelper"%>
 <%@page import="wt.org.WTUser"%>
 <%@page import="java.util.Map"%>
@@ -7,6 +8,12 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%
 EcaDTO dto = (EcaDTO) request.getAttribute("dto");
+EChangeOrder eco = (EChangeOrder) request.getAttribute("eco");
+String sendType = eco.getSendType();
+boolean isOrder = false;
+if ("ORDER".equals(sendType)) {
+	isOrder = true;
+}
 ArrayList<Map<String, Object>> list = (ArrayList<Map<String, Object>>) request.getAttribute("list");
 JSONArray clist = (JSONArray) request.getAttribute("clist");
 WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
@@ -211,7 +218,11 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 						_popup(url, "", "", "f");
 					}
 				}
-			}, {
+			}, 
+			<%
+				if(isOrder) {
+			%>	
+			{
 				headerText : "선구매<br>여부",
 				dataField : "preOrder",
 				dataType : "boolean",
@@ -222,7 +233,11 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 					type : "CheckboxEditRenderer",
 					editable : true
 				}
-			}, {
+			}, 
+			<%
+				}
+			%>
+			{
 				headerText : "개정 전",
 				children : [ {
 					dataField : "part_number",
@@ -712,18 +727,13 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 					return false;
 				}
 
-				// 				for (let i = 0; i < data.length; i++) {
-				// 					const group = data[i].group;
-				// 					if (group === "") {
-				// 						alert("그룹핑이 안된 품목들이 존재합니다.");
-				// 						return false;
-				// 					}
-				// 				}
-				// 				const ecnUserOid = document.getElementById("ecnUserOid").value;
-				// 				if (ecnUserOid === "") {
-				// 					alert("ECN 담당자를 선택하세요.");
-				// 					return false;
-				// 				}
+				for (let i = 0; i < data.length; i++) {
+					const group = data[i].group;
+					if (group === "") {
+						alert("그룹핑이 안된 품목들이 존재합니다.");
+						return false;
+					}
+				}
 
 				const oid = document.getElementById("oid").value;
 				const description = document.getElementById("description").value;

@@ -331,36 +331,6 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 			let myGridID;
 			function _layout() {
 				return [ {
-					dataField : "_3d",
-					headerText : "3D",
-					dataType : "string",
-					width : 50,
-					renderer : {
-						type : "ImageRenderer",
-						altField : null,
-						imgHeight : 16,
-						onClick : function(event) {
-						}
-					},
-					filter : {
-						inline : false
-					},
-				}, {
-					dataField : "_2d",
-					headerText : "2D",
-					dataType : "string",
-					width : 50,
-					renderer : {
-						type : "ImageRenderer",
-						altField : null,
-						imgHeight : 16,
-						onClick : function(event) {
-						}
-					},
-					filter : {
-						inline : false
-					},
-				}, {
 					dataField : "icon",
 					headerText : "",
 					dataType : "string",

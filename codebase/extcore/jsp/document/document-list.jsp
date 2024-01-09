@@ -384,7 +384,7 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 				const props = {
 					headerHeight : 30,
 					showRowNumColumn : true,
-// 					showRowCheckColumn : true,
+					// 					showRowCheckColumn : true,
 					rowNumHeaderText : "번호",
 					showAutoNoDataMessage : false,
 					selectionMode : "multipleCells",
@@ -400,7 +400,7 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 				};
 				myGridID = AUIGrid.create("#grid_wrap", columnLayout, props);
 				loadGridData();
-				AUIGrid.bind(myGridID, "contextMenu", auiContextMenuHandler);
+				AUIGrid.bind(myGridID, "contextMenu", _auiContextMenuHandler);
 				AUIGrid.bind(myGridID, "vScrollChange", function(event) {
 					hideContextMenu();
 				});
@@ -409,31 +409,58 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 				});
 			}
 
-			function auiContextMenuHandler(event) {
-				const menu = [ {
-					label : "문서 정보보기",
-					callback : auiContextHandler
-				}, {
-					label : "_$line" // label 에 _$line 을 설정하면 라인을 긋는 아이템으로 인식합니다.
-				}, {
-					label : "버전이력보기",
-					callback : auiContextHandler
-				}, {
-					label : "결재이력보기",
-					callback : auiContextHandler
-				}, {
-					label : "_$line" // label 에 _$line 을 설정하면 라인을 긋는 아이템으로 인식합니다.
-				}, {
-					label : "결재회수(결재선유지)",
-					callback : auiContextHandler
-				}, {
-					label : "결재회수(결재선초기화)",
-					callback : auiContextHandler
-				}, {
-					label : "인쇄하기",
-					callback : auiContextHandler
-				} ];
-				return menu;
+			function _auiContextMenuHandler(event) {
+				if (event.target == "header") { // 헤더 컨텍스트
+					if (nowHeaderMenuVisible) {
+						hideContextMenu();
+					}
+
+					nowHeaderMenuVisible = true;
+
+					// 컨텍스트 메뉴 생성된 dataField 보관.
+					currentDataField = event.dataField;
+
+					if (event.dataField == "id") { // ID 칼럼은 숨기기 못하게 설정
+						$("#h_item_4").addClass("ui-state-disabled");
+					} else {
+						$("#h_item_4").removeClass("ui-state-disabled");
+					}
+
+					// 헤더 에서 사용할 메뉴 위젯 구성
+					$("#headerMenu").menu({
+						select : headerMenuSelectHandler
+					});
+
+					$("#headerMenu").css({
+						left : event.pageX,
+						top : event.pageY
+					}).show();
+				} else {
+					const menu = [ {
+						label : "문서 정보보기",
+						callback : auiContextHandler
+					}, {
+						label : "_$line" // label 에 _$line 을 설정하면 라인을 긋는 아이템으로 인식합니다.
+					}, {
+						label : "버전이력보기",
+						callback : auiContextHandler
+					}, {
+						label : "결재이력보기",
+						callback : auiContextHandler
+					}, {
+						label : "_$line" // label 에 _$line 을 설정하면 라인을 긋는 아이템으로 인식합니다.
+					}, {
+						label : "결재회수(결재선유지)",
+						callback : auiContextHandler
+					}, {
+						label : "결재회수(결재선초기화)",
+						callback : auiContextHandler
+					}, {
+						label : "인쇄하기",
+						callback : auiContextHandler
+					} ];
+					return menu;
+				}
 			}
 
 			function auiContextHandler(event) {

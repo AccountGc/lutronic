@@ -11,6 +11,7 @@ boolean view = "view".equals(mode);
 boolean update = "update".equals(mode);
 boolean create = "create".equals(mode);
 boolean header = Boolean.parseBoolean(request.getParameter("header"));
+boolean req = Boolean.parseBoolean(request.getParameter("req"));
 JSONArray data = null;
 if(view || update){
 	data = AUIGridUtil.include(oid, "eco");
@@ -36,7 +37,7 @@ if(view || update){
 		<col width="*">
 	</colgroup>
 	<tr>
-		<th class="lb">관련 ECO</th>
+		<th class="lb <%if(req) {%> req<%}%>">관련 ECO</th>
 		<td class="indent5 <%if (!view) {%>pt5 <%}%>">
 			<%
 			if (create || update) {

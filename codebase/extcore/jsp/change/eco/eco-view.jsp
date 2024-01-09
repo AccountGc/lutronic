@@ -168,7 +168,31 @@ boolean isAdmin = (boolean) request.getAttribute("isAdmin");
 				const tabId = ui.newPanel.prop("id");
 				switch (tabId) {
 				case "tabs-0":
-					break;				
+					const isCreated101 = AUIGrid.isCreated(myGridID101); // 다운로드이력
+					if (isCreated101) {
+						AUIGrid.resize(myGridID101);
+					} else {
+						createAUIGrid101(columns101);
+					}
+					const isCreated103 = AUIGrid.isCreated(myGridID103); // 다운로드이력
+					if (isCreated103) {
+						AUIGrid.resize(myGridID103);
+					} else {
+						createAUIGrid103(columns103);
+					}
+					const isCreated110 = AUIGrid.isCreated(myGridID110); // 다운로드이력
+					if (isCreated110) {
+						AUIGrid.resize(myGridID110);
+					} else {
+						createAUIGrid110(columns110);
+					}
+					const isCreated111 = AUIGrid.isCreated(myGridID111); // 다운로드이력
+					if (isCreated111) {
+						AUIGrid.resize(myGridID111);
+					} else {
+						createAUIGrid111(columns111);
+					}
+					break;
 				case "tabs-2":
 					const isCreated500 = AUIGrid.isCreated(myGridID500); // 다운로드이력
 					if (isCreated500) {
@@ -206,9 +230,7 @@ boolean isAdmin = (boolean) request.getAttribute("isAdmin");
 				}
 			}
 		});
-		createAUIGrid101(columns101);
 		createAUIGrid700(columns700);
-		AUIGrid.resize(myGridID101);
 		AUIGrid.resize(myGridID700);
 		autoTextarea();
 	});

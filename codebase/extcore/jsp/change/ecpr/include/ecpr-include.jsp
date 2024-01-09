@@ -41,14 +41,14 @@ if (header) {
 			<%
 			}
 			%>
-			<div id="gridEcpr" style="height: 30px; border-top: 1px solid #3180c3; margin: 5px;"></div>
+			<div id="grid103" style="height: 30px; border-top: 1px solid #3180c3; margin: 5px;"></div>
 		</td>
 	</tr>
 </table>
 <%
 } else {
 %>
-<div id="gridEcpr" style="height: 30px; border-top: 1px solid #3180c3; margin: 5px;"></div>
+<div id="grid103" style="height: 30px; border-top: 1px solid #3180c3; margin: 5px;"></div>
 <%
 }
 %>
@@ -133,7 +133,7 @@ if (header) {
 				enableFilter : true,
 				autoGridHeight : true
 		}
-		myGridID103 = AUIGrid.create("#gridEcpr", columnLayout, props);
+		myGridID103 = AUIGrid.create("#grid103", columnLayout, props);
 		<%if (view || update) {%>
 		AUIGrid.setGridData(myGridID103, <%=AUIGridUtil.include(oid, "ecpr")%>);
 		<%}%>
@@ -150,14 +150,10 @@ if (header) {
 	function deleteRow103() {
 		const checkedItems = AUIGrid.getCheckedRowItems(myGridID103);
 		if (checkedItems.length === 0) {
-			alert("삭제할 행을 선택하세요.");
+			alert("삭제할 ECPR을 선택하세요.");
 			return false;
 		}
-
-		for (let i = checkedItems.length - 1; i >= 0; i--) {
-			const rowIndex = checkedItems[i].rowIndex;
-			AUIGrid.removeRow(myGridID103, rowIndex);
-		}
+		AUIGrid.removeCheckedRows(myGridID110);
 	}
 
 	function insert103(arr, callBack) {

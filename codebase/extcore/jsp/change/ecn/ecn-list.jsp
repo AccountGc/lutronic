@@ -11,6 +11,7 @@ ArrayList<NumberCode> modelList = (ArrayList<NumberCode>) request.getAttribute("
 List<Map<String, String>> lifecycleList = (List<Map<String, String>>) request.getAttribute("lifecycleList");
 WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 JSONArray list = (JSONArray) request.getAttribute("list");
+boolean isEdit = (boolean) request.getAttribute("isEdit");
 %>
 <!DOCTYPE html>
 <html>
@@ -106,15 +107,21 @@ JSONArray list = (JSONArray) request.getAttribute("list");
 					<img src="/Windchill/extcore/images/fileicon/file_excel.gif" title="엑셀 다운로드" onclick="exportExcel();">
 					<img src="/Windchill/extcore/images/save.gif" title="테이블 저장" onclick="saveColumnLayout('ecn-list');">
 					<img src="/Windchill/extcore/images/redo.gif" title="테이블 초기화" onclick="resetColumnLayout('ecn-list');">
-					<input type="button" value="저장" title="저장" onclick="save();" class="red">
 				</td>
 				<td class="right">
 					<select name="_psize" id="_psize">
-					<option value="10">10</option>
+						<option value="10">10</option>
 						<option value="30">30</option>
 						<option value="50">50</option>
 						<option value="100">100</option>
 					</select>
+					<%
+					if (isEdit) {
+					%>
+					<input type="button" value="저장" title="저장" onclick="save();" class="red">
+					<%
+					}
+					%>
 					<input type="button" value="검색" title="검색" onclick="loadGridData();">
 				</td>
 			</tr>
@@ -130,27 +137,6 @@ JSONArray list = (JSONArray) request.getAttribute("list");
 			;
 			function _layout() {
 				return [ {
-					dataField : "partNumber",
-					headerText : "제품번호",
-					dataType : "string",
-					width : 150,
-					editable : false,
-					renderer : {
-						type : "LinkRenderer",
-						baseUrl : "javascript",
-						jsCallback : function(rowIndex, columnIndex, value, item) {
-							const oid = item.oid;
-							const url = getCallUrl("/ecn/view?oid=" + oid);
-							_popup(url, 1600, 500, "n");
-						}
-					},
-				}, {
-					dataField : "partName",
-					headerText : "제품명",
-					dataType : "string",
-					width : 250,
-					editable : false,
-				}, {
 					dataField : "ecoNumber",
 					headerText : "ECO 번호",
 					dataType : "string",
@@ -171,14 +157,36 @@ JSONArray list = (JSONArray) request.getAttribute("list");
 					headerText : "ECN번호",
 					dataType : "string",
 					width : 100,
-					cellMerge : true,
 					editable : false,
+					renderer : {
+						type : "LinkRenderer",
+						baseUrl : "javascript",
+						jsCallback : function(rowIndex, columnIndex, value, item) {
+							const oid = item.oid;
+							const url = getCallUrl("/ecn/view?oid=" + oid);
+							_popup(url, 1600, 500, "n");
+						}
+					},					
 				}, {
-					dataField : "name",
-					headerText : "ECN제목",
+					dataField : "partNumber",
+					headerText : "제품번호",
+					dataType : "string",
+					width : 150,
+					editable : false,
+// 					renderer : {
+// 						type : "LinkRenderer",
+// 						baseUrl : "javascript",
+// 						jsCallback : function(rowIndex, columnIndex, value, item) {
+// 							const oid = item.oid;
+// 							const url = getCallUrl("/part/view?oid=" + oid);
+// 							_popup(url, 1600, 500, "n");
+// 						}
+// 					},
+				}, {
+					dataField : "partName",
+					headerText : "제품명",
 					dataType : "string",
 					style : "aui-left",
-					cellMerge : true,
 					editable : false,
 				}, {
 					dataField : "progress",
@@ -289,17 +297,18 @@ JSONArray list = (JSONArray) request.getAttribute("list");
 					hideContextMenu();
 				});
 			}
-			
+
 			function auiCellEditBeginHandler(event) {
 				const item = event.item;
 				const dataField = event.dataField;
-				if(dataField === "worker_oid") {
-// 					if(true) {
-// 						return true;
-// 					} else {
-// 						return false;						
-// 					}
-				}
+				if (dataField === "worker_oid") {
+		<%if (isEdit) {%>
+			return true;
+		<%} else {%>
+			alert("ECN 담당자는 RA팀장 및 관리자만 가능합니다.");
+					return false;
+		<%}%>
+			}
 				return true;
 			}
 

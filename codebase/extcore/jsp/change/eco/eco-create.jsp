@@ -227,8 +227,9 @@
 					}
 				}
 
-				if (isEmpty(name.value)) {
+				if (name.value === "") {
 					alert("ECO 제목을 입력해주세요.");
+					name.focus();
 					return;
 				}
 

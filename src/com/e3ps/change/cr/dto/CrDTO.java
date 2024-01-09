@@ -127,12 +127,15 @@ public class CrDTO {
 	 */
 	private void setAuth(EChangeRequest cr) throws Exception {
 		boolean isAdmin = CommonUtil.isAdmin();
-		if(check(cr, "APPROVED")) {
+		if (check(cr, "APPROVED")) {
 			set_print(true);
 		}
-		if (check(cr, "LINE_REGISTER") || isAdmin) {
+
+		// 최신버전이고 결재선 지정상태일 경우 승인가능
+		if ((check(cr, "LINE_REGISTER") || check(cr, "RETURN"))) {
 			set_modify(true);
 		}
+
 		if (isAdmin) {
 			set_delete(true);
 		}

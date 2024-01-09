@@ -1037,7 +1037,6 @@ public class PartHelper {
 		}
 
 		View view = ViewHelper.service.getView(viewName);
-		State state = part.getLifeCycleState();
 		QuerySpec query = new QuerySpec();
 		int idx_usage = query.appendClassList(WTPartUsageLink.class, true);
 		int idx_part = query.appendClassList(WTPart.class, true);
@@ -1059,10 +1058,6 @@ public class PartHelper {
 					view.getPersistInfo().getObjectIdentifier().getId()), new int[] { idx_part });
 		}
 
-//		if (state != null) {
-//			query.appendAnd();
-//			query.appendWhere(new SearchCondition(WTPart.class, "state.state", "=", state), new int[] { idx_part });
-//		}
 		QuerySpecUtils.toLatest(query, idx_part, WTPart.class);
 		QuerySpecUtils.toOrderBy(query, idx_part, WTPart.class, WTPart.NUMBER, true);
 		QueryResult qr = PersistenceHelper.manager.find(query);

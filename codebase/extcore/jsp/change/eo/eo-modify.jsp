@@ -18,8 +18,7 @@ boolean isAdmin = (boolean) request.getAttribute("isAdmin");
 			</div>
 		</td>
 		<td class="right">
-			<input type="button" value="수정" title="수정" class="blue" onclick="update('false');">
-			<input type="button" value="임시저장" title="임시저장" onclick="update('true');">
+			<input type="button" value="수정완료" title="수정완료" class="blue" onclick="update();">
 			<input type="button" value="닫기" title="닫기" class="gray" onclick="self.close();">
 		</td>
 	</tr>
@@ -46,7 +45,6 @@ boolean isAdmin = (boolean) request.getAttribute("isAdmin");
 				<jsp:param value="insert300" name="method" />
 				<jsp:param value="MODEL" name="codeType" />
 				<jsp:param value="true" name="multi" />
-				<jsp:param value="150" name="height" />
 			</jsp:include>
 		</td>
 	</tr>
@@ -100,7 +98,6 @@ boolean isAdmin = (boolean) request.getAttribute("isAdmin");
 	<jsp:param value="<%=dto.getOid()%>" name="oid" />
 	<jsp:param value="update" name="mode" />
 	<jsp:param value="true" name="multi" />
-	<jsp:param value="250" name="height" />
 	<jsp:param value="true" name="header" />
 </jsp:include>
 
@@ -109,22 +106,18 @@ boolean isAdmin = (boolean) request.getAttribute("isAdmin");
 	<jsp:param value="<%=dto.getOid()%>" name="oid" />
 	<jsp:param value="update" name="mode" />
 	<jsp:param value="true" name="multi" />
-	<jsp:param value="250" name="height" />
 </jsp:include>
 
 <table class="button-table">
 	<tr>
 		<td class="center">
-			<input type="button" value="수정" title="수정" class="blue" onclick="update('false');">
-			<input type="button" value="임시저장" title="임시저장" onclick="update('true');">
+			<input type="button" value="수정완료" title="수정완료" class="blue" onclick="update();">
 			<input type="button" value="닫기" title="닫기" class="gray" onclick="self.close();">
 		</td>
 	</tr>
 </table>
 <script type="text/javascript">
-	function update(temp) {
-		// 임시저장
-		const temprary = JSON.parse(temp);
+	function update() {
 		const name = document.getElementById("name");
 		const eoCommentA = toId("eoCommentA");
 		const eoCommentB = toId("eoCommentB");
@@ -152,39 +145,31 @@ boolean isAdmin = (boolean) request.getAttribute("isAdmin");
 			rows90 : rows90,
 			rows200 : rows200,
 			rows300 : rows300,
-			temprary : temprary,
 			oid : oid
 		};
 
 		logger(rows200);
-		
-		if (temprary) {
-			if (!confirm("임시저장하시겠습니까??")) {
-				return false;
-			}
 
-		} else {
-			if (name.value === "") {
-				alert("EO 제목을 입력하세요.");
-				name.focus();
-				return false;
-			}
+		if (name.value === "") {
+			alert("EO 제목을 입력하세요.");
+			name.focus();
+			return false;
+		}
 
-			if (rows300.length === 0) {
-				alert("제품명을 선택하세요.");
-				popup300();
-				return false;
-			}
+		if (rows300.length === 0) {
+			alert("제품명을 선택하세요.");
+			popup300();
+			return false;
+		}
 
-			if (rows104.length === 0) {
-				alert("완제품을 선택하세요.");
-				popup104();
-				return false;
-			}
-			
-			if (!confirm("수정 하시겠습니까?")) {
-				return false;
-			}
+		if (rows104.length === 0) {
+			alert("완제품을 선택하세요.");
+			popup104();
+			return false;
+		}
+
+		if (!confirm("수정 하시겠습니까?")) {
+			return false;
 		}
 
 		openLayer();

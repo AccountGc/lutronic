@@ -25,6 +25,8 @@ import com.e3ps.doc.DocumentEOLink;
 import com.e3ps.doc.DocumentToDocumentLink;
 import com.e3ps.doc.etc.dto.EtcDTO;
 import com.e3ps.org.service.MailUserHelper;
+import com.e3ps.workspace.WorkData;
+import com.e3ps.workspace.service.WorkDataHelper;
 import com.e3ps.workspace.service.WorkspaceHelper;
 
 import wt.clients.folder.FolderTaskLogic;
@@ -72,28 +74,19 @@ public class StandardEtcService extends StandardManager implements EtcService {
 		String location = dto.getLocation();
 		String description = dto.getDescription();
 		String content = dto.getContent();
-//		String documentType = dto.getDocumentType_code();
-//		String documentName = dto.getDocumentName();
 		String lifecycle = dto.getLifecycle();
-		boolean temprary = dto.isTemprary();
-
-		// 설별 활동 링크 OID
-		String oid = dto.getOid();
-
+		String type = dto.getType();
 		Transaction trs = new Transaction();
 		try {
 			trs.start();
 			// 기본설정으로..
-//			DocumentType docType = DocumentType.toDocumentType(documentType);
-			String interalnumber = dto.getInteralnumber();
 			WTDocument doc = WTDocument.newWTDocument();
-//			doc.setDocType(docType);
+			String number = EtcHelper.manager.getNextNumber(type.toUpperCase() + "-");
 
 			// 문서 이름 세팅..
 			doc.setName(name);
-			doc.setNumber(interalnumber);
+			doc.setNumber(number);
 			doc.setDescription(description);
-			doc.getTypeInfoWTDocument().setPtc_rht_1(content);
 
 			Folder folder = FolderHelper.service.getFolder(location, WCUtil.getWTContainerRef());
 			FolderHelper.assignLocation((FolderEntry) doc, folder);
@@ -109,12 +102,6 @@ public class StandardEtcService extends StandardManager implements EtcService {
 				LifeCycleHelper.service.setLifeCycleState(doc, State.toState("BATCHAPPROVAL"), false);
 			}
 
-			if (temprary) {
-				State state = State.toState("TEMPRARY");
-				// 상태값 변경해준다 임시저장 <<< StateRB 추가..
-				LifeCycleHelper.service.setLifeCycleState(doc, state);
-			}
-
 			// 첨부 파일 저장
 			saveAttach(doc, dto);
 
@@ -124,12 +111,12 @@ public class StandardEtcService extends StandardManager implements EtcService {
 			// 문서 관련 객체 데이터 처리
 			saveLink(doc, dto);
 
-			// 설변활동 링크
-			if (StringUtil.checkString(oid)) {
-				EChangeActivity eca = (EChangeActivity) CommonUtil.getObject(oid);
-				DocumentActivityLink link = DocumentActivityLink
-						.newDocumentActivityLink((WTDocumentMaster) doc.getMaster(), eca);
-				PersistenceHelper.manager.save(link);
+			doc = (WTDocument) PersistenceHelper.manager.refresh(doc);
+
+			// 작업함으로 이동 시킨다
+			// 일괄 결재가 아닐 경우에만 시작한다
+			if (!"LC_Default_NonWF".equals(lifecycle)) {
+				WorkDataHelper.service.create(doc);
 			}
 
 			trs.commit();
@@ -267,10 +254,8 @@ public class StandardEtcService extends StandardManager implements EtcService {
 	public void modify(EtcDTO dto) throws Exception {
 		String oid = dto.getOid();
 		String name = dto.getName();
-		String interalnumber = dto.getInteralnumber();
 		String location = dto.getLocation();
 		String description = dto.getDescription();
-		String content = dto.getContent();
 		String lifecycle = dto.getLifecycle();
 		String iterationNote = dto.getIterationNote();
 
@@ -280,26 +265,22 @@ public class StandardEtcService extends StandardManager implements EtcService {
 
 			WTDocument doc = (WTDocument) CommonUtil.getObject(oid);
 
-//			DocumentType docType = DocumentType.toDocumentType(documentType);
-//			String number = getDocumentNumberSeq(docType.getLongDescription());
+			WorkData dd = WorkDataHelper.manager.getWorkData(doc);
+			if (dd != null) {
+				PersistenceHelper.manager.delete(dd);
+			}
 
 			Folder cFolder = CheckInOutTaskLogic.getCheckoutFolder();
 			CheckoutLink clink = WorkInProgressHelper.service.checkout(doc, cFolder, "문서 수정 체크 아웃");
 			WTDocument workCopy = (WTDocument) clink.getWorkingCopy();
 			workCopy.setDescription(description);
-//			workCopy.setDocType(docType);
 
 			WTDocumentMaster master = (WTDocumentMaster) workCopy.getMaster();
 			WTDocumentMasterIdentity identity = (WTDocumentMasterIdentity) master.getIdentificationObject();
 
 			identity.setName(name);
-			identity.setNumber(interalnumber);
 			master = (WTDocumentMaster) IdentityHelper.service.changeIdentity(master, identity);
 
-			workCopy.getTypeInfoWTDocument().setPtc_rht_1(content);
-//			WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
-//			String msg = user.getFullName() + " 사용자가 문서를 수정 하였습니다.";
-			// 필요하면 수정 사유로 대체
 			workCopy = (WTDocument) WorkInProgressHelper.service.checkin(workCopy, iterationNote);
 
 			// 폴더 이동
@@ -309,17 +290,20 @@ public class StandardEtcService extends StandardManager implements EtcService {
 			LifeCycleHelper.service.reassign(workCopy,
 					LifeCycleHelper.service.getLifeCycleTemplateReference(lifecycle, WCUtil.getWTContainerRef())); // Lifecycle
 
+			// 일괄결재 일경우 결재선 지정을 안만든다..
+			if ("LC_Default_NonWF".equals(lifecycle)) {
+				workCopy = (WTDocument) PersistenceHelper.manager.refresh(workCopy);
+				LifeCycleHelper.service.setLifeCycleState(workCopy, State.toState("BATCHAPPROVAL"), false);
+			} else {
+				WorkDataHelper.service.create(workCopy);
+			}
+
 			// 첨부 파일 클리어
 			removeAttach(workCopy);
 			// 첨부파일 저장
 			saveAttach(workCopy, dto);
-
-			// IBA 삭제
-//			deleteIBAAttributes(workCopy);
-
 			// IBA 설정
 			setIBAAttributes(workCopy, dto);
-
 			// 링크 정보 삭제
 			deleteLink(workCopy);
 			// 관련 링크 세팅

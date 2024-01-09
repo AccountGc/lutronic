@@ -11,10 +11,7 @@
 <%
 String type = request.getParameter("type");
 ArrayList<NumberCode> preserationList = (ArrayList<NumberCode>) request.getAttribute("preserationList");
-ArrayList<NumberCode> deptcodeList = (ArrayList<NumberCode>) request.getAttribute("deptcodeList");
 ArrayList<NumberCode> modelList = (ArrayList<NumberCode>) request.getAttribute("modelList");
-ArrayList<FormTemplate> form = (ArrayList<FormTemplate>) request.getAttribute("form");
-DocumentDTO dto = (DocumentDTO) request.getAttribute("dto");
 String location = (String) request.getAttribute("location");
 %>
 <!DOCTYPE html>
@@ -22,11 +19,6 @@ String location = (String) request.getAttribute("location");
 <head>
 <meta charset="UTF-8">
 <title></title>
-<style type="text/css">
-iframe {
-	margin-top: 3px;
-}
-</style>
 <%@include file="/extcore/jsp/common/css.jsp"%>
 <%@include file="/extcore/jsp/common/script.jsp"%>
 <%@include file="/extcore/jsp/common/auigrid.jsp"%>
@@ -46,14 +38,11 @@ iframe {
 				</td>
 				<td class="right">
 					<input type="button" value="등록" title="등록" class="red" onclick="create('false');">
-					<input type="button" value="임시저장" title="임시저장" onclick="create('true');">
 				</td>
 			</tr>
 		</table>
 		<table class="create-table">
 			<colgroup>
-				<col width="150">
-				<col width="*">
 				<col width="150">
 				<col width="*">
 				<col width="150">
@@ -70,28 +59,11 @@ iframe {
 				<td class="indent5">
 					<input type="text" name="writer" id="writer" class="width-200">
 				</td>
-				<th class="req">문서 템플릿</th>
-				<td class="indent5">
-					<select name="formType" id="formType" class="width-200" onchange="loadForm();">
-						<option value="">선택</option>
-						<%
-						for (FormTemplate formType : form) {
-						%>
-						<option value="<%=formType.getPersistInfo().getObjectIdentifier().getStringValue()%>"><%=formType.getName()%></option>
-						<%
-						}
-						%>
-					</select>
-				</td>
 			</tr>
 			<tr>
 				<th class="req lb">문서명</th>
 				<td class="indent5">
-					<input type="text" name="docName" id="docName" class="width-300">
-				</td>
-				<th class="req">내부 문서번호</th>
-				<td class="indent5">
-					<input type="text" name="interalnumber" id="interalnumber" class="width-200">
+					<input type="text" name="name" id="name" class="width-300">
 				</td>
 				<th class="req">결재방식</th>
 				<td>
@@ -142,32 +114,13 @@ iframe {
 						%>
 					</select>
 				</td>
-				<th>부서</th>
-				<td class="indent5">
-					<select name="deptcode" id="deptcode" class="width-200">
-						<option value="">선택</option>
-						<%
-						for (NumberCode deptcode : deptcodeList) {
-						%>
-						<option value="<%=deptcode.getCode()%>"><%=deptcode.getName()%></option>
-						<%
-						}
-						%>
-					</select>
-				</td>
-			</tr>
-			<tr>
-				<th class="lb">내용</th>
-				<td colspan="5" class="indent7 pb8">
-					<script type="text/javascript">
-						new Dext5editor('content');
-					</script>
-				</td>
 			</tr>
 			<tr>
 				<th class="lb">문서설명</th>
 				<td colspan="5" class="indent5">
-					<textarea name="description" id="description" rows="5"></textarea>
+					<div class="textarea-auto">
+						<textarea name="description" id="description" rows="5"></textarea>
+					</div>
 				</td>
 			</tr>
 			<tr>
@@ -240,7 +193,6 @@ iframe {
 			<tr>
 				<td class="center">
 					<input type="button" value="등록" title="등록" class="red" onclick="create('false');">
-					<input type="button" value="임시저장" title="임시저장" onclick="create('true');">
 				</td>
 			</tr>
 		</table>
@@ -253,39 +205,18 @@ iframe {
 				_popup(url, 500, 600, "n");
 			}
 
-			function loadForm() {
-				const oid = document.getElementById("formType").value;
-				if (oid === "") {
-					return false;
-				}
-				const url = getCallUrl("/form/html?oid=" + oid);
-				parent.openLayer();
-				call(url, null, function(data) {
-					if (data.result) {
-						DEXT5.setBodyValue(data.html, 'content');
-					} else {
-						alert(data.msg);
-					}
-					parent.closeLayer();
-				}, "GET");
-			}
-
 			// 문서 등록
-			function create(temp) {
+			function create() {
 				// temp 임시저장 여부 처리
 				const location = document.getElementById("location");
-				const formType = document.getElementById("formType");
-				const name = document.getElementById("docName");
+				const name = document.getElementById("name");
 				const description = document.getElementById("description");
 				const lifecycle = document.querySelector("input[name=lifecycle]:checked").value;
 				const secondarys = toArray("secondarys");
 				const primary = document.querySelector("input[name=primary]");
 				const model = document.getElementById("model").value;
 				const writer = document.getElementById("writer").value;
-				const interalnumber = document.getElementById("interalnumber");
-				const deptcode = document.getElementById("deptcode").value;
 				const preseration = document.getElementById("preseration").value;
-				const temprary = JSON.parse(temp);
 
 				const url = getCallUrl("/etc/create");
 
@@ -302,54 +233,42 @@ iframe {
 				// 관련ECO
 				const rows105 = AUIGrid.getGridDataWithState(myGridID105, "gridState");
 				// 내용
-				const content = DEXT5.getBodyValue("content");
+				const type = document.getElementById("type").value;
 
-				if (isNull(interalnumber.value)) {
-					alert("내부 문서번호를 입력해주세요.");
+				if (name.value === "") {
+					alert("문서명을 입력하세요.");
+					name.focus();
 					return false;
 				}
 
-				if (temprary) {
-					if (!confirm("임시저장하시겠습니까??")) {
-						return false;
-					}
+				if (primary == null) {
+					alert("주 첨부파일을 첨부해주세요.");
+					return false;
+				}
 
-				} else {
-
-					if (primary == null) {
-						alert("주 첨부파일을 첨부해주세요.");
-						return false;
-					}
-
-					if (!confirm("등록하시겠습니까?")) {
-						return false;
-					}
+				if (!confirm("등록하시겠습니까?")) {
+					return false;
 				}
 
 				const params = {
 					name : name.value,
 					lifecycle : lifecycle,
 					description : description.value,
-					content : content,
 					secondarys : secondarys,
 					primary : primary == null ? '' : primary.value,
 					location : location.value,
 					model_code : model,
-					deptcode_code : deptcode,
-					interalnumber : interalnumber.value,
 					writer : writer,
 					preseration_code : preseration,
-					// 링크 데이터
+					type : type,
 					rows90 : rows90,
 					rows91 : rows91,
 					rows100 : rows100,
 					rows101 : rows101,
 					rowsEcpr : rowsEcpr,
 					rows105 : rows105,
-					temprary : temprary
 				};
 				logger(params);
-				const type = document.getElementById("type").value;
 				parent.openLayer();
 				call(url, params, function(data) {
 					alert(data.msg);
@@ -362,10 +281,9 @@ iframe {
 			}
 
 			document.addEventListener("DOMContentLoaded", function() {
-				selectbox("formType");
+				toFocus("name");
 				selectbox("preseration");
 				selectbox("model");
-				selectbox("deptcode");
 				$("#preseration").bindSelectSetValue("PR001");
 				createAUIGrid90(columns90);
 				createAUIGrid91(columns91);
@@ -379,6 +297,7 @@ iframe {
 				AUIGrid.resize(myGridID101);
 				AUIGrid.resize(myGridID103);
 				AUIGrid.resize(myGridID105);
+				autoTextarea();
 			});
 
 			window.addEventListener("resize", function() {

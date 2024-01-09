@@ -31,6 +31,7 @@ import com.e3ps.org.service.OrgHelper;
 import com.e3ps.sap.service.SAPHelper;
 
 import net.sf.json.JSONArray;
+import wt.org.WTUser;
 import wt.part.WTPartDescribeLink;
 
 @Controller
@@ -41,9 +42,17 @@ public class EcnController extends BaseController {
 	@GetMapping(value = "/list")
 	public ModelAndView list() throws Exception {
 		ArrayList<NumberCode> modelList = NumberCodeHelper.manager.getArrayCodeList("MODEL");
+		boolean isAdmin = CommonUtil.isAdmin();
+		WTUser user = CommonUtil.sessionUser();
 		List<Map<String, String>> lifecycleList = CommonUtil.getLifeCycleState("LC_Default");
 		ModelAndView model = new ModelAndView();
 		JSONArray list = OrgHelper.manager.toJsonWTUser("RA팀");
+
+		boolean isEdit = false;
+		if ("cdpark".equals(user.getName()) || isAdmin) {
+			isEdit = true;
+		}
+		model.addObject("isEdit", isEdit);
 		model.addObject("list", list);
 		model.addObject("modelList", modelList);
 		model.addObject("lifecycleList", lifecycleList);

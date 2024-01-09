@@ -113,9 +113,10 @@ public class EoDTO {
 	 */
 	private void setAuth(EChangeOrder eo) throws Exception {
 		boolean isAdmin = CommonUtil.isAdmin();
-		if (check(eo, "LINE_REGISTER") || check(eo, "ACTIVITY") || isAdmin) {
+		if (check(eo, "LINE_REGISTER") || check(eo, "ACTIVITY") || check(eo, "RETURN")) {
 			set_modify(true);
 		}
+
 		if (isAdmin) {
 			set_delete(true);
 		}

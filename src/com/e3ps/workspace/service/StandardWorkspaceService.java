@@ -137,7 +137,7 @@ public class StandardWorkspaceService extends StandardManager implements Workspa
 
 		int sort = 0;
 		if (isAgree) {
-			sort = 1;
+//			sort = 1;
 			for (Map<String, String> agree : agreeRows) {
 				String woid = agree.get("woid");
 				WTUser wtuser = (WTUser) CommonUtil.getObject(woid);
@@ -906,7 +906,7 @@ public class StandardWorkspaceService extends StandardManager implements Workspa
 				ArrayList<ApprovalLine> approvalLines = WorkspaceHelper.manager.getApprovalLines(master);
 				for (ApprovalLine approvalLine : approvalLines) {
 					int sort = approvalLine.getSort();
-					if (sort == 1) {
+					if (sort == 0) {
 						approvalLine.setState(WorkspaceHelper.STATE_APPROVAL_APPROVING);
 						approvalLine.setStartTime(completeTime);
 						approvalLine = (ApprovalLine) PersistenceHelper.manager.modify(approvalLine);

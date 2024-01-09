@@ -23,7 +23,7 @@ String submitDate = dateFormat.format(submitLine.getCompleteTime());
 <style type="text/css">
 @page {
 	size: A4;
-	margin: 30px 30px 80px 30pxauto;
+	margin: 70px auto;
 }
 
 @media print {

@@ -111,9 +111,11 @@ public class EcprDTO {
 		if(check(ecpr, "APPROVED")) {
 			set_print(true);
 		}
-		if (check(ecpr, "LINE_REGISTER") || isAdmin) {
+		
+		if ((check(ecpr, "LINE_REGISTER") || check(ecpr, "RETURN"))) {
 			set_modify(true);
 		}
+
 		if (isAdmin) {
 			set_delete(true);
 		}

@@ -24,8 +24,6 @@ public class PartColumn {
 	private String part_oid; // 부품
 	private String epm_oid; // 3D
 	private String drawing_oid; // 2D
-	private String _3d;
-	private String _2d;
 	private String number;
 	private String name;
 	private String location;
@@ -55,7 +53,6 @@ public class PartColumn {
 	public PartColumn(WTPart part) throws Exception {
 //		setLatest(CommonUtil.isLatestVersion(part));
 		setPart_oid(part.getPersistInfo().getObjectIdentifier().getStringValue());
-		set_3d(ThumbnailUtil.thumbnailSmall(part));
 		setNumber(part.getNumber());
 		setName(part.getName());
 		setLocation(part.getLocation());
@@ -68,8 +65,6 @@ public class PartColumn {
 		setModifier(part.getModifierFullName());
 		setModifiedDate(part.getModifyTimestamp());
 		setModifiedDate_txt(part.getModifyTimestamp().toString().substring(0, 10));
-		setThumbnail(part);
-//		setPreOrder(IBAUtil.getBooleanValue(part, "PREORDER"));
 		boolean isCheckedOut = WorkInProgressHelper.isCheckedOut(part);
 		if (isCheckedOut) {
 			setIcon("/Windchill/extcore/images/icon/partcheckout.gif");
@@ -93,18 +88,5 @@ public class PartColumn {
 //		} else {
 //			return version + " <b><font color='red'>(" + latest_version + ")</font></b>";
 //		}
-	}
-
-	private void setThumbnail(WTPart part) throws Exception {
-		EPMDocument epm = PartHelper.manager.getEPMDocument(part);
-		// 3D 캐드 세팅..
-		if (epm != null) {
-			EPMDocument epm_d = PartHelper.manager.getEPMDocument2D(epm);
-			setEpm_oid(epm.getPersistInfo().getObjectIdentifier().getStringValue());
-			if (epm_d != null) {
-				set_2d(ThumbnailUtil.thumbnailSmall(epm_d));
-				setDrawing_oid(epm_d.getPersistInfo().getObjectIdentifier().getStringValue());
-			}
-		}
 	}
 }

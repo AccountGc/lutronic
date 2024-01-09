@@ -22,11 +22,6 @@ if ("modify".equals(mode)) {
 	title = "개정";
 }
 %>
-<style type="text/css">
-iframe {
-	margin-top: 3px;
-}
-</style>
 <script type="text/javascript" src="/Windchill/extcore/dext5editor/js/dext5editor.js"></script>
 <input type="hidden" name="oid" id="oid" value="<%=dto.getOid()%>">
 <table class="button-table">
@@ -39,8 +34,7 @@ iframe {
 			</div>
 		</td>
 		<td class="right">
-			<input type="button" value="<%=title%>" title="<%=title%>" class="blue" onclick="<%=mode%>('false');">
-			<input type="button" value="임시저장" title="임시저장" class="" onclick="<%=mode%>('true');">
+			<input type="button" value="<%=title%>완료" title="<%=title%>완료" class="blue" onclick="<%=mode%>();">
 			<input type="button" value="닫기" title="닫기" class="gray" onclick="self.close();">
 		</td>
 	</tr>
@@ -82,11 +76,7 @@ iframe {
 	<tr>
 		<th class="req lb">병리연구 문서명</th>
 		<td class="indent5">
-			<input type="text" name="docName" id="docName" class="width-300" value="<%=dto.getName()%>">
-		</td>
-		<th>내부 문서번호</th>
-		<td class="indent5">
-			<input type="text" name="interalnumber" id="interalnumber" class="width-200" value="<%=dto.getInteralnumber()%>">
+			<input type="text" name="name" id="name" class="width-300" value="<%=dto.getName()%>">
 		</td>
 		<th class="req">결재방식</th>
 		<td>
@@ -141,35 +131,9 @@ iframe {
 		</td>
 	</tr>
 	<tr>
-		<th class="lb">부서</th>
-		<td class="indent5">
-			<select name="deptcode" id="deptcode" class="width-200">
-				<option value="">선택</option>
-				<%
-				for (NumberCode deptcode : deptcodeList) {
-					boolean selected = deptcode.getCode().equals(dto.getDeptcode_code());
-				%>
-				<option value="<%=deptcode.getCode()%>" <%if (selected) {%> selected="selected" <%}%>><%=deptcode.getName()%></option>
-				<%
-				}
-				%>
-			</select>
-		</td>
-
 		<th>작성자</th>
 		<td class="indent5">
 			<input type="text" name="writer" id="writer" data-multi="false" class="width-200" value="<%=dto.getWriter()%>">
-		</td>
-	</tr>
-	<tr>
-		<th class="lb">내용</th>
-		<td colspan="5" class="indent7 pb8">
-			<textarea name="contents" id="contents" rows="15" style="display: none;"><%=dto.getContent() != null ? dto.getContent() : ""%></textarea>
-			<script type="text/javascript">
-				new Dext5editor('content');
-				const content = document.getElementById("contents").value;
-				DEXT5.setBodyValue(content, 'content');
-			</script>
 		</td>
 	</tr>
 	<tr>
@@ -252,8 +216,7 @@ iframe {
 <table class="button-table">
 	<tr>
 		<td class="center">
-			<input type="button" value="<%=title%>" title="<%=title%>" class="blue" onclick="<%=mode%>('false');">
-			<input type="button" value="임시저장" title="임시저장" class="" onclick="<%=mode%>('true');">
+			<input type="button" value="<%=title%>완료" title="<%=title%>완료" class="blue" onclick="<%=mode%>();">
 			<input type="button" value="닫기" title="닫기" class="gray" onclick="self.close();">
 		</td>
 	</tr>
@@ -283,24 +246,18 @@ iframe {
 	}
 
 	// 문서 등록
-	function <%=mode%>(temp) {
-		// temp 임시저장 여부 처리
+	function <%=mode%>() {
 		const oid = document.getElementById("oid").value;
 		const location = document.getElementById("location");
-		const formType = document.getElementById("formType");
-		const name = document.getElementById("docName");
+		const name = document.getElementById("name");
 		const description = document.getElementById("description");
 		const lifecycle = document.querySelector("input[name=lifecycle]:checked").value;
 		const secondarys = toArray("secondarys");
 		const primary = document.querySelector("input[name=primary]");
 		const model = document.getElementById("model").value;
 		const writer = document.getElementById("writer").value;
-		const interalnumber = document.getElementById("interalnumber").value;
-		const deptcode = document.getElementById("deptcode").value;
 		const preseration = document.getElementById("preseration").value;
-		const temprary = JSON.parse(temp);
 		const iterationNote = document.getElementById("iterationNote").value;
-	
 		const url = getCallUrl("/etc/<%=mode%>");
 
 		// 관련문서
@@ -315,23 +272,20 @@ iframe {
 		const rows101 = AUIGrid.getGridDataWithState(myGridID101, "gridState");
 		// 관련ECPR
 		const rowsEcpr = AUIGrid.getGridDataWithState(myGridID103, "gridState");
-		// 내용
-		const content = DEXT5.getBodyValue("content");
-		
-		if(temprary) {
-			if (!confirm("임시저장하시겠습니까?")){
-				return false;
-			}	
-		} else {
 
-			if (primary == null) {
-				alert("주 첨부파일을 첨부해주세요.");
-				return false;
-			}
-			
-			if (!confirm("<%=title%>하시겠습니까?")) {
-				return false;
-			}	
+		if(name.value === "") {
+			alert("문서명을 입력하세요.");
+			name.focus();
+			return false;
+		}
+		
+		if (primary == null) {
+			alert("주 첨부파일을 첨부해주세요.");
+			return false;
+		}
+		
+		if (!confirm("<%=title%>하시겠습니까?")) {
+			return false;
 		}
 		
 		const params = {
@@ -339,13 +293,10 @@ iframe {
 			name : name.value,
 			lifecycle : lifecycle,
 			description : description.value,
-			content : content,
 			secondarys : secondarys,
 			primary : primary==null ? '' : primary.value,
 			location : location.value,
 			model_code : model,
-			deptcode_code : deptcode,
-			interalnumber : interalnumber,
 			writer : writer,
 			preseration_code : preseration,
 			iterationNote : iterationNote,
@@ -356,7 +307,6 @@ iframe {
 			rows101 : rows101,
 			rowsEcpr : rowsEcpr,
 			rows105 : rows105,
-			temprary : temprary
 		};
 		logger(params);
 		openLayer();
@@ -372,11 +322,9 @@ iframe {
 	}
 
 	document.addEventListener("DOMContentLoaded", function() {
-// 		toFocus("iterationNote");
-		selectbox("formType");
+		toFocus("name");
 		selectbox("preseration");
 		selectbox("model");
-		selectbox("deptcode");
 		createAUIGrid90(columns90);
 		createAUIGrid91(columns91);
 		createAUIGrid100(columns100);

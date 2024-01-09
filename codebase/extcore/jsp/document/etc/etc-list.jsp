@@ -34,6 +34,7 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 		<input type="hidden" name="sessionid" id="sessionid">
 		<input type="hidden" name="curPage" id="curPage">
 		<input type="hidden" name="sessionName" id="sessionName" value="<%=user.getFullName()%>">
+		<input type="hidden" name="oid" id="oid">
 		<input type="hidden" name="title" id="title" value="<%=title%>">
 		<input type="hidden" name="type" id="type" value="<%=type%>">
 		<table class="button-table">
@@ -61,13 +62,9 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 					<input type="hidden" name="location" id="location" value="<%=location%>">
 					<span id="locationText"><%=location%></span>
 				</td>
-				<th>문서번호</th>
-				<td class="indent5">
-					<input type="text" name="number" id="number" class="width-300">
-				</td>
 				<th>문서명</th>
-				<td class="indent5">
-					<input type="text" name="name" id="name" class="width-300">
+				<td class="indent5" colspan="3">
+					<input type="text" name="name" id="name" class="width-400">
 				</td>
 			</tr>
 			<tr>
@@ -140,21 +137,8 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 						%>
 					</select>
 				</td>
-				<th>부서</th>
-				<td class="indent5">
-					<select name="deptcode" id="deptcode" class="width-200">
-						<option value="">선택</option>
-						<%
-						for (NumberCode deptcode : deptcodeList) {
-						%>
-						<option value="<%=deptcode.getCode()%>"><%=deptcode.getName()%></option>
-						<%
-						}
-						%>
-					</select>
-				</td>
 				<th>REV</th>
-				<td>
+				<td colspan="3">
 					&nbsp;
 					<div class="pretty p-switch">
 						<input type="radio" name="latest" value="true" checked="checked">
@@ -240,22 +224,6 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 						}
 					},
 				}, {
-					dataField : "number",
-					headerText : "문서번호",
-					dataType : "string",
-					width : 180,
-					renderer : {
-						type : "LinkRenderer",
-						baseUrl : "javascript",
-						jsCallback : function(rowIndex, columnIndex, value, item) {
-							const oid = item.oid;
-							const title = document.getElementById("title").value;
-							const type = document.getElementById("type").value;
-							const url = getCallUrl("/etc/view?oid=" + oid + "&title=" + title + "&type=" + type);
-							_popup(url, "", "", "f");
-						}
-					},
-				}, {
 					dataField : "model",
 					headerText : "프로젝트 코드",
 					dataType : "string",
@@ -322,7 +290,6 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 				const props = {
 					headerHeight : 30,
 					showRowNumColumn : true,
-					showRowCheckColumn : true,
 					rowNumHeaderText : "번호",
 					showAutoNoDataMessage : false,
 					selectionMode : "multipleCells",
@@ -373,7 +340,7 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 			}
 
 			document.addEventListener("DOMContentLoaded", function() {
-				toFocus("number");
+				toFocus("name");
 				const columns = loadColumnLayout("etc-list");
 				const contenxtHeader = genColumnHtml(columns);
 				$("#h_item_ul").append(contenxtHeader);

@@ -213,10 +213,6 @@ boolean complete = docList.size() > 0;
 			}
 
 			function complete() {
-		<%if (!complete) {%>
-			alert("등록된 산출물이 하나도 없습니다.");
-				return false;
-		<%}%>
 			const oid = document.getElementById("oid").value;
 				const description = document.getElementById("description").value;
 				if (!confirm("설변활동을 완료 하시겠습니까?")) {

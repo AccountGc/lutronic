@@ -65,7 +65,7 @@ public class EtcController extends BaseController {
 		model.addObject("deptcodeList", deptcodeList);
 		model.addObject("modelList", modelList);
 		model.addObject("title", title);
-		model.addObject("type",type);
+		model.addObject("type", type);
 		model.addObject("location", location);
 		model.setViewName("/extcore/jsp/document/etc/etc-list.jsp");
 		return model;
@@ -92,17 +92,11 @@ public class EtcController extends BaseController {
 	public ModelAndView create(String type) throws Exception {
 		ModelAndView model = new ModelAndView();
 		ArrayList<NumberCode> preserationList = NumberCodeHelper.manager.getArrayCodeList("PRESERATION");
-		ArrayList<NumberCode> deptcodeList = NumberCodeHelper.manager.getArrayCodeList("DEPTCODE");
 		ArrayList<NumberCode> modelList = NumberCodeHelper.manager.getArrayCodeList("MODEL");
-		ArrayList<FormTemplate> form = FormTemplateHelper.manager.array();
-		JSONArray docTypeList = DocumentHelper.manager.toJson();
 		String location = EtcHelper.manager.getLocation(type);
 		model.addObject("location", location);
-		model.addObject("docTypeList", docTypeList);
 		model.addObject("preserationList", preserationList);
-		model.addObject("deptcodeList", deptcodeList);
 		model.addObject("modelList", modelList);
-		model.addObject("form", form);
 		model.setViewName("/extcore/jsp/document/etc/etc-create.jsp");
 		return model;
 	}
@@ -148,7 +142,8 @@ public class EtcController extends BaseController {
 
 	@Description(value = "기타문서 상세보기")
 	@GetMapping(value = "/view")
-	public ModelAndView view(@RequestParam String oid, @RequestParam String title, @RequestParam String type) throws Exception {
+	public ModelAndView view(@RequestParam String oid, @RequestParam String title, @RequestParam String type)
+			throws Exception {
 		ModelAndView model = new ModelAndView();
 		boolean isAdmin = CommonUtil.isAdmin();
 		EtcDTO dto = new EtcDTO(oid);
@@ -168,16 +163,12 @@ public class EtcController extends BaseController {
 		boolean isAdmin = CommonUtil.isAdmin();
 		EtcDTO dto = new EtcDTO(oid);
 		ArrayList<NumberCode> preserationList = NumberCodeHelper.manager.getArrayCodeList("PRESERATION");
-		ArrayList<NumberCode> deptcodeList = NumberCodeHelper.manager.getArrayCodeList("DEPTCODE");
 		ArrayList<NumberCode> modelList = NumberCodeHelper.manager.getArrayCodeList("MODEL");
-		ArrayList<FormTemplate> form = FormTemplateHelper.manager.array();
 		String location = EtcHelper.manager.getLocation(type);
 		model.addObject("location", location);
 		model.addObject("type", type);
 		model.addObject("preserationList", preserationList);
-		model.addObject("deptcodeList", deptcodeList);
 		model.addObject("modelList", modelList);
-		model.addObject("form", form);
 		model.addObject("isAdmin", isAdmin);
 		model.addObject("dto", dto);
 		model.addObject("mode", mode);

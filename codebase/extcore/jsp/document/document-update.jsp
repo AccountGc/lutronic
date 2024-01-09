@@ -46,7 +46,7 @@ iframe {
 			</div>
 		</td>
 		<td class="right">
-			<input type="button" value="<%=title%>" title="<%=title%>" class="blue" onclick="<%=mode%>('false');">
+			<input type="button" value="<%=title%>완료" title="<%=title%>완료" class="blue" onclick="<%=mode%>();">
 			<input type="button" value="닫기" title="닫기" class="gray" onclick="self.close();">
 		</td>
 	</tr>
@@ -241,7 +241,6 @@ iframe {
 
 	// 문서 등록
 	function <%=mode%>() {
-		// temp 임시저장 여부 처리
 		const oid = document.getElementById("oid").value;
 		const location = document.getElementById("location");
 		const description = document.getElementById("description");

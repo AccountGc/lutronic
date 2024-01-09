@@ -45,10 +45,6 @@ String state = (String) request.getAttribute("state");
 			<input type="hidden" name="location" id="location" value="<%=location%>">
 			<span id="locationText"><%=location%></span>
 		</td>
-		<th>문서번호</th>
-		<td class="indent5">
-			<input type="text" name="number" id="number" class="width-300">
-		</td>
 		<th>문서명</th>
 		<td class="indent5">
 			<input type="text" name="name" id="name" class="width-300">
@@ -134,19 +130,6 @@ String state = (String) request.getAttribute("state");
 				%>
 			</select>
 		</td>
-		<th>부서</th>
-		<td class="indent5">
-			<select name="deptcode" id="deptcode" class="width-200">
-				<option value="">선택</option>
-				<%
-				for (NumberCode deptcode : deptcodeList) {
-				%>
-				<option value="<%=deptcode.getCode()%>"><%=deptcode.getName()%></option>
-				<%
-				}
-				%>
-			</select>
-		</td>
 		<th>REV</th>
 		<td>
 			&nbsp;
@@ -214,24 +197,6 @@ String state = (String) request.getAttribute("state");
 <script type="text/javascript">
 let myGridID;
 const columns = [ {
-	dataField : "number",
-	headerText : "문서번호",
-	dataType : "string",
-	width : 120,
-	filter : {
-		showIcon : true,
-		inline : true
-	},
-}, {
-	dataField : "number",
-	headerText : "문서번호",
-	dataType : "string",
-	width : 120,
-	filter : {
-		showIcon : true,
-		inline : true
-	},
-}, {
 	dataField : "model",
 	headerText : "프로젝트 코드",
 	dataType : "string",
@@ -419,7 +384,7 @@ function loadGridData() {
 }
 
 document.addEventListener("DOMContentLoaded", function() {
-	toFocus("number");
+	toFocus("name");
 	const contenxtHeader = genColumnHtml(columns);
 	$("#h_item_ul").append(contenxtHeader);
 	$("#headerMenu").menu({

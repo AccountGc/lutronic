@@ -9,7 +9,6 @@ import com.e3ps.common.comments.service.CommentsHelper;
 import com.e3ps.common.iba.IBAUtil;
 import com.e3ps.common.util.CommonUtil;
 import com.e3ps.common.util.QuerySpecUtils;
-import com.e3ps.org.service.MailUserHelper;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -57,6 +56,8 @@ public class EtcDTO {
 	private String approvaltype_name;
 	private String approvaltype_code;
 
+	private String type;
+
 	// 댓글
 	private ArrayList<CommentsDTO> comments = new ArrayList<CommentsDTO>();
 
@@ -64,7 +65,6 @@ public class EtcDTO {
 	private boolean _delete = false;
 	private boolean _modify = false;
 	private boolean _revise = false;
-	private boolean _print = false;
 	private boolean _withdraw = false;
 
 	// 변수용
@@ -158,29 +158,25 @@ public class EtcDTO {
 	 * 권한 설정
 	 */
 	private void setAuth(WTDocument doc) throws Exception {
-		// 개정 권한 - (최신버전 && 승인됨)
-//		if (!CommonCUtil.isAdmin()) {
-			if (check("APPROVED") && isLatest()) {
-				set_revise(true);
-				set_print(true);
-			}
-			// 삭제, 수정 권한 - (최신버전 && ( 임시저장 || 작업중 || 일괄결재중 || 재작업))
-			if (isLatest() && (check("INWORK") || check("TEMPRARY") || check("BATCHAPPROVAL") || check("REWORK"))) {
-				set_delete(true);
-				set_modify(true);
-			}
+		boolean isAdmin = CommonUtil.isAdmin();
+		if (isAdmin && isLatest()) {
+			set_delete(true);
+		}
 
-			if (check("APPROVING") && isLatest()) {
-				set_withdraw(true);
-			}
-			// 관리자는 일단 모든 권한 오픈
-//		} else {
-//			set_delete(true);
-//			set_modify(true);
-//			set_withdraw(true);
-//			set_revise(true);
-//			set_print(true);
-//		}
+		// 승인되고 최신버전일경우 개정가능
+		if (check("APPROVED") && isLatest()) {
+			set_revise(true);
+		}
+
+		// 최신버전이고 결재선 지정상태일 경우 승인가능
+		if (isLatest() && (check("LINE_REGISTER") || check("RETURN"))) {
+			set_modify(true);
+		}
+
+		// 승인중일 경우 회수 가능
+		if (check("APPROVING") && isLatest()) {
+			set_withdraw(true);
+		}
 	}
 
 	/**

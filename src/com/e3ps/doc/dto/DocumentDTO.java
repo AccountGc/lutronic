@@ -242,12 +242,13 @@ public class DocumentDTO {
 	 * 권한 설정
 	 */
 	private void setAuth(WTDocument doc) throws Exception {
+		boolean isAdmin = CommonUtil.isAdmin();
 		// 승인된경우 프린트
 		if (check("APPROVED")) {
 			set_print(true);
 		}
 
-		if (CommonUtil.isAdmin() && isLatest()) {
+		if (isAdmin && isLatest()) {
 			set_delete(true);
 		}
 
@@ -257,7 +258,7 @@ public class DocumentDTO {
 		}
 
 		// 최신버전이고 결재선 지정상태일 경우 승인가능
-		if (isLatest() && check("LINE_REGISTER")) {
+		if (isLatest() && (check("LINE_REGISTER") || check("RETURN"))) {
 			set_modify(true);
 		}
 
@@ -266,7 +267,7 @@ public class DocumentDTO {
 			set_withdraw(true);
 		}
 
-		if (CommonUtil.isAdmin()) {
+		if (isAdmin) {
 			set_force(true);
 		}
 	}

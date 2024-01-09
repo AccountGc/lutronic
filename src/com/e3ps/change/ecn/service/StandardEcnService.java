@@ -1,6 +1,7 @@
 package com.e3ps.change.ecn.service;
 
 import java.sql.Timestamp;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -83,8 +84,7 @@ public class StandardEcnService extends StandardManager implements EcnService {
 				WTUser worker = (WTUser) CommonUtil.getObject(worker_oid);
 				ecn.setWorker(worker);
 				PersistenceHelper.manager.modify(ecn);
-				
-				
+
 			}
 
 			trs.commit();
@@ -106,13 +106,9 @@ public class StandardEcnService extends StandardManager implements EcnService {
 		try {
 			trs.start();
 
-			// 완제품개수만큼 ECN이 발행된다???
-
-//			Date currentDate = new Date();
-//			String number = "N" + new SimpleDateFormat("yyMM", Locale.KOREA).format(currentDate);
-//			String seqNo = SequenceDao.manager.getSeqNo(number, "000", "EChangeNotice", EChangeNotice.EO_NUMBER);
-//			number = number + seqNo;
-
+			// 완제품 개수 만큼 일단 ECN이 생성되야 생성
+			DecimalFormat df = new DecimalFormat("00");
+			int idx = 0;
 			for (EOCompletePartLink link : completeParts) {
 				EChangeNotice ecn = EChangeNotice.newEChangeNotice();
 				WTPartMaster m = link.getCompletePart();
@@ -120,7 +116,7 @@ public class StandardEcnService extends StandardManager implements EcnService {
 				ecn.setPartName(m.getName()); // 완제품 명으로 하냐.. 번호로하냐
 				ecn.setPartNumber(m.getNumber());
 				ecn.setEoName(eco.getEoName());
-				ecn.setEoNumber("N" + eco.getEoNumber());
+				ecn.setEoNumber("N" + eco.getEoNumber() + df.format(idx));
 				ecn.setModel(eco.getModel());
 				ecn.setEoCommentA(eco.getEoCommentA());
 				ecn.setEoCommentB(eco.getEoCommentB());
@@ -142,48 +138,49 @@ public class StandardEcnService extends StandardManager implements EcnService {
 						LifeCycleHelper.service.getLifeCycleTemplate(lifecycle, WCUtil.getWTContainerRef())); // Lifecycle
 				ecn = (EChangeNotice) PersistenceHelper.manager.save(ecn);
 
-				for (EcoPartLink l : ecoParts) {
-					WTPartMaster master = l.getPart();
-					String version = l.getVersion();
-					WTPart part = PartHelper.manager.getPart(master.getNumber(), version);
-
-					JSONArray end = PartHelper.manager.end(part.getPersistInfo().getObjectIdentifier().getStringValue(),
-							null);
-					for (int k = 0; k < end.size(); k++) {
-						Map<String, String> endMap = (Map<String, String>) end.get(k);
-						String part_oid = endMap.get("oid");
-						WTPart endPart = (WTPart) CommonUtil.getObject(part_oid);
-						WTPartMaster endMaster = (WTPartMaster) endPart.getMaster();
-						// 최종품목이 포함되어있을 경우??
-						if (endMaster.getPersistInfo().getObjectIdentifier().getId() == m.getPersistInfo()
-								.getObjectIdentifier().getId()) {
-							boolean isApproved = part.getLifeCycleState().toString().equals("APPROVED");
-							String group = "";
-							if (isApproved) {
-								WTPart next_part = (WTPart) EChangeUtils.manager.getNext(part);
-								if (next_part != null) {
-									group = EChangeUtils.manager.getPartGroup(next_part, eco);
-								}
-							} else {
-								if (part != null) {
-									group = EChangeUtils.manager.getPartGroup(part, eco);
-								}
-							}
-
-							if (group.length() > 0) {
-
-								String[] groups = group.split(",");
-								for (String s : groups) {
-									EChangeRequest ecr = (EChangeRequest) CommonUtil.getObject(s.trim());
-									EcnToPartLink eLink = EcnToPartLink.newEcnToPartLink(ecn, part);
-									eLink.setEcr(ecr);
-									eLink.setCompletePart(endMaster);
-									PersistenceHelper.manager.save(eLink);
-								}
-							}
-						}
-					}
-				}
+//				for (EcoPartLink l : ecoParts) {
+//					WTPartMaster master = l.getPart();
+//					String version = l.getVersion();
+//					WTPart part = PartHelper.manager.getPart(master.getNumber(), version);
+//
+//					JSONArray end = PartHelper.manager.end(part.getPersistInfo().getObjectIdentifier().getStringValue(),
+//							null);
+//					for (int k = 0; k < end.size(); k++) {
+//						Map<String, String> endMap = (Map<String, String>) end.get(k);
+//						String part_oid = endMap.get("oid");
+//						WTPart endPart = (WTPart) CommonUtil.getObject(part_oid);
+//						WTPartMaster endMaster = (WTPartMaster) endPart.getMaster();
+//						// 최종품목이 포함되어있을 경우??
+//						if (endMaster.getPersistInfo().getObjectIdentifier().getId() == m.getPersistInfo()
+//								.getObjectIdentifier().getId()) {
+//							boolean isApproved = part.getLifeCycleState().toString().equals("APPROVED");
+//							String group = "";
+//							if (isApproved) {
+//								WTPart next_part = (WTPart) EChangeUtils.manager.getNext(part);
+//								if (next_part != null) {
+//									group = EChangeUtils.manager.getPartGroup(next_part, eco);
+//								}
+//							} else {
+//								if (part != null) {
+//									group = EChangeUtils.manager.getPartGroup(part, eco);
+//								}
+//							}
+//
+//							if (group.length() > 0) {
+//
+//								String[] groups = group.split(",");
+//								for (String s : groups) {
+//									EChangeRequest ecr = (EChangeRequest) CommonUtil.getObject(s.trim());
+//									EcnToPartLink eLink = EcnToPartLink.newEcnToPartLink(ecn, part);
+//									eLink.setEcr(ecr);
+//									eLink.setCompletePart(endMaster);
+//									PersistenceHelper.manager.save(eLink);
+//								}
+//							}
+//						}
+//					}
+//				}
+				idx++;
 			}
 
 			trs.commit();

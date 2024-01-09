@@ -7,16 +7,25 @@ import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.Map;
 
+import com.e3ps.change.ECPRRequest;
+import com.e3ps.change.ECRMRequest;
 import com.e3ps.change.EChangeActivity;
+import com.e3ps.change.EChangeNotice;
 import com.e3ps.change.EChangeOrder;
 import com.e3ps.change.EChangeRequest;
 import com.e3ps.change.EOCompletePartLink;
+import com.e3ps.change.EcnEco;
 import com.e3ps.change.EcoPartLink;
+import com.e3ps.change.EcoToEcprLink;
+import com.e3ps.change.EcrmToEcoLink;
 import com.e3ps.change.RequestOrderLink;
 import com.e3ps.change.activity.dto.ActDTO;
 import com.e3ps.change.activity.service.ActivityHelper;
 import com.e3ps.change.cr.column.CrColumn;
+import com.e3ps.change.ecn.column.EcnColumn;
 import com.e3ps.change.eco.column.EcoColumn;
+import com.e3ps.change.ecpr.column.EcprColumn;
+import com.e3ps.change.ecrm.column.EcrmColumn;
 import com.e3ps.change.util.EChangeUtils;
 import com.e3ps.common.code.service.NumberCodeHelper;
 import com.e3ps.common.iba.IBAUtils;
@@ -239,6 +248,54 @@ public class EcoHelper {
 			return JSONArray.fromObject(referenceCr(eco, list));
 		} else if ("complete".equals(type)) {
 			return JSONArray.fromObject(referenceComplete(eco, list));
+		} else if ("ecpr".equals(type)) {
+			return JSONArray.fromObject(referenceEcpr(eco, list));
+		} else if ("ecrm".equals(type)) {
+			return JSONArray.fromObject(referenceEcrm(eco, list));
+		} else if ("ecn".equals(type)) {
+			return JSONArray.fromObject(referenceEcn(eco, list));
+		}
+		return JSONArray.fromObject(list);
+	}
+
+	/**
+	 * 관련 ECPR
+	 */
+	private Object referenceEcpr(EChangeOrder eco, ArrayList<Map<String, Object>> list) throws Exception {
+		QueryResult qr = PersistenceHelper.manager.navigate(eco, "ecpr", EcoToEcprLink.class);
+		while (qr.hasMoreElements()) {
+			ECPRRequest ecpr = (ECPRRequest) qr.nextElement();
+			EcprColumn data = new EcprColumn(ecpr);
+			Map<String, Object> map = AUIGridUtil.dtoToMap(data);
+			list.add(map);
+		}
+		return JSONArray.fromObject(list);
+	}
+
+	/**
+	 * 관련 ECRM
+	 */
+	private Object referenceEcrm(EChangeOrder eco, ArrayList<Map<String, Object>> list) throws Exception {
+		QueryResult qr = PersistenceHelper.manager.navigate(eco, "ecrm", EcrmToEcoLink.class);
+		while (qr.hasMoreElements()) {
+			ECRMRequest ecrm = (ECRMRequest) qr.nextElement();
+			EcrmColumn data = new EcrmColumn(ecrm);
+			Map<String, Object> map = AUIGridUtil.dtoToMap(data);
+			list.add(map);
+		}
+		return JSONArray.fromObject(list);
+	}
+
+	/**
+	 * 관련 ECN
+	 */
+	private Object referenceEcn(EChangeOrder eco, ArrayList<Map<String, Object>> list) throws Exception {
+		QueryResult qr = PersistenceHelper.manager.navigate(eco, "ecn", EcnEco.class);
+		while (qr.hasMoreElements()) {
+			EChangeNotice ecn = (EChangeNotice) qr.nextElement();
+			EcnColumn data = new EcnColumn(ecn);
+			Map<String, Object> map = AUIGridUtil.dtoToMap(data);
+			list.add(map);
 		}
 		return JSONArray.fromObject(list);
 	}
@@ -563,6 +620,9 @@ public class EcoHelper {
 		}
 	}
 
+	/**
+	 * ECO 다음번호
+	 */
 	public String getNextNumber(String number) throws Exception {
 		DecimalFormat df = new DecimalFormat("00");
 		String rtn = null;
@@ -591,7 +651,6 @@ public class EcoHelper {
 	 */
 	public void summaryData(Map<String, Object> params) throws Exception {
 		String type = (String) params.get("type");
-		
 
 	}
 }

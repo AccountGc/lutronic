@@ -38,7 +38,7 @@ public class EcnColumn {
 		setOid(ecn.getPersistInfo().getObjectIdentifier().getStringValue());
 		setPartName(ecn.getPartName());
 		setPartNumber(ecn.getPartNumber());
-		setEcoNumber(ecn.getEco().getEoNumber());
+		setEcoNumber(ecn.getEco() != null ? ecn.getEco().getEoNumber() : "");
 		setEoid(ecn.getEco().getPersistInfo().getObjectIdentifier().getStringValue());
 		setNumber(ecn.getEoNumber());
 		setName(ecn.getEoName());

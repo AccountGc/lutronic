@@ -315,36 +315,6 @@ boolean complete = (boolean) request.getAttribute("complete");
 <script type="text/javascript">
 let myGridID;
 const columns = [ {
-	dataField : "_3d",
-	headerText : "3D",
-	dataType : "string",
-	width : 50,
-	renderer : {
-		type : "ImageRenderer",
-		altField : null,
-		imgHeight : 16,
-		onClick : function(event) {
-		}
-	},
-	filter : {
-		inline : false
-	},	
-}, {
-	dataField : "_2d",
-	headerText : "2D",
-	dataType : "string",
-	width : 50,
-	renderer : {
-		type : "ImageRenderer",
-		altField : null,
-		imgHeight : 16,
-		onClick : function(event) {
-		}
-	},
-	filter : {
-		inline : false
-	},	
-}, {
 	dataField : "icon",
 	headerText : "",
 	dataType : "string",
@@ -357,6 +327,11 @@ const columns = [ {
 	filter : {
 		inline : false
 	},	
+}, {
+	dataField : "number",
+	headerText : "품목번호",
+	dataType : "string",
+	width : 180,
 }, {
 	dataField : "name",
 	headerText : "품목명",

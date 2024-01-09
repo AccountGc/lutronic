@@ -130,9 +130,10 @@ public class EcoDTO {
 	 */
 	private void setAuth(EChangeOrder eco) throws Exception {
 		boolean isAdmin = CommonUtil.isAdmin();
-		if (check(eco, "LINE_REGISTER") || (check(eco, "ACTIVITY")) || isAdmin) {
+		if ((check(eco, "LINE_REGISTER") || (check(eco, "ACTIVITY")) || check(eco, "RETURN"))) {
 			set_modify(true);
 		}
+
 		if (isAdmin) {
 			set_delete(true);
 		}

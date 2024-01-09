@@ -121,9 +121,11 @@ public class EcrmDTO {
 		if (check(ecrm, "APPROVED")) {
 			set_print(true);
 		}
-		if (check(ecrm, "LINE_REGISTER") || isAdmin) {
+		
+		if ((check(ecrm, "LINE_REGISTER") || check(ecrm, "RETURN"))) {
 			set_modify(true);
 		}
+		
 		if (isAdmin) {
 			set_delete(true);
 		}

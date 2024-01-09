@@ -24,7 +24,7 @@ iframe {
 			</div>
 		</td>
 		<td class="right">
-			<input type="button" value="수정" title="수정" class="blue" onclick="modify();">
+			<input type="button" value="수정완료" title="수정완료" class="blue" onclick="modify();">
 			<input type="button" value="닫기" title="닫기" class="gray" onclick="self.close();">
 		</td>
 	</tr>
@@ -130,6 +130,7 @@ iframe {
 	<jsp:param value="update" name="mode" />
 	<jsp:param value="true" name="multi" />
 	<jsp:param value="true" name="header" />
+	<jsp:param value="true" name="req" />
 </jsp:include>
 
 <!-- 	관련 CR -->
@@ -177,10 +178,16 @@ iframe {
 			return;
 		}
 
-		if (rows300.length == 0) {
+		if (rows300.length === 0) {
 			alert("제품을 선택해주세요.");
 			poup300();
 			return;
+		}
+		
+		if (rows105.length === 0) {
+			alert("ECO는 반드시 하나 이상 선택해야합니다.");
+			popup105();
+			return false;
 		}
 
 		if (!confirm("수정 하시겠습니까?")) {
