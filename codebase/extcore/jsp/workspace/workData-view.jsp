@@ -163,6 +163,7 @@ boolean validate = dto.isValidate();
 				alert(data.msg);
 				if (data.result) {
 					parent.updateWorkData();
+					parent.updateWorkspace();
 					document.location.href = getCallUrl("/workData/list");
 				}
 				parent.closeLayer();

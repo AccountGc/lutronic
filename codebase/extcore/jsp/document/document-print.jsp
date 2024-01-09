@@ -23,7 +23,7 @@ String submitDate = dateFormat.format(submitLine.getCompleteTime());
 <style type="text/css">
 @page {
 	size: A4;
-	margin: 30px auto;
+	margin: 30px 30px 80px 30pxauto;
 }
 
 @media print {
@@ -66,14 +66,15 @@ td {
 }
 
 .footer {
-/* 	position: fixed; */
-/* 	bottom: 0; */
-/* 	left: 0; */
-/* 	width: 100%; */
-/* 	margin-top: 30px; */
-/* 	padding: 0px; */
-/* 	left: 0; */
+	/* 	position: fixed; */
+	/* 	bottom: 0; */
+	/* 	left: 0; */
+	/* 	width: 100%; */
+	/* 	margin-top: 30px; */
+	/* 	padding: 0px; */
+	/* 	left: 0; */
 	/* 	height: 10px; */
+	
 }
 
 td.left {
@@ -85,8 +86,7 @@ td.right {
 }
 
 main {
-/* 	margin-top: 60px; /* 헤더의 높이만큼 본문을 내리기 */ */
-/* 	margin-bottom: 80px; /* 푸터의 높이만큼 본문을 올리기 */ */
+	
 }
 </style>
 

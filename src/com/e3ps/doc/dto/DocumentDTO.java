@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.aspose.pdf.internal.imaging.internal.bouncycastle.crypto.engines.ISAACEngine;
 import com.e3ps.common.code.NumberCode;
 import com.e3ps.common.code.service.NumberCodeHelper;
 import com.e3ps.common.comments.beans.CommentsDTO;
@@ -244,6 +245,10 @@ public class DocumentDTO {
 		// 승인된경우 프린트
 		if (check("APPROVED")) {
 			set_print(true);
+		}
+
+		if (CommonUtil.isAdmin() && isLatest()) {
+			set_delete(true);
 		}
 
 		// 승인되고 최신버전일경우 개정가능

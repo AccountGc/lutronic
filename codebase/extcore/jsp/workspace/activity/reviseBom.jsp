@@ -793,15 +793,15 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 			}
 
 			function prev(arr, callBack) {
-				// 				const checkedItems = AUIGrid.getCheckedRowItems(myGridID);
-				// 				const oid = checkedItems[0].item.next_oid;
+				const checkedItems = AUIGrid.getCheckedRowItems(myGridID);
+				const oid = checkedItems[0].item.next_oid;
 				const item = arr[0].item;
 				const part_oid = item.part_oid;
 				const url = getCallUrl("/activity/prev");
 				const soid = document.getElementById("oid").value
 				const params = {
 					prev : part_oid,
-					// 					after : oid,
+					after : oid,
 					oid : soid
 				};
 				parent.openLayer();

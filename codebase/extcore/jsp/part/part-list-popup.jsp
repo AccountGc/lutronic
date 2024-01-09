@@ -21,17 +21,6 @@ String rowId = request.getParameter("rowId") == null ? "" : request.getParameter
 boolean limit = request.getParameter("limit") == null ? false : Boolean.parseBoolean(request.getParameter("limit"));
 boolean complete = (boolean) request.getAttribute("complete");
 %>
-<style type="text/css">
-.preOrder {
-	/* 	background-color: rgb(200, 255, 203) !important; */
-	
-}
-
-.checkout {
-	background-color: rgb(254, 192, 209) !important;
-}
-</style>
-
 <input type="hidden" name="sessionid" id="sessionid">
 <input type="hidden" name="curPage" id="curPage">
 <input type="hidden" name="oid" id="oid">

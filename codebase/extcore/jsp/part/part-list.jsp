@@ -25,16 +25,6 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 <head>
 <meta charset="UTF-8">
 <title></title>
-<style type="text/css">
-.preOrder {
-	/* 	background-color: rgb(200, 255, 203) !important; */
-	
-}
-
-.checkout {
-	background-color: rgb(255, 234, 235) !important;
-}
-</style>
 <%@include file="/extcore/jsp/common/css.jsp"%>
 <%@include file="/extcore/jsp/common/script.jsp"%>
 <%@include file="/extcore/jsp/common/auigrid.jsp"%>
@@ -477,14 +467,6 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 					filterLayerWidth : 320,
 					filterItemMoreMessage : "필터링 검색이 너무 많습니다. 검색을 이용해주세요.",
 					enableRowCheckShiftKey : true,
-					rowStyleFunction : function(rowIndex, item) {
-						if (item.preOrder) {
-							return "preOrder";
-						} else if (item.checkout) {
-							return "checkout";
-						}
-						return "";
-					}
 				};
 				myGridID = AUIGrid.create("#grid_wrap", columnLayout, props);
 				loadGridData();

@@ -12,7 +12,6 @@
 <%
 String oid = (String) request.getParameter("oid");
 Representable representable = (Representable) CommonUtil.getObject(oid);
-// Representable representable = PublishUtils.findRepresentable(part);
 Representation representation = PublishUtils.getRepresentation(representable, true, null, false);
 
 String temp = WTProperties.getLocalProperties().getProperty("wt.codebase.location");

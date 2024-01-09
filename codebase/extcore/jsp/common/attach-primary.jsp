@@ -78,8 +78,8 @@ String mode = request.getParameter("mode");
 					form.appendChild(primaryTag);
 				}
 				primary.setUploadedList(data);
-				imgurl = data[0].filePath + data[0].name;
-				$("#sign_preview").attr("src", imgurl);
+// 				imgurl = data[0].filePath + data[0].name;
+// 				$("#sign_preview").attr("src", imgurl);
 			}
 		});
 	}

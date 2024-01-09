@@ -570,8 +570,6 @@ public class StandardDocumentService extends StandardManager implements Document
 			LifeCycleHelper.service.reassign(workCopy,
 					LifeCycleHelper.service.getLifeCycleTemplateReference(lifecycle, WCUtil.getWTContainerRef())); // Lifecycle
 
-			
-			
 			// 일괄결재 일경우 결재선 지정을 안만든다..
 			if ("LC_Default_NonWF".equals(lifecycle)) {
 				workCopy = (WTDocument) PersistenceHelper.manager.refresh(workCopy);
@@ -592,8 +590,6 @@ public class StandardDocumentService extends StandardManager implements Document
 			deleteLink(workCopy);
 			// 관련 링크 세팅
 			saveLink(workCopy, dto);
-
-		x
 
 			String classType1_code = workCopy.getTypeInfoWTDocument().getPtc_str_2();
 			if (StringUtil.checkString(classType1_code)) {

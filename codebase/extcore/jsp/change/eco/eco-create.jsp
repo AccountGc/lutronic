@@ -239,13 +239,13 @@
 
 				if (rows200.length === 0) {
 					alert("설계변경 활동을 하나이상 추가하세요.");
-					popup101();
 					return false;
 				}
 
 				if (sendType === "ECO") {
 					if (rows101.length === 0) {
 						alert("ECO 일 경우 반드시 CR은 하나이상 존재해야합니다.");
+						popup101();
 						return false;
 					}
 				}

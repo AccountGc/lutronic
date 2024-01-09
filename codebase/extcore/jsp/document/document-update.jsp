@@ -10,7 +10,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%
 ArrayList<NumberCode> preserationList = (ArrayList<NumberCode>) request.getAttribute("preserationList");
-ArrayList<NumberCode> deptcodeList = (ArrayList<NumberCode>) request.getAttribute("deptcodeList");
 ArrayList<NumberCode> modelList = (ArrayList<NumberCode>) request.getAttribute("modelList");
 DocumentDTO dto = (DocumentDTO) request.getAttribute("dto");
 String mode = (String) request.getAttribute("mode");
@@ -76,23 +75,9 @@ iframe {
 		</td>
 	</tr>
 	<tr>
-		<th class="lb">내부 문서번호</th>
+		<th class="lb">문서번호</th>
 		<td class="indent5">
 			<input type="text" name="interalnumber" id="interalnumber" class="width-200" value="<%=dto.getInteralnumber()%>" readonly="readonly">
-		</td>
-		<th>부서</th>
-		<td class="indent5">
-			<select name="deptcode" id="deptcode" class="width-200">
-				<option value="">선택</option>
-				<%
-				for (NumberCode deptcode : deptcodeList) {
-					boolean selected = deptcode.getCode().equals(dto.getDeptcode_code());
-				%>
-				<option value="<%=deptcode.getCode()%>" <%if (selected) {%> selected="selected" <%}%>><%=deptcode.getName()%></option>
-				<%
-				}
-				%>
-			</select>
 		</td>
 		<th class="req">결재방식</th>
 		<td>
@@ -115,9 +100,7 @@ iframe {
 				</div>
 			</div>
 		</td>
-	</tr>
-	<tr>
-		<th class="lb req">보존년한</th>
+		<th class="req">보존년한</th>
 		<td class="indent5">
 			<select name="preseration" id="preseration" class="width-200">
 				<%
@@ -131,6 +114,8 @@ iframe {
 				%>
 			</select>
 		</td>
+	</tr>
+	<tr>
 		<th>프로젝트코드</th>
 		<td class="indent5">
 			<select name="model" id="model" class="width-200">
@@ -145,15 +130,9 @@ iframe {
 				%>
 			</select>
 		</td>
-		<th>작성자</th>
-		<td class="indent5">
-			<input type="text" name="writer" id="writer" data-multi="false" class="width-200" value="<%=dto.getWriter() != null ? dto.getWriter() : ""%>">
-		</td>
-	</tr>
-	<tr>
 		<th class="lb"><%=title%>사유
 		</th>
-		<td class="indent5" colspan="5">
+		<td class="indent5" colspan="3">
 			<input type="text" name="iterationNote" id="iterationNote" class="width-600">
 		</td>
 	</tr>
@@ -178,7 +157,7 @@ iframe {
 	</tr>
 	<!-- 개발문서와 지침서일 경우만 필수이다.. -->
 	<tr>
-		<th class="<%if(isReq) { %>req <%} %> lb">주 첨부파일</th>
+		<th class="<%if (isReq) {%>req <%}%> lb">주 첨부파일</th>
 		<td class="indent5" colspan="5">
 			<jsp:include page="/extcore/jsp/common/attach-primary.jsp">
 				<jsp:param value="<%=dto.getOid()%>" name="oid" />
@@ -270,8 +249,6 @@ iframe {
 		const secondarys = toArray("secondarys");
 		const primary = document.querySelector("input[name=primary]");
 		const model = document.getElementById("model").value;
-		const writer = document.getElementById("writer").value;
-		const deptcode = document.getElementById("deptcode").value;
 		const preseration = document.getElementById("preseration").value;
 		const iterationNote = document.getElementById("iterationNote");
 		const preFix = document.getElementById("preFix").value;
@@ -314,16 +291,12 @@ iframe {
 			return false;
 		}
 
-		<%
-			if(isReq) {
-		%>
+		<%if (isReq) {%>
 		if (primary == null) {
 			alert("주 첨부파일을 첨부해주세요.");
 			return false;
 		}
-		<%
-			}
-		%>
+		<%}%>
 		
 		
 		if (!confirm("<%=title%>하시겠습니까?")) {
@@ -340,9 +313,7 @@ iframe {
 			primary : primary==null ? '' : primary.value,
 			location : location.value,
 			model_code : model,
-			deptcode_code : deptcode,
 			interalnumber : interalnumber,
-			writer : writer,
 			preseration_code : preseration,
 			iterationNote : iterationNote.value,
 			// 링크 데이터
@@ -372,7 +343,6 @@ iframe {
 		autoTextarea();
 		selectbox("preseration");
 		selectbox("model");
-		selectbox("deptcode");
 		createAUIGrid90(columns90);
 		createAUIGrid91(columns91);
 		createAUIGrid100(columns100);
