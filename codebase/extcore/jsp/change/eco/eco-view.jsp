@@ -39,6 +39,9 @@ boolean isAdmin = (boolean) request.getAttribute("isAdmin");
 			<a href="#tabs-1">기본 정보</a>
 		</li>
 		<li>
+			<a href="#tabs-0">관련 객체</a>
+		</li>
+		<li>
 			<a href="#tabs-2">연관품목</a>
 		</li>
 		<li>
@@ -128,14 +131,12 @@ boolean isAdmin = (boolean) request.getAttribute("isAdmin");
 				</td>
 			</tr>
 		</table>
-		<!-- 	관련 CR -->
-		<jsp:include page="/extcore/jsp/change/cr/include/cr-include.jsp">
-			<jsp:param value="<%=dto.getOid()%>" name="oid" />
-			<jsp:param value="view" name="mode" />
-			<jsp:param value="true" name="multi" />
-			<jsp:param value="true" name="header" />
-		</jsp:include>
 		<jsp:include page="/extcore/jsp/change/activity/include/activity-view.jsp">
+			<jsp:param value="<%=dto.getOid()%>" name="oid" />
+		</jsp:include>
+	</div>
+	<div id="tabs-0">
+		<jsp:include page="/extcore/jsp/change/eco/include/eco-reference-include.jsp">
 			<jsp:param value="<%=dto.getOid()%>" name="oid" />
 		</jsp:include>
 	</div>
@@ -166,6 +167,20 @@ boolean isAdmin = (boolean) request.getAttribute("isAdmin");
 			activate : function(event, ui) {
 				const tabId = ui.newPanel.prop("id");
 				switch (tabId) {
+				case "tabs-0":
+					const isCreated500 = AUIGrid.isCreated(myGridID500); // 다운로드이력
+					if (isCreated500) {
+						AUIGrid.resize(myGridID500);
+					} else {
+						createAUIGrid500(columns500);
+					}
+					const isCreated510 = AUIGrid.isCreated(myGridID510); // 다운로드이력
+					if (isCreated510) {
+						AUIGrid.resize(myGridID510);
+					} else {
+						createAUIGrid510(columns510);
+					}
+					break;				
 				case "tabs-2":
 					const isCreated500 = AUIGrid.isCreated(myGridID500); // 다운로드이력
 					if (isCreated500) {
@@ -205,11 +220,13 @@ boolean isAdmin = (boolean) request.getAttribute("isAdmin");
 		});
 		createAUIGrid101(columns101);
 		createAUIGrid700(columns700);
+		AUIGrid.resize(myGridID101);
 		AUIGrid.resize(myGridID700);
 		autoTextarea();
 	});
 
 	window.addEventListener("resize", function() {
+		AUIGrid.resize(myGridID101);
 		AUIGrid.resize(myGridID1010);
 		AUIGrid.resize(myGridID700);
 		AUIGrid.resize(myGridID500);

@@ -788,7 +788,15 @@ public class StandardDrawingService extends StandardManager implements DrawingSe
 
 		// Folder && LifeCycle Setting
 		ReferenceFactory rf = new ReferenceFactory();
-		Folder folder = FolderHelper.service.getFolder(location, WCUtil.getWTContainerRef());
+
+		System.out.println("location=" + location);
+		Folder folder = null;
+		if (location.indexOf("SubFolder") > -1) {
+			folder = (Folder) CommonUtil.getObject(location);
+		} else {
+			folder = FolderHelper.service.getFolder(location, WCUtil.getWTContainerRef());
+		}
+
 		FolderHelper.assignLocation((FolderEntry) epm, folder);
 
 		PDMLinkProduct e3psProduct = WCUtil.getPDMLinkProduct();
