@@ -791,7 +791,7 @@ public class StandardDrawingService extends StandardManager implements DrawingSe
 
 		System.out.println("location=" + location);
 		Folder folder = null;
-		if (location.indexOf("SubFolder") > -1) {
+		if (location.contains("SubFolder")) {
 			folder = (Folder) CommonUtil.getObject(location);
 		} else {
 			folder = FolderHelper.service.getFolder(location, WCUtil.getWTContainerRef());

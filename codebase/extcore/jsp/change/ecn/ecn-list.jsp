@@ -294,12 +294,11 @@ JSONArray list = (JSONArray) request.getAttribute("list");
 				const item = event.item;
 				const dataField = event.dataField;
 				if(dataField === "worker_oid") {
-					alert("RA팀 팀장님으로..");
-					if(true) {
-						return true;
-					} else {
-						return false;						
-					}
+// 					if(true) {
+// 						return true;
+// 					} else {
+// 						return false;						
+// 					}
 				}
 				return true;
 			}

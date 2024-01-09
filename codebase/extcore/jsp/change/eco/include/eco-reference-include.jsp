@@ -3,14 +3,14 @@
 String oid = request.getParameter("oid");
 %>
 <!-- 관련 CR -->
-<jsp:include page="/extcore/jsp/cr/include/cr-include.jsp">
+<jsp:include page="/extcore/jsp/change/cr/include/cr-include.jsp">
 	<jsp:param value="<%=oid%>" name="oid" />
 	<jsp:param value="view" name="mode" />
 	<jsp:param value="true" name="multi" />
 </jsp:include>
 
 <!-- 	관련 ECPR -->
-<jsp:include page="/extcore/jsp/ecpr/include/ecpr-include.jsp">
+<jsp:include page="/extcore/jsp/change/ecpr/include/ecpr-include.jsp">
 	<jsp:param value="<%=oid%>" name="oid" />
 	<jsp:param value="view" name="mode" />
 	<jsp:param value="true" name="multi" />
