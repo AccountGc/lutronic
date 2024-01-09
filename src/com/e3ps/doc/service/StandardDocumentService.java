@@ -2,7 +2,6 @@
 package com.e3ps.doc.service;
 
 import java.io.File;
-import java.io.FileOutputStream;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -42,7 +41,6 @@ import com.e3ps.workspace.WorkData;
 import com.e3ps.workspace.service.WorkDataHelper;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.ptc.windchill.dpimpl.core.WTProcessStep;
 
 import wt.clients.folder.FolderTaskLogic;
 import wt.clients.vc.CheckInOutTaskLogic;
@@ -51,7 +49,6 @@ import wt.content.ContentHelper;
 import wt.content.ContentItem;
 import wt.content.ContentRoleType;
 import wt.content.ContentServerHelper;
-import wt.doc.DocumentType;
 import wt.doc.WTDocument;
 import wt.doc.WTDocumentMaster;
 import wt.doc.WTDocumentMasterIdentity;
@@ -200,11 +197,7 @@ public class StandardDocumentService extends StandardManager implements Document
 		String location = dto.getLocation();
 		String description = dto.getDescription();
 		String content = dto.getContent();
-//		String documentType = dto.getDocumentType_code();
-//		String documentName = dto.getDocumentName();
 		String lifecycle = dto.getLifecycle();
-		boolean temprary = dto.isTemprary();
-		// 설별 활동 링크 OID
 		String oid = dto.getOid();
 		String classType1_code = dto.getClassType1_code();
 		String classType2_oid = dto.getClassType2_oid();
@@ -239,21 +232,8 @@ public class StandardDocumentService extends StandardManager implements Document
 			}
 
 			doc.setTypeInfoWTDocument(info);
-
-//			if (!documentType.equals("")) {
-//				DocumentType docType = DocumentType.toDocumentType(documentType);
-//				doc.setDocType(docType);
-//			}
-
 			String interalnumber = dto.getInteralnumber();
-
-			// 문서 이름 세팅..
 			doc.setName(name); // 하나의 번호로 세팅합니다.
-//			if (name.length() > 0) {
-//				doc.setName(documentName + "-" + name);
-//			} else {
-//				doc.setName(documentName);
-//			}
 			doc.setNumber(interalnumber);
 			doc.setDescription(description);
 			doc.getTypeInfoWTDocument().setPtc_rht_1(content);
@@ -291,16 +271,10 @@ public class StandardDocumentService extends StandardManager implements Document
 
 			doc = (WTDocument) PersistenceHelper.manager.refresh(doc);
 
-			if (temprary) {
-				State state = State.toState("TEMPRARY");
-				// 상태값 변경해준다 임시저장 <<< StateRB 추가..
-				LifeCycleHelper.service.setLifeCycleState(doc, state);
-			} else {
-				// 작업함으로 이동 시킨다
-				// 일괄 결재가 아닐 경우에만 시작한다
-				if (!"LC_Default_NonWF".equals(lifecycle)) {
-					WorkDataHelper.service.create(doc);
-				}
+			// 작업함으로 이동 시킨다
+			// 일괄 결재가 아닐 경우에만 시작한다
+			if (!"LC_Default_NonWF".equals(lifecycle)) {
+				WorkDataHelper.service.create(doc);
 			}
 
 			// 개발 구분과 지침서
@@ -483,10 +457,10 @@ public class StandardDocumentService extends StandardManager implements Document
 		try {
 			trs.start();
 
+			// 승인됨 상태이니 기존 결재선 지정이 없는 상태..
+
 			WTDocument doc = (WTDocument) CommonUtil.getObject(oid);
 			WTDocument latest = (WTDocument) VersionControlHelper.service.newVersion(doc);
-//			WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
-//			String msg = user.getFullName() + " 사용자가 문서를 개정 하였습니다.";
 			VersionControlHelper.setNote(latest, iterationNote);
 
 			latest.setDescription(description);
@@ -496,9 +470,7 @@ public class StandardDocumentService extends StandardManager implements Document
 
 			// 문서 이름 세팅..
 			identity.setName(name);
-//			identity.setNumber(number);
 			master = (WTDocumentMaster) IdentityHelper.service.changeIdentity(master, identity);
-
 			latest.getTypeInfoWTDocument().setPtc_rht_1(content);
 
 			PersistenceHelper.manager.save(latest);
@@ -510,13 +482,18 @@ public class StandardDocumentService extends StandardManager implements Document
 			LifeCycleHelper.service.reassign(latest,
 					LifeCycleHelper.service.getLifeCycleTemplateReference(lifecycle, WCUtil.getWTContainerRef())); // Lifecycle
 
+			if ("LC_Default_NonWF".equals(lifecycle)) {
+				doc = (WTDocument) PersistenceHelper.manager.refresh(doc);
+				LifeCycleHelper.service.setLifeCycleState(doc, State.toState("BATCHAPPROVAL"), false);
+			} else {
+				// 작업함으로 이동 시킨다
+				WorkDataHelper.service.create(latest);
+			}
+
 			// 첨부 파일 클리어
 			removeAttach(latest);
 			// 첨부파일 저장
 			saveAttach(latest, dto);
-
-			// IBA 삭제
-//			deleteIBAAttributes(workCopy);
 
 			// IBA 설정
 			setIBAAttributes(latest, dto);
@@ -525,9 +502,6 @@ public class StandardDocumentService extends StandardManager implements Document
 			deleteLink(latest);
 			// 관련 링크 세팅
 			saveLink(latest, dto);
-
-			// 작업함으로 이동 시킨다
-			WorkDataHelper.service.create(latest);
 
 			String classType1_code = latest.getTypeInfoWTDocument().getPtc_str_2();
 			if (StringUtil.checkString(classType1_code)) {
@@ -568,6 +542,7 @@ public class StandardDocumentService extends StandardManager implements Document
 
 			WTDocument doc = (WTDocument) CommonUtil.getObject(oid);
 
+			// 기존 결재선 지정 삭제..
 			WorkData wd = WorkDataHelper.manager.getWorkData(doc);
 			if (wd != null) {
 				PersistenceHelper.manager.delete(wd);
@@ -577,20 +552,15 @@ public class StandardDocumentService extends StandardManager implements Document
 			CheckoutLink clink = WorkInProgressHelper.service.checkout(doc, cFolder, "문서 수정 체크 아웃");
 			WTDocument workCopy = (WTDocument) clink.getWorkingCopy();
 			workCopy.setDescription(description);
-//			workCopy.setDocType(docType);
 
 			WTDocumentMaster master = (WTDocumentMaster) workCopy.getMaster();
 			WTDocumentMasterIdentity identity = (WTDocumentMasterIdentity) master.getIdentificationObject();
 
 			// 문서 이름 세팅..
 			identity.setName(name);
-//			identity.setNumber(number);
 			master = (WTDocumentMaster) IdentityHelper.service.changeIdentity(master, identity);
 
 			workCopy.getTypeInfoWTDocument().setPtc_rht_1(content);
-//			WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
-//			String msg = user.getFullName() + " 사용자가 문서를 수정 하였습니다.";
-			// 필요하면 수정 사유로 대체
 			workCopy = (WTDocument) WorkInProgressHelper.service.checkin(workCopy, iterationNote);
 
 			// 폴더 이동
@@ -600,18 +570,20 @@ public class StandardDocumentService extends StandardManager implements Document
 			LifeCycleHelper.service.reassign(workCopy,
 					LifeCycleHelper.service.getLifeCycleTemplateReference(lifecycle, WCUtil.getWTContainerRef())); // Lifecycle
 
+			
+			
+			// 일괄결재 일경우 결재선 지정을 안만든다..
 			if ("LC_Default_NonWF".equals(lifecycle)) {
 				workCopy = (WTDocument) PersistenceHelper.manager.refresh(workCopy);
 				LifeCycleHelper.service.setLifeCycleState(workCopy, State.toState("BATCHAPPROVAL"), false);
+			} else {
+				WorkDataHelper.service.create(workCopy);
 			}
 
 			// 첨부 파일 클리어
 			removeAttach(workCopy);
 			// 첨부파일 저장
 			saveAttach(workCopy, dto);
-
-			// IBA 삭제
-//			deleteIBAAttributes(workCopy);
 
 			// IBA 설정
 			setIBAAttributes(workCopy, dto);
@@ -621,7 +593,7 @@ public class StandardDocumentService extends StandardManager implements Document
 			// 관련 링크 세팅
 			saveLink(workCopy, dto);
 
-			WorkDataHelper.service.create(workCopy);
+		x
 
 			String classType1_code = workCopy.getTypeInfoWTDocument().getPtc_str_2();
 			if (StringUtil.checkString(classType1_code)) {

@@ -3,18 +3,14 @@
 <%@page import="net.sf.json.JSONArray"%>
 <%@page import="com.e3ps.doc.dto.DocumentDTO"%>
 <%@page import="wt.doc.DocumentType"%>
-<%@page import="com.e3ps.admin.form.FormTemplate"%>
 <%@page import="com.e3ps.doc.service.DocumentHelper"%>
 <%@page import="com.e3ps.common.code.NumberCode"%>
 <%@page import="java.util.ArrayList"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%
 ArrayList<NumberCode> preserationList = (ArrayList<NumberCode>) request.getAttribute("preserationList");
-// ArrayList<NumberCode> deptcodeList = (ArrayList<NumberCode>) request.getAttribute("deptcodeList");
 ArrayList<NumberCode> modelList = (ArrayList<NumberCode>) request.getAttribute("modelList");
-// ArrayList<FormTemplate> form = (ArrayList<FormTemplate>) request.getAttribute("form");
 ArrayList<Map<String, String>> classTypes1 = (ArrayList<Map<String, String>>) request.getAttribute("classTypes1");
-// JSONArray docTypeList = (JSONArray) request.getAttribute("docTypeList");
 DocumentDTO dto = (DocumentDTO) request.getAttribute("dto");
 %>
 <!DOCTYPE html>
@@ -257,7 +253,7 @@ iframe {
 			}
 
 			// 문서 등록
-			function create(temp) {
+			function create() {
 				const location = document.getElementById("location");
 				const preFix = document.getElementById("preFix").value;
 				const suffix = document.getElementById("suffix");
@@ -268,7 +264,6 @@ iframe {
 				const model = document.getElementById("model").value;
 				const interalnumber = document.getElementById("interalnumber");
 				const preseration = document.getElementById("preseration").value;
-				const temprary = JSON.parse(temp);
 
 				// 클래스타입
 				const classType1_code = document.getElementById("classType1").value;
@@ -352,7 +347,6 @@ iframe {
 					rows101 : rows101,
 					rows103 : rows103,
 					rows105 : rows105,
-					temprary : temprary,
 					// 클래스타입
 					classType1_code : classType1_code,
 					classType2_oid : classType2_oid,
@@ -363,12 +357,7 @@ iframe {
 				call(url, params, function(data) {
 					alert(data.msg);
 					if (data.result) {
-						if (!temprary) {
-							document.location.href = getCallUrl("/doc/list");
-						} else {
-							document.location.href = getCallUrl("/temprary/list");
-						}
-						//parent.updateWorkspace();
+						document.location.href = getCallUrl("/doc/list");
 					}
 					parent.closeLayer();
 				});
