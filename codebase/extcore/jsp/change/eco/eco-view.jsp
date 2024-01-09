@@ -168,18 +168,6 @@ boolean isAdmin = (boolean) request.getAttribute("isAdmin");
 				const tabId = ui.newPanel.prop("id");
 				switch (tabId) {
 				case "tabs-0":
-					const isCreated500 = AUIGrid.isCreated(myGridID500); // 다운로드이력
-					if (isCreated500) {
-						AUIGrid.resize(myGridID500);
-					} else {
-						createAUIGrid500(columns500);
-					}
-					const isCreated510 = AUIGrid.isCreated(myGridID510); // 다운로드이력
-					if (isCreated510) {
-						AUIGrid.resize(myGridID510);
-					} else {
-						createAUIGrid510(columns510);
-					}
 					break;				
 				case "tabs-2":
 					const isCreated500 = AUIGrid.isCreated(myGridID500); // 다운로드이력
