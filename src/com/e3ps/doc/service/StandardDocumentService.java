@@ -281,7 +281,7 @@ public class StandardDocumentService extends StandardManager implements Document
 			if (classType1_code.equals("DEV") || classType1_code.equals("INSTRUCTION")) {
 				DocumentHelper.manager.wordToPdfMethod(doc.getPersistInfo().getObjectIdentifier().getStringValue());
 			} else {
-				DocumentHelper.manager.genWordAndPdfMethod(doc.getPersistInfo().getObjectIdentifier().getStringValue());
+//				DocumentHelper.manager.genWordAndPdfMethod(doc.getPersistInfo().getObjectIdentifier().getStringValue());
 			}
 			trs.commit();
 			trs = null;
@@ -509,8 +509,8 @@ public class StandardDocumentService extends StandardManager implements Document
 					DocumentHelper.manager
 							.wordToPdfMethod(latest.getPersistInfo().getObjectIdentifier().getStringValue());
 				} else {
-					DocumentHelper.manager
-							.genWordAndPdfMethod(latest.getPersistInfo().getObjectIdentifier().getStringValue());
+//					DocumentHelper.manager
+//							.genWordAndPdfMethod(latest.getPersistInfo().getObjectIdentifier().getStringValue());
 				}
 			}
 
@@ -597,8 +597,8 @@ public class StandardDocumentService extends StandardManager implements Document
 					DocumentHelper.manager
 							.wordToPdfMethod(workCopy.getPersistInfo().getObjectIdentifier().getStringValue());
 				} else {
-					DocumentHelper.manager
-							.genWordAndPdfMethod(workCopy.getPersistInfo().getObjectIdentifier().getStringValue());
+//					DocumentHelper.manager
+//							.genWordAndPdfMethod(workCopy.getPersistInfo().getObjectIdentifier().getStringValue());
 				}
 			}
 
