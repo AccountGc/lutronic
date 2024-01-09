@@ -312,22 +312,29 @@ QuantityUnit[] unitList = (QuantityUnit[]) request.getAttribute("unitList");
 					dataField : "thumb",
 					headerText : "3D",
 					dataType : "string",
-					width : 60,
+					width : 50,
 					renderer : {
 						type : "ImageRenderer",
 						altField : null,
+						imgHeight : 16,
 						onClick : function(event) {
 						}
+					},
+					filter : {
+						inline : false
 					},
 				}, {
 					dataField : "icon",
 					headerText : "",
 					dataType : "string",
-					width : 40,
+					width : 50,
 					renderer : {
 						type : "ImageRenderer",
 						altField : null,
 						imgHeight : 16,
+					},
+					filter : {
+						inline : false
 					},
 				}, {
 					dataField : "cadType",

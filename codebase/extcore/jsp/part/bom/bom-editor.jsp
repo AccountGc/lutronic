@@ -322,11 +322,10 @@ WTPart root = (WTPart) request.getAttribute("root");
 			const refNode = null;
 			const moveMode = null;
 			let node = tree.getActiveNode();
-
+			const parent = node.parent;
+			const parentIsApproved = parent.data.state === "승인됨";
+			const isApproved = node.data.state === "승인됨";
 			switch (data.cmd) {
-			case "cut":
-
-				break;
 			case "copy":
 				CLIPBOARD = {
 					mode : data.cmd,
@@ -339,12 +338,10 @@ WTPart root = (WTPart) request.getAttribute("root");
 				CLIPBOARD = null;
 				break;
 			case "paste":
-				logger(CLIPBOARD);
-				if (CLIPBOARD.mode === "cut") {
-					CLIPBOARD.data.moveTo(node, "child");
-					CLIPBOARD.data.setActive();
-				} else if (CLIPBOARD.mode === "copy") {
-					nodePaste(node, CLIPBOARD.data);
+				if (CLIPBOARD.mode === "copy") {
+					if(!parentIsApproved && !isApproved) {
+						nodePaste(node, CLIPBOARD.data);
+					}
 				}
 				break;
 			case "removeLink":
@@ -356,9 +353,6 @@ WTPart root = (WTPart) request.getAttribute("root");
 		}).on("keydown", function(e) {
 			let cmd = null;
 			switch ($.ui.fancytree.eventToString(e)) {
-			case "ctrl+x":
-				cmd = "cut";
-				break;
 			case "ctrl+c":
 				cmd = "copy";
 				break;
@@ -476,11 +470,6 @@ WTPart root = (WTPart) request.getAttribute("root");
 		}, {
 			title : "----"
 		}, {
-			title : "잘라내기",
-			cmd : "cut",
-			uiIcon : "ui-icon-cut",
-			disabled : true,
-		}, {
 			title : "복사",
 			cmd : "copy",
 			uiIcon : "ui-icon-copy",
@@ -502,7 +491,8 @@ WTPart root = (WTPart) request.getAttribute("root");
 			const node = $.ui.fancytree.getNode(ui.target);
 			const parent = node.parent;
 			const isCheckOut = node.data.isCheckOut;
-			const isApproved = parent.data.state === "승인됨";
+			const parentIsApproved = parent.data.state === "승인됨";
+			const isApproved = node.data.state === "승인됨";
 // 			logger(node);
 
 			// 삭제 승인됨 상태가 아니여야함..
@@ -516,17 +506,21 @@ WTPart root = (WTPart) request.getAttribute("root");
 
 			// 체크인 체크아웃 체크아웃취소
 			$("#treetable").contextmenu("enableEntry", "checkin", isCheckOut);
-			$("#treetable").contextmenu("enableEntry", "checkout", (!isCheckOut && !isApproved));
+			
+			// 부모도 승인됨이 아니고, 자신도 승인됨이 아니여야함, 자신이 체크아웃 상태가 아니여야함
+			$("#treetable").contextmenu("enableEntry", "checkout", !isCheckOut && (!isApproved && !parentIsApproved));
 			$("#treetable").contextmenu("enableEntry", "undocheckout", isCheckOut);
 
-			// 잘라내기 승인됨이 아니고 체크아웃이 아닐경우
-			$("#treetable").contextmenu("enableEntry", "cut", (!isCheckOut && !isApproved));
 
 			// 복사 체크아웃상태는 못하게
 			$("#treetable").contextmenu("enableEntry", "copy", !isCheckOut);
 
-			// 붙여넣기 , 비우기 전부 클립보드 체크
-			$("#treetable").contextmenu("enableEntry", "paste", !!CLIPBOARD);
+			
+			// 붙여넣기
+			$("#treetable").contextmenu("enableEntry", "paste", !!CLIPBOARD && (!isApproved && !parentIsApproved));
+			
+			
+			
 			$("#treetable").contextmenu("enableEntry", "empty", !!CLIPBOARD);
 
 			node.setActive();
@@ -548,7 +542,10 @@ WTPart root = (WTPart) request.getAttribute("root");
 		const link = node.data.link;
 		const params = new Object();
 		const tree = $("#treetable").fancytree("getTree");
-
+		const parent = node.parent;
+		const parentIsApproved = parent.data.state === "승인됨";
+		const isApproved = node.data.state === "승인됨";
+		
 		// 정보보기
 		if (action === "info") {
 			url = getCallUrl("/part/view?oid=" + oid);
@@ -563,12 +560,6 @@ WTPart root = (WTPart) request.getAttribute("root");
 		} else if (action === "new") {
 			url = getCallUrl("/part/append?method=append");
 			_popup(url, 1600, 800, "n");
-			// 기존 삽입
-		} else if (action === "cut") {
-			if (node.data.state === "승인됨") {
-				alert("승인됨 품목은 잘라내기를 할 수 없습니다.");
-				return false;
-			}
 			// 잘라내기
 		} else if (action === "exist") {
 			url = getCallUrl("/part/popup?method=exist&multi=true");
@@ -583,7 +574,9 @@ WTPart root = (WTPart) request.getAttribute("root");
 			};
 			// 붙여넣기
 		} else if (action === "paste") {
-			nodePaste(node, CLIPBOARD.data);
+			if(!parentIsApproved && !isApproved) {
+				nodePaste(node, CLIPBOARD.data);
+			}
 		} else if (action === "checkout") {
 			openLayer();
 			url = getCallUrl("/bom/checkout?oid=" + oid);

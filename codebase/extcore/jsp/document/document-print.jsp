@@ -28,7 +28,7 @@ String submitDate = dateFormat.format(submitLine.getCompleteTime());
 
 @media print {
 	body {
-		zoom: 80%; 
+		zoom: 80%;
 	}
 }
 
@@ -70,7 +70,9 @@ td {
 	bottom: 0;
 	left: 0;
 	width: 100%;
-	padding: 10px 0;
+	margin-top: 30px;
+	padding: 0px;
+/* 	height: 10px; */
 }
 
 td.left {
@@ -80,9 +82,13 @@ td.left {
 td.right {
 	text-align: right;
 }
+
+.page-break {
+	page-break-after: always;
+}
 </style>
 
-<h1 class="center"><%=classType2%></h1>
+<h1 class="center" style="font-size: 24pt"><%=classType2%></h1>
 
 <div style="float: left; padding-bottom: 10px;">
 	<table style="border-top: 1px solid black;">
@@ -278,12 +284,14 @@ if (agreeLines.size() > 0) {
 </table>
 
 
-<div id="content"></div>
-<!-- <table style="margin-top: 10px;"> -->
-<!-- 	<tr> -->
-<!-- 		<td id="content" style="border: none;"> -->
-<!-- 	</tr> -->
-<!-- </table> -->
+<table style="margin-bottom: 30px;">
+	<tr>
+		<td id="content" style="border: none;"></td>
+	</tr>
+</table>
+
+
+<div style="clear: both;"></div>
 
 <div class="footer">
 	<table>
@@ -293,8 +301,7 @@ if (agreeLines.size() > 0) {
 			<col width="80px;">
 		</colgroup>
 		<tr>
-			<td class="center" style="border: none;">
-				&nbsp;&nbsp;<%=DocumentHelper.manager.getFooterNumber(dto.getOid())%></td>
+			<td class="center" style="border: none;"><%=DocumentHelper.manager.getFooterNumber(dto.getOid())%></td>
 			<td class="center" style="border: none;">LUTRONIC</td>
 			<td class="center" style="border: none;">A4(210 X 297)</td>
 		</tr>

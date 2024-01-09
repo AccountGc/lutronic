@@ -17,9 +17,6 @@
 <%
 boolean isAdmin = (boolean) request.getAttribute("isAdmin");
 PartDTO dto = (PartDTO) request.getAttribute("dto");
-Map<String, String> pdf = dto.getPdf();
-Map<String, String> dxf = dto.getDxf();
-Map<String, String> step = dto.getStep();
 WTPart part = (WTPart) CommonUtil.getObject(dto.getOid());
 List<CommentsDTO> list = dto.getComments();
 String pnum = (String) request.getAttribute("pnum");

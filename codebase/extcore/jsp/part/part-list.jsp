@@ -344,19 +344,22 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 					dataField : "_3d",
 					headerText : "3D",
 					dataType : "string",
-					width : 40,
+					width : 50,
 					renderer : {
 						type : "ImageRenderer",
 						altField : null,
 						imgHeight : 16,
 						onClick : function(event) {
 						}
+					},
+					filter : {
+						inline : false
 					},
 				}, {
 					dataField : "_2d",
 					headerText : "2D",
 					dataType : "string",
-					width : 40,
+					width : 50,
 					renderer : {
 						type : "ImageRenderer",
 						altField : null,
@@ -364,15 +367,21 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 						onClick : function(event) {
 						}
 					},
+					filter : {
+						inline : false
+					},
 				}, {
 					dataField : "icon",
 					headerText : "",
 					dataType : "string",
-					width : 40,
+					width : 50,
 					renderer : {
 						type : "ImageRenderer",
 						altField : null,
 						imgHeight : 16,
+					},
+					filter : {
+						inline : false
 					},
 				}, {
 					dataField : "number",
@@ -522,17 +531,6 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 					}, {
 						label : "_$line" // label 에 _$line 을 설정하면 라인을 긋는 아이템으로 인식합니다.
 					}, {
-						label : "STEP 다운로드",
-						callback : auiContextHandler
-					}, {
-						label : "DXF 다운로드",
-						callback : auiContextHandler
-					}, {
-						label : "PDF 다운로드",
-						callback : auiContextHandler
-					}, {
-						label : "_$line" // label 에 _$line 을 설정하면 라인을 긋는 아이템으로 인식합니다.
-					}, {
 						label : "속성보기",
 						callback : auiContextHandler
 					}, {
@@ -646,66 +644,40 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 					_popup(url, 800, 600, "n");
 					break;
 				case 2:
-					if (item._3d === null) {
-						alert("STEP 파일이 존재하지 않습니다.");
-						return false;
-					}
-					url = getCallUrl("/drawing/step?oid=" + part_oid);
-					document.location.href = url;
-					break;
-				case 3:
-					//DXF
-					if (item._2d === null) {
-						alert("DXF 파일이 존재하지 않습니다.");
-						return false;
-					}
-					url = getCallUrl("/drawing/dxf?oid=" + part_oid);
-					document.location.href = url;
-					break;
-				case 4:
-					if (item._2d === null) {
-						alert("PDF 파일이 존재하지 않습니다.");
-						return false;
-					}
-					//PDF
-					url = getCallUrl("/drawing/pdf?oid=" + part_oid);
-					document.location.href = url;
-					break;
-				case 6:
 					//속성
 					url = getCallUrl("/part/attr?oid=" + part_oid);
 					_popup(url, 1000, 500, "n");
 					break;
-				case 7:
+				case 3:
 					//BOM 뷰
 					url = getCallUrl("/bom/view?oid=" + part_oid);
 					_popup(url, 1600, 800, "n");
 					break;
-				case 8:
+				case 4:
 					url = getCallUrl("/bom/editor?oid=" + part_oid);
 					_popup(url, "", "", "f");
 					break;
-				case 9:
+				case 5:
 					url = "/Windchill/netmarkets/jsp/structureCompare/StructureCompare.jsp?oid=OR:" + part_oid + "&ncId=5304500442831603818&locale=ko";
 					_popup(url, 1600, 600, "n");
 					break;
-				case 10:
+				case 6:
 					url = getCallUrl("/part/viewHistory?oid=" + part_oid);
 					_popup(url, 1200, 500, "n");
 					break;
-				case 12:
+				case 8:
 					url = getCallUrl("/part/upper?oid=" + part_oid);
 					_popup(url, 600, 430, "n");
 					break;
-				case 13:
+				case 9:
 					url = getCallUrl("/part/lower?oid=" + part_oid);
 					_popup(url, 600, 430, "n");
 					break;
-				case 14:
+				case 10:
 					url = getCallUrl("/part/end?oid=" + part_oid);
 					_popup(url, 600, 430, "n");
 					break;
-				case 16:
+				case 12:
 					publish(part_oid);
 					break;
 				}

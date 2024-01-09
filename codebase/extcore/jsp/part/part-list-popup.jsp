@@ -192,7 +192,7 @@ boolean complete = (boolean) request.getAttribute("complete");
 		<td class="indent5">
 			<input type="text" name="weight" id="weight" class="width-300">
 		</td>
-		<th>Manufacturer</th>
+		<th>MANUFACTURER</th>
 		<td class="indent5">
 			<select name="manufacture" id="manufacture" class="width-200">
 				<option value="">선택</option>
@@ -329,7 +329,7 @@ const columns = [ {
 	dataField : "_3d",
 	headerText : "3D",
 	dataType : "string",
-	width : 40,
+	width : 50,
 	renderer : {
 		type : "ImageRenderer",
 		altField : null,
@@ -337,11 +337,14 @@ const columns = [ {
 		onClick : function(event) {
 		}
 	},
+	filter : {
+		inline : false
+	},	
 }, {
 	dataField : "_2d",
 	headerText : "2D",
 	dataType : "string",
-	width : 40,
+	width : 50,
 	renderer : {
 		type : "ImageRenderer",
 		altField : null,
@@ -349,21 +352,22 @@ const columns = [ {
 		onClick : function(event) {
 		}
 	},
+	filter : {
+		inline : false
+	},	
 }, {
 	dataField : "icon",
 	headerText : "",
 	dataType : "string",
-	width : 40,
+	width : 50,
 	renderer : {
 		type : "ImageRenderer",
 		altField : null,
 		imgHeight : 16,
 	},
-}, {
-	dataField : "number",
-	headerText : "품목번호",
-	dataType : "string",
-	width : 180,
+	filter : {
+		inline : false
+	},	
 }, {
 	dataField : "name",
 	headerText : "품목명",

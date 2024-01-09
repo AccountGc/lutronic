@@ -53,9 +53,7 @@ public class CommonContentHelper {
 	static {
 		try {
 			if (savePath == null) {
-//				savePath = WTProperties.getServerProperties().getProperty("wt.temp") + File.separator + "kekorea";
-				savePath = WTProperties.getServerProperties().getProperty("wt.codebase.location") + File.separator
-						+ "extcore" + File.separator + "lutronic";
+				savePath = WTProperties.getServerProperties().getProperty("wt.temp") + File.separator + "lutronic";
 				File tempFolder = new File(savePath);
 				if (!tempFolder.exists()) {
 					tempFolder.mkdirs();
@@ -222,7 +220,7 @@ public class CommonContentHelper {
 
 		// DRM 로그
 		SystemHelper.service.fasooLogger(name, request);
-		
+
 		File file = FasooUtils.decryptedFile(savePath, name);
 		InputStream[] streams = new InputStream[1];
 		streams[0] = new FileInputStream(file);

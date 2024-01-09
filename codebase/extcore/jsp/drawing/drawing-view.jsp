@@ -1,10 +1,8 @@
+<%@page import="com.e3ps.common.util.ThumbnailUtil"%>
 <%@page import="java.util.Map"%>
 <%@page import="com.e3ps.drawing.beans.EpmData"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@page import="wt.org.WTUser"%>
-<%@include file="/extcore/jsp/common/css.jsp"%>
-<%@include file="/extcore/jsp/common/script.jsp"%>
-<%@include file="/extcore/jsp/common/auigrid.jsp"%>
 <%
 boolean isAdmin = (boolean) request.getAttribute("isAdmin");
 EpmData dto = (EpmData) request.getAttribute("dto");
@@ -59,13 +57,20 @@ Map<String, String> step = dto.getStep();
 		<table class="view-table">
 			<colgroup>
 				<col width="130">
-				<col width="500">
+				<col width="300">
 				<col width="130">
-				<col width="500">
+				<col width="300">
+				<col width="80">
+				<col width="150">
 			</colgroup>
 			<tr>
 				<th class="lb">도면번호</th>
 				<td class="indent5" colspan="3"><%=dto.getNumber()%></td>
+				<td class="" align="center" rowspan="7" colspan="2">
+					<jsp:include page="/extcore/jsp/common/thumbnail-view.jsp">
+						<jsp:param value="<%=dto.getOid()%>" name="oid" />
+					</jsp:include>
+				</td>
 			</tr>
 			<tr>
 				<th class="lb">도면명</th>
@@ -116,12 +121,8 @@ Map<String, String> step = dto.getStep();
 				<td class="indent5"><%=dto.getApplicationType()%></td>
 			</tr>
 			<tr>
-				<th class="lb">DXF</th>
-				<td class="indent5" colspan="3"></td>
-			</tr>
-<tr>
 				<th class="lb">STEP</th>
-				<td class="indent5" colspan="4">
+				<td class="indent5" colspan="5">
 					<%
 					if (step.size() > 0) {
 					%>
@@ -139,7 +140,7 @@ Map<String, String> step = dto.getStep();
 			</tr>
 			<tr>
 				<th class="lb">PDF</th>
-				<td class="indent5" colspan="4">
+				<td class="indent5" colspan="5">
 					<%
 					if (pdf.size() > 0) {
 					%>
@@ -157,7 +158,7 @@ Map<String, String> step = dto.getStep();
 			</tr>
 			<tr>
 				<th class="lb">DXF</th>
-				<td class="indent5" colspan="4">
+				<td class="indent5" colspan="5">
 					<%
 					if (dxf.size() > 0) {
 					%>
@@ -175,7 +176,7 @@ Map<String, String> step = dto.getStep();
 			</tr>
 			<tr>
 				<th class="lb">첨부파일</th>
-				<td class="indent5" colspan="3">
+				<td class="indent5" colspan="5">
 					<jsp:include page="/extcore/jsp/common/secondary-view.jsp">
 						<jsp:param value="<%=dto.getOid()%>" name="oid" />
 					</jsp:include>
