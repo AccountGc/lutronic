@@ -110,8 +110,10 @@ public class ContentUtils {
 
 			primary.put("fileSizeKB", data.getFileSizeKB() + "KB");
 			primary.put("fileIcon", fileIcon);
-			primary.put("url", "/Windchill/plm/content/download?oid="
-					+ data.getPersistInfo().getObjectIdentifier().getStringValue());
+			primary.put("url",
+					"/Windchill/plm/content/download?oid="
+							+ data.getPersistInfo().getObjectIdentifier().getStringValue() + "&holder="
+							+ holder.getPersistInfo().getObjectIdentifier().getStringValue());
 			primary.put("fileSize", data.getFileSize());
 			primary.put("filePath", FILE_PATH);
 		}
@@ -147,8 +149,10 @@ public class ContentUtils {
 			}
 			map.put("fileSizeKB", data.getFileSizeKB() + "KB");
 			map.put("fileIcon", fileIcon);
-			map.put("url", "/Windchill/plm/content/download?oid="
-					+ data.getPersistInfo().getObjectIdentifier().getStringValue());
+			map.put("url",
+					"/Windchill/plm/content/download?oid="
+							+ data.getPersistInfo().getObjectIdentifier().getStringValue() + "&holder="
+							+ holder.getPersistInfo().getObjectIdentifier().getStringValue());
 			map.put("fileSize", data.getFileSize());
 			secondarys.add(map);
 		}

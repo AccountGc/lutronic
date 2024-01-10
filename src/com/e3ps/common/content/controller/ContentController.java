@@ -99,12 +99,26 @@ public class ContentController extends BaseController {
 
 	@Description(value = "파일 다운로드")
 	@GetMapping(value = "/download")
-	public ResponseEntity<byte[]> download(@RequestParam String oid) {
+	public ResponseEntity<byte[]> download(@RequestParam String oid, @RequestParam(required = false) String holder) {
 		HttpHeaders headers = new HttpHeaders();
 		byte[] bytes = null;
 
 		try {
 			ApplicationData data = (ApplicationData) CommonUtil.getObject(oid);
+			String name = null;
+
+			ContentHolder h = null;
+			if (StringUtil.checkString(holder)) {
+				h = (ContentHolder) CommonUtil.getObject(holder);
+				if (h instanceof EPMDocument) {
+					EPMDocument e = (EPMDocument) h;
+					name = e.getCADName();
+				} else {
+					name = URLEncoder.encode(data.getFileName(), "UTF-8").replaceAll("\\+", "%20");
+				}
+			} else {
+				name = URLEncoder.encode(data.getFileName(), "UTF-8").replaceAll("\\+", "%20");
+			}
 
 			// 다운로드 이력 생성..
 			DownloadHistoryHelper.service.create(oid);
@@ -119,7 +133,6 @@ public class ContentController extends BaseController {
 			}
 
 			bytes = byteArrayOutputStream.toByteArray();
-			String name = URLEncoder.encode(data.getFileName(), "UTF-8").replaceAll("\\+", "%20");
 
 			headers.setContentType(MediaType.APPLICATION_OCTET_STREAM);
 			headers.setContentLength(bytes.length);
@@ -451,189 +464,6 @@ public class ContentController extends BaseController {
 		ModelAndView model = new ModelAndView();
 		model.addObject("list", list);
 		model.setViewName("empty:/portal/include_attachFileView");
-		return model;
-	}
-
-	@RequestMapping("/include_AttachSelect")
-	public ModelAndView include_AttachSelect(HttpServletRequest request, HttpServletResponse response)
-			throws Exception {
-		String oid = request.getParameter("oid");
-		String type = request.getParameter("type");
-		String isWG = request.getParameter("isWG");
-		String description = request.getParameter("description");
-
-		Object obj = CommonUtil.getObject(oid);
-
-		ContentHolder holder = ContentHelper.service.getContents((ContentHolder) obj);
-
-		if ("p".equals(type)) {
-			ContentItem item = null;
-			QueryResult result = ContentHelper.service.getContentsByRole((ContentHolder) obj, ContentRoleType.PRIMARY);
-			while (result.hasMoreElements()) {
-				item = (ContentItem) result.nextElement();
-			}
-
-			if (item != null) {
-				ApplicationData pAppData = (ApplicationData) item;
-				String nUrl = "/Windchill/jsp/common/DownloadGW.jsp?holderOid=" + CommonUtil.getOIDString(holder)
-						+ "&appOid=" + CommonUtil.getOIDString(pAppData);
-				String pName = pAppData.getFileName();
-				String icon = CommonUtil.getContentIconStr(item);
-				String aoid = CommonUtil.getOIDString(pAppData);
-			}
-		} else {
-			Vector<?> vec = ContentHelper.getContentList(holder);
-			for (int i = 0; i < vec.size(); i++) {
-				ApplicationData appData = (ApplicationData) vec.get(i);
-				String nUrl = "/Windchill/jsp/common/DownloadGW.jsp?holderOid=" + CommonUtil.getOIDString(holder)
-						+ "&appOid=" + CommonUtil.getOIDString(appData);
-				String name = appData.getFileName();
-				String aoid = CommonUtil.getOIDString(appData);
-			}
-		}
-
-		ModelAndView model = new ModelAndView();
-		model.setViewName("include:/common/include_AttachSelect");
-		model.addObject("oid", oid);
-		model.addObject("type", type);
-		model.addObject("isWG", isWG);
-		model.addObject("description", description);
-		return model;
-	}
-
-	/**
-	 * <pre>
-	 * &#64;description  파일 업로드 컴포넌트 로드 (CREATE, UPDATE)
-	 * &#64;author dhkim
-	 * &#64;date 2016. 3. 10. 오후 1:43:06
-	 * &#64;method includeAttachFiles
-	 * &#64;param request
-	 * &#64;param response
-	 * &#64;return ModelAndView
-	 * @throws Exception
-	 * </pre>
-	 */
-	@RequestMapping("/includeAttachFiles")
-	public ModelAndView includeAttachFiles(@RequestParam Map<String, String> reqMap) throws WTException {
-
-		String btnId = StringUtil.checkReplaceStr(reqMap.get("btnId"), "none");
-		String location = StringUtil.checkReplaceStr(SessionHelper.getLocale().toString().toUpperCase(), "KO")
-				.substring(0, 2);
-		String type = StringUtil.checkReplaceStr(reqMap.get("type"), "SECONDARY").toUpperCase();
-		// System.out.println("type="+(StringUtil.checkNull(type)));
-		String oid = StringUtil.checkNull(reqMap.get("oid"));
-		String description = StringUtil.checkNull(reqMap.get("description"));
-		String formId = StringUtil.checkNull(reqMap.get("formId"));
-		String savePath = null;
-		try {
-			savePath = WTProperties.getServerProperties().getProperty("wt.temp");
-		} catch (IOException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		}
-		String m_fileFullPath = null;
-
-		String url = UploadToCacheHelper.service.getUploadToCacheURL();
-		URL hostUrl;
-		try {
-			hostUrl = new URL(url);
-			url = "http://" + hostUrl.getHost();
-
-		} catch (MalformedURLException e) {
-			throw new WTException(e);
-		}
-
-		ContentRoleType roleType = ContentRoleType.toContentRoleType(type);
-
-		ContentHolder holder = null;
-		QueryResult result = new QueryResult();
-
-		if (oid != null && !oid.isEmpty()) {
-			holder = (ContentHolder) CommonUtil.getObject(oid);
-			result = wt.content.ContentHelper.service.getContentsByRole(holder, roleType);
-		}
-
-		StringBuffer uploadedList = new StringBuffer();
-
-		if (ContentRoleType.SECONDARY == roleType) {
-			uploadedList.append("[");
-		}
-
-		List<ContentItem> items = new ArrayList<>();
-		while (result.hasMoreElements()) {
-			ContentItem item = (ContentItem) result.nextElement();
-			/*
-			 * if ("".equals(description) && description.isEmpty()) { items.add(item); }
-			 * else { if (description.equals(item.getDescription())) { items.add(item); } }
-			 */
-			if (StringUtil.checkString(description)) {
-				if (description.equals(item.getDescription())) {
-					items.add(item);
-				}
-			} else {
-				if (item.getDescription() == null) {
-					items.add(item);
-				}
-			}
-		}
-		int cnt = 0;
-		for (ContentItem item : items) {
-			if (cnt != 0) {
-				uploadedList.append(",");
-			}
-			ApplicationData appData = (ApplicationData) item;
-
-			String delocId = item.getPersistInfo().getObjectIdentifier().toString();
-
-			String fileName = appData.getFileName();
-			fileName = fileName.replaceAll("'", "\\\\'");
-			m_fileFullPath = savePath + "\\" + fileName;
-
-			System.out.println("fileName=" + fileName);
-			System.out.println("savePath=" + savePath);
-			System.out.println("m_fileFullPath=" + m_fileFullPath);
-
-			long fileSize = appData.getFileSize();
-			String fileExtType = fileName.split(".").length > 1 ? fileName.split(".")[1] : "";
-			uploadedList.append("{");
-			uploadedList.append("id : '" + type + description + cnt + "', ");
-			uploadedList.append("name : '" + fileName + "', ");
-			uploadedList.append("type : '" + fileExtType + "', ");
-			uploadedList.append("saveName : '" + fileName + "', ");
-			uploadedList.append("fileSize : '" + fileSize + "', ");
-			uploadedList.append("uploadedPath : 'servlet/AttachmentsDownloadDirectionServlet?oid="
-					+ CommonUtil.getFullOIDString(holder) + "&cioids=" + CommonUtil.getOIDString(appData) + "&role="
-					+ type + "', ");
-			uploadedList.append("thumbUrl : '', ");
-			uploadedList.append("roleType : '" + type + "', ");
-			uploadedList.append("formId : '" + formId + "', ");
-			uploadedList.append(description + "delocId : '" + delocId + "', ");
-			uploadedList.append("description : '" + description + "', ");
-			uploadedList.append("cacheId : '' ");
-			uploadedList.append("}");
-			cnt++;
-		}
-
-		if (ContentRoleType.SECONDARY == roleType) {
-			uploadedList.append("]");
-		}
-
-		WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
-		String userName = user.getName();
-		String componentName = type + "_" + description;
-		ModelAndView model = new ModelAndView();
-		model.setViewName("empty:/common/content/includeAttachFiles");
-		model.addObject("userName", userName);
-		model.addObject("location", location);
-		model.addObject("type", type);
-		model.addObject("uploadedList", uploadedList.toString());
-		model.addObject("description", description);
-		model.addObject("formId", formId);
-		model.addObject("componentName", componentName);
-		model.addObject("m_fileFullPath", m_fileFullPath);
-		model.addObject("url", url);
-		model.addObject("btnId", btnId);
-
 		return model;
 	}
 
