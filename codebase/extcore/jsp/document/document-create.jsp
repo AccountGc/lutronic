@@ -28,7 +28,7 @@ iframe {
 <%@include file="/extcore/jsp/common/auigrid.jsp"%>
 
 <!-- 채번스크립트 -->
-<script type="text/javascript" src="/Windchill/extcore/jsp/document/js/genNumber.js?v=01000431"></script>
+<script type="text/javascript" src="/Windchill/extcore/jsp/document/js/genNumber.js?v=090091"></script>
 </head>
 <body>
 	<form>
@@ -99,9 +99,7 @@ iframe {
 				</td>
 				<th>중분류</th>
 				<td class="indent5">
-					<select name="classType2" id="classType2" class="width-300" onchange="second();">
-						<option value="">선택</option>
-					</select>
+					<input type="text" name="classType2" id="classType2" class="width-300" readonly="readonly">
 				</td>
 				<th>소분류</th>
 				<td class="indent5">
@@ -268,6 +266,10 @@ iframe {
 				// 클래스타입
 				const classType1_code = document.getElementById("classType1").value;
 				const classType2_oid = document.getElementById("classType2").value;
+				const classType2 = document.getElementById(classType2Id);
+				const selectedIndex = classType2.selectedIndex;
+				const clazz2 = classType2.options[selectedIndex].getAttribute("data-clazz");
+
 				const classType3_oid = document.getElementById("classType3").value;
 
 				const url = getCallUrl("/doc/create");
@@ -294,19 +296,27 @@ iframe {
 				}
 
 				let name;
-				
+				let checker = true;
 				// 개발문서일 경우 체크를 안한다..
-				if("DEV" === classType1_code {
-					
-				} else {
+				if ("DEV" === classType1_code) {
+					checker = false;
+				}
+
+				// 회의록에 일반 희의록이 아닐 경우만
+				if ("MEETING" === classType1_code) {
+					if ("회의록" !== clazz2) {
+						checker = false;
+					}
+				}
+
+				if (checker) {
 					if (suffix.value === "") {
 						alert("문서명을 입력하세요,");
 						suffix.focus();
 						return false;
 					}
 				}
-				
-				
+
 				if (preFix !== "") {
 					name = preFix + suffix.value;
 				} else {

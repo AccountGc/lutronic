@@ -359,4 +359,31 @@ public class DocumentClassHelper {
 		}
 		return null;
 	}
+
+	/**
+	 * 문서 채번 관련 파인더
+	 */
+	public ArrayList<Map<String, String>> finder(Map<String, String> params) throws Exception {
+		ArrayList<Map<String, String>> list = new ArrayList<>();
+		String value = params.get("value");
+		String classType = params.get("classType");
+		QuerySpec query = new QuerySpec();
+		int idx = query.appendClassList(DocumentClass.class, true);
+		QuerySpecUtils.toEqualsAnd(query, idx, DocumentClass.class, DocumentClass.CLASS_TYPE, classType);
+		QuerySpecUtils.toLikeAnd(query, idx, DocumentClass.class, DocumentClass.NAME, value);
+		QuerySpecUtils.toEqualsAnd(query, idx, DocumentClass.class, "parentReference.key.id", 0L);
+//		QuerySpecUtils.toBooleanAnd(query, idx, DocumentClass.class, DocumentClass.ENABLED, true);
+		QuerySpecUtils.toOrderBy(query, idx, DocumentClass.class, DocumentClass.SORT, false);
+		QueryResult result = PersistenceHelper.manager.find(query);
+		while (result.hasMoreElements()) {
+			Object[] obj = (Object[]) result.nextElement();
+			DocumentClass n = (DocumentClass) obj[0];
+			Map<String, String> map = new HashMap<>();
+			map.put("oid", n.getPersistInfo().getObjectIdentifier().getStringValue());
+			map.put("name", n.getName());
+			map.put("clazz", n.getClazz());
+			list.add(map);
+		}
+		return list;
+	}
 }

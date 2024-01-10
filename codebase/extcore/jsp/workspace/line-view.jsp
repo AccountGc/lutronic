@@ -89,7 +89,9 @@ String tapOid = dto.getPersist().getPersistInfo().getObjectIdentifier().getStrin
 	<tr>
 		<th class="lb">결재의견</th>
 		<td class="indent5" colspan="3">
-			<textarea name="description" id="description" rows="6"></textarea>
+			<div class="textarea-auto">
+				<textarea name="description" id="description" rows="6"></textarea>
+			</div>
 		</td>
 	</tr>
 </table>

@@ -44,7 +44,9 @@ ApprovalLineDTO dto = (ApprovalLineDTO) request.getAttribute("dto");
 	<tr>
 		<th class="lb">결재의견</th>
 		<td class="indent5" colspan="5">
-			<textarea name="description" id="description" rows="6" readonly="readonly"><%=dto.getDescription() != null ? dto.getDescription() : ""%></textarea>
+			<div class="textarea-auto">
+				<textarea name="description" id="description" rows="6" readonly="readonly"><%=dto.getDescription() != null ? dto.getDescription() : ""%></textarea>
+			</div>
 		</td>
 	</tr>
 </table>

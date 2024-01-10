@@ -164,4 +164,20 @@ public class DocumentClassController extends BaseController {
 		return result;
 	}
 
+	@Description(value = "문서 채번관련 파인더")
+	@PostMapping(value = "/finder")
+	@ResponseBody
+	public Map<String, Object> finder(@RequestBody Map<String, String> params) throws Exception {
+		Map<String, Object> result = new HashMap<String, Object>();
+		try {
+			ArrayList<Map<String, String>> list = DocumentClassHelper.manager.finder(params);
+			result.put("result", SUCCESS);
+			result.put("list", list);
+		} catch (Exception e) {
+			e.printStackTrace();
+			result.put("msg", e.toString());
+			result.put("result", FAIL);
+		}
+		return result;
+	}
 }

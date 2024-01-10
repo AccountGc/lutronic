@@ -10,7 +10,6 @@ const requiredId = "required";
 // 최초 화면 로드시 셀렉트 박스 변경
 function toUI() {
 	selectbox(classType1Id);
-	selectbox(classType2Id);
 	selectbox(classType3Id);
 
 	const numberTag = document.querySelector("#" + interalnumberId);
@@ -18,7 +17,6 @@ function toUI() {
 	numberTag.setAttribute("readonly", "readonly");
 	nameTag.setAttribute("readonly", "readonly");
 	// 초기 사용 불가 상태
-	$("#" + classType2Id).bindSelectDisabled(true);
 	$("#" + classType3Id).bindSelectDisabled(true);
 	$("#" + modelId).bindSelectDisabled(true);
 }
@@ -84,41 +82,50 @@ function removeReadOnly() {
 // 클래스 2타입 가여조기
 // 중분류 세팅
 function classType2(classType1) {
-	const url = getCallUrl("/class/classType2?classType1=" + classType1);
-	call(url, null, function(data) {
-		const classType2 = data.classType2;
-		if (data.result) {
-			document.querySelector("#classType2 option").remove();
-			document.querySelector("#classType2").innerHTML = "<option value=\"\">선택</option>";
-			for (let i = 0; i < classType2.length; i++) {
-				const value = classType2[i].value;
-				const clazz = classType2[i].clazz;
-				const tag = "<option data-clazz=\"" + clazz + "\" value=\"" + value + "\">" + classType2[i].name + "</option>";
-				document.querySelector("#classType2").innerHTML += tag;
-			}
-		}
-	}, "GET", false);
-	selectbox(classType2Id);
+	const classType2Tag = document.getElementById(classType2Id);
+	classType2Tag.removeAttribute("readonly");
+	axdom("#classType2").bindSelector({
+		reserveKeys: {
+			options: "list",
+			optionValue: "oid",
+			optionText: "name"
+		},
+		optionPrintLength: "all",
+		onsearch: function(id, obj, callBack) {
+			const value = document.getElementById(id).value;
+			const params = new Object();
+			const url = getCallUrl("/class/finder");
+			params.value = value;
+			params.classType = classType1;
+			call(url, params, function(data) {
+				callBack({
+					options: data.list
+				})
+			})
+		},
+		onchange: function() {
+			removeClazz();
+			const el = document.getElementById("classType2");
+			const clazzEl = document.createElement("input");
+			clazzEl.setAttribute("data-oid", this.selectedOption.oid);
+			clazzEl.type = "hidden";
+			clazzEl.name = "clazz";
+			clazzEl.id = "clazz";
+			clazzEl.value = this.selectedOption.clazz;
+			el.parentNode.insertBefore(clazzEl, el.nextSibling);
+			second();
+		},
+	})
 }
 
 // 중분류 변경
 function second() {
-	const selectElement = document.getElementById(classType2Id);
-	const value = selectElement.value;
-	const selectedIndex = selectElement.selectedIndex;
-	const clazz = selectElement.options[selectedIndex].getAttribute("data-clazz");
-	const text = selectElement.options[selectedIndex].text;
-
-	const selectElement1 = document.getElementById(classType2Id);
+	const value = document.getElementById("clazz").getAttribute("data-oid");
+	const clazz = document.getElementById("clazz").value;
 	const classType1 = document.getElementById(classType1Id).value;
-	//	const selectedIndex1 = selectElement1.selectedIndex;
-	//	const clazz1 = selectElement1.options[selectedIndex1].getAttribute("data-clazz");
-
 	const tag = document.querySelector("#" + interalnumberId);
 	const nameTag = document.querySelector("#" + preFixId);
 	if (value !== "") {
-		// 개발문서
-
 		if ("INSTRUCTION" == classType1) {
 			nameTag.value = "";
 			tag.value = "";
@@ -169,9 +176,8 @@ function last() {
 	if (value !== "") {
 		numberTag.value = "";
 		const classType2 = document.getElementById(classType2Id);
-		const index = classType2.selectedIndex;
-		const text = classType2.options[index].text;
-		const clazz2 = classType2.options[index].getAttribute("data-clazz");
+		const text = classType2.value;
+		const clazz2 = document.getElementById("clazz").value;
 		if ("REPORT" === classType1) {
 			const currentDate = new Date();
 			const year = currentDate.getFullYear() % 100; // 연도의 뒤 2자리
@@ -198,9 +204,8 @@ function preNumberCheck(obj) {
 	if (value !== "") {
 		const classType1 = document.getElementById(classType1Id);
 		const classType2 = document.getElementById(classType2Id);
-		const selectedIndex = classType2.selectedIndex;
-		const text = classType2.options[selectedIndex].text;
-		const clazz2 = classType2.options[selectedIndex].getAttribute("data-clazz");
+		const text = classType2.value;
+		const clazz2 = document.getElementById("clazz").getAttribute("data-clazz");
 		if (classType1.value === "DEV") {
 			tag.value = "";
 			tag.value += clazz2 + "-" + value + "-";
@@ -263,13 +268,24 @@ function clearValue() {
 	numberTag.setAttribute("readonly", "readonly");
 	preFixTag.setAttribute("readonly", "readonly");
 	suffixTag.setAttribute("readonly", "readonly");
-	$("#" + classType2Id).bindSelectSetValue("");
 	$("#" + classType3Id).bindSelectSetValue("");
 	$("#" + modelId).bindSelectSetValue("");
-	$("#" + classType2Id).bindSelectDisabled(true);
 	$("#" + classType3Id).bindSelectDisabled(true);
 	$("#" + modelId).bindSelectDisabled(true);
 	DEXT5.setBodyValue("", "content");
+
+	const classType2Tag = document.getElementById(classType2Id);
+	classType2Tag.setAttribute("readonly", "readonly");
+	classType2Tag.value = "";
+	removeClazz();
+}
+
+
+function removeClazz() {
+	const el = document.getElementById("clazz");
+	if (el) {
+		el.parentNode.removeChild(el);
+	}
 }
 
 

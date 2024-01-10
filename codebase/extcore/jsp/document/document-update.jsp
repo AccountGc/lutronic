@@ -22,6 +22,7 @@ if ("modify".equals(mode)) {
 }
 
 String classType1 = dto.getClassType1_code();
+String classType2 = dto.getClassType2_code();
 boolean isReq = false;
 if (StringUtil.checkString(classType1)) {
 	if ("DEV".equals(classType1) || "INSTRUCTION".equals(classType1)) {
@@ -35,6 +36,8 @@ iframe {
 }
 </style>
 <script type="text/javascript" src="/Windchill/extcore/dext5editor/js/dext5editor.js"></script>
+<input type="hidden" name="classType1" id="classType1" value="<%=classType1 %>">
+<input type="hidden" name="classType2" id="classType2" value="<%=classType2 %>">
 <input type="hidden" name="oid" id="oid" value="<%=dto.getOid()%>">
 <table class="button-table">
 	<tr>
@@ -270,12 +273,23 @@ iframe {
 		// 내용
 		const content = DEXT5.getBodyValue("content");
 		
-		const interalnumber = document.getElementById("interalnumber").value;
+		const classType1 = document.getElementById("classType1").value;
+		const classType2 = document.getElementById("classType2").value;
+		
+		alert(classType1);
+		alert(classType2);
 		
 		let name;
-		if (suffix === "") {
-			alert("문서명을 입력하세요,");
-			return false;
+		let checker = true;
+		if("DEV" === classType1) {
+			checker = false;
+		}
+		
+		if(checker) {
+			if (suffix === "") {
+				alert("문서명을 입력하세요,");
+				return false;
+			}
 		}
 		
 		if (preFix !== "") {
