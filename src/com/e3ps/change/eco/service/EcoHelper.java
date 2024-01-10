@@ -569,8 +569,6 @@ public class EcoHelper {
 					LifeCycleHelper.service.setLifeCycleState(part, State.toState("APPROVED"));
 					part = (WTPart) PersistenceHelper.manager.refresh(part);
 				}
-
-				// 최종승인일..
 				String today = new Timestamp(new Date().getTime()).toString().substring(0, 10);
 				IBAUtils.appendIBA(part, "CHANGENO", eco.getEoNumber(), "s");
 				IBAUtils.appendIBA(part, "CHANGEDATE", today, "s");

@@ -1,4 +1,5 @@
 <%@page import="com.e3ps.change.cr.dto.CrDTO"%>
+<%@page import="com.e3ps.doc.service.DocumentHelper"%>
 <%@page import="com.e3ps.org.service.OrgHelper"%>
 <%@page import="com.e3ps.org.dto.PeopleDTO"%>
 <%@page import="wt.org.WTUser"%>
@@ -21,11 +22,17 @@ String submitDate = dateFormat.format(submitLine.getCompleteTime());
 <style type="text/css">
 @page {
 	size: A4;
-	margin: 0;
+	margin: 70px auto;
+}
+
+@media print {
+	body {
+		zoom: 80%;
+	}
 }
 
 html {
-	font-size: 13px;
+	font-size: 11px;
 }
 
 table {
@@ -56,7 +63,33 @@ td {
 .center {
 	text-align: center;
 }
+
+.footer {
+	/* 	position: fixed; */
+	/* 	bottom: 0; */
+	/* 	left: 0; */
+	/* 	width: 100%; */
+	/* 	margin-top: 30px; */
+	/* 	padding: 0px; */
+	/* 	left: 0; */
+	/* 	height: 10px; */
+	
+}
+
+td.left {
+	text-align: left;
+}
+
+td.right {
+	text-align: right;
+}
+
+main {
+	
+}
 </style>
+
+<h1 class="center" style="font-size: 24pt">변경관리 요청서(CR)</h1>
 
 <div style="float: left; padding-bottom: 10px;">
 	<table style="border-top: 1px solid black;">
@@ -143,9 +176,8 @@ td {
 		</tr>
 	</table>
 </div>
-
 <%
-	if(agreeLines.size() > 0) {
+if (agreeLines.size() > 0) {
 %>
 <div style="float: right; padding-bottom: 10px;">
 	<table style="border-top: 1px solid black;">
@@ -210,8 +242,9 @@ td {
 	</table>
 </div>
 <%
-	}
+}
 %>
+
 <table style="width: 100%; border-top: 1px solid black;">
 	<colgroup>
 		<col style="width: 13%;" />
@@ -221,22 +254,22 @@ td {
 		<col style="width: 13%" />
 		<col style="width: 21%" />
 	</colgroup>
-<!-- 	<tr> -->
-<!-- 		<th style="max-width: 100px; min-width: 100px;">작성자</th> -->
-<%-- 		<td class="center"><%=dto.getWriter()%></td> --%>
-<!-- 		<th style="max-width: 100px; min-width: 100px;">작성부서</th> -->
-<%-- 		<td class="center"><%=dto.getDeptcode_name()%></td> --%>
-<!-- 		<th style="max-width: 100px; min-width: 100px;">문서번호</th> -->
-<%-- 		<td class="center"><%=dto.getNumber()%></td> --%>
-<!-- 	</tr> -->
-<!-- 	<tr> -->
-<!-- 		<th style="max-width: 100px; min-width: 100px;">문서분류</th> -->
-<%-- 		<td class="center"><%=classType1%></td> --%>
-<!-- 		<th style="max-width: 100px; min-width: 100px;">프로젝트코드</th> -->
-<%-- 		<td class="center"><%=dto.getModel_name()%></td> --%>
-<!-- 		<th style="max-width: 100px; min-width: 100px;">보존년한</th> -->
-<%-- 		<td class="center"><%=dto.getPreseration_name()%></td> --%>
-<!-- 	</tr> -->
+	<tr>
+		<th style="max-width: 100px; min-width: 100px;">작성자</th>
+		<td class="center"><%=submit.getName()%></td>
+		<th style="max-width: 100px; min-width: 100px;">작성부서</th>
+		<td class="center"><%=submit.getDepartment_name()%></td>
+		<th style="max-width: 100px; min-width: 100px;">문서번호</th>
+		<td class="center"><%=dto.getNumber()%></td>
+	</tr>
+	<tr>
+		<th style="max-width: 100px; min-width: 100px;">문서분류</th>
+		<td class="center">변경관리 요청서(CR)</td>
+		<th style="max-width: 100px; min-width: 100px;">프로젝트코드</th>
+		<td class="center"><%=dto.getModel()%></td>
+		<th style="max-width: 100px; min-width: 100px;">보존년한</th>
+		<td class="center"><%=dto.getPeriod_name()%></td>
+	</tr>
 </table>
 
 <table style="margin-top: 10px; width: 100%; border-top: 1px solid black;">
@@ -251,11 +284,27 @@ td {
 	<tr>
 </table>
 
-<div id="content"></div>
+
+<main id="content"></main>
+
+<div class="footer">
+	<table>
+		<colgroup>
+			<col width="80px;">
+			<col width="*">
+			<col width="80px;">
+		</colgroup>
+		<tr>
+			<td class="center" style="border: none;">QF-809-03</td>
+			<td class="center" style="border: none;">LUTRONIC</td>
+			<td class="center" style="border: none;">A4(210 X 297)</td>
+		</tr>
+	</table>
+</div>
 
 <script type="text/javascript">
 	const data = window.data;
 	const content = document.getElementById("content");
 	content.innerHTML = data;
-	window.opener._print(content);
+	print();
 </script>

@@ -156,7 +156,7 @@ boolean isEdit = (boolean) request.getAttribute("isEdit");
 					dataField : "number",
 					headerText : "ECN번호",
 					dataType : "string",
-					width : 100,
+					width : 130,
 					editable : false,
 					renderer : {
 						type : "LinkRenderer",
