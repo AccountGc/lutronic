@@ -117,8 +117,16 @@ Map<String, String> step = dto.getStep();
 			<tr>
 				<th class="lb">주 부품</th>
 				<td class="indent5"><%=dto.getPNum()%></td>
-				<th>ApplicationType</th>
+				<th>APPLICATIONTYPE</th>
 				<td class="indent5"><%=dto.getApplicationType()%></td>
+			</tr>
+			<tr>
+				<th class="lb">주 첨부파일</th>
+				<td class="indent5" colspan="5">
+					<jsp:include page="/extcore/jsp/common/primary-view.jsp">
+						<jsp:param value="<%=dto.getOid()%>" name="oid" />
+					</jsp:include>
+				</td>
 			</tr>
 			<tr>
 				<th class="lb">STEP</th>
