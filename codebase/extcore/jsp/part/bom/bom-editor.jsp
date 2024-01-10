@@ -129,7 +129,7 @@ WTPart root = (WTPart) request.getAttribute("root");
 					<col width="*">
 				</colgroup>
 				<tr>
-					<th>문서 분류</th>
+					<th>품목 분류</th>
 					<td class="indent5">
 						<input type="text" name="number" id="number" class="width-400" readonly="readonly" onclick="load();">
 						<input type="hidden" name="poid" id="poid">

@@ -19,7 +19,7 @@ MoldDTO dto = (MoldDTO) request.getAttribute("dto");
 			</div>
 		</td>
 		<td class="right">
-			<input type="button" value="수정" title="수정" class="blue" onclick="update('false');">
+			<input type="button" value="수정완료" title="수정완료" class="blue" onclick="update('false');">
 			<input type="button" value="닫기" title="닫기" class="gray" onclick="self.close();">
 		</td>
 	</tr>
@@ -165,7 +165,7 @@ MoldDTO dto = (MoldDTO) request.getAttribute("dto");
 <table class="button-table">
 	<tr>
 		<td class="center">
-			<input type="button" value="수정" title="수정" class="blue" onclick="update('false');">
+			<input type="button" value="수정완료" title="수정완료" class="blue" onclick="update('false');">
 			<input type="button" value="닫기" title="닫기" class="gray" onclick="self.close();">
 		</td>
 	</tr>
