@@ -148,9 +148,6 @@ boolean multi = (boolean) request.getAttribute("multi");
 </table>
 <table class="button-table">
 	<tr>
-		<td class="left">
-			<input type="button" value="추가" title="추가" onclick="<%=method%>();">
-		</td>
 		<td class="right">
 			<select name="_psize" id="_psize">
 				<option value="10">10</option>
@@ -159,6 +156,7 @@ boolean multi = (boolean) request.getAttribute("multi");
 				<option value="100">100</option>
 			</select>
 			<input type="button" value="검색" title="검색" onclick="loadGridData();">
+			<input type="button" value="추가" title="추가" class="blue" onclick="<%=method%>();">
 			<input type="button" value="닫기" title="닫기" class="gray" onclick="javascript:self.close();">
 		</td>
 	</tr>

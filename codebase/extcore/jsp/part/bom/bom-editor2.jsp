@@ -113,11 +113,11 @@ WTPart root = (WTPart) request.getAttribute("root");
 			<table class="button-table">
 				<tr>
 					<td class="left">
-						<input type="button" value="추가" title="추가" class="red" onclick="insert();">
 						<input type="button" value="교체" title="교체" class="blue" onclick="replace();">
 					</td>
 					<td class="right">
 						<input type="button" value="검색" title="검색" onclick="loadGridData();">
+						<input type="button" value="추가" title="추가" class="blue" onclick="insert();">
 					</td>
 				</tr>
 			</table>
