@@ -518,6 +518,7 @@ public class StandardWorkspaceService extends StandardManager implements Workspa
 				String docType = doc.getDocType().toString();
 				// 금형 아닐경우
 				if (!"$$MMDocument".equals(docType) && !"$$ROHS".equals(docType)) {
+					System.out.println("표지 생성한다.");
 					DocumentHelper.service.createCover(doc);
 				}
 			}

@@ -849,6 +849,7 @@ public class DocumentHelper {
 	 * PDF 병합
 	 */
 	public void mergePdf(WTDocument doc) throws Exception {
+		System.out.println("문서 PDF병합 시작!");
 
 		doc = (WTDocument) PersistenceHelper.manager.refresh(doc);
 
@@ -928,6 +929,7 @@ public class DocumentHelper {
 			ContentServerHelper.service.deleteContent(doc, dd);
 		}
 
+		System.out.println("savePath=" + savePath);
 		ApplicationData applicationData = ApplicationData.newApplicationData(doc);
 		applicationData.setRole(ContentRoleType.toContentRoleType("MERGE"));
 		PersistenceHelper.manager.save(applicationData);
