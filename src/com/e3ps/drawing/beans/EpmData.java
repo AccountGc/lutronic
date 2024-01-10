@@ -150,7 +150,7 @@ public class EpmData {
 	private void setRepresentable(EPMDocument epm) throws Exception {
 
 		if (epm.getDocType().toString().equals("CADDRAWING")) {
-			Representation representation = PublishUtils.getRepresentation(epm2d);
+			Representation representation = PublishUtils.getRepresentation(epm);
 			if (representation != null) {
 				QueryResult result = ContentHelper.service.getContentsByRole(representation, ContentRoleType.SECONDARY);
 				while (result.hasMoreElements()) {
