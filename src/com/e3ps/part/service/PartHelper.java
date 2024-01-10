@@ -732,6 +732,21 @@ public class PartHelper {
 	}
 
 	/**
+	 * 최신버전 부품인지 확인
+	 */
+	public boolean isLatest(WTPart part) throws Exception {
+		LatestConfigSpec config = new LatestConfigSpec();
+		QueryResult result = ConfigHelper.service.filteredIterationsOf(part.getMaster(), config);
+		if (result.hasMoreElements()) {
+			WTPart latest = (WTPart) result.nextElement();
+			if (latest == part) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	/**
 	 * 부품 BOM 구조 호출 함수
 	 */
 	public ArrayList<WTPart> descendants(WTPart part) throws Exception {

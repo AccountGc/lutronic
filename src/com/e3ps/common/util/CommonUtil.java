@@ -131,123 +131,10 @@ public class CommonUtil implements wt.method.RemoteAccess, java.io.Serializable 
 		return null;
 	}
 
-	public static String getObjectIconImageTag(WTObject object) throws Exception {
-
-		if (!SERVER) {
-			Class argTypes[] = new Class[] { WTObject.class };
-			Object args[] = new Object[] { object };
-			try {
-				return (String) wt.method.RemoteMethodServer.getDefault().invoke("getObjectIconImageTag",
-						"com.e3ps.common.util.CommonUtil", null, argTypes, args);
-			} catch (RemoteException e) {
-				e.printStackTrace();
-				throw new WTException(e);
-			} catch (InvocationTargetException e) {
-				e.printStackTrace();
-				throw new WTException(e);
-			} catch (Exception e) {
-				e.printStackTrace();
-				throw new WTException(e);
-			}
-		}
-
-		return wt.enterprise.BasicTemplateProcessor.getObjectIconImgTag(object);
-	}
-
-	public static String getContentIconStr(ContentItem item) throws WTException {
-		URLFactory urlFac = new URLFactory();
-		String iconStr = "";
-		String fileiconpath = "jsp/portal/images/icon/fileicon/";
-		String filename = "";
-		if (item instanceof URLData) {
-			iconStr = urlFac.getBaseURL().getPath() + fileiconpath + "link.gif";
-		} else if (item instanceof ApplicationData) {
-			ApplicationData data = (ApplicationData) item;
-
-			String extStr = "";
-			String tempFileName = data.getFileName();
-			filename = tempFileName;
-			int dot = tempFileName.lastIndexOf(".");
-			if (dot != -1)
-				extStr = tempFileName.substring(dot + 1); // includes
-															// "."
-
-			if (extStr.equalsIgnoreCase("cc"))
-				iconStr = urlFac.getBaseURL().getPath() + fileiconpath + "ed.gif";
-			else if (extStr.equalsIgnoreCase("exe"))
-				iconStr = urlFac.getBaseURL().getPath() + fileiconpath + "exe.gif";
-			else if (extStr.equalsIgnoreCase("doc"))
-				iconStr = urlFac.getBaseURL().getPath() + fileiconpath + "doc.gif";
-			else if (extStr.equalsIgnoreCase("ppt"))
-				iconStr = urlFac.getBaseURL().getPath() + fileiconpath + "ppt.gif";
-			else if (extStr.equalsIgnoreCase("xls"))
-				iconStr = urlFac.getBaseURL().getPath() + fileiconpath + "xls.gif";
-			else if (extStr.equalsIgnoreCase("csv"))
-				iconStr = urlFac.getBaseURL().getPath() + fileiconpath + "xls.gif";
-			else if (extStr.equalsIgnoreCase("txt"))
-				iconStr = urlFac.getBaseURL().getPath() + fileiconpath + "notepad.gif";
-			else if (extStr.equalsIgnoreCase("mpp"))
-				iconStr = urlFac.getBaseURL().getPath() + fileiconpath + "mpp.gif";
-			else if (extStr.equalsIgnoreCase("pdf"))
-				iconStr = urlFac.getBaseURL().getPath() + fileiconpath + "pdf.gif";
-			else if (extStr.equalsIgnoreCase("tif"))
-				iconStr = urlFac.getBaseURL().getPath() + fileiconpath + "tif.gif";
-			else if (extStr.equalsIgnoreCase("gif"))
-				iconStr = urlFac.getBaseURL().getPath() + fileiconpath + "gif.gif";
-			else if (extStr.equalsIgnoreCase("jpg"))
-				iconStr = urlFac.getBaseURL().getPath() + fileiconpath + "jpg.gif";
-			else if (extStr.equalsIgnoreCase("ed"))
-				iconStr = urlFac.getBaseURL().getPath() + fileiconpath + "ed.gif";
-			else if (extStr.equalsIgnoreCase("zip"))
-				iconStr = urlFac.getBaseURL().getPath() + fileiconpath + "zip.gif";
-			else if (extStr.equalsIgnoreCase("tar"))
-				iconStr = urlFac.getBaseURL().getPath() + fileiconpath + "zip.gif";
-			else if (extStr.equalsIgnoreCase("rar"))
-				iconStr = urlFac.getBaseURL().getPath() + fileiconpath + "zip.gif";
-			else if (extStr.equalsIgnoreCase("jar"))
-				iconStr = urlFac.getBaseURL().getPath() + fileiconpath + "zip.gif";
-			else if (extStr.equalsIgnoreCase("igs"))
-				iconStr = urlFac.getBaseURL().getPath() + fileiconpath + "epmall.gif";
-			else if (extStr.equalsIgnoreCase("pcb"))
-				iconStr = urlFac.getBaseURL().getPath() + fileiconpath + "epmall.gif";
-			else if (extStr.equalsIgnoreCase("asc"))
-				iconStr = urlFac.getBaseURL().getPath() + fileiconpath + "epmall.gif";
-			else if (extStr.equalsIgnoreCase("dwg"))
-				iconStr = urlFac.getBaseURL().getPath() + fileiconpath + "epmall.gif";
-			else if (extStr.equalsIgnoreCase("dxf"))
-				iconStr = urlFac.getBaseURL().getPath() + fileiconpath + "epmall.gif";
-			else if (extStr.equalsIgnoreCase("sch"))
-				iconStr = urlFac.getBaseURL().getPath() + fileiconpath + "epmall.gif";
-			else if (extStr.equalsIgnoreCase("html"))
-				iconStr = urlFac.getBaseURL().getPath() + fileiconpath + "htm.gif";
-			else if (extStr.equalsIgnoreCase("htm"))
-				iconStr = urlFac.getBaseURL().getPath() + fileiconpath + "htm.gif";
-			else if (extStr.equalsIgnoreCase("docx"))
-				iconStr = urlFac.getBaseURL().getPath() + fileiconpath + "doc.gif";
-			else if (extStr.equalsIgnoreCase("pptx"))
-				iconStr = urlFac.getBaseURL().getPath() + fileiconpath + "ppt.gif";
-			else if (extStr.equalsIgnoreCase("xlsx"))
-				iconStr = urlFac.getBaseURL().getPath() + fileiconpath + "xls.gif";
-			else if (extStr.equalsIgnoreCase("bmp"))
-				iconStr = urlFac.getBaseURL().getPath() + fileiconpath + "bmp.gif";
-			else
-				iconStr = urlFac.getBaseURL().getPath() + fileiconpath + "generic.gif";
-		} else {
-			return null;
-		}
-		iconStr = "<img src='" + iconStr + "' border=0 alt='" + filename + "'>";
-		return iconStr;
-	}
-
-	/**
-	 * 占쏙옙체 占쏙옙占쏙옙 占쏙옙占쏙옙占싹깍옙 占쏙옙占쌔쇽옙 占쏙옙占쏙옙트 占쏙옙占쌘몌옙 Private占쏙옙 占쏙옙占쏙옙
-	 */
 	private CommonUtil() {
+
 	}
 
-	/**
-	 * 占식띰옙占쏙옙庫占� 占쏙옙占쏙옙 Persistable 占쏙옙체占쏙옙 OID 占쏙옙 占쏙옙占쏙옙占싹댐옙 Method <br>
-	 */
 	public static String getOIDString(Persistable per) {
 		if (per == null)
 			return null;
@@ -276,12 +163,6 @@ public class CommonUtil implements wt.method.RemoteAccess, java.io.Serializable 
 		return Long.parseLong(tempoid);
 	}
 
-	/**
-	 * VR oid占쏙옙 占쏙옙占쏙옙占싼댐옙.
-	 * 
-	 * @param oid
-	 * @return
-	 */
 	public static String getVROID(String oid) {
 		Object obj = getObject(oid);
 		if (obj == null)
@@ -295,12 +176,6 @@ public class CommonUtil implements wt.method.RemoteAccess, java.io.Serializable 
 		return "VR:" + verRef.getKey().getClassname() + ":" + verForeignKey.getBranchId();
 	}
 
-	/**
-	 * VR oid占쏙옙 占쏙옙占쏙옙占싼댐옙.
-	 * 
-	 * @param persistable
-	 * @return
-	 */
 	public static String getVROID(Persistable persistable) {
 
 		if (persistable == null)

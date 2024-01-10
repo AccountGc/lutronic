@@ -443,6 +443,21 @@ public class DocumentHelper {
 	}
 
 	/**
+	 * 최신버전 문서인지 확인
+	 */
+	public boolean isLatest(WTDocument doc) throws Exception {
+		LatestConfigSpec config = new LatestConfigSpec();
+		QueryResult result = ConfigHelper.service.filteredIterationsOf(doc.getMaster(), config);
+		if (result.hasMoreElements()) {
+			WTDocument latest = (WTDocument) result.nextElement();
+			if (latest == doc) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	/**
 	 * 문서 폴더 가져오기
 	 */
 	public JSONArray recurcive() throws Exception {
@@ -657,31 +672,31 @@ public class DocumentHelper {
 		if (ref != null) {
 			classType2 = (DocumentClass) ref.getObject();
 		}
-		
+
 		// 지침서 양식번호
 		if ("INSTRUCTION".equals(classTypeCode)) {
 			worksheet.getPageSetup().setFooter(0, "P7.3-1-1");
 		} else if ("DEV".equals(classTypeCode)) {
 			// 개발 문서
-			if(classType2 != null) {
-				String clazz  = classType2.getClazz();
+			if (classType2 != null) {
+				String clazz = classType2.getClazz();
 				String n = "";
 				// 위험 관리 계획서 QF-701-01
-				if("RMP".equals(clazz.trim())) {
+				if ("RMP".equals(clazz.trim())) {
 					n = "QF-701-01";
-				}else if("RMR".equals(clazz.trim())) {
+				} else if ("RMR".equals(clazz.trim())) {
 					n = "QF-701-02	";
-				} else if("PRS".equals(clazz.trim())) {
+				} else if ("PRS".equals(clazz.trim())) {
 					n = "QF-705-12";
-				} else if("DSP".equals(clazz.trim())) {
+				} else if ("DSP".equals(clazz.trim())) {
 					n = "QF-705-16";
-				} else if("DSR".equals(clazz.trim())) {
+				} else if ("DSR".equals(clazz.trim())) {
 					n = "QF-705-18";
-				} else if("DMR".equals(clazz.trim()) {
+				} else if ("DMR".equals(clazz.trim())) {
 					n = "QF-705-19";
-				} else if("CCL".equals(clazz.trim())) {
+				} else if ("CCL".equals(clazz.trim())) {
 					n = "QF-701-20";
-				} else if("VR".equals(clazz.trim())) {
+				} else if ("VR".equals(clazz.trim())) {
 					n = "QF-701-29";
 				} else {
 					n = "P7.3-1-1";
@@ -692,8 +707,6 @@ public class DocumentHelper {
 
 		Cell modelCell = worksheet.getCells().get(3, 5);
 		modelCell.putValue(IBAUtil.getStringValue(d, "MODEL"));
-
-	
 
 		Cell nameCell = worksheet.getCells().get(4, 0);
 		if (classType2 != null) {
