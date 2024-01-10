@@ -148,24 +148,8 @@ public class EpmData {
 	}
 
 	private void setRepresentable(EPMDocument epm) throws Exception {
-		Representation _representation = PublishUtils.getRepresentation(epm);
-		if (_representation != null) {
-			// step
-			QueryResult qr = ContentHelper.service.getContentsByRole(_representation, ContentRoleType.SECONDARY);
-			while (qr.hasMoreElements()) {
-				ApplicationData data = (ApplicationData) qr.nextElement();
-				String ext = FileUtil.getExtension(data.getFileName());
-				if ("stp".equalsIgnoreCase(ext)) {
-					this.step.put("name", data.getFileName());
-					this.step.put("fileSizeKB", data.getFileSizeKB() + "KB");
-					this.step.put("url",
-							ContentHelper.getDownloadURL(_representation, data, false, data.getFileName()).toString());
-				}
-			}
-		}
 
-		EPMDocument epm2d = PartHelper.manager.getEPMDocument2D(epm);
-		if (epm2d != null) {
+		if (epm.getDocType().toString().equals("CADDRAWING")) {
 			Representation representation = PublishUtils.getRepresentation(epm2d);
 			if (representation != null) {
 				QueryResult result = ContentHelper.service.getContentsByRole(representation, ContentRoleType.SECONDARY);
@@ -193,6 +177,23 @@ public class EpmData {
 					}
 				}
 			}
+		} else {
+			Representation _representation = PublishUtils.getRepresentation(epm);
+			if (_representation != null) {
+				// step
+				QueryResult qr = ContentHelper.service.getContentsByRole(_representation, ContentRoleType.SECONDARY);
+				while (qr.hasMoreElements()) {
+					ApplicationData data = (ApplicationData) qr.nextElement();
+					String ext = FileUtil.getExtension(data.getFileName());
+					if ("stp".equalsIgnoreCase(ext)) {
+						this.step.put("name", data.getFileName());
+						this.step.put("fileSizeKB", data.getFileSizeKB() + "KB");
+						this.step.put("url", ContentHelper
+								.getDownloadURL(_representation, data, false, data.getFileName()).toString());
+					}
+				}
+			}
+
 		}
 	}
 }
