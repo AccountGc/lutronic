@@ -121,7 +121,21 @@ iframe {
 				<td class="indent5"><%=dto.getState()%></td>
 				<th>REV</th>
 				<td class="indent5">
+					<%
+					if (dto.isLatest()) {
+					%>
 					<%=dto.getVersion()%>.<%=dto.getIteration()%>
+					<%
+					} else {
+					%>
+					<%=dto.getVersion()%>.<%=dto.getIteration()%><a href="javascript:latest();">
+						<font color="red">
+							<b>(최신버전으로)</b>
+						</font>
+					</a>
+					<%
+					}
+					%>
 				</td>
 			</tr>
 			<tr>
@@ -372,6 +386,13 @@ iframe {
 		}, "DELETE");
 	}
 
+	// 최신버전으로 페이지 이동
+	function latest() {
+		const oid = document.getElementById("oid").value;
+		const url = getCallUrl("/doc/latest?oid=" + oid);
+		document.location.href = url;
+	}
+	
 	document.addEventListener("DOMContentLoaded", function() {
 		$("#tabs").tabs({
 			active : 0,

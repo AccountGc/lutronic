@@ -450,7 +450,8 @@ public class DocumentHelper {
 		QueryResult result = ConfigHelper.service.filteredIterationsOf(doc.getMaster(), config);
 		if (result.hasMoreElements()) {
 			WTDocument latest = (WTDocument) result.nextElement();
-			if (latest == doc) {
+			if (doc.getPersistInfo().getObjectIdentifier().getId() == latest.getPersistInfo().getObjectIdentifier()
+					.getId()) {
 				return true;
 			}
 		}

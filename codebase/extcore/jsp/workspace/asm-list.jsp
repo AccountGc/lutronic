@@ -145,8 +145,7 @@ boolean isAdmin = (boolean) request.getAttribute("isAdmin");
 					},
 				}, {
 					dataField : "name",
-					headerText : "<%=title%>
-			일괄결재제목",
+					headerText : "<%=title%> 일괄결재제목",
 					dataType : "string",
 					style : "aui-left",
 					renderer : {

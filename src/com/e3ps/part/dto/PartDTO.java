@@ -1,6 +1,8 @@
 package com.e3ps.part.dto;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 import com.e3ps.common.comments.beans.CommentsDTO;
 import com.e3ps.common.comments.service.CommentsHelper;
@@ -38,6 +40,8 @@ public class PartDTO {
 	private boolean _delete = false;
 	private boolean _modify = false;
 	private boolean _revise = false;
+	
+	private Map<String, String> step = new HashMap<>();
 
 	// 댓글
 	private ArrayList<CommentsDTO> comments = new ArrayList<CommentsDTO>();

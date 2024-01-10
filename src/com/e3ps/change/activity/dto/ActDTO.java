@@ -118,8 +118,8 @@ public class ActDTO {
 		Timestamp today = new Timestamp(new Date().getTime());
 		Timestamp finish = act.getFinishDate();
 
-		if ("COMPLETE".equals(state)) {
-
+		if ("COMPLETED".equals(state)) {
+			current = "COMPLETED";
 		} else {
 			if (finish == null) {
 				current = "DELAY";

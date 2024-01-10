@@ -853,4 +853,20 @@ public class DrawingHelper {
 		}
 		fis.close();
 	}
+	
+	/**
+	 * 최신버전 도면인지 확인
+	 */
+	public boolean isLatest(EPMDocument epm) throws Exception {
+		LatestConfigSpec config = new LatestConfigSpec();
+		QueryResult result = ConfigHelper.service.filteredIterationsOf(epm.getMaster(), config);
+		if (result.hasMoreElements()) {
+			EPMDocument latest = (EPMDocument) result.nextElement();
+			if (epm.getPersistInfo().getObjectIdentifier().getId() == latest.getPersistInfo().getObjectIdentifier()
+					.getId()) {
+				return true;
+			}
+		}
+		return false;
+	}
 }
