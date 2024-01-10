@@ -225,7 +225,7 @@ iframe {
 <table class="button-table">
 	<tr>
 		<td class="center">
-			<input type="button" value="<%=title%>" title="<%=title%>" class="blue" onclick="<%=mode%>('false');">
+			<input type="button" value="<%=title%> 완료" title="<%=title%> 완료" class="blue" onclick="<%=mode%>('false');">
 			<input type="button" value="닫기" title="닫기" class="gray" onclick="self.close();">
 		</td>
 	</tr>
