@@ -294,11 +294,19 @@ iframe {
 				}
 
 				let name;
-				if (suffix.value === "") {
-					alert("문서명을 입력하세요,");
-					suffix.focus();
-					return false;
+				
+				// 개발문서일 경우 체크를 안한다..
+				if("DEV" === classType1_code {
+					
+				} else {
+					if (suffix.value === "") {
+						alert("문서명을 입력하세요,");
+						suffix.focus();
+						return false;
+					}
 				}
+				
+				
 				if (preFix !== "") {
 					name = preFix + suffix.value;
 				} else {

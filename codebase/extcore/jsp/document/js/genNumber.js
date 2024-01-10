@@ -205,7 +205,7 @@ function preNumberCheck(obj) {
 			tag.value = "";
 			tag.value += clazz2 + "-" + value + "-";
 			suffixEnable();
-			preFixTag.value = text + "_" + value + "_";
+			preFixTag.value = text + "_" + value;
 			lastNumber(tag.value, classType1.value);
 		} else if (classType1.value === "INSTRUCTION") {
 			tag.value = "";

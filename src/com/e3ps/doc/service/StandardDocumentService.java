@@ -760,6 +760,7 @@ public class StandardDocumentService extends StandardManager implements Document
 				ApplicationData dd = (ApplicationData) qr.nextElement();
 				String n = dd.getFileName();
 				String ext = FileUtil.getExtension(n);
+				System.out.println("ext=" + ext);
 				if (!"docx".equalsIgnoreCase(ext) && !"doc".equalsIgnoreCase(ext)) {
 					System.out.println("대상파일이 아닙니다.");
 					checker = false;
