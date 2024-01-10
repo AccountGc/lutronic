@@ -739,7 +739,8 @@ public class PartHelper {
 		QueryResult result = ConfigHelper.service.filteredIterationsOf(part.getMaster(), config);
 		if (result.hasMoreElements()) {
 			WTPart latest = (WTPart) result.nextElement();
-			if (latest == part) {
+			if (part.getPersistInfo().getObjectIdentifier().getId() == latest.getPersistInfo().getObjectIdentifier()
+					.getId()) {
 				return true;
 			}
 		}
