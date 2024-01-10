@@ -68,7 +68,7 @@ String codeType = (String) request.getAttribute("codeType");
 				<option value="200">200</option>
 				<option value="300">300</option>
 			</select>
-			<input type="button" value="검색" title="검색" class="blue" onclick="loadGridData();">
+			<input type="button" value="검색" title="검색" onclick="loadGridData();">
 			<input type="button" value="추가" title="추가" class="blue" onclick="<%=method%>();">
 			<input type="button" value="닫기" title="닫기" class="gray" onclick="javascript:self.close();">
 		</td>

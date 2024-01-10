@@ -238,7 +238,7 @@ ArrayList<Map<String, String>> classTypes1 = (ArrayList<Map<String, String>>) re
 				<option value="50">50</option>
 				<option value="100">100</option>
 			</select>
-			<input type="button" value="검색" title="검색" class="blue" onclick="loadGridData();">
+			<input type="button" value="검색" title="검색" onclick="loadGridData();">
 			<input type="button" value="추가" title="추가" class="blue" onclick="<%=method%>();">
 			<input type="button" value="닫기" title="닫기" class="gray" onclick="javascript:self.close();">
 		</td>
