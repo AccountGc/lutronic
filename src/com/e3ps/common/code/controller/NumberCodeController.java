@@ -3,7 +3,6 @@ package com.e3ps.common.code.controller;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
-import java.util.List;
 import java.util.Map;
 
 import org.springframework.context.annotation.Description;
@@ -16,16 +15,11 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
-import com.e3ps.common.code.NumberCode;
 import com.e3ps.common.code.dto.NumberCodeDTO;
 import com.e3ps.common.code.service.NumberCodeHelper;
-import com.e3ps.common.util.StringUtil;
 import com.e3ps.controller.BaseController;
-import com.e3ps.org.service.OrgHelper;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
-
-import wt.doc.DocumentType;
 
 @Controller
 @RequestMapping(value = "/code/**")

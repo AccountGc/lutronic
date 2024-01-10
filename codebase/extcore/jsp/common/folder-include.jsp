@@ -56,7 +56,7 @@ String height = request.getParameter("height");
 	function auiCellEditBeginHandler(event) {
 		const item = event.item;
 		if(!item.isNew) {
-			return false;
+// 			return false;
 		}
 		return true;
 	}

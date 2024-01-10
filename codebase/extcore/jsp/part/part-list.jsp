@@ -424,7 +424,7 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 				const props = {
 					headerHeight : 30,
 					showRowNumColumn : true,
-					showRowCheckColumn : true,
+// 					showRowCheckColumn : true,
 					rowNumHeaderText : "번호",
 					showAutoNoDataMessage : false,
 					selectionMode : "multipleCells",
@@ -507,11 +507,6 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 						callback : auiContextHandler
 					}, {
 						label : "END ITEM",
-						callback : auiContextHandler
-					}, {
-						label : "_$line" // label 에 _$line 을 설정하면 라인을 긋는 아이템으로 인식합니다.
-					}, {
-						label : "재변환",
 						callback : auiContextHandler
 					} ];
 					return menu;
@@ -634,16 +629,6 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 					break;
 				}
 			};
-
-			// 재변환
-			function publish(oid) {
-				const url = getCallUrl("/part/publish?oid=" + oid);
-				parent.openLayer();
-				call(url, null, function(data) {
-					alert(data.msg);
-					parent.closeLayer();
-				}, "GET");
-			}
 
 			function spread(target) {
 				const e = document.querySelectorAll('.hidden');

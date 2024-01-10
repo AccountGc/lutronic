@@ -431,7 +431,7 @@ QuantityUnit[] unitList = (QuantityUnit[]) request.getAttribute("unitList");
 				};
 				myGridID = AUIGrid.create("#grid_wrap", columnLayout, props);
 				loadGridData();
-				AUIGrid.bind(myGridID, "contextMenu", auiContextMenuHandler);
+				AUIGrid.bind(myGridID, "contextMenu", _auiContextMenuHandler);
 				AUIGrid.bind(myGridID, "vScrollChange", function(event) {
 					hideContextMenu();
 				});
@@ -439,7 +439,65 @@ QuantityUnit[] unitList = (QuantityUnit[]) request.getAttribute("unitList");
 					hideContextMenu();
 				});
 			}
+			
+			function _auiContextMenuHandler(event) {
+				if (event.target == "header") { // 헤더 컨텍스트
+					if (nowHeaderMenuVisible) {
+						hideContextMenu();
+					}
 
+					nowHeaderMenuVisible = true;
+
+					// 컨텍스트 메뉴 생성된 dataField 보관.
+					currentDataField = event.dataField;
+
+					if (event.dataField == "id") { // ID 칼럼은 숨기기 못하게 설정
+						$("#h_item_4").addClass("ui-state-disabled");
+					} else {
+						$("#h_item_4").removeClass("ui-state-disabled");
+					}
+
+					// 헤더 에서 사용할 메뉴 위젯 구성
+					$("#headerMenu").menu({
+						select : headerMenuSelectHandler
+					});
+
+					$("#headerMenu").css({
+						left : event.pageX,
+						top : event.pageY
+					}).show();
+				} else {
+					hideContextMenu();
+					const menu = [ {
+						label : "재변환",
+						callback : auiContextHandler
+					} ];
+					return menu;
+				}
+			}
+
+			
+			function auiContextHandler(event) {
+				const item = event.item;
+				const oid = item.oid;
+				let url;
+				switch (event.contextIndex) {
+				case 0:
+					publish(oid);
+					break;
+				}
+			};
+
+			// 재변환
+			function publish(oid) {
+				const url = getCallUrl("/part/publish?oid=" + oid);
+				parent.openLayer();
+				call(url, null, function(data) {
+					alert(data.msg);
+					parent.closeLayer();
+				}, "GET");
+			}
+			
 			function loadGridData(movePage) {
 				if (movePage === undefined) {
 					document.getElementById("sessionid").value = 0;

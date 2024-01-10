@@ -1,11 +1,5 @@
 package com.e3ps.part.controller;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.InputStream;
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -14,22 +8,6 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.poi.ss.usermodel.BorderStyle;
-import org.apache.poi.ss.usermodel.Cell;
-import org.apache.poi.ss.usermodel.CellStyle;
-import org.apache.poi.ss.usermodel.ClientAnchor;
-import org.apache.poi.ss.usermodel.CreationHelper;
-import org.apache.poi.ss.usermodel.Drawing;
-import org.apache.poi.ss.usermodel.Font;
-import org.apache.poi.ss.usermodel.HorizontalAlignment;
-import org.apache.poi.ss.usermodel.Picture;
-import org.apache.poi.ss.usermodel.Row;
-import org.apache.poi.ss.usermodel.Sheet;
-import org.apache.poi.ss.usermodel.VerticalAlignment;
-import org.apache.poi.ss.usermodel.Workbook;
-import org.apache.poi.ss.util.CellRangeAddress;
-import org.apache.poi.util.IOUtils;
-import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.context.annotation.Description;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -55,26 +33,17 @@ import com.e3ps.common.service.CommonHelper;
 import com.e3ps.common.util.CommonUtil;
 import com.e3ps.common.util.StringUtil;
 import com.e3ps.controller.BaseController;
-import com.e3ps.part.bom.service.BomHelper;
 import com.e3ps.part.dto.PartDTO;
 import com.e3ps.part.dto.PartData;
 import com.e3ps.part.service.BomSearchHelper;
 import com.e3ps.part.service.PartHelper;
 import com.e3ps.part.service.PartSearchHelper;
-import com.ptc.wvs.server.util.PublishUtils;
 
 import net.sf.json.JSONArray;
-import wt.content.ApplicationData;
-import wt.content.ContentHelper;
-import wt.content.ContentRoleType;
-import wt.content.ContentServerHelper;
 import wt.enterprise.Master;
-import wt.fc.QueryResult;
 import wt.fc.ReferenceFactory;
 import wt.part.QuantityUnit;
 import wt.part.WTPart;
-import wt.representation.Representation;
-import wt.util.FileUtil;
 import wt.util.WTException;
 import wt.util.WTRuntimeException;
 import wt.vc.baseline.Baseline;
@@ -144,7 +113,6 @@ public class PartController extends BaseController {
 		ArrayList<NumberCode> productmethodList = NumberCodeHelper.manager.getArrayCodeList("PRODUCTMETHOD");
 		ArrayList<NumberCode> deptcodeList = NumberCodeHelper.manager.getArrayCodeList("DEPTCODE");
 		ArrayList<NumberCode> matList = NumberCodeHelper.manager.getArrayCodeList("MAT");
-		ArrayList<NumberCode> manufactureList = NumberCodeHelper.manager.getArrayCodeList("MANUFACTURE");
 		ArrayList<NumberCode> finishList = NumberCodeHelper.manager.getArrayCodeList("FINISH");
 		QuantityUnit[] unitList = QuantityUnit.getQuantityUnitSet();
 		ModelAndView model = new ModelAndView();
@@ -152,7 +120,6 @@ public class PartController extends BaseController {
 		model.addObject("productmethodList", productmethodList);
 		model.addObject("deptcodeList", deptcodeList);
 		model.addObject("matList", matList);
-		model.addObject("manufactureList", manufactureList);
 		model.addObject("finishList", finishList);
 		model.addObject("unitList", unitList);
 		model.setViewName("/extcore/jsp/part/part-create.jsp");
@@ -399,7 +366,6 @@ public class PartController extends BaseController {
 		ArrayList<NumberCode> productmethodList = NumberCodeHelper.manager.getArrayCodeList("PRODUCTMETHOD");
 		ArrayList<NumberCode> deptcodeList = NumberCodeHelper.manager.getArrayCodeList("DEPTCODE");
 		ArrayList<NumberCode> matList = NumberCodeHelper.manager.getArrayCodeList("MAT");
-		ArrayList<NumberCode> manufactureList = NumberCodeHelper.manager.getArrayCodeList("MANUFACTURE");
 		ArrayList<NumberCode> finishList = NumberCodeHelper.manager.getArrayCodeList("FINISH");
 		QuantityUnit[] unitList = QuantityUnit.getQuantityUnitSet();
 		try {
@@ -412,7 +378,6 @@ public class PartController extends BaseController {
 		model.addObject("productmethodList", productmethodList);
 		model.addObject("deptcodeList", deptcodeList);
 		model.addObject("matList", matList);
-		model.addObject("manufactureList", manufactureList);
 		model.addObject("finishList", finishList);
 		model.addObject("unitList", unitList);
 		model.setViewName("popup:/part/part-update");

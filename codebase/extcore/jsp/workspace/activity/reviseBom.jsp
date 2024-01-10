@@ -104,7 +104,9 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 			<tr>
 				<th class="lb">의견</th>
 				<td class="indent5" colspan="3">
-					<textarea name="description" id="description" rows="6"></textarea>
+					<div class="textarea-auto">
+						<textarea name="description" id="description" rows="6"></textarea>
+					</div>
 				</td>
 			</tr>
 		</table>

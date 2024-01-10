@@ -49,6 +49,8 @@ import com.e3ps.part.service.PartSearchHelper;
 import com.e3ps.part.util.BomBroker;
 import com.e3ps.part.util.PartUtil;
 import com.e3ps.workspace.service.WorkspaceHelper;
+import com.ptc.wvs.client.beans.PublishConfigSpec;
+import com.ptc.wvs.common.ui.Publisher;
 import com.ptc.wvs.server.ui.UIHelper;
 import com.ptc.wvs.server.util.FileHelper;
 import com.ptc.wvs.server.util.PublishUtils;
@@ -126,6 +128,42 @@ public class StandardDrawingService extends StandardManager implements DrawingSe
 		final StandardDrawingService instance = new StandardDrawingService();
 		instance.initialize();
 		return instance;
+	}
+
+	@Override
+	public void publish(String oid) throws Exception {
+		Transaction trs = new Transaction();
+		try {
+			trs.start();
+			EPMDocument epm = (EPMDocument) CommonUtil.getObject(oid);
+			Representable representable = PublishUtils.findRepresentable(epm);
+			Representation representation = PublishUtils.getRepresentation(representable, true, null, false);
+			if (representation != null) {
+				PersistenceHelper.manager.delete(representation);
+			}
+
+			Publisher publisher = new Publisher();
+			PublishConfigSpec pcs = new PublishConfigSpec();
+			boolean viewableLink = true;
+			boolean forceRepublish = false;
+			boolean isPublished = publisher.doPublish(viewableLink, forceRepublish, oid,
+					pcs.getEPMActiveNavigationCriteria(false, null), pcs.getPartActiveNavigationCriteria(null), true,
+					null, null, pcs.getStructureType(), null, 1);
+
+			if (isPublished) {
+				System.out.println("재변환 성공");
+			}
+
+			trs.commit();
+			trs = null;
+		} catch (Exception e) {
+			e.printStackTrace();
+			trs.rollback();
+			throw e;
+		} finally {
+			if (trs != null)
+				trs.rollback();
+		}
 	}
 
 	@Override

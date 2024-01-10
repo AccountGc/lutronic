@@ -11,7 +11,6 @@ ArrayList<NumberCode> modelList = (ArrayList<NumberCode>) request.getAttribute("
 ArrayList<NumberCode> deptcodeList = (ArrayList<NumberCode>) request.getAttribute("deptcodeList");
 ArrayList<NumberCode> matList = (ArrayList<NumberCode>) request.getAttribute("matList");
 ArrayList<NumberCode> productmethodList = (ArrayList<NumberCode>) request.getAttribute("productmethodList");
-ArrayList<NumberCode> manufactureList = (ArrayList<NumberCode>) request.getAttribute("manufactureList");
 ArrayList<NumberCode> finishList = (ArrayList<NumberCode>) request.getAttribute("finishList");
 QuantityUnit[] unitList = (QuantityUnit[]) request.getAttribute("unitList");
 %>
@@ -176,16 +175,7 @@ QuantityUnit[] unitList = (QuantityUnit[]) request.getAttribute("unitList");
 		</td>
 		<th>MANUFACTURER</th>
 		<td class="indent5">
-			<select name="manufacture" id="manufacture" class="width-200">
-				<option value="">선택</option>
-				<%
-				for (NumberCode manufacture : manufactureList) {
-				%>
-				<option value="<%=manufacture.getCode() %>" <% if(data.getManufacture() != null && data.getManufacture().equals(manufacture.getCode())) { %> selected <% } %>><%=manufacture.getName()%></option>
-				<%
-				}
-				%>
-			</select>
+			<input type="text" name="manufacture" id="manufacture" class="width-200">
 		</td>
 	</tr>
 	<tr>
@@ -339,7 +329,33 @@ document.addEventListener("DOMContentLoaded", function() {
 	selectbox("unit");
 	selectbox("mat");
 	selectbox("finish");
-	selectbox("manufacture");
+	
+	axdom("#manufacture").bindSelector({
+		reserveKeys: {
+			options: "list",
+			optionValue: "oid",
+			optionText: "name"
+		},
+		optionPrintLength: "all",
+		onsearch: function(id, obj, callBack) {
+			const value = document.getElementById(id).value;
+			const params = new Object();
+			const url = getCallUrl("/code/finder");
+			params.value = value;
+			params.codeType = "MANUFACTURE";
+			params.obj = obj;
+			call(url, params, function(data) {
+				callBack({
+					options: data.list
+				})
+			})
+		},
+		onchange: function() {
+			const id = this.targetID;
+			const value = this.selectedOption.oid
+			document.getElementById(id + "Oid").value = value;
+		},
+	})	
 });
 
 window.addEventListener("resize", function() {

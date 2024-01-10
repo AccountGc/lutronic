@@ -22,6 +22,11 @@ import wt.util.WTException;
 @RemoteInterface
 public interface DrawingService {
 
+	/**
+	 * 도면 재변환 요청
+	 */
+	public abstract void publish(String oid) throws Exception; 
+	
 	EPMDocument getEPMDocument(WTPart _part) throws Exception;
 
 	Map<String, String> create(Map<String, Object> hash, String[] loc);

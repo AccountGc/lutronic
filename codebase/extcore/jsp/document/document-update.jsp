@@ -330,6 +330,7 @@ iframe {
 		call(url, params, function(data) {
 			alert(data.msg);
 			if (data.result) {
+				opener.parent.updateHeader();
 				opener.loadGridData();
 				self.close();
 			} else {

@@ -390,6 +390,7 @@ public class WorkspaceController extends BaseController {
 		} else if (columnType.equals("COLUMN_REJECT")) { // 반려
 			dto = WorkspaceHelper.manager.rejectLine(master);
 		}
+		System.out.println("dto=" + dto);
 		model.addObject("dto", dto);
 		model.addObject("oid", oid);
 		model.setViewName("popup:/workspace/master-view");

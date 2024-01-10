@@ -12,7 +12,6 @@
 <%
 ArrayList<NumberCode> preserationList = (ArrayList<NumberCode>) request.getAttribute("preserationList");
 ArrayList<NumberCode> deptcodeList = (ArrayList<NumberCode>) request.getAttribute("deptcodeList");
-ArrayList<NumberCode> modelList = (ArrayList<NumberCode>) request.getAttribute("modelList");
 List<Map<String, String>> lifecycleList = (List<Map<String, String>>) request.getAttribute("lifecycleList");
 ArrayList<Map<String, String>> classTypes1 = (ArrayList<Map<String, String>>) request.getAttribute("classTypes1");
 WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
@@ -145,16 +144,7 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 				</td>
 				<th>프로젝트코드</th>
 				<td class="indent5">
-					<select name="model" id="model" class="width-200">
-						<option value="">선택</option>
-						<%
-						for (NumberCode model : modelList) {
-						%>
-						<option value="<%=model.getCode()%>"><%=model.getName()%></option>
-						<%
-						}
-						%>
-					</select>
+					<input type="text" name="model" id="model" class="width-200">
 				</td>
 			</tr>
 			<tr>
@@ -637,12 +627,38 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 				twindate("modified");
 				selectbox("_psize");
 				selectbox("preseration");
-				selectbox("model");
 				selectbox("deptcode");
 				finderUser("writer");
 				selectbox("classType1");
 				selectbox("classType2");
 				selectbox("classType3");
+				
+				axdom("#model").bindSelector({
+					reserveKeys: {
+						options: "list",
+						optionValue: "oid",
+						optionText: "name"
+					},
+					optionPrintLength: "all",
+					onsearch: function(id, obj, callBack) {
+						const value = document.getElementById(id).value;
+						const params = new Object();
+						const url = getCallUrl("/code/finder");
+						params.value = value;
+						params.codeType = "MODEL";
+						params.obj = obj;
+						call(url, params, function(data) {
+							callBack({
+								options: data.list
+							})
+						})
+					},
+					onchange: function() {
+						const id = this.targetID;
+						const value = this.selectedOption.oid
+						document.getElementById(id + "Oid").value = value;
+					},
+				})
 			});
 
 			function exportExcel() {

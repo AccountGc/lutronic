@@ -62,6 +62,23 @@ import wt.util.WTException;
 @Controller
 @RequestMapping(value = "/drawing/**")
 public class DrawingController extends BaseController {
+	
+	@Description(value = "도면 재변환")
+	@ResponseBody
+	@GetMapping(value = "/publish")
+	public Map<String, Object> publish(@RequestParam String oid) throws Exception {
+		Map<String, Object> result = new HashMap<>();
+		try {
+			DrawingHelper.service.publish(oid);
+			result.put("msg", "재변환이 요청 되었습니다.\n잠시 후 데이터 확인을 해주세요.");
+			result.put("result", SUCCESS);
+		} catch (Exception e) {
+			e.printStackTrace();
+			result.put("result", FAIL);
+			result.put("msg", e.toString());
+		}
+		return result;
+	}
 
 	@Description(value = "도면 일괄 등록")
 	@ResponseBody

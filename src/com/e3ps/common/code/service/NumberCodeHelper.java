@@ -372,7 +372,7 @@ public class NumberCodeHelper {
 		QuerySpec query = new QuerySpec();
 		int idx = query.appendClassList(NumberCode.class, true);
 		QuerySpecUtils.toEqualsAnd(query, idx, NumberCode.class, NumberCode.CODE_TYPE, codeType);
-		QuerySpecUtils.toEqualsAnd(query, idx, NumberCode.class, NumberCode.NAME, value);
+		QuerySpecUtils.toLikeAnd(query, idx, NumberCode.class, NumberCode.NAME, value);
 		QuerySpecUtils.toBooleanAnd(query, idx, NumberCode.class, NumberCode.DISABLED, false);
 		QuerySpecUtils.toOrderBy(query, idx, NumberCode.class, NumberCode.SORT, false);
 		QueryResult result = PersistenceHelper.manager.find(query);

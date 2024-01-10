@@ -780,7 +780,7 @@ public class WorkspaceHelper {
 		ArrayList<ApprovalLine> list = getApprovalLines(master);
 		for (ApprovalLine appLine : list) {
 			int compare = appLine.getSort();
-			System.out.println("="+compare);
+			System.out.println("=" + compare);
 			if (sort <= compare) {
 				isEndApprovalLine = false;
 				break;
@@ -948,6 +948,8 @@ public class WorkspaceHelper {
 		QuerySpecUtils.toEquals(query, idx, ApprovalMaster.class, ApprovalMaster.STATE, STATE_APPROVAL_COMPLETE);
 //		QuerySpecUtils.toEqualsAnd(query, idx, ApprovalLine.class, "masterReference.key.id", master);
 //		QuerySpecUtils.toOrderBy(query, idx, ApprovalLine.class, ApprovalLine.START_TIME, false);
+
+		System.out.println("query=" + query);
 		QueryResult result = PersistenceHelper.manager.find(query);
 		ApprovalLineDTO dto = null;
 		while (result.hasMoreElements()) {
