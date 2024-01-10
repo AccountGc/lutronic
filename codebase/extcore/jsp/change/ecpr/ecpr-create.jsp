@@ -236,6 +236,7 @@ iframe {
 				call(url, params, function(data) {
 					alert(data.msg);
 					if (data.result) {
+						parent.updateHeader();
 						location.href = getCallUrl("/ecpr/list");
 					} else {
 						parent.closeLayer();

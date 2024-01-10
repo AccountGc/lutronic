@@ -899,11 +899,11 @@ public class WorkspaceHelper {
 	 */
 	public ApprovalLineDTO ingLine(ApprovalMaster master) throws Exception {
 		QuerySpec query = new QuerySpec();
-		int idx = query.appendClassList(ApprovalLine.class, true);
+		int idx = query.appendClassList(ApprovalMaster.class, true);
 
 		if (!CommonUtil.isAdmin()) {
 			WTUser sessionUser = CommonUtil.sessionUser();
-			QuerySpecUtils.toCreator(query, idx, ApprovalLine.class,
+			QuerySpecUtils.toCreator(query, idx, ApprovalMaster.class,
 					sessionUser.getPersistInfo().getObjectIdentifier().getStringValue());
 		}
 
@@ -912,17 +912,17 @@ public class WorkspaceHelper {
 		}
 
 		query.appendOpenParen();
-		QuerySpecUtils.toEquals(query, idx, ApprovalLine.class, ApprovalLine.STATE, STATE_AGREE_START);
-		QuerySpecUtils.toEqualsOr(query, idx, ApprovalLine.class, ApprovalLine.STATE, STATE_APPROVAL_APPROVING);
+		QuerySpecUtils.toEquals(query, idx, ApprovalMaster.class, ApprovalMaster.STATE, STATE_AGREE_START);
+		QuerySpecUtils.toEqualsOr(query, idx, ApprovalMaster.class, ApprovalMaster.STATE, STATE_APPROVAL_APPROVING);
 		query.appendCloseParen();
 
-		QuerySpecUtils.toEqualsAnd(query, idx, ApprovalLine.class, "masterReference.key.id", master);
-		QuerySpecUtils.toOrderBy(query, idx, ApprovalLine.class, ApprovalLine.START_TIME, false);
+//		QuerySpecUtils.toEqualsAnd(query, idx, ApprovalLine.class, "masterReference.key.id", master);
+//		QuerySpecUtils.toOrderBy(query, idx, ApprovalLine.class, ApprovalLine.START_TIME, false);
 		QueryResult result = PersistenceHelper.manager.find(query);
 		ApprovalLineDTO dto = null;
 		while (result.hasMoreElements()) {
 			Object[] obj = (Object[]) result.nextElement();
-			dto = new ApprovalLineDTO((ApprovalLine) obj[0]);
+			dto = new ApprovalLineDTO((ApprovalMaster) obj[0]);
 		}
 		return dto;
 	}
@@ -932,12 +932,12 @@ public class WorkspaceHelper {
 	 */
 	public ApprovalLineDTO completeLine(ApprovalMaster master) throws Exception {
 		QuerySpec query = new QuerySpec();
-		int idx = query.appendClassList(ApprovalLine.class, true);
+		int idx = query.appendClassList(ApprovalMaster.class, true);
 
 		// 완료함은 자기가 기안한거..
 		if (!CommonUtil.isAdmin()) {
 			WTUser sessionUser = CommonUtil.sessionUser();
-			QuerySpecUtils.toCreator(query, idx, ApprovalLine.class,
+			QuerySpecUtils.toCreator(query, idx, ApprovalMaster.class,
 					sessionUser.getPersistInfo().getObjectIdentifier().getStringValue());
 		}
 
@@ -945,15 +945,14 @@ public class WorkspaceHelper {
 			query.appendAnd();
 		}
 
-		QuerySpecUtils.toEquals(query, idx, ApprovalLine.class, ApprovalLine.STATE, STATE_APPROVAL_COMPLETE);
-		QuerySpecUtils.toEqualsAnd(query, idx, ApprovalLine.class, ApprovalLine.TYPE, SUBMIT_LINE);
-		QuerySpecUtils.toEqualsAnd(query, idx, ApprovalLine.class, "masterReference.key.id", master);
-		QuerySpecUtils.toOrderBy(query, idx, ApprovalLine.class, ApprovalLine.START_TIME, false);
+		QuerySpecUtils.toEquals(query, idx, ApprovalMaster.class, ApprovalMaster.STATE, STATE_APPROVAL_COMPLETE);
+//		QuerySpecUtils.toEqualsAnd(query, idx, ApprovalLine.class, "masterReference.key.id", master);
+//		QuerySpecUtils.toOrderBy(query, idx, ApprovalLine.class, ApprovalLine.START_TIME, false);
 		QueryResult result = PersistenceHelper.manager.find(query);
 		ApprovalLineDTO dto = null;
 		while (result.hasMoreElements()) {
 			Object[] obj = (Object[]) result.nextElement();
-			dto = new ApprovalLineDTO((ApprovalLine) obj[0]);
+			dto = new ApprovalLineDTO((ApprovalMaster) obj[0]);
 		}
 		return dto;
 	}
@@ -963,11 +962,11 @@ public class WorkspaceHelper {
 	 */
 	public ApprovalLineDTO rejectLine(ApprovalMaster master) throws Exception {
 		QuerySpec query = new QuerySpec();
-		int idx = query.appendClassList(ApprovalLine.class, true);
+		int idx = query.appendClassList(ApprovalMaster.class, true);
 
 		if (!CommonUtil.isAdmin()) {
 			WTUser sessionUser = CommonUtil.sessionUser();
-			QuerySpecUtils.toCreator(query, idx, ApprovalLine.class,
+			QuerySpecUtils.toCreator(query, idx, ApprovalMaster.class,
 					sessionUser.getPersistInfo().getObjectIdentifier().getStringValue());
 		}
 
@@ -975,15 +974,15 @@ public class WorkspaceHelper {
 			query.appendAnd();
 		}
 
-		QuerySpecUtils.toEquals(query, idx, ApprovalLine.class, ApprovalLine.STATE, STATE_APPROVAL_REJECT);
-
-		QuerySpecUtils.toEqualsAnd(query, idx, ApprovalLine.class, "masterReference.key.id", master);
-		QuerySpecUtils.toOrderBy(query, idx, ApprovalLine.class, ApprovalLine.START_TIME, false);
+		QuerySpecUtils.toEquals(query, idx, ApprovalMaster.class, ApprovalMaster.STATE, STATE_APPROVAL_REJECT);
+//		QuerySpecUtils.toEqualsAnd(query, idx, ApprovalLine.class, ApprovalLine.TYPE, SUBMIT_LINE);
+//		QuerySpecUtils.toEqualsAnd(query, idx, ApprovalLine.class, "masterReference.key.id", master);
+//		QuerySpecUtils.toOrderBy(query, idx, ApprovalLine.class, ApprovalLine.START_TIME, false);
 		QueryResult result = PersistenceHelper.manager.find(query);
 		ApprovalLineDTO dto = null;
 		while (result.hasMoreElements()) {
 			Object[] obj = (Object[]) result.nextElement();
-			dto = new ApprovalLineDTO((ApprovalLine) obj[0]);
+			dto = new ApprovalLineDTO((ApprovalMaster) obj[0]);
 		}
 		return dto;
 	}

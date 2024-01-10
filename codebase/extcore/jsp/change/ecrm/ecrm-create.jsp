@@ -216,6 +216,7 @@ iframe {
 				call(url, params, function(data) {
 					alert(data.msg);
 					if (data.result) {
+						parent.updateHeader();
 						document.location.href = getCallUrl("/ecrm/list");
 					}
 					parent.closeLayer();

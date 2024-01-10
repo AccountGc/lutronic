@@ -31,15 +31,13 @@ ApprovalLineDTO dto = (ApprovalLineDTO) request.getAttribute("dto");
 	</colgroup>
 	<tr>
 		<th class="lb">결재 제목</th>
-		<td class="indent5" colspan="5">
+		<td class="indent5" colspan="3">
 			<a href="javascript:dataView();"><%=dto.getName()%></a>
 		</td>
 	</tr>
 	<tr>
 		<th class="lb">수신일</th>
 		<td class="indent5"><%=dto.getReceiveTime()%></td>
-		<th>기안자</th>
-		<td class="indent5"><%=dto.getSubmiter()%></td>
 		<th>상태</th>
 		<td class="indent5"><%=dto.getState()%></td>
 	</tr>

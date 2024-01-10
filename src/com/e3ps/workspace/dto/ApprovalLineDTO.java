@@ -46,6 +46,16 @@ public class ApprovalLineDTO {
 		this((ApprovalLine) CommonUtil.getObject(oid));
 	}
 
+	public ApprovalLineDTO(ApprovalMaster m) throws Exception {
+		Persistable per = m.getPersist();
+		setOid(m.getPersistInfo().getObjectIdentifier().getStringValue());
+		setPoid(per.getPersistInfo().getObjectIdentifier().getStringValue());
+		setName(m.getName());
+		setState(m.getState());
+		setPersist(per);
+		url(per);
+	}
+
 	public ApprovalLineDTO(ApprovalLine line) throws Exception {
 		ApprovalMaster master = line.getMaster();
 		Persistable per = master.getPersist();
