@@ -600,9 +600,14 @@ public class StandardSAPService extends StandardManager implements SAPService {
 						String compNum = dto.getNewChildPartNumber();
 
 						// addList에서 같은 newChildPartNumber를 찾으면 changeList에서 제거
-						if (sendList.stream().anyMatch(sendDTo -> sendDTo.getNewChildPartNumber().equals(compNum))) {
-							iterator.remove();
+						for (Map<String, Object> addMap : addList) {
+							String addOid = (String) addMap.get("oid");
+							WTPart addPart = (WTPart) CommonUtil.getObject(addOid);
+							if (addPart.getNumber().equals(compNum)) {
+								iterator.remove();
+							}
 						}
+
 					}
 					sendList.addAll(changeList);
 				}

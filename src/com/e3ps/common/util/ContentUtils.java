@@ -139,7 +139,12 @@ public class ContentUtils {
 			String fileIcon = getFileIcon(data.getFileName());
 			map.put("oid", holder.getPersistInfo().getObjectIdentifier().getStringValue());
 			map.put("aoid", data.getPersistInfo().getObjectIdentifier().getStringValue());
-			map.put("name", data.getFileName());
+			if (holder instanceof EPMDocument) {
+				EPMDocument d = (EPMDocument) holder;
+				map.put("name", d.getCADName());
+			} else {
+				map.put("name", data.getFileName());
+			}
 			map.put("fileSizeKB", data.getFileSizeKB() + "KB");
 			map.put("fileIcon", fileIcon);
 			map.put("url", "/Windchill/plm/content/download?oid="
