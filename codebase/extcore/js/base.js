@@ -182,6 +182,30 @@ function isNull(value) {
 	return false;
 }
 
+// numbercode finder
+function finderCode(tag, key) {
+	axdom("#" + tag).bindSelector({
+		reserveKeys: {
+			options: "list",
+			optionValue: "oid",
+			optionText: "name"
+		},
+		optionPrintLength: "all",
+		onsearch: function(id, obj, callBack) {
+			const value = document.getElementById(id).value;
+			const params = new Object();
+			const url = getCallUrl("/code/finder");
+			params.value = value;
+			params.codeType = key;
+			call(url, params, function(data) {
+				callBack({
+					options: data.list
+				})
+			})
+		},
+	})
+}
+
 
 // axisj user 검색 바인딩 공용 
 function finderUser(id) {

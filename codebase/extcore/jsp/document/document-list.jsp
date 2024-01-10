@@ -632,33 +632,7 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 				selectbox("classType1");
 				selectbox("classType2");
 				selectbox("classType3");
-				
-				axdom("#model").bindSelector({
-					reserveKeys: {
-						options: "list",
-						optionValue: "oid",
-						optionText: "name"
-					},
-					optionPrintLength: "all",
-					onsearch: function(id, obj, callBack) {
-						const value = document.getElementById(id).value;
-						const params = new Object();
-						const url = getCallUrl("/code/finder");
-						params.value = value;
-						params.codeType = "MODEL";
-						params.obj = obj;
-						call(url, params, function(data) {
-							callBack({
-								options: data.list
-							})
-						})
-					},
-					onchange: function() {
-						const id = this.targetID;
-						const value = this.selectedOption.oid
-						document.getElementById(id + "Oid").value = value;
-					},
-				})
+				finderCode("model", "MODEL");
 			});
 
 			function exportExcel() {
