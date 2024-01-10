@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.aspose.pdf.internal.imaging.internal.bouncycastle.crypto.engines.ISAACEngine;
 import com.e3ps.common.code.NumberCode;
 import com.e3ps.common.code.service.NumberCodeHelper;
 import com.e3ps.common.comments.beans.CommentsDTO;
@@ -13,8 +12,10 @@ import com.e3ps.common.iba.IBAUtil;
 import com.e3ps.common.util.CommonUtil;
 import com.e3ps.common.util.ContentUtils;
 import com.e3ps.common.util.QuerySpecUtils;
+import com.e3ps.common.util.StringUtil;
 import com.e3ps.doc.DocumentClass;
 import com.e3ps.doc.DocumentClassType;
+import com.e3ps.doc.service.DocumentHelper;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -33,7 +34,6 @@ import wt.query.QuerySpec;
 public class DocumentDTO {
 
 	private String oid;
-	private WTDocument doc;
 	private String number;
 	private String name;
 	private String description;
@@ -51,8 +51,6 @@ public class DocumentDTO {
 	private String modifiedDate;
 
 	// IBA
-//	private String writer_name;
-//	private String writer_oid;
 	private String writer;
 	private String model_name;
 	private String model_code;
@@ -106,8 +104,6 @@ public class DocumentDTO {
 	private ArrayList<Map<String, String>> rows101 = new ArrayList<>(); // 관련 CR
 	private ArrayList<Map<String, String>> rows103 = new ArrayList<>(); // 관련 ECPR
 
-	private boolean temprary;
-
 	private String prefix;
 	private String suffix;
 
@@ -124,7 +120,6 @@ public class DocumentDTO {
 	 */
 	public DocumentDTO(WTDocument doc) throws Exception {
 		setOid(doc.getPersistInfo().getObjectIdentifier().getStringValue());
-		setDoc(doc);
 		setName(doc.getName());
 		setNumber(doc.getNumber());
 		setDescription(doc.getDescription());
@@ -132,7 +127,7 @@ public class DocumentDTO {
 		setLocation(doc.getLocation());
 		setDocumentType_name(doc.getDocType().getDisplay());
 		setDocumentType_code(doc.getDocType().toString());
-		setLatest(CommonUtil.isLatestVersion(doc));
+		setLatest(DocumentHelper.manager.isLatest(doc));
 		setState(doc.getLifeCycleState().getDisplay());
 		setVersion(doc.getVersionIdentifier().getSeries().getValue());
 		setIteration(doc.getIterationIdentifier().getSeries().getValue());
@@ -148,6 +143,9 @@ public class DocumentDTO {
 		setClassTypeInfo(doc);
 	}
 
+	/**
+	 * 문서 타입 세팅
+	 */
 	private void setClassTypeInfo(WTDocument doc) throws Exception {
 		WTDocumentTypeInfo info = doc.getTypeInfoWTDocument();
 		if (info != null) {
@@ -163,33 +161,40 @@ public class DocumentDTO {
 		}
 	}
 
+	/**
+	 * 문서명 세팅
+	 */
 	private void setNameInfo(WTDocument doc) throws Exception {
 		// 과거 데이터는 어떻게 할것인지..
 		String classType1 = doc.getTypeInfoWTDocument().getPtc_str_2();
-		DocumentClassType dct = DocumentClassType.toDocumentClassType(classType1);
-		if (dct != null) {
-			setClassType1_code(dct.toString());
-			setClassType1_name(dct.getDisplay());
-		}
-		if ("DEV".equals(classType1) || "INSTRUCTION".equals(classType1) || "REPORT".equals(classType1)
-				|| "VALIDATION".equals(classType1) || "MEETING".equals(classType1)) {
-			// _ 무조건 붙이게하도록...
-			String name = doc.getName();
-			int idx = name.lastIndexOf("_");
-			String prefix = "";
-			String suffix = "";
-			if (idx > -1) {
-				prefix = name.substring(0, idx);
-				suffix = name.substring(idx + 1);
-			} else {
-				prefix = name;
-				suffix = "";
+		if (StringUtil.checkString(classType1)) {
+			DocumentClassType dct = DocumentClassType.toDocumentClassType(classType1);
+			if (dct != null) {
+				setClassType1_code(dct.toString());
+				setClassType1_name(dct.getDisplay());
 			}
-			setPrefix(prefix);
-			setSuffix(suffix);
+			if ("DEV".equals(classType1) || "INSTRUCTION".equals(classType1) || "REPORT".equals(classType1)
+					|| "VALIDATION".equals(classType1) || "MEETING".equals(classType1)) {
+				// _ 무조건 붙이게하도록...
+				String name = doc.getName();
+				int idx = name.lastIndexOf("_");
+				String prefix = "";
+				String suffix = "";
+				if (idx > -1) {
+					prefix = name.substring(0, idx);
+					suffix = name.substring(idx + 1);
+				} else {
+					prefix = name;
+					suffix = "";
+				}
+				setPrefix(prefix);
+				setSuffix(suffix);
+			} else {
+				setPrefix("");
+				setSuffix(doc.getName());
+			}
 		} else {
-			setPrefix("");
-			setSuffix(doc.getName());
+			setPrefix(doc.getName());
 		}
 	}
 
@@ -244,7 +249,7 @@ public class DocumentDTO {
 	private void setAuth(WTDocument doc) throws Exception {
 		boolean isAdmin = CommonUtil.isAdmin();
 		// 승인된경우 프린트
-		if (check("APPROVED")) {
+		if (check(doc, "APPROVED")) {
 			set_print(true);
 		}
 
@@ -253,17 +258,17 @@ public class DocumentDTO {
 		}
 
 		// 승인되고 최신버전일경우 개정가능
-		if (check("APPROVED") && isLatest()) {
+		if (check(doc, "APPROVED") && isLatest()) {
 			set_revise(true);
 		}
 
 		// 최신버전이고 결재선 지정상태일 경우 승인가능
-		if (isLatest() && (check("LINE_REGISTER") || check("RETURN"))) {
+		if (isLatest() && (check(doc, "LINE_REGISTER") || check(doc, "RETURN"))) {
 			set_modify(true);
 		}
 
 		// 승인중일 경우 회수 가능
-		if (check("APPROVING") && isLatest()) {
+		if (check(doc, "APPROVING") && isLatest()) {
 			set_withdraw(true);
 		}
 
@@ -275,9 +280,9 @@ public class DocumentDTO {
 	/**
 	 * 상태값 여부 체크
 	 */
-	private boolean check(String state) throws Exception {
+	private boolean check(WTDocument doc, String state) throws Exception {
 		boolean check = false;
-		String compare = getDoc().getLifeCycleState().toString();
+		String compare = doc.getLifeCycleState().toString();
 		if (compare.equals(state)) {
 			check = true;
 		}

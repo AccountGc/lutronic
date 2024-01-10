@@ -134,7 +134,7 @@ public class ContentUtils {
 		Vector<Map<String, Object>> secondarys = new Vector<>();
 		QueryResult result = ContentHelper.service.getContentsByRole(holder, ContentRoleType.SECONDARY);
 		while (result.hasMoreElements()) {
-			Map<String, Object> map = new HashMap();
+			Map<String, Object> map = new HashMap<>();
 			ApplicationData data = (ApplicationData) result.nextElement();
 			String fileIcon = getFileIcon(data.getFileName());
 			map.put("oid", holder.getPersistInfo().getObjectIdentifier().getStringValue());

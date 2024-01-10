@@ -5,9 +5,11 @@ import java.util.ArrayList;
 import com.e3ps.common.comments.beans.CommentsDTO;
 import com.e3ps.common.comments.service.CommentsHelper;
 import com.e3ps.common.util.CommonUtil;
+import com.e3ps.part.service.PartHelper;
 
 import lombok.Getter;
 import lombok.Setter;
+import wt.doc.WTDocument;
 import wt.part.WTPart;
 import wt.vc.views.View;
 import wt.vc.views.ViewHelper;
@@ -33,6 +35,10 @@ public class PartDTO {
 	private String epmOid;
 	private String viewName;
 
+	private boolean _delete = false;
+	private boolean _modify = false;
+	private boolean _revise = false;
+
 	// 댓글
 	private ArrayList<CommentsDTO> comments = new ArrayList<CommentsDTO>();
 
@@ -47,15 +53,41 @@ public class PartDTO {
 		setLocation(part.getLocation());
 		setVersion(part.getVersionIdentifier().getSeries().getValue() + "."
 				+ part.getIterationIdentifier().getSeries().getValue());
-//		setRemark((String) map.get(AttributeKey.IBAKey.IBA_REMARKS));//
 		setState(part.getLifeCycleState().getDisplay());
 		setCreator(part.getCreatorFullName());
 		setCreateDate(part.getCreateTimestamp().toString().substring(0, 10));
 		setModifier(part.getModifierFullName());
 		setModifyDate(part.getModifyTimestamp().toString().substring(0, 10));
 		setComments(CommentsHelper.manager.comments(part));
-		setLatest(CommonUtil.isLatestVersion(part));
+		setLatest(PartHelper.manager.isLatest(part));
 		View view = ViewHelper.getView(part);
 		setViewName(view == null ? "" : view.getName());
+		setAuth(part);
+	}
+
+	/**
+	 * 권한
+	 */
+	private void setAuth(WTPart part) throws Exception {
+		boolean isAdmin = CommonUtil.isAdmin();
+		if (isLatest() && (check(part, "INWORK"))) {
+			set_modify(true);
+		}
+
+		if (isAdmin) {
+			set_delete(true);
+		}
+	}
+
+	/**
+	 * 상태값 여부 체크
+	 */
+	private boolean check(WTPart part, String state) throws Exception {
+		boolean check = false;
+		String compare = part.getLifeCycleState().toString();
+		if (compare.equals(state)) {
+			check = true;
+		}
+		return check;
 	}
 }
