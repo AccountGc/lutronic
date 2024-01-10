@@ -5,12 +5,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%
 ApprovalLineDTO dto = (ApprovalLineDTO) request.getAttribute("dto");
-String jsp = dto.getPersist().getClass().getName();
-
-int idx = jsp.indexOf(".");
-
-jsp = jsp.substring(jsp.lastIndexOf(".") + 1);
-String url = "/extcore/jsp/workspace/" + jsp + ".jsp";
 %>
 <input type="hidden" name="oid" id="oid" value="<%=dto.getOid()%>">
 <table class="button-table">

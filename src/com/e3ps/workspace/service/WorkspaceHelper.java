@@ -934,6 +934,7 @@ public class WorkspaceHelper {
 		QuerySpec query = new QuerySpec();
 		int idx = query.appendClassList(ApprovalLine.class, true);
 
+		// 완료함은 자기가 기안한거..
 		if (!CommonUtil.isAdmin()) {
 			WTUser sessionUser = CommonUtil.sessionUser();
 			QuerySpecUtils.toCreator(query, idx, ApprovalLine.class,
@@ -945,7 +946,7 @@ public class WorkspaceHelper {
 		}
 
 		QuerySpecUtils.toEquals(query, idx, ApprovalLine.class, ApprovalLine.STATE, STATE_APPROVAL_COMPLETE);
-		QuerySpecUtils.toEqualsAnd(query, idx, ApprovalLine.class, ApprovalLine.TYPE, APPROVAL_LINE);
+		QuerySpecUtils.toEqualsAnd(query, idx, ApprovalLine.class, ApprovalLine.TYPE, SUBMIT_LINE);
 		QuerySpecUtils.toEqualsAnd(query, idx, ApprovalLine.class, "masterReference.key.id", master);
 		QuerySpecUtils.toOrderBy(query, idx, ApprovalLine.class, ApprovalLine.START_TIME, false);
 		QueryResult result = PersistenceHelper.manager.find(query);

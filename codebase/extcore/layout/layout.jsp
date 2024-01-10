@@ -64,17 +64,22 @@
 			}
 		})
 
-		
+		function updateHeader() {
+			updateWorkData();
+			updateWorkspace();
+			updateActivity();
+		}
+
 		function updateWorkData() {
 			const workData = document.getElementById("workData");
 			const url = getCallUrl("/workData/update");
 			call(url, null, function(data) {
-				if(data.result) {
+				if (data.result) {
 					workData.innerHTML = data.count;
 				}
 			}, "GET");
 		}
-		
+
 		function updateWorkspace() {
 			const approval = document.getElementById("approval");
 			const agree = document.getElementById("agree");
@@ -84,7 +89,7 @@
 			const progress = document.getElementById("progress");
 			const url = getCallUrl("/workspace/update");
 			call(url, null, function(data) {
-				if(data.result) {
+				if (data.result) {
 					approval.innerHTML = data.approval;
 					agree.innerHTML = data.agree;
 					receive.innerHTML = data.receive;
@@ -94,17 +99,17 @@
 				}
 			}, "GET");
 		}
-		
+
 		function updateActivity() {
 			const activity = document.getElementById("activity");
 			const url = getCallUrl("/activity/update");
 			call(url, null, function(data) {
-				if(data.result) {
+				if (data.result) {
 					activity.innerHTML = data.count;
 				}
 			}, "GET");
 		}
-		
+
 		function openLayer() {
 			document.getElementById("loading_layer").style.display = "block";
 			cover.open();

@@ -493,11 +493,10 @@ WTPart root = (WTPart) request.getAttribute("root");
 			const isCheckOut = node.data.isCheckOut;
 			const parentIsApproved = parent.data.state === "승인됨";
 			const isApproved = node.data.state === "승인됨";
-// 			logger(node);
 
 			// 삭제 승인됨 상태가 아니여야함..
 			// 부모도 승인됨 상태가 아니여야할거같은데??
-			$("#treetable").contextmenu("enableEntry", "removeLink", !isApproved);
+			$("#treetable").contextmenu("enableEntry", "removeLink", !parentIsApproved);
 			$("#treetable").contextmenu("enableEntry", "removeMultiLink", selectedNodes.length > 1);
 
 			// 추가 자체도.. 승인됨이 일단 아닐 경우
