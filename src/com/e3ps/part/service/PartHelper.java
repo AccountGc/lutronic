@@ -14,6 +14,7 @@ import com.e3ps.change.EChangeOrder;
 import com.e3ps.change.EChangeRequest;
 import com.e3ps.change.EcoPartLink;
 import com.e3ps.change.EcrPartLink;
+import com.e3ps.change.eco.column.EcoColumn;
 import com.e3ps.change.service.ECOSearchHelper;
 import com.e3ps.common.folder.beans.CommonFolderHelper;
 import com.e3ps.common.iba.AttributeKey;
@@ -24,10 +25,8 @@ import com.e3ps.common.util.CommonUtil;
 import com.e3ps.common.util.PageQueryUtils;
 import com.e3ps.common.util.QuerySpecUtils;
 import com.e3ps.common.util.StringUtil;
-import com.e3ps.common.util.ThumbnailUtil;
 import com.e3ps.common.util.WCUtil;
 import com.e3ps.doc.column.DocumentColumn;
-import com.e3ps.org.People;
 import com.e3ps.part.PartToPartLink;
 import com.e3ps.part.column.PartColumn;
 import com.e3ps.part.dto.ObjectComarator;
@@ -64,9 +63,7 @@ import wt.iba.definition.StringDefinition;
 import wt.iba.definition.litedefinition.AttributeDefDefaultView;
 import wt.iba.definition.service.IBADefinitionHelper;
 import wt.iba.value.BooleanValue;
-import wt.iba.value.StringValue;
 import wt.lifecycle.State;
-import wt.org.WTUser;
 import wt.part.PartDocHelper;
 import wt.part.QuantityUnit;
 import wt.part.WTPart;
@@ -78,7 +75,6 @@ import wt.part.WTPartMaster;
 import wt.part.WTPartStandardConfigSpec;
 import wt.part.WTPartUsageLink;
 import wt.query.ClassAttribute;
-import wt.query.OrderBy;
 import wt.query.QuerySpec;
 import wt.query.SearchCondition;
 import wt.services.ServiceFactory;
@@ -904,6 +900,22 @@ public class PartHelper {
 		} else if ("rohs".equalsIgnoreCase(type)) {
 			// ROHS
 			return JSONArray.fromObject(referenceRohs(part, list));
+		} else if ("eco".equalsIgnoreCase(type)) {
+			return JSONArray.fromObject(referenceEco(part, list));
+		}
+		return JSONArray.fromObject(list);
+	}
+
+	/**
+	 * 관련 ECO
+	 */
+	private Object referenceEco(WTPart part, ArrayList<Map<String, Object>> list) throws Exception {
+		QueryResult qr = PersistenceHelper.manager.navigate((WTPartMaster) part.getMaster(), "eco", EcoPartLink.class);
+		while (qr.hasMoreElements()) {
+			EChangeOrder eco = (EChangeOrder) qr.nextElement();
+			EcoColumn data = new EcoColumn(eco);
+			Map<String, Object> map = AUIGridUtil.dtoToMap(data);
+			list.add(map);
 		}
 		return JSONArray.fromObject(list);
 	}

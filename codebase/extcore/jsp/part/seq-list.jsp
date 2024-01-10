@@ -29,101 +29,47 @@ String partNumber = request.getParameter("partNumber");
 		headerText : "품목번호",
 		dataType : "string",
 		width : 180,
-		renderer : {
-			type : "LinkRenderer",
-			baseUrl : "javascript",
-			jsCallback : function(rowIndex, columnIndex, value, item) {
-				const oid = item.part_oid;
-				const url = getCallUrl("/part/view?oid=" + oid);
-				_popup(url, 1600, 800, "n");
-			}
-		},
-		filter : {
-			showIcon : true,
-			inline : true
-		},
 	}, {
 		dataField : "name",
 		headerText : "품목명",
 		dataType : "string",
 		style : "aui-left",
 		width : 350,
-		renderer : {
-			type : "LinkRenderer",
-			baseUrl : "javascript",
-			jsCallback : function(rowIndex, columnIndex, value, item) {
-				const oid = item.part_oid;
-				const url = getCallUrl("/part/view?oid=" + oid);
-				_popup(url, 1600, 800, "n");
-			}
-		},
-		filter : {
-			showIcon : true,
-			inline : true
-		},
 	}, {
 		dataField : "location",
 		headerText : "품목분류",
 		dataType : "string",
 		width : 180,
-		filter : {
-			showIcon : true,
-			inline : true
-		},
 	}, {
 		dataField : "version",
 		headerText : "REV",
 		dataType : "string",
 		width : 80,
-		filter : {
-			showIcon : true,
-			inline : true
-		},
 	}, {
 		dataField : "state",
 		headerText : "상태",
 		dataType : "string",
 		width : 80,
-		filter : {
-			showIcon : true,
-			inline : true
-		},
 	}, {
 		dataField : "creator",
 		headerText : "등록자",
 		dataType : "string",
 		width : 100,
-		filter : {
-			showIcon : true,
-			inline : true
-		},
 	}, {
 		dataField : "createdDate",
 		headerText : "등록일",
 		dataType : "string",
 		width : 100,
-		filter : {
-			showIcon : true,
-			inline : true
-		},
 	}, {
 		dataField : "modifitedDate",
 		headerText : "수정일",
 		dataType : "string",
 		width : 100,
-		filter : {
-			showIcon : true,
-			inline : true
-		}
 	}, {
 		dataField : "remarks",
 		headerText : "OEM Info.",
 		dataType : "string",
 		width : 100,
-		filter : {
-			showIcon : true,
-			inline : true
-		},
 	} ]
 
 	function createAUIGrid(columnLayout) {
@@ -148,7 +94,6 @@ String partNumber = request.getParameter("partNumber");
 	function loadGridData() {
 		let params = new Object();
 		const url = getCallUrl("/part/seq");
-		const partNumber = document.querySelector("#partNumber").value;
 		const field = [ "partNumber" ];
 		params = toField(params, field);
 		openLayer();

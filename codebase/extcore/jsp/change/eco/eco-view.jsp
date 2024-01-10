@@ -42,7 +42,7 @@ boolean isAdmin = (boolean) request.getAttribute("isAdmin");
 			<a href="#tabs-0">관련 객체</a>
 		</li>
 		<li>
-			<a href="#tabs-2">연관품목</a>
+			<a href="#tabs-2">연관 품목</a>
 		</li>
 		<li>
 			<a href="#tabs-3">산출물</a>

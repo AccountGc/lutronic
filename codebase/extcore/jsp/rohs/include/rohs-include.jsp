@@ -10,6 +10,7 @@ boolean multi = Boolean.parseBoolean(request.getParameter("multi"));
 boolean view = "view".equals(mode);
 boolean update = "update".equals(mode);
 boolean create = "create".equals(mode);
+boolean header = Boolean.parseBoolean(request.getParameter("header"));
 %>
 <table class="button-table">
 	<tr>
@@ -19,8 +20,29 @@ boolean create = "create".equals(mode);
 				관련 ROHS
 			</div>
 		</td>
+		<%
+		if (!header) {
+		%>
+		<td class="right">
+			<%
+			if (create || update) {
+			%>
+			<input type="button" value="추가" title="추가" class="blue" onclick="popup106();">
+			<input type="button" value="삭제" title="삭제" class="red" onclick="deleteRow106();">
+			<%
+			}
+			%>
+		</td>
+		<%
+		}
+		%>
 	</tr>
 </table>
+<%
+// 테이블 처리 여부
+if (header) {
+%>
+
 <table class="create-table">
 	<colgroup>
 		<col width="150">
@@ -41,6 +63,14 @@ boolean create = "create".equals(mode);
 		</td>
 	</tr>
 </table>
+
+<%
+} else {
+%>
+<div id="grid106" style="height: 30px; border-top: 1px solid #3180c3; margin: 5px;"></div>
+<%
+}
+%>
 <script type="text/javascript">
 	let myGridID106;
 	const columns106 = [ {

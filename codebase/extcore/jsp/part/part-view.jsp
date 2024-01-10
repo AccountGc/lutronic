@@ -144,7 +144,7 @@ WTUser sessionUser = (WTUser) SessionHelper.manager.getPrincipal();
 			<tr>
 				<th class="lb">첨부파일</th>
 				<td class="indent5" colspan="5">
-					<jsp:include page="/extcore/jsp/common/content/include_primaryFileView.jsp">
+					<jsp:include page="/extcore/jsp/common/secondary-view.jsp">
 						<jsp:param value="<%=dto.getOid()%>" name="oid" />
 					</jsp:include>
 				</td>
@@ -335,34 +335,13 @@ WTUser sessionUser = (WTUser) SessionHelper.manager.getPrincipal();
 		$("#tabs").tabs({
 			active : 0,
 			activate : function(event, ui) {
-				var tabId = ui.newPanel.prop("id");
-				let isCreated = false;
+				const tabId = ui.newPanel.prop("id");
 				switch (tabId) {
 				case "tabs-1":
 					$(".comment-table").show();
 					break;
-				case "tabs-2":
-					isCreated = AUIGrid.isCreated(drawingGridID);
-					if (isCreated) {
-						AUIGrid.resize(drawingGridID);
-						$(".comment-table").hide();
-					} else {
-						createAUIGridDrawing(columnsDrawing);
-						$(".comment-table").hide();
-					}
-					break;
-				case "tabs-3":
-					isCreated = AUIGrid.isCreated(refbyGridID);
-					if (isCreated) {
-						AUIGrid.resize(refbyGridID);
-						$(".comment-table").hide();
-					} else {
-						createAUIGrid3(columnRefby);
-						$(".comment-table").hide();
-					}
-					break;
 				case "tabs-4":
-					isCreated90 = AUIGrid.isCreated(myGridID90);
+					const isCreated90 = AUIGrid.isCreated(myGridID90);
 					if (isCreated90) {
 						AUIGrid.resize(myGridID90);
 						$(".comment-table").hide();
@@ -371,7 +350,7 @@ WTUser sessionUser = (WTUser) SessionHelper.manager.getPrincipal();
 						$(".comment-table").hide();
 					}
 
-					isCreated106 = AUIGrid.isCreated(myGridID106);
+					const isCreated106 = AUIGrid.isCreated(myGridID106);
 					if (isCreated106) {
 						AUIGrid.resize(myGridID106);
 						$(".comment-table").hide();
@@ -379,25 +358,12 @@ WTUser sessionUser = (WTUser) SessionHelper.manager.getPrincipal();
 						createAUIGrid106(columns106);
 						$(".comment-table").hide();
 					}
-					break;
-				case "tabs-5":
-					isCreated = AUIGrid.isCreated(adminGridID);
-					if (isCreated) {
-						AUIGrid.resize(adminGridID);
-						$(".comment-table").hide();
+
+					const isCreated105 = AUIGrid.isCreated(myGridID105); // 다운로드이력
+					if (isCreated105) {
+						AUIGrid.resize(myGridID105);
 					} else {
-						createAUIGridAdmin(columnsAdmin);
-						$(".comment-table").hide();
-					}
-					break;
-				case "tabs-6":
-					isCreated = AUIGrid.isCreated(enDocGridID);
-					if (isCreated) {
-						AUIGrid.resize(enDocGridID);
-						$(".comment-table").hide();
-					} else {
-						createAUIGridEnDoc(columnEnDoc);
-						$(".comment-table").hide();
+						createAUIGrid105(columns105);
 					}
 					break;
 				case "tabs-7":
@@ -412,28 +378,6 @@ WTUser sessionUser = (WTUser) SessionHelper.manager.getPrincipal();
 						AUIGrid.resize(myGridID51);
 					} else {
 						createAUIGrid51(columns51);
-					}
-					break;
-				case "tabs-8":
-					const isCreated80 = AUIGrid.isCreated(myGridID80); // 상위 품목
-					if (isCreated80) {
-						AUIGrid.resize(myGridID80);
-					} else {
-						createAUIGrid80(columns80);
-					}
-
-					const isCreated81 = AUIGrid.isCreated(myGridID81); // 하위 품목
-					if (isCreated81) {
-						AUIGrid.resize(myGridID81);
-					} else {
-						createAUIGrid81(columns81);
-					}
-
-					const isCreated82 = AUIGrid.isCreated(myGridID82); // end item
-					if (isCreated82) {
-						AUIGrid.resize(myGridID82);
-					} else {
-						createAUIGrid82(columns82);
 					}
 					break;
 				}
