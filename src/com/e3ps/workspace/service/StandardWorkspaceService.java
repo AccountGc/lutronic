@@ -535,30 +535,30 @@ public class StandardWorkspaceService extends StandardManager implements Workspa
 
 			// aspose pdf 변경 3가지가..
 			if (per instanceof ECPRRequest) {
-				System.out.println("ECPR PDF 변경!");
+//				System.out.println("ECPR PDF 변경!");
 				ECPRRequest ecpr = (ECPRRequest) per;
 				ecpr.setApproveDate(new Timestamp(new Date().getTime()).toString().substring(0, 10));
 				ecpr = (ECPRRequest) PersistenceHelper.manager.modify(ecpr);
-				EChangeUtils.manager.attachPdfMethod(ecpr.getPersistInfo().getObjectIdentifier().getStringValue());
-				System.out.println("ECPR PDF 변경 종료!");
+//				EChangeUtils.manager.attachPdfMethod(ecpr.getPersistInfo().getObjectIdentifier().getStringValue());
+//				System.out.println("ECPR PDF 변경 종료!");
 			}
 
 			if (per instanceof ECRMRequest) {
-				System.out.println("ECRM PDF 변경!");
+//				System.out.println("ECRM PDF 변경!");
 				ECRMRequest ecrm = (ECRMRequest) per;
 				ecrm.setApproveDate(new Timestamp(new Date().getTime()).toString().substring(0, 10));
 				ecrm = (ECRMRequest) PersistenceHelper.manager.modify(ecrm);
-				EChangeUtils.manager.attachPdfMethod(ecrm.getPersistInfo().getObjectIdentifier().getStringValue());
-				System.out.println("ECRM PDF 변경 종료!");
+//				EChangeUtils.manager.attachPdfMethod(ecrm.getPersistInfo().getObjectIdentifier().getStringValue());
+//				System.out.println("ECRM PDF 변경 종료!");
 			}
 
 			if (per instanceof EChangeRequest) {
-				System.out.println("CR PDF 변경!");
+//				System.out.println("CR PDF 변경!");
 				EChangeRequest cr = (EChangeRequest) per;
 				cr.setApproveDate(new Timestamp(new Date().getTime()).toString().substring(0, 10));
 				cr = (EChangeRequest) PersistenceHelper.manager.modify(cr);
-				EChangeUtils.manager.attachPdfMethod(cr.getPersistInfo().getObjectIdentifier().getStringValue());
-				System.out.println("CR PDF 변경 종료!");
+//				EChangeUtils.manager.attachPdfMethod(cr.getPersistInfo().getObjectIdentifier().getStringValue());
+//				System.out.println("CR PDF 변경 종료!");
 			}
 
 			// EO/ ECO

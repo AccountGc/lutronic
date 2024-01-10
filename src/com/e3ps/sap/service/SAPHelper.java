@@ -764,20 +764,30 @@ public class SAPHelper {
 		return value;
 	}
 
-	public ArrayList<WTPart> removeList(ArrayList<WTPart> lefts, ArrayList<WTPart> rights) throws Exception {
+	/**
+	 * 삭제된 품목 리스트
+	 */
+	public ArrayList<Map<String, Object>> removeList(ArrayList<Object[]> lefts, ArrayList<Object[]> rights)
+			throws Exception {
 		ArrayList<Map<String, Object>> mergedList = new ArrayList<>();
 		ArrayList<Map<String, Object>> compList = new ArrayList<Map<String, Object>>();
 
-		ArrayList<WTPart> removeList = new ArrayList<WTPart>();
+		ArrayList<Map<String, Object>> removeList = new ArrayList<>();
 
-		for (WTPart l : rights) {
+		for (Object[] o : rights) {
+			WTPart l = (WTPart) o[1];
+			WTPartUsageLink link = (WTPartUsageLink) o[0];
 			Map<String, Object> mergedData = new HashMap<>();
 			mergedData.put("number", l.getNumber());
+			mergedData.put("qty", (int) link.getQuantity().getAmount());
+			mergedData.put("unit", link.getQuantity().getUnit().toString().toUpperCase());
 			mergedData.put("oid", l.getPersistInfo().getObjectIdentifier().getStringValue());
 			mergedList.add(mergedData);
 		}
 
-		for (WTPart r : lefts) {
+		for (Object[] o : lefts) {
+			WTPart r = (WTPart) o[1];
+			WTPartUsageLink link = (WTPartUsageLink) o[0];
 			String key = r.getPersistInfo().getObjectIdentifier().getStringValue();
 			boolean isExist = false;
 
@@ -794,6 +804,8 @@ public class SAPHelper {
 				// partNo가 동일한 데이터가 없으면 mergedList에 데이터를 추가
 				Map<String, Object> mergedData = new HashMap<>();
 				mergedData.put("oid", key);
+				mergedData.put("qty", (int) link.getQuantity().getAmount());
+				mergedData.put("unit", link.getQuantity().getUnit().toString().toUpperCase());
 				mergedData.put("number", r.getNumber());
 				compList.add(mergedData);
 			}
@@ -807,25 +819,35 @@ public class SAPHelper {
 			if (qr.size() > 0) {
 				continue;
 			}
-			removeList.add(pp);
+			removeList.add(m);
 		}
 		return removeList;
 	}
 
-	public ArrayList<WTPart> addList(ArrayList<WTPart> lefts, ArrayList<WTPart> rights) throws Exception {
+	/**
+	 * 추가된 품목 리스트
+	 */
+	public ArrayList<Map<String, Object>> addList(ArrayList<Object[]> lefts, ArrayList<Object[]> rights)
+			throws Exception {
 		ArrayList<Map<String, Object>> mergedList = new ArrayList<>();
 		ArrayList<Map<String, Object>> compList = new ArrayList<Map<String, Object>>();
 
-		ArrayList<WTPart> addList = new ArrayList<WTPart>();
+		ArrayList<Map<String, Object>> addList = new ArrayList<>();
 
-		for (WTPart l : lefts) {
+		for (Object[] o : lefts) {
+			WTPart l = (WTPart) o[1];
+			WTPartUsageLink link = (WTPartUsageLink) o[0];
 			Map<String, Object> mergedData = new HashMap<>();
 			mergedData.put("number", l.getNumber());
+			mergedData.put("qty", (int) link.getQuantity().getAmount());
+			mergedData.put("unit", link.getQuantity().getUnit().toString().toUpperCase());
 			mergedData.put("oid", l.getPersistInfo().getObjectIdentifier().getStringValue());
 			mergedList.add(mergedData);
 		}
 
-		for (WTPart r : rights) {
+		for (Object[] o : rights) {
+			WTPart r = (WTPart) o[1];
+			WTPartUsageLink link = (WTPartUsageLink) o[0];
 			String key = r.getPersistInfo().getObjectIdentifier().getStringValue();
 			boolean isExist = false;
 
@@ -842,6 +864,8 @@ public class SAPHelper {
 				// partNo가 동일한 데이터가 없으면 mergedList에 데이터를 추가
 				Map<String, Object> mergedData = new HashMap<>();
 				mergedData.put("oid", key);
+				mergedData.put("qty", (int) link.getQuantity().getAmount());
+				mergedData.put("unit", link.getQuantity().getUnit().toString().toUpperCase());
 				mergedData.put("number", r.getNumber());
 				compList.add(mergedData);
 			}
@@ -855,9 +879,59 @@ public class SAPHelper {
 			if (qr.size() > 0) {
 				continue;
 			}
-			addList.add(pp);
+			addList.add(m);
 		}
 		return addList;
 	}
 
+	/**
+	 * ECO 전송 비교 대상을 위한 함수
+	 */
+	public ArrayList<Object[]> sendList(WTPart part) throws Exception {
+		ArrayList<Object[]> list = new ArrayList<Object[]>();
+		// root 추가
+		String viewName = part.getViewName();
+		if (!StringUtil.checkString(viewName)) {
+			viewName = "Design";
+		}
+
+		View view = ViewHelper.service.getView(viewName);
+		WTPartConfigSpec configSpec = WTPartConfigSpec
+				.newWTPartConfigSpec(WTPartStandardConfigSpec.newWTPartStandardConfigSpec(view, null));
+		QueryResult result = WTPartHelper.service.getUsesWTParts(part, configSpec);
+		while (result.hasMoreElements()) {
+			Object obj[] = (Object[]) result.nextElement();
+			if (!(obj[1] instanceof WTPart)) {
+				continue;
+			}
+			WTPart p = (WTPart) obj[1];
+			list.add(obj);
+			sendList(p, list);
+		}
+		return list;
+	}
+
+	/**
+	 * ECO 전송 비교 대상을 위한 함수
+	 */
+	private void sendList(WTPart part, ArrayList<Object[]> list) throws Exception {
+		String viewName = part.getViewName();
+		if (!StringUtil.checkString(viewName)) {
+			viewName = "Design";
+		}
+
+		View view = ViewHelper.service.getView(viewName);
+		WTPartConfigSpec configSpec = WTPartConfigSpec
+				.newWTPartConfigSpec(WTPartStandardConfigSpec.newWTPartStandardConfigSpec(view, null));
+		QueryResult result = WTPartHelper.service.getUsesWTParts(part, configSpec);
+		while (result.hasMoreElements()) {
+			Object obj[] = (Object[]) result.nextElement();
+			if (!(obj[1] instanceof WTPart)) {
+				continue;
+			}
+			WTPart p = (WTPart) obj[1];
+			list.add(obj);
+			sendList(p, list);
+		}
+	}
 }

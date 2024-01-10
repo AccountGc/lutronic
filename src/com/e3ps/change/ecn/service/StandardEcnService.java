@@ -33,6 +33,7 @@ import wt.part.WTPartMaster;
 import wt.pom.Transaction;
 import wt.services.StandardManager;
 import wt.util.WTException;
+import wt.vc.VersionControlHelper;
 
 public class StandardEcnService extends StandardManager implements EcnService {
 
@@ -128,6 +129,8 @@ public class StandardEcnService extends StandardManager implements EcnService {
 				ecn.setProgress("작업중 ");
 				ecn.setRate(0D);
 
+//				VersionControlHelper.service.assignIterationCreator(ecn, eco.getOwner());
+				
 				String location = "/Default/설계변경/ECN";
 				String lifecycle = "LC_ECN";
 

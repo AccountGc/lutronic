@@ -27,6 +27,10 @@ public class SAPSendBomDTO {
 	private String newChildPartVersion;
 	private int qty = 0;
 	private String unit;
+	
+	public SAPSendBomDTO() {
+		
+	}
 
 	public SAPSendBomDTO(WTPart child, WTPart parent, WTPartUsageLink link, EChangeOrder eco) throws Exception {
 //		WTPart parent = link.getUsedBy();

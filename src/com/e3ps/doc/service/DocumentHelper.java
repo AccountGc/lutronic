@@ -644,7 +644,7 @@ public class DocumentHelper {
 	/**
 	 * 표지 싸인입력
 	 */
-	public File stamping(WTDocument d, File excelFile) throws Exception {
+	public File stamping(WTDocument d, File excelFile, String classTypeCode) throws Exception {
 		String number = IBAUtil.getStringValue(d, "INTERALNUMBER");
 		ApprovalMaster m = WorkspaceHelper.manager.getMaster(d);
 		ArrayList<ApprovalLine> agreeLines = WorkspaceHelper.manager.getAgreeLine(m);
@@ -652,29 +652,56 @@ public class DocumentHelper {
 		Workbook workbook = new Workbook(excelFile.getPath());
 		Worksheet worksheet = workbook.getWorksheets().get(0);
 
-		worksheet.getPageSetup().setFooter(0, "문서양식번호넣는곳");
-
-		Cell modelCell = worksheet.getCells().get(3, 5);
-		modelCell.putValue(IBAUtil.getStringValue(d, "MODEL"));
-
 		ObjectReference ref = d.getTypeInfoWTDocument().getPtc_ref_2();
 		DocumentClass classType2 = null;
 		if (ref != null) {
 			classType2 = (DocumentClass) ref.getObject();
 		}
+		
+		// 지침서 양식번호
+		if ("INSTRUCTION".equals(classTypeCode)) {
+			worksheet.getPageSetup().setFooter(0, "P7.3-1-1");
+		} else if ("DEV".equals(classTypeCode)) {
+			// 개발 문서
+			if(classType2 != null) {
+				String clazz  = classType2.getClazz();
+				String n = "";
+				// 위험 관리 계획서 QF-701-01
+				if("RMP".equals(clazz.trim())) {
+					n = "QF-701-01";
+				}else if("RMR".equals(clazz.trim())) {
+					n = "QF-701-02	";
+				} else if("PRS".equals(clazz.trim())) {
+					n = "QF-705-12";
+				} else if("DSP".equals(clazz.trim())) {
+					n = "QF-705-16";
+				} else if("DSR".equals(clazz.trim())) {
+					n = "QF-705-18";
+				} else if("DMR".equals(clazz.trim()) {
+					n = "QF-705-19";
+				} else if("CCL".equals(clazz.trim())) {
+					n = "QF-701-20";
+				} else if("VR".equals(clazz.trim())) {
+					n = "QF-701-29";
+				} else {
+					n = "P7.3-1-1";
+				}
+				worksheet.getPageSetup().setFooter(0, n);
+			}
+		}
 
-//		String n = d.getName();
-//		String value = "";
-//		int idx = n.lastIndexOf("_");
-//		if (idx > -1) {
-//			value = n.substring(0, idx);
-//		} else {
-//			value = n;
-//		}
+		Cell modelCell = worksheet.getCells().get(3, 5);
+		modelCell.putValue(IBAUtil.getStringValue(d, "MODEL"));
+
+	
 
 		Cell nameCell = worksheet.getCells().get(4, 0);
 		if (classType2 != null) {
-			nameCell.putValue(classType2.getName());
+			if (!"INSTRUCTION".equals(classTypeCode)) {
+				nameCell.putValue(classType2.getName());
+			} else {
+				nameCell.putValue(d.getName());
+			}
 		} else {
 			nameCell.putValue("");
 		}
@@ -959,6 +986,5 @@ public class DocumentHelper {
 		}
 		return "";
 	}
-	
-	
+
 }

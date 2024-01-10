@@ -218,9 +218,6 @@ public class EChangeUtils {
 		String oid = hash.get("oid");
 		EChangeOrder eco = (EChangeOrder) CommonUtil.getObject(oid);
 
-		// SAP 전송
-//		SAPHelper.service.sendSapToEco(eco);
-
 		// 완제품 재수집
 		ArrayList<EOCompletePartLink> completeParts = EcoHelper.manager.completeParts(eco);
 		ArrayList<EcoPartLink> ecoParts = EcoHelper.manager.ecoParts(eco);

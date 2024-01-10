@@ -77,6 +77,12 @@ String oid = request.getParameter("oid");
 		headerText : "상태",
 		dataType : "string",
 		width : 80,
+		styleFunction : function(rowIndex, columnIndex, value, headerText, item, dataField) {
+			if (value === "승인됨") {
+				return "approved";
+			}
+			return null;
+		}		
 	}, {
 		dataField : "version",
 		headerText : "REV",
@@ -249,6 +255,12 @@ String oid = request.getParameter("oid");
 			dataType : "string",
 			headerText : "상태",
 			width : 80,
+			styleFunction : function(rowIndex, columnIndex, value, headerText, item, dataField) {
+				if (value === "승인됨") {
+					return "approved";
+				}
+				return null;
+			}
 		}, {
 			dataField : "part_version",
 			dataType : "string",
