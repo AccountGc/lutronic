@@ -1,5 +1,7 @@
+<%@page import="com.e3ps.common.util.CommonUtil"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%
+boolean isAdmin = CommonUtil.isAdmin();
 String height = request.getParameter("height");
 %>
 <!-- 폴더 그리드 리스트 -->
@@ -27,52 +29,87 @@ String height = request.getParameter("height");
 			forceTreeView : true,
 			useContextMenu : true,
 			enableRightDownFocus : true,
-			contextMenuItems : [ {
-				label : "선택된 행 이전 부서추가",
-				callback : contextItemHandler
-			}, {
-				label : "선택된 행 이후 부서추가",
-				callback : contextItemHandler
-			}, {
-				label : "선택된 자식 부서추가",
-				callback : contextItemHandler
-			}, {
-				label : "선택된 부서 삭제",
-				callback : contextItemHandler
-			}, {
-				label : "_$line"
-			}, {
-				label : "저장",
-				callback : contextItemHandler
-			} ],
+			<%if (isAdmin) {%>
+			editable : true
+			<%}%>			
 		}
 		_myGridID = AUIGrid.create("#_grid_wrap", columnLayout, props);
 		loadTree();
-		// 		AUIGrid.bind(_myGridID, "selectionChange", auiGridSelectionChangeHandler);
-		AUIGrid.bind(_myGridID, "cellDoubleClick", auiCellDoubleClick);
 		AUIGrid.bind(_myGridID, "cellClick", auiCellClick);
 		AUIGrid.bind(_myGridID, "ready", auiReadyHandler);
+		<%if (isAdmin) {%>
+		AUIGrid.bind(_myGridID, "contextMenu", auiContextMenuHandler_);
+		<%}%>
 	}
 
-	function contextItemHandler(event) {
-		alert("수정");
+	function auiContextMenuHandler_(event) {
+		const menu = [ { 
+			label : "부서 생성(자식)",
+			callback : auiContextHandler_
+		}, {
+			label : "부서 생성(동일레벨)",
+			callback : auiContextHandler_
+		}, {
+			label : "삭제",
+			callback : auiContextHandler_
+		}, {
+			label : "_$line"
+		}, {
+			label : "저장",
+			callback : auiContextHandler_
+		} ]
+		return menu;
 	}
 
+	function auiContextHandler_(event) {
+		const t = document.getElementById("type").value;
+		const item = event.item;
+		const oid = item.oid;
+		const poid = item.poid;
+		const isNew = item.isNew;
+		switch (event.contextIndex) {
+		case 0:
+			addTreeRow();
+			break;
+		case 1:
+			addRow();
+			break;
+		case 2:
+			break;
+		case 3:
+			break;
+		case 4:
+			departmentSave();
+			break;
+		}
+	}
+	
+	function addTreeRow(oid) {
+		const parentRowId = oid;
+		const newItem = new Object();
+		newItem.parentRowId = parentRowId;
+		newItem.poid = oid;
+		newItem.name = "새 폴더";
+		newItem.isNew = true;
+		AUIGrid.addTreeRow(_myGridID, newItem, parentRowId, "selectionDown");
+	}
+	
+	function addRow(poid) {
+		const parentRowId = poid;
+		const newItem = new Object();
+		newItem.poid = poid;
+		newItem.parentRowId = parentRowId;
+		newItem.name = "새 폴더";
+		newItem.isNew = true;
+		AUIGrid.addTreeRow(_myGridID, newItem, parentRowId, "selectionDown");
+	}
+	
 	function auiReadyHandler() {
 		AUIGrid.showItemsOnDepth(_myGridID, 2);
 	}
 
+	let timerId;
 	function auiCellClick(event) {
-		const item = event.item;
-		const oid = item.oid;
-		const location = item.location;
-		document.getElementById("oid").value = oid;
-		// 		document.getElementById("location").value = oid;
-		document.getElementById("locationName").innerText = location;
-	}
-
-	let timerId = null;
-	function auiCellDoubleClick(event) {
 		if (timerId) {
 			clearTimeout(timerId);
 		}
@@ -82,7 +119,6 @@ String height = request.getParameter("height");
 			const oid = primeCell.oid;
 			const location = primeCell.location;
 			document.getElementById("oid").value = oid;
-			// 			document.getElementById("location").value = oid;
 			document.getElementById("locationName").innerText = location;
 			loadGridData();
 		}, 500);
