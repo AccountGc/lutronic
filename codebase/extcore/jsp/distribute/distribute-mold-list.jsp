@@ -29,7 +29,7 @@ WTUser user = (WTUser) request.getAttribute("sessionUser");
 		<input type="hidden" name="searchType" id="searchType" value="MOLD">
 		<input type="hidden" name="state" id="state" value="APPROVED">
 		<input type="hidden" name="sessionName" id="sessionName" value="<%=user.getFullName()%>">
-		
+
 		<table class="button-table">
 			<tr>
 				<td class="left">
@@ -40,7 +40,7 @@ WTUser user = (WTUser) request.getAttribute("sessionUser");
 				</td>
 			</tr>
 		</table>
-		
+
 		<table class="search-table">
 			<colgroup>
 				<col width="130">
@@ -94,7 +94,7 @@ WTUser user = (WTUser) request.getAttribute("sessionUser");
 						<%
 						for (NumberCode deptcode : deptcodeList) {
 						%>
-						<option value="<%=deptcode.getCode() %>"><%=deptcode.getName()%></option>
+						<option value="<%=deptcode.getCode()%>"><%=deptcode.getName()%></option>
 						<%
 						}
 						%>
@@ -104,16 +104,8 @@ WTUser user = (WTUser) request.getAttribute("sessionUser");
 			<tr>
 				<th>Manufacturer</th>
 				<td class="indent5">
-					<select name="manufacture" id="manufacture" class="width-200">
-						<option value="">선택</option>
-						<%
-						for (NumberCode manufacture : manufactureList) {
-						%>
-						<option value="<%=manufacture.getCode() %>"><%=manufacture.getName()%></option>
-						<%
-						}
-						%>
-					</select>
+					<input type="text" name="manufacture" id="manufacture" class="width-200">
+					<img src="/Windchill/extcore/images/delete.png" class="delete" title="삭제" onclick="clearUser('manufacture')">
 				</td>
 				<th>내부 문서번호</th>
 				<td class="indent5">
@@ -142,9 +134,9 @@ WTUser user = (WTUser) request.getAttribute("sessionUser");
 		<table class="button-table">
 			<tr>
 				<td class="left">
-					<img src="/Windchill/extcore/images/fileicon/file_excel.gif" title="엑셀 다운로드" onclick="exportExcel();"> 
+					<img src="/Windchill/extcore/images/fileicon/file_excel.gif" title="엑셀 다운로드" onclick="exportExcel();">
 					<img src="/Windchill/extcore/images/save.gif" title="테이블 저장" onclick="saveColumnLayout('distribute-mold-list');">
-					<img src="/Windchill/extcore/images/redo.gif" title="테이블 초기화" onclick="resetColumnLayout('distribute-mold-list');"> 
+					<img src="/Windchill/extcore/images/redo.gif" title="테이블 초기화" onclick="resetColumnLayout('distribute-mold-list');">
 				</td>
 				<td class="right">
 					<select name="_psize" id="_psize">
@@ -159,7 +151,7 @@ WTUser user = (WTUser) request.getAttribute("sessionUser");
 			</tr>
 		</table>
 
-		<div id="grid_wrap" style="height: 530px; border-top: 1px solid #3180c3;"></div> 
+		<div id="grid_wrap" style="height: 530px; border-top: 1px solid #3180c3;"></div>
 		<%@include file="/extcore/jsp/common/aui-context.jsp"%>
 		<div id="grid_paging" class="aui-grid-paging-panel my-grid-paging-panel"></div>
 		<script type="text/javascript">
@@ -237,7 +229,7 @@ WTUser user = (WTUser) request.getAttribute("sessionUser");
 					filterLayerWidth : 320,
 					filterItemMoreMessage : "필터링 검색이 너무 많습니다. 검색을 이용해주세요.",
 					enableRowCheckShiftKey : true
-	         	};
+				};
 				myGridID = AUIGrid.create("#grid_wrap", columnLayout, props);
 				loadGridData();
 				AUIGrid.bind(myGridID, "contextMenu", auiContextMenuHandler);
@@ -255,7 +247,7 @@ WTUser user = (WTUser) request.getAttribute("sessionUser");
 				}
 				let params = new Object();
 				const url = getCallUrl("/mold/list");
-				const field = ["number","name","createdFrom","createdTo","modifiedFrom","modifiedTo", "creatorOid", "state", "interalnumber", "deptcode", "description", "manufacture", "moldtype", "moldcost", "lifecycle", "location", "searchType", "moldnumber"];
+				const field = [ "number", "name", "createdFrom", "createdTo", "modifiedFrom", "modifiedTo", "creatorOid", "state", "interalnumber", "deptcode", "description", "manufacture", "moldtype", "moldcost", "lifecycle", "location", "searchType", "moldnumber" ];
 				params = toField(params, field);
 				params.islastversion = "false";
 				AUIGrid.showAjaxLoader(myGridID);
@@ -282,7 +274,7 @@ WTUser user = (WTUser) request.getAttribute("sessionUser");
 				});
 				createAUIGrid(columns);
 				AUIGrid.resize(myGridID);
-				selectbox("manufacture");
+				finderCode("manufacture", "MANUFACTURE");
 				selectbox("moldtype");
 				selectbox("deptcode");
 				finderUser("creator");
@@ -305,10 +297,10 @@ WTUser user = (WTUser) request.getAttribute("sessionUser");
 			window.addEventListener("resize", function() {
 				AUIGrid.resize(myGridID);
 			});
-			
+
 			function exportExcel() {
-			    const sessionName = document.getElementById("sessionName").value;
-			    exportToExcel("금형 리스트", "금형", "금형 리스트", [], sessionName);
+				const sessionName = document.getElementById("sessionName").value;
+				exportToExcel("금형 리스트", "금형", "금형 리스트", [], sessionName);
 			}
 		</script>
 	</form>

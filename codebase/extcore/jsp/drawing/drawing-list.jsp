@@ -101,11 +101,11 @@ QuantityUnit[] unitList = (QuantityUnit[]) request.getAttribute("unitList");
 				<!-- 					<select name="model" id="model" class="width-200"> -->
 				<!-- 						<option value="">선택</option> -->
 				<%-- 						<% --%>
-<!-- 				// for (NumberCode model : modelList) { -->
+				<!-- 				// for (NumberCode model : modelList) { -->
 				<%-- 						%> --%>
 				<%-- 						<option value="<%=model.getCode()%>"><%=model.getName()%></option> --%>
 				<%-- 						<% --%>
-<!-- 				// } -->
+				<!-- 				// } -->
 				<%-- 						%> --%>
 				<!-- 					</select> -->
 				<!-- 				</td> -->
@@ -213,16 +213,8 @@ QuantityUnit[] unitList = (QuantityUnit[]) request.getAttribute("unitList");
 				</td>
 				<th>Manufacturer</th>
 				<td class="indent5">
-					<select name="manufacture" id="manufacture" class="width-200">
-						<option value="">선택</option>
-						<%
-						for (NumberCode manufacture : manufactureList) {
-						%>
-						<option value="<%=manufacture.getCode()%>"><%=manufacture.getName()%></option>
-						<%
-						}
-						%>
-					</select>
+					<input type="text" name="manufacture" id="manufacture" class="width-200">
+					<img src="/Windchill/extcore/images/delete.png" class="delete" title="삭제" onclick="clearUser('manufacture')">
 				</td>
 			</tr>
 			<tr class="hidden">
@@ -576,7 +568,7 @@ QuantityUnit[] unitList = (QuantityUnit[]) request.getAttribute("unitList");
 				// 				selectbox("model");
 				selectbox("productmethod");
 				selectbox("deptcode");
-				selectbox("manufacture");
+				finderCode("manufacture", "MANUFACTURE");
 				selectbox("unit");
 				selectbox("mat");
 				selectbox("finish");
@@ -627,7 +619,7 @@ QuantityUnit[] unitList = (QuantityUnit[]) request.getAttribute("unitList");
 						selectbox("unit");
 						selectbox("mat");
 						selectbox("finish");
-						selectbox("manufacture");
+						finderCode("manufacture", MANUFACTURE);
 						selectbox("_psize");
 						finderUser("creator");
 						twindate("created");
@@ -643,7 +635,7 @@ QuantityUnit[] unitList = (QuantityUnit[]) request.getAttribute("unitList");
 						selectbox("unit");
 						selectbox("mat");
 						selectbox("finish");
-						selectbox("manufacture");
+						finderCode("manufacture", MANUFACTURE);
 						selectbox("_psize");
 						finderUser("creator");
 						twindate("created");

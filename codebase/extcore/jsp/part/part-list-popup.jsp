@@ -175,16 +175,8 @@ boolean complete = (boolean) request.getAttribute("complete");
 		</td>
 		<th>MANUFACTURER</th>
 		<td class="indent5">
-			<select name="manufacture" id="manufacture" class="width-200">
-				<option value="">선택</option>
-				<%
-				for (NumberCode manufacture : manufactureList) {
-				%>
-				<option value="<%=manufacture.getCode()%>"><%=manufacture.getName()%></option>
-				<%
-				}
-				%>
-			</select>
+			<input type="text" name="manufacture" id="manufacture" class="width-200">
+			<img src="/Windchill/extcore/images/delete.png" class="delete" title="삭제" onclick="clearUser('manufacture')">
 		</td>
 	</tr>
 	<tr class="hidden">
@@ -514,7 +506,7 @@ document.addEventListener("DOMContentLoaded", function() {
 	selectbox("unit");
 	selectbox("mat");
 	selectbox("finish");
-	selectbox("manufacture");
+	finderCode("manufacture", "MANUFACTURE");
 	selectbox("_psize");
 	finderUser("creator");
 	twindate("created");
@@ -554,7 +546,7 @@ function spread(target) {
 			selectbox("unit");
 			selectbox("mat");
 			selectbox("finish");
-			selectbox("manufacture");
+			finderCode("manufacture", "MANUFACTURE");
 			selectbox("_psize");
 			finderUser("creator");
 			twindate("created");
@@ -569,7 +561,7 @@ function spread(target) {
 			selectbox("unit");
 			selectbox("mat");
 			selectbox("finish");
-			selectbox("manufacture");
+			finderCode("manufacture", "MANUFACTURE");
 			selectbox("_psize");
 			finderUser("creator");
 			twindate("created");

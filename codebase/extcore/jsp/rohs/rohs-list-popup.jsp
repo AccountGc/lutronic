@@ -84,13 +84,8 @@ String state = (String) request.getAttribute("state");
 	<tr>
 		<th>협력업체</th>
 		<td class="indent5">
-			<select name="manufacture" id="manufacture" class="width-200">
-				<option value="">선택</option>
-				<option value="INWORK">작업 중</option>
-				<option value="UNDERAPPROVAL">승인 중</option>
-				<option value="APPROVED">승인됨</option>
-				<option value="RETURN">반려됨</option>
-			</select>
+			<input type="text" name="manufacture" id="manufacture" class="width-200">
+			<img src="/Windchill/extcore/images/delete.png" class="delete" title="삭제" onclick="clearUser('manufacture')">
 		</td>
 		<th>설명</th>
 		<td class="indent5" colspan="3">
@@ -257,7 +252,7 @@ String state = (String) request.getAttribute("state");
 		createAUIGrid(columns);
 		AUIGrid.resize(myGridID);
 		selectbox("state");
-		selectbox("manufacture");
+		finderCode("manufacture", "MANUFACTURE");
 		finderUser("creator");
 		twindate("created");
 		twindate("modified");

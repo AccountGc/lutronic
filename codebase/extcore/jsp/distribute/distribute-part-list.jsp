@@ -138,7 +138,7 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 						<%
 						for (QuantityUnit unit : unitList) {
 						%>
-						<option value="<%=unit.toString() %>"><%=unit.getDisplay() %></option>
+						<option value="<%=unit.toString()%>"><%=unit.getDisplay()%></option>
 						<%
 						}
 						%>
@@ -150,16 +150,8 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 				</td>
 				<th>Manufacturer</th>
 				<td class="indent5">
-					<select name="manufacture" id="manufacture" class="width-200">
-						<option value="">선택</option>
-						<%
-						for (NumberCode manufacture : manufactureList) {
-						%>
-						<option value="<%=manufacture.getCode()%>"><%=manufacture.getName()%></option>
-						<%
-						}
-						%>
-					</select>
+					<input type="text" name="manufacture" id="manufacture" class="width-200">
+					<img src="/Windchill/extcore/images/delete.png" class="delete" title="삭제" onclick="clearUser('manufacture')">
 				</td>
 			</tr>
 			<tr class="hidden">
@@ -376,7 +368,7 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 					width : 100,
 				} ]
 			}
-			
+
 			function createAUIGrid(columnLayout) {
 				const props = {
 					headerHeight : 30,
@@ -413,7 +405,7 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 					hideContextMenu();
 				});
 			}
-			
+
 			function _auiContextMenuHandler(event) {
 				if (event.target == "header") { // 헤더 컨텍스트
 					if (nowHeaderMenuVisible) {
@@ -544,7 +536,7 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 				selectbox("unit");
 				selectbox("mat");
 				selectbox("finish");
-				selectbox("manufacture");
+				finderCode("manufacture", "MANUFACTURE";
 				selectbox("_psize");
 				finderUser("creator");
 				twindate("created");
@@ -566,7 +558,7 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 			window.addEventListener("resize", function() {
 				AUIGrid.resize(myGridID);
 			});
-			
+
 			function auiContextHandler(event) {
 				const item = event.item;
 				const part_oid = item.part_oid;
@@ -638,7 +630,7 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 					break;
 				}
 			};
-			
+
 			// 재변환
 			function publish(oid) {
 				const url = getCallUrl("/part/publish?oid=" + oid);
@@ -665,7 +657,7 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 						selectbox("unit");
 						selectbox("mat");
 						selectbox("finish");
-						selectbox("manufacture");
+						finderCode("manufacture", "MANUFACTURE");
 						selectbox("_psize");
 						finderUser("creator");
 						twindate("created");
@@ -679,7 +671,7 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 						selectbox("unit");
 						selectbox("mat");
 						selectbox("finish");
-						selectbox("manufacture");
+						finderCode("manufacture", "MANUFACTURE");
 						selectbox("_psize");
 						finderUser("creator");
 						twindate("created");
@@ -687,11 +679,11 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 					}
 				}
 			}
-			
+
 			function exportExcel() {
 				const exceptColumnFields = [ "_3d", "_2d" ];
-			    const sessionName = document.getElementById("sessionName").value;
-			    exportToExcel("품목 리스트", "품목", "품목 리스트", exceptColumnFields, sessionName);
+				const sessionName = document.getElementById("sessionName").value;
+				exportToExcel("품목 리스트", "품목", "품목 리스트", exceptColumnFields, sessionName);
 			}
 		</script>
 	</form>

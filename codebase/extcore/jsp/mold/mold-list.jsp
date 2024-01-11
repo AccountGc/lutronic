@@ -117,16 +117,8 @@ WTUser user = (WTUser) request.getAttribute("sessionUser");
 				</td>
 				<th>MANUFACTURER</th>
 				<td class="indent5">
-					<select name="manufacture" id="manufacture" class="width-200">
-						<option value="">선택</option>
-						<%
-						for (NumberCode manufacture : manufactureList) {
-						%>
-						<option value="<%=manufacture.getCode()%>"><%=manufacture.getName()%></option>
-						<%
-						}
-						%>
-					</select>
+					<input type="text" name="manufacture" id="manufacture" class="width-200">
+					<img src="/Windchill/extcore/images/delete.png" class="delete" title="삭제" onclick="clearUser('manufacture')">
 				</td>
 				<th>수정일</th>
 				<td class="indent5">
@@ -327,7 +319,7 @@ WTUser user = (WTUser) request.getAttribute("sessionUser");
 				createAUIGrid(columns);
 				AUIGrid.resize(myGridID);
 				selectbox("state");
-				selectbox("manufacture");
+				finderCode("manufacture", "MANUFACTURE");
 				selectbox("moldtype");
 				selectbox("deptcode");
 				finderUser("creator");

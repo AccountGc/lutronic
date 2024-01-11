@@ -106,16 +106,8 @@ List<Map<String, String>> lifecycleList = (List<Map<String, String>>) request.ge
 			<tr>
 				<th>협력업체</th>
 				<td class="indent5">
-					<select name="manufacture" id="manufacture" class="width-200">
-						<option value="">선택</option>
-						<%
-						for (NumberCode manufacture : manufactureList) {
-						%>
-						<option value="<%=manufacture.getCode()%>"><%=manufacture.getName()%></option>
-						<%
-						}
-						%>
-					</select>
+					<input type="text" name="manufacture" id="manufacture" class="width-200">
+					<img src="/Windchill/extcore/images/delete.png" class="delete" title="삭제" onclick="clearUser('manufacture')">
 				</td>
 				<th>설명</th>
 				<td class="indent5" colspan="3">
@@ -278,7 +270,7 @@ List<Map<String, String>> lifecycleList = (List<Map<String, String>>) request.ge
 				createAUIGrid(columns);
 				AUIGrid.resize(myGridID);
 				selectbox("state");
-				selectbox("manufacture");
+				finderCode("manufacture", "MANUFACTURE");
 				finderUser("creator");
 				twindate("created");
 				twindate("modified");
