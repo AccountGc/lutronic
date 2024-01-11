@@ -133,16 +133,24 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 		dataType : "string",
 		width : 40,
 		renderer : {
-			type : "ImageRenderer"
-		}
+			type : "ImageRenderer",
+			altField : null,
+			imgHeight : 16,
+			onClick : function(event) {
+			}
+		},
 	}, {
 		dataField : "thumb_2d",
 		headerText : "2D",
 		dataType : "string",
 		width : 40,
 		renderer : {
-			type : "ImageRenderer"
-		}
+			type : "ImageRenderer",
+			altField : null,
+			imgHeight : 16,
+			onClick : function(event) {
+			}
+		},
 	}, {
 		dataField : "level",
 		headerText : "레벨",

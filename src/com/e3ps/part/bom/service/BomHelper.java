@@ -1001,7 +1001,7 @@ public class BomHelper {
 	private ArrayList<Map<String, Object>> descendants(ArrayList<Map<String, Object>> list, String oid, boolean skip,
 			int level) throws Exception {
 		WTPart part = (WTPart) CommonUtil.getObject(oid);
-		String viewName = part.getAuthoringLanguage();
+		String viewName = part.getViewName();
 		if (!StringUtil.checkString(viewName)) {
 			viewName = "Design";
 		}
@@ -1354,11 +1354,6 @@ public class BomHelper {
 					view.getPersistInfo().getObjectIdentifier().getId()), new int[] { idx_part });
 		}
 
-		if (state != null) {
-			query.appendAnd();
-			query.appendWhere(new SearchCondition(WTPart.class, "state.state", "=", state), new int[] { idx_part });
-		}
-
 		QuerySpecUtils.toLatest(query, idx_part, WTPart.class);
 		QueryResult qr = PersistenceHelper.manager.find(query);
 		boolean isLazy = false;
@@ -1382,8 +1377,9 @@ public class BomHelper {
 	/**
 	 * 베이스 라인 역전개 레이즈 로드 여부 확인
 	 */
+	QuerySpec query = new QuerySpec();
+
 	private boolean isLazy(WTPartMaster master, String baseline, String state, boolean skip) throws Exception {
-		QuerySpec query = new QuerySpec();
 		int idx_usage = query.appendClassList(WTPartUsageLink.class, true);
 		int idx_part = query.appendClassList(WTPart.class, true);
 
@@ -1394,12 +1390,6 @@ public class BomHelper {
 		sc.setOuterJoin(0);
 		query.appendAnd();
 		query.appendWhere(sc, new int[] { idx_usage, idx_part });
-
-		if (state != null) {
-			query.appendAnd();
-			query.appendWhere(new SearchCondition(WTPart.class, "state.state", "=", state.toString()),
-					new int[] { idx_part });
-		}
 
 		if (baseline != null) {
 			Baseline baseLine = (Baseline) CommonUtil.getObject(baseline);
