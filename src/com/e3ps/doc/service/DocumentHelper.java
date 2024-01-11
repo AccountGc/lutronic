@@ -721,6 +721,7 @@ public class DocumentHelper {
 		}
 
 		if ("DMR".equals(classType2.getClazz())) {
+			System.out.println("제품명 = " + d.getTypeInfoWTDocument().getPtc_str_1());
 			Cell productCell = worksheet.getCells().get(8, 0);
 			productCell.putValue(d.getTypeInfoWTDocument().getPtc_str_1());
 		}

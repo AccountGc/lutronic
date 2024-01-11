@@ -431,7 +431,11 @@ String oid = (String) request.getAttribute("oid");
 				</tr>
 				<tr>
 					<td class="center pt5">
-						<input type="button" value="지정" title="지정" class="orange" onclick="register();">
+						<input type="button" value="결재선 지정완료" title="결재선 지정완료" class="orange" onclick="register();">
+					</td>
+				</tr>
+				<tr>
+					<td class="center pt5">
 						<input type="button" value="닫기" title="닫기" class="gray" onclick="self.close();">
 					</td>
 				</tr>

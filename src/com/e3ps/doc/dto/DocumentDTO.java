@@ -136,11 +136,12 @@ public class DocumentDTO {
 		setModifier(doc.getModifierFullName());
 		setModifiedDate(doc.getModifyTimestamp().toString().substring(0, 10));
 		setIBAAttributes(doc);
-		setAuth(doc);
 		setComments(CommentsHelper.manager.comments(doc));
 		setPdf(ContentUtils.getContentData(getOid(), "MERGE"));
 		setClassTypeInfo(doc);
 		setNameInfo(doc);
+		setAuth(doc);
+
 	}
 
 	/**
@@ -149,6 +150,9 @@ public class DocumentDTO {
 	private void setClassTypeInfo(WTDocument doc) throws Exception {
 		WTDocumentTypeInfo info = doc.getTypeInfoWTDocument();
 		if (info != null) {
+
+			String classType1 = info.getPtc_str_2();
+			setClassType1_code(classType1);
 
 			if (info.getPtc_ref_2() != null) {
 				DocumentClass classType2 = (DocumentClass) info.getPtc_ref_2().getObject();

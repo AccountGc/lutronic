@@ -15,6 +15,8 @@ boolean isAdmin = (boolean) request.getAttribute("isAdmin");
 DocumentDTO dto = (DocumentDTO) request.getAttribute("dto");
 ArrayList<CommentsDTO> list = dto.getComments();
 WTDocument d = (WTDocument)CommonUtil.getObject(dto.getOid());
+out.println(d.getTypeInfoWTDocument().getPtc_str_1());
+
 %>
 <style type="text/css">
 iframe {
