@@ -262,19 +262,8 @@ public class BomHelper {
 				+ end.getIterationIdentifier().getSeries().getValue());
 		rootNode.put("modifier", end.getModifierFullName());
 		rootNode.put("qty", 1);
-		String c = IBAUtils.getStringValue(end, "MODEL");
-		NumberCode n = NumberCodeHelper.manager.getNumberCode(c, "MODEL");
-		if (n != null) {
-			rootNode.put("model", "");
-		} else {
-			rootNode.put("model", c + ":" + n.getName());
-		}
-		rootNode.put("remarks", IBAUtils.getStringValue(end, "REMARKS"));
-		rootNode.put("specification", IBAUtils.getStringValue(end, "SPECIFICATION"));
-		rootNode.put("deptcode", IBAUtils.getStringValue(end, "DEPTCODE"));
-		rootNode.put("productmethod", IBAUtils.getStringValue(end, "PRODUCTMETHOD"));
-		rootNode.put("ecoNo", IBAUtils.getStringValue(end, "CHANGENO"));
-		rootNode.put("manufacture", IBAUtils.getStringValue(end, "MANUFACTURE"));
+
+		settingNode(rootNode, end);
 
 		boolean isCheckOut = WorkInProgressHelper.isCheckedOut(end);
 //		boolean isWorkCopy = WorkInProgressHelper.isWorkingCopy(end);
@@ -346,19 +335,7 @@ public class BomHelper {
 					+ p.getIterationIdentifier().getSeries().getValue());
 			node.put("modifier", p.getModifierFullName());
 			node.put("qty", link.getQuantity().getAmount());
-			String _c = IBAUtils.getStringValue(p, "MODEL");
-			NumberCode _n = NumberCodeHelper.manager.getNumberCode(_c, "MODEL");
-			if (_n != null) {
-				node.put("model", "");
-			} else {
-				node.put("model", _c + ":" + _n.getName());
-			}
-			node.put("remarks", IBAUtils.getStringValue(p, "REMARKS"));
-			node.put("specification", IBAUtils.getStringValue(p, "SPECIFICATION"));
-			node.put("deptcode", IBAUtils.getStringValue(p, "DEPTCODE"));
-			node.put("productmethod", IBAUtils.getStringValue(p, "PRODUCTMETHOD"));
-			node.put("ecoNo", IBAUtils.getStringValue(p, "CHANGENO"));
-			node.put("manufacture", IBAUtils.getStringValue(p, "MANUFACTURE"));
+			settingNode(node, p);
 
 			isCheckOut = WorkInProgressHelper.isCheckedOut(p);
 //			isWorkCopy = WorkInProgressHelper.isWorkingCopy(p);
@@ -407,19 +384,7 @@ public class BomHelper {
 				+ end.getIterationIdentifier().getSeries().getValue());
 		rootNode.put("modifier", end.getModifierFullName());
 		rootNode.put("qty", 1);
-		String c = IBAUtils.getStringValue(end, "MODEL");
-		NumberCode n = NumberCodeHelper.manager.getNumberCode(c, "MODEL");
-		if (n != null) {
-			rootNode.put("model", "");
-		} else {
-			rootNode.put("model", c + ":" + n.getName());
-		}
-		rootNode.put("remarks", IBAUtils.getStringValue(end, "REMARKS"));
-		rootNode.put("specification", IBAUtils.getStringValue(end, "SPECIFICATION"));
-		rootNode.put("deptcode", IBAUtils.getStringValue(end, "DEPTCODE"));
-		rootNode.put("productmethod", IBAUtils.getStringValue(end, "PRODUCTMETHOD"));
-		rootNode.put("ecoNo", IBAUtils.getStringValue(end, "CHANGENO"));
-		rootNode.put("manufacture", IBAUtils.getStringValue(end, "MANUFACTURE"));
+		settingNode(rootNode, end);
 
 		boolean isCheckOut = WorkInProgressHelper.isCheckedOut(end);
 //		boolean isWorkCopy = WorkInProgressHelper.isWorkingCopy(end);
@@ -493,19 +458,8 @@ public class BomHelper {
 					+ p.getIterationIdentifier().getSeries().getValue());
 			node.put("modifier", p.getModifierFullName());
 			node.put("qty", link.getQuantity().getAmount());
-			String _c = IBAUtils.getStringValue(p, "MODEL");
-			NumberCode _n = NumberCodeHelper.manager.getNumberCode(_c, "MODEL");
-			if (_n != null) {
-				node.put("model", "");
-			} else {
-				node.put("model", _c + ":" + _n.getName());
-			}
-			node.put("remarks", IBAUtils.getStringValue(p, "REMARKS"));
-			node.put("specification", IBAUtils.getStringValue(p, "SPECIFICATION"));
-			node.put("deptcode", IBAUtils.getStringValue(p, "DEPTCODE"));
-			node.put("productmethod", IBAUtils.getStringValue(p, "PRODUCTMETHOD"));
-			node.put("ecoNo", IBAUtils.getStringValue(p, "CHANGENO"));
-			node.put("manufacture", IBAUtils.getStringValue(p, "MANUFACTURE"));
+
+			settingNode(node, p);
 
 			isCheckOut = WorkInProgressHelper.isCheckedOut(p);
 //			isWorkCopy = WorkInProgressHelper.isWorkingCopy(p);
@@ -552,20 +506,7 @@ public class BomHelper {
 				+ root.getIterationIdentifier().getSeries().getValue());
 		rootNode.put("modifier", root.getModifierFullName());
 		rootNode.put("qty", 1);
-		String c = IBAUtils.getStringValue(root, "MODEL");
-		NumberCode n = NumberCodeHelper.manager.getNumberCode(c, "MODEL");
-		if (n != null) {
-			rootNode.put("model", "");
-		} else {
-			rootNode.put("model", c + ":" + n.getName());
-		}
-		rootNode.put("remarks", IBAUtils.getStringValue(root, "REMARKS"));
-		rootNode.put("specification", IBAUtils.getStringValue(root, "SPECIFICATION"));
-		rootNode.put("deptcode", IBAUtils.getStringValue(root, "DEPTCODE"));
-		rootNode.put("productmethod", IBAUtils.getStringValue(root, "PRODUCTMETHOD"));
-		rootNode.put("ecoNo", IBAUtils.getStringValue(root, "CHANGENO"));
-		rootNode.put("manufacture", IBAUtils.getStringValue(root, "MANUFACTURE"));
-
+		settingNode(rootNode, root);
 		boolean isCheckOut = WorkInProgressHelper.isCheckedOut(root);
 //		boolean isWorkCopy = WorkInProgressHelper.isWorkingCopy(root);
 		if (isCheckOut) {
@@ -615,19 +556,7 @@ public class BomHelper {
 					+ p.getIterationIdentifier().getSeries().getValue());
 			node.put("modifier", p.getModifierFullName());
 			node.put("qty", link.getQuantity().getAmount());
-			String _c = IBAUtils.getStringValue(root, "MODEL");
-			NumberCode _n = NumberCodeHelper.manager.getNumberCode(_c, "MODEL");
-			if (_n != null) {
-				node.put("model", "");
-			} else {
-				node.put("model", _c + ":" + _n.getName());
-			}
-			node.put("remarks", IBAUtils.getStringValue(p, "REMARKS"));
-			node.put("specification", IBAUtils.getStringValue(p, "SPECIFICATION"));
-			node.put("deptcode", IBAUtils.getStringValue(p, "DEPTCODE"));
-			node.put("productmethod", IBAUtils.getStringValue(p, "PRODUCTMETHOD"));
-			node.put("ecoNo", IBAUtils.getStringValue(p, "CHANGENO"));
-			node.put("manufacture", IBAUtils.getStringValue(p, "MANUFACTURE"));
+			settingNode(node, p);
 
 			isCheckOut = WorkInProgressHelper.isCheckedOut(p);
 //			isWorkCopy = WorkInProgressHelper.isWorkingCopy(p);
@@ -674,19 +603,7 @@ public class BomHelper {
 		rootNode.put("modifier", root.getModifierFullName());
 		rootNode.put("qty", 1);
 
-		String c = IBAUtils.getStringValue(root, "MODEL");
-		NumberCode n = NumberCodeHelper.manager.getNumberCode(c, "MODEL");
-		if (n != null) {
-			rootNode.put("model", "");
-		} else {
-			rootNode.put("model", c + ":" + n.getName());
-		}
-		rootNode.put("remarks", IBAUtils.getStringValue(root, "REMARKS"));
-		rootNode.put("specification", IBAUtils.getStringValue(root, "SPECIFICATION"));
-		rootNode.put("deptcode", IBAUtils.getStringValue(root, "DEPTCODE"));
-		rootNode.put("productmethod", IBAUtils.getStringValue(root, "PRODUCTMETHOD"));
-		rootNode.put("ecoNo", IBAUtils.getStringValue(root, "CHANGENO"));
-		rootNode.put("manufacture", IBAUtils.getStringValue(root, "MANUFACTURE"));
+		settingNode(rootNode, root);
 
 		boolean isCheckOut = WorkInProgressHelper.isCheckedOut(root);
 //		boolean isWorkCopy = WorkInProgressHelper.isWorkingCopy(root);
@@ -732,19 +649,7 @@ public class BomHelper {
 			node.put("modifier", p.getModifierFullName());
 			node.put("qty", link.getQuantity().getAmount());
 
-			String _c = IBAUtils.getStringValue(root, "MODEL");
-			NumberCode _n = NumberCodeHelper.manager.getNumberCode(_c, "MODEL");
-			if (_n != null) {
-				node.put("model", "");
-			} else {
-				node.put("model", _c + ":" + _n.getName());
-			}
-			node.put("remarks", IBAUtils.getStringValue(p, "REMARKS"));
-			node.put("specification", IBAUtils.getStringValue(p, "SPECIFICATION"));
-			node.put("deptcode", IBAUtils.getStringValue(p, "DEPTCODE"));
-			node.put("productmethod", IBAUtils.getStringValue(p, "PRODUCTMETHOD"));
-			node.put("ecoNo", IBAUtils.getStringValue(p, "CHANGENO"));
-			node.put("manufacture", IBAUtils.getStringValue(p, "MANUFACTURE"));
+			settingNode(node, p);
 
 			isCheckOut = WorkInProgressHelper.isCheckedOut(p);
 //			isWorkCopy = WorkInProgressHelper.isWorkingCopy(p);
@@ -868,13 +773,7 @@ public class BomHelper {
 					+ p.getIterationIdentifier().getSeries().getValue());
 			node.put("modifier", p.getModifierFullName());
 			node.put("qty", link.getQuantity().getAmount());
-			node.put("model", IBAUtils.getStringValue(p, "MODEL"));
-			node.put("remarks", IBAUtils.getStringValue(p, "REMARKS"));
-			node.put("specification", IBAUtils.getStringValue(p, "SPECIFICATION"));
-			node.put("deptcode", IBAUtils.getStringValue(p, "DEPTCODE"));
-			node.put("productmethod", IBAUtils.getStringValue(p, "PRODUCTMETHOD"));
-			node.put("ecoNo", IBAUtils.getStringValue(p, "CHANGENO"));
-			node.put("manufacture", IBAUtils.getStringValue(p, "MANUFACTURE"));
+			settingMap(node, p);
 			boolean isCheckOut = WorkInProgressHelper.isCheckedOut(p);
 //			boolean isWorkCopy = WorkInProgressHelper.isWorkingCopy(p);
 			if (isCheckOut) {
@@ -966,13 +865,7 @@ public class BomHelper {
 					+ p.getIterationIdentifier().getSeries().getValue());
 			node.put("modifier", p.getModifierFullName());
 			node.put("qty", link.getQuantity().getAmount());
-			node.put("model", IBAUtils.getStringValue(p, "MODEL"));
-			node.put("remarks", IBAUtils.getStringValue(p, "REMARKS"));
-			node.put("specification", IBAUtils.getStringValue(p, "SPECIFICATION"));
-			node.put("deptcode", IBAUtils.getStringValue(p, "DEPTCODE"));
-			node.put("productmethod", IBAUtils.getStringValue(p, "PRODUCTMETHOD"));
-			node.put("ecoNo", IBAUtils.getStringValue(p, "CHANGENO"));
-			node.put("manufacture", IBAUtils.getStringValue(p, "MANUFACTURE"));
+			settingMap(node, p);
 			boolean isCheckOut = WorkInProgressHelper.isCheckedOut(p);
 //			boolean isWorkCopy = WorkInProgressHelper.isWorkingCopy(p);
 			if (isCheckOut) {
@@ -1040,13 +933,7 @@ public class BomHelper {
 					+ p.getIterationIdentifier().getSeries().getValue());
 			node.put("modifier", p.getModifierFullName());
 			node.put("qty", link.getQuantity().getAmount());
-			node.put("model", IBAUtils.getStringValue(p, "MODEL"));
-			node.put("remarks", IBAUtils.getStringValue(p, "REMARKS"));
-			node.put("specification", IBAUtils.getStringValue(p, "SPECIFICATION"));
-			node.put("deptcode", IBAUtils.getStringValue(p, "DEPTCODE"));
-			node.put("productmethod", IBAUtils.getStringValue(p, "PRODUCTMETHOD"));
-			node.put("ecoNo", IBAUtils.getStringValue(p, "CHANGENO"));
-			node.put("manufacture", IBAUtils.getStringValue(p, "MANUFACTURE"));
+			settingMap(node, p);
 			boolean isCheckOut = WorkInProgressHelper.isCheckedOut(p);
 //			boolean isWorkCopy = WorkInProgressHelper.isWorkingCopy(p);
 			if (isCheckOut) {
@@ -1106,13 +993,7 @@ public class BomHelper {
 					+ p.getIterationIdentifier().getSeries().getValue());
 			node.put("modifier", p.getModifierFullName());
 			node.put("qty", link.getQuantity().getAmount());
-			node.put("model", IBAUtils.getStringValue(p, "MODEL"));
-			node.put("remarks", IBAUtils.getStringValue(p, "REMARKS"));
-			node.put("specification", IBAUtils.getStringValue(p, "SPECIFICATION"));
-			node.put("deptcode", IBAUtils.getStringValue(p, "DEPTCODE"));
-			node.put("productmethod", IBAUtils.getStringValue(p, "PRODUCTMETHOD"));
-			node.put("ecoNo", IBAUtils.getStringValue(p, "CHANGENO"));
-			node.put("manufacture", IBAUtils.getStringValue(p, "MANUFACTURE"));
+			settingMap(node, p);
 			boolean isCheckOut = WorkInProgressHelper.isCheckedOut(p);
 //			boolean isWorkCopy = WorkInProgressHelper.isWorkingCopy(p);
 			if (isCheckOut) {
@@ -1514,5 +1395,111 @@ public class BomHelper {
 		}
 		node.put("isCheckOut", isCheckOut);
 		return node;
+	}
+
+	/**
+	 * BOM뷰에서 코드:이름으로 보이게 처리
+	 */
+	private void settingNode(JSONObject node, WTPart p) throws Exception {
+		String model_code = IBAUtils.getStringValue(p, "MODEL");
+		NumberCode model = NumberCodeHelper.manager.getNumberCode(model_code, "MODEL");
+		if (model == null) {
+			node.put("model", "");
+		} else {
+			node.put("model", model_code + ":" + model.getName());
+		}
+
+		String remarks_code = IBAUtils.getStringValue(p, "REMARKS");
+		NumberCode remarks = NumberCodeHelper.manager.getNumberCode(remarks_code, "REMARKS");
+		if (remarks == null) {
+			node.put("remarks", "");
+		} else {
+			node.put("remarks", remarks_code + ":" + remarks.getName());
+		}
+
+		String specification_code = IBAUtils.getStringValue(p, "SPECIFICATION");
+		NumberCode specification = NumberCodeHelper.manager.getNumberCode(specification_code, "SPECIFICATION");
+		if (specification == null) {
+			node.put("specification", "");
+		} else {
+			node.put("specification", specification_code + ":" + specification.getName());
+		}
+
+		String deptcode_code = IBAUtils.getStringValue(p, "DEPTCODE");
+		NumberCode deptcode = NumberCodeHelper.manager.getNumberCode(deptcode_code, "DEPTCODE");
+		if (deptcode == null) {
+			node.put("deptcode", "");
+		} else {
+			node.put("deptcode", deptcode_code + ":" + deptcode.getName());
+		}
+
+		String productmethod_code = IBAUtils.getStringValue(p, "PRODUCTMETHOD");
+		NumberCode productmethod = NumberCodeHelper.manager.getNumberCode(productmethod_code, "PRODUCTMETHOD");
+		if (productmethod == null) {
+			node.put("productmethod", "");
+		} else {
+			node.put("productmethod", productmethod_code + ":" + productmethod.getName());
+		}
+
+		String manufacture_code = IBAUtils.getStringValue(p, "MANUFACTURE");
+		NumberCode manufacture = NumberCodeHelper.manager.getNumberCode(manufacture_code, "MANUFACTURE");
+		if (manufacture == null) {
+			node.put("manufacture", "");
+		} else {
+			node.put("manufacture", manufacture_code + ":" + manufacture.getName());
+		}
+	}
+
+	/**
+	 * BOM 뷰에서 사용할 도면 여부체크
+	 */
+	private void settingMap(Map<String, Object> node, WTPart p) throws Exception {
+		String model_code = IBAUtils.getStringValue(p, "MODEL");
+		NumberCode model = NumberCodeHelper.manager.getNumberCode(model_code, "MODEL");
+		if (model == null) {
+			node.put("model", "");
+		} else {
+			node.put("model", model_code + ":" + model.getName());
+		}
+
+		String remarks_code = IBAUtils.getStringValue(p, "REMARKS");
+		NumberCode remarks = NumberCodeHelper.manager.getNumberCode(remarks_code, "REMARKS");
+		if (remarks == null) {
+			node.put("remarks", "");
+		} else {
+			node.put("remarks", remarks_code + ":" + remarks.getName());
+		}
+
+		String specification_code = IBAUtils.getStringValue(p, "SPECIFICATION");
+		NumberCode specification = NumberCodeHelper.manager.getNumberCode(specification_code, "SPECIFICATION");
+		if (specification == null) {
+			node.put("specification", "");
+		} else {
+			node.put("specification", specification_code + ":" + specification.getName());
+		}
+
+		String deptcode_code = IBAUtils.getStringValue(p, "DEPTCODE");
+		NumberCode deptcode = NumberCodeHelper.manager.getNumberCode(deptcode_code, "DEPTCODE");
+		if (deptcode == null) {
+			node.put("deptcode", "");
+		} else {
+			node.put("deptcode", deptcode_code + ":" + deptcode.getName());
+		}
+
+		String productmethod_code = IBAUtils.getStringValue(p, "PRODUCTMETHOD");
+		NumberCode productmethod = NumberCodeHelper.manager.getNumberCode(productmethod_code, "PRODUCTMETHOD");
+		if (productmethod == null) {
+			node.put("productmethod", "");
+		} else {
+			node.put("productmethod", productmethod_code + ":" + productmethod.getName());
+		}
+
+		String manufacture_code = IBAUtils.getStringValue(p, "MANUFACTURE");
+		NumberCode manufacture = NumberCodeHelper.manager.getNumberCode(manufacture_code, "MANUFACTURE");
+		if (manufacture == null) {
+			node.put("manufacture", "");
+		} else {
+			node.put("manufacture", manufacture_code + ":" + manufacture.getName());
+		}
 	}
 }
