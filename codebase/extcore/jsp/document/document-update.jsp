@@ -275,12 +275,22 @@ iframe {
 		
 		const classType1 = document.getElementById("classType1").value;
 		const classType2 = document.getElementById("classType2").value;
+		alert(classType1);
+		alert(classType2);
 		
 		let name;
 		let checker = true;
 		if("DEV" === classType1) {
 			checker = false;
 		}
+		
+		// 회의록에 일반 희의록이 아닐 경우만
+		if ("MEETING" === classType1) {
+			if ("회의록" !== classType2) {
+				checker = false;
+			}
+		}
+
 		
 		if(checker) {
 			if (suffix === "") {

@@ -155,7 +155,7 @@ public class DocumentDTO {
 				if (classType2 != null) {
 					setClassType2_name(classType2.getName());
 					setClassType2_oid(classType2.getPersistInfo().getObjectIdentifier().getStringValue());
-					setClassType3_code(classType2.getClazz());
+					setClassType2_code(classType2.getClazz());
 				}
 			}
 		}

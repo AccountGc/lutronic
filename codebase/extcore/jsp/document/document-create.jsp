@@ -265,10 +265,11 @@ iframe {
 				const preseration = document.getElementById("preseration").value;
 
 				// 클래스타입
+				const clazz2 = document.getElementById("clazz");
 				const classType1_code = document.getElementById("classType1").value;
-				const classType2_oid = document.getElementById("classType2").value;
+				const classType2_oid = clazz2.getAttribute("data-oid");
 				const classType2 = document.getElementById(classType2Id);
-				const clazz2 = document.getElementById("clazz").value;
+				
 
 				const classType3_oid = document.getElementById("classType3").value;
 
@@ -304,7 +305,7 @@ iframe {
 
 				// 회의록에 일반 희의록이 아닐 경우만
 				if ("MEETING" === classType1_code) {
-					if ("회의록" !== clazz2) {
+					if ("회의록" !== clazz2.value) {
 						checker = false;
 					}
 				}
