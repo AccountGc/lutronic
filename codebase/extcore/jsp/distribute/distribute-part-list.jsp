@@ -94,16 +94,8 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 			<tr>
 				<th>프로젝트코드</th>
 				<td class="indent5" colspan="5">
-					<select name="model" id="model" class="width-200">
-						<option value="">선택</option>
-						<%
-						for (NumberCode model : modelList) {
-						%>
-						<option value="<%=model.getCode()%>"><%=model.getName()%></option>
-						<%
-						}
-						%>
-					</select>
+					<input type="text" name="model" id="model" class="width-200">
+					<img src="/Windchill/extcore/images/delete.png" class="delete" title="삭제" onclick="clearUser('model')">
 				</td>
 			</tr>
 			<tr class="hidden">
@@ -546,7 +538,7 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 				AUIGrid.resize(myGridID);
 				_createAUIGrid(_columns);
 				AUIGrid.resize(_myGridID);
-				selectbox("model");
+				finderCode("model", "MODEL");
 				selectbox("productmethod");
 				selectbox("deptcode");
 				selectbox("unit");

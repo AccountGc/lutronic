@@ -86,16 +86,8 @@ boolean complete = (boolean) request.getAttribute("complete");
 	<tr>
 		<th>프로젝트코드</th>
 		<td class="indent5">
-			<select name="model" id="model" class="width-200">
-				<option value="">선택</option>
-				<%
-				for (NumberCode model : modelList) {
-				%>
-				<option value="<%=model.getCode()%>"><%=model.getName()%></option>
-				<%
-				}
-				%>
-			</select>
+			<input type="text" name="model" id="model" class="width-200">
+			<img src="/Windchill/extcore/images/delete.png" class="delete" title="삭제" onclick="clearUser('model')">
 		</td>
 		<th>상태</th>
 		<td class="indent5">
@@ -517,7 +509,6 @@ document.addEventListener("DOMContentLoaded", function() {
 	_createAUIGrid(_columns);
 	AUIGrid.resize(_myGridID);
 	selectbox("state");
-	selectbox("model");
 	selectbox("productmethod");
 	selectbox("deptcode");
 	selectbox("unit");
@@ -528,6 +519,7 @@ document.addEventListener("DOMContentLoaded", function() {
 	finderUser("creator");
 	twindate("created");
 	twindate("modified");
+	finderCode("model", "MODEL");
 });
 
 document.addEventListener("keydown", function(event) {

@@ -51,7 +51,7 @@ boolean isEdit = (boolean) request.getAttribute("isEdit");
 			<tr>
 				<th>ECN 번호</th>
 				<td class="indent5">
-					<input type="text" name="number" id="number" class="width-300">
+					<input type="text" name="number" id="number" class="width-260">
 				</td>
 				<th>ECN 제목</th>
 				<td class="indent5">
@@ -59,7 +59,7 @@ boolean isEdit = (boolean) request.getAttribute("isEdit");
 				</td>
 				<th>상태</th>
 				<td class="indent5">
-					<select name="state" id="state" class="width-200">
+					<select name="state" id="state" class="width-240">
 						<option value="">선택</option>
 						<%
 						for (Map<String, String> lifecycle : lifecycleList) {
@@ -87,16 +87,8 @@ boolean isEdit = (boolean) request.getAttribute("isEdit");
 				</td>
 				<th>프로젝트 코드</th>
 				<td class="indent5">
-					<select name="model" id="model" class="width-200">
-						<option value="">선택</option>
-						<%
-						for (NumberCode model : modelList) {
-						%>
-						<option value="<%=model.getCode()%>"><%=model.getName()%></option>
-						<%
-						}
-						%>
-					</select>
+					<input type="text" name="model" id="model" class="width-200">
+					<img src="/Windchill/extcore/images/delete.png" class="delete" title="삭제" onclick="clearUser('model')">
 				</td>
 			</tr>
 		</table>
@@ -375,7 +367,7 @@ boolean isEdit = (boolean) request.getAttribute("isEdit");
 				twindate("created");
 				twindate("modified");
 				selectbox("_psize");
-				selectbox("model");
+				finderCode("model", "MODEL");
 			});
 
 			document.addEventListener("keydown", function(event) {
