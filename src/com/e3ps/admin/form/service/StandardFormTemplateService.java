@@ -96,19 +96,15 @@ public class StandardFormTemplateService extends StandardManager implements Form
 	public void modify(Map<String, Object> params) throws Exception {
 		String oid = (String) params.get("oid");
 		String name = (String) params.get("name");
-		String number = (String) params.get("number");
 		String description = (String) params.get("description");
-		String formType = (String) params.get("formType");
 		Transaction trs = new Transaction();
 		try {
 			trs.start();
 
 			FormTemplate form = (FormTemplate) CommonUtil.getObject(oid);
 			form.setName(name);
-			form.setNumber(number);
 			form.setDescription(description);
-			form.setFormType(formType);
-			form.setVersion(form.getVersion() + 1);
+//			form.setVersion(form.getVersion() + 1);
 			PersistenceHelper.manager.modify(form);
 
 			trs.commit();

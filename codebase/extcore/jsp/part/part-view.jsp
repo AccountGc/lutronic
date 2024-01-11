@@ -48,14 +48,20 @@ WTUser sessionUser = (WTUser) SessionHelper.manager.getPrincipal();
 
 			<input type="button" value="일괄 수정" title="일괄 수정" onclick="packageUpdate();">
 			<%
-			if (isAdmin) {
+			// 			if (isAdmin) {
 			%>
 			<input type="button" value="수정" title="수정" class="blue" onclick="update();">
 			<input type="button" value="삭제" title="삭제" class="red" onclick="_delete();">
 			<input type="button" value="채번" title="채번" onclick="change();">
-			<input type="button" value="채번(새버전)" title="채번(새버전)" onclick="orderNumber_NewVersion();">
+			<%
+			if (dto.is_modify()) {
+			%>
+			<input type="button" value="채번(새버전)" title="채번(새버전)" class="blue" onclick="order();">
 			<%
 			}
+			%>
+			<%
+			// 			}
 			%>
 			<input type="button" value="닫기" title="닫기" class="gray" onclick="self.close();">
 			<%
@@ -462,8 +468,9 @@ WTUser sessionUser = (WTUser) SessionHelper.manager.getPrincipal();
 		_popup(url, 1500, 600, "n");
 	}
 
-	function orderNumber_NewVersion() {
-		const url = getCallUrl("/part/updateAUIPartChange?oid=" + oid);
+	// 새채번 팝업
+	function order() {
+		const url = getCallUrl("/part/order?oid=" + oid);
 		_popup(url, 1500, 600, "n");
 	}
 

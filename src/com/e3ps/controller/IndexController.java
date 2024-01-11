@@ -73,8 +73,8 @@ public class IndexController extends BaseController {
 	@GetMapping(value = "/mainPage")
 	public ModelAndView mainPage() throws Exception {
 		ModelAndView model = new ModelAndView();
-		JSONArray crPieList = ChartsHelper.manager.crPie();
-		model.addObject("crPieList", crPieList);
+//		JSONArray crPieList = ChartsHelper.manager.crPie();
+//		model.addObject("crPieList", crPieList);
 		model.setViewName("/extcore/jsp/change/mainPage.jsp");
 		return model;
 	}

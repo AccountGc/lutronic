@@ -2022,8 +2022,8 @@ public class StandardPartService extends StandardManager implements PartService 
 			map.put("disabled", disabled);
 			map.put("checked", checked);
 
-			String icon = CommonUtil.getObjectIconImageTag(data.part);
-			map.put("icon", icon);
+//			String icon = CommonUtil.getObjectIconImageTag(data.part);
+			map.put("icon", "/Windchill/wtcore/images/part.gif");
 
 			map.put("partOid", data.part.getPersistInfo().getObjectIdentifier().toString());
 			map.put("number", data.number);

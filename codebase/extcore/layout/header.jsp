@@ -334,31 +334,7 @@ int eca = (int) request.getAttribute("eca");
 			</li>
 			<%
 			}
-			%>
-			<%
-			if (isProduction) {
-			%>
-			<!-- 			<li> -->
-			<!-- 				<a href="css_animation.html"> -->
-			<!-- 					<i class="fa fa-magic"></i> -->
-			<!-- 					<span class="nav-label">생산본부 문서관리</span> -->
-			<!-- 					<span class="fa arrow"></span> -->
-			<!-- 				</a> -->
-			<!-- 				<ul class="nav nav-second-level collapse"> -->
-			<!-- 					<li> -->
-			<!-- 						<a onclick="moveToPage(this, '/etc/create?type=production', '> 생산본부 문서관리 > 생산본부 문서등록');">생산본부 문서등록</a> -->
-			<!-- 					</li> -->
-			<!-- 					<li> -->
-			<!-- 						<a onclick="moveToPage(this, '/etc/list?type=production', '> 생산본부 문서관리 > 생산본부 문서검색');">생산본부 문서검색</a> -->
-			<!-- 					</li> -->
-			<!-- 					<li> -->
-			<!-- 						<a onclick="moveToPage(this, '/etc/list?docType=production', '> 생산본부 문서관리 > 생산본부 문서결재');">생산본부 문서결재</a> -->
-			<!-- 					</li> -->
-			<!-- 				</ul> -->
-			<!-- 			</li> -->
-			<%
-			}
-			// 			if (isPathological) {
+			if (isPathological) {
 			%>
 			<li>
 				<a href="css_animation.html">
@@ -382,8 +358,8 @@ int eca = (int) request.getAttribute("eca");
 				</ul>
 			</li>
 			<%
-			// 			}
-			// 			if (isClinical) {
+			}
+			if (isClinical) {
 			%>
 			<li>
 				<a href="css_animation.html">
@@ -407,30 +383,10 @@ int eca = (int) request.getAttribute("eca");
 				</ul>
 			</li>
 			<%
-			// 			}
-			if (isRa) {
-			%>
-			<!-- 			<li> -->
-			<!-- 				<a href="css_animation.html"> -->
-			<!-- 					<i class="fa fa-magic"></i> -->
-			<!-- 					<span class="nav-label">RA팀 문서관리</span> -->
-			<!-- 					<span class="fa arrow"></span> -->
-			<!-- 				</a> -->
-			<!-- 				<ul class="nav nav-second-level collapse"> -->
-			<!-- 					<li> -->
-			<!-- 						<a onclick="moveToPage(this, '/etc/create?type=ra', '> RA팀 문서관리 > RA팀 문서등록');">RA팀 문서등록</a> -->
-			<!-- 					</li> -->
-			<!-- 					<li> -->
-			<!-- 						<a onclick="moveToPage(this, '/etc/list?type=ra', '> RA팀 문서관리 > RA팀 문서검색');">RA팀 문서검색</a> -->
-			<!-- 					</li> -->
-			<!-- 					<li> -->
-			<!-- 						<a onclick="moveToPage(this, '/etc/list?docType=production', '> RA팀 문서관리 > RA팀 문서결재');">RA팀 문서결재</a> -->
-			<!-- 					</li> -->
-			<!-- 				</ul> -->
-			<!-- 			</li> -->
-			<%
 			}
-			// 			if (isCosmetic) {
+			%>
+			<%
+			if (isCosmetic) {
 			%>
 			<li>
 				<a href="css_animation.html">
@@ -454,7 +410,7 @@ int eca = (int) request.getAttribute("eca");
 				</ul>
 			</li>
 			<%
-			// 			}
+			}
 			if (isAdmin) {
 			%>
 			<li>

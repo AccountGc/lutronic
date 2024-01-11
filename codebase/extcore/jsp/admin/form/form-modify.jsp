@@ -37,37 +37,16 @@ iframe {
 			<colgroup>
 				<col width="150">
 				<col width="*">
-				<col width="150">
-				<col width="*">
-				<col width="150">
-				<col width="*">
 			</colgroup>
 			<tr>
-				<th class="req lb">문서템플릿 번호</th>
-				<td class="indent5">
-					<input type="text" name="number" id="number" class="width-200" value="<%=dto.getNumber()%>">
-				</td>
-				<th class="req">문서템플릿 제목</th>
+				<th class="req lb">문서템플릿 제목</th>
 				<td class="indent5">
 					<input type="text" name="name" id="name" class="width-400" value="<%=dto.getName()%>">
-				</td>
-				<th class="req">문서양식 유형</th>
-				<td class="indent5">
-					<select name="formType" id="formType" class="width-200">
-						<option value="">선택</option>
-						<%
-						for (NumberCode n : formType) {
-						%>
-						<option value="<%=n.getName()%>" <%if (n.getCode().equals(dto.getFormType())) {%> selected="selected" <%}%>><%=n.getName()%></option>
-						<%
-						}
-						%>
-					</select>
 				</td>
 			</tr>
 			<tr>
 				<th class="req lb">내용</th>
-				<td colspan="5" class="indent5">
+				<td class="indent5">
 					<textarea name="contents" id="contents" rows="15" style="display:none;"><%=dto.getDescription() != null ? dto.getDescription() : "" %></textarea>
 					<script type="text/javascript">
 						new Dext5editor('description');
@@ -91,27 +70,22 @@ iframe {
 	<script type="text/javascript">
 		document.addEventListener("DOMContentLoaded", function() {
 			toFocus("name");
-			selectbox("formType");
 		});
 
 		function modify() {
 			const oid = document.getElementById("oid").value;
-			const number = document.getElementById("number");
 			const name = document.getElementById("name");
-			const formType = document.getElementById("formType");
 			const description = DEXT5.getBodyValue("description");
 
 			if (!confirm("수정 하시겠습니까?")) {
 				return false;
 			}
+			
 			const params = {
 				oid : oid,
 				name : name.value,
-				number : number.value,
-				formType : formType.value,
 				description : description
 			}
-			logger(params);
 			const url = getCallUrl("/form/modify");
 			parent.openLayer();
 			call(url, params, function(data) {

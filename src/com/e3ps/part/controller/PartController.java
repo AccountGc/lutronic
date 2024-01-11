@@ -55,6 +55,15 @@ import wt.vc.views.ViewHelper;
 @RequestMapping(value = "/part/**")
 public class PartController extends BaseController {
 
+	@Description(value = "새 채번 페이지")
+	@GetMapping(value = "/order")
+	public ModelAndView order(@RequestParam String oid) {
+		ModelAndView model = new ModelAndView();
+		model.addObject("oid", oid);
+		model.setViewName("popup:/part/part-order");
+		return model;
+	}
+
 	@Description(value = "품목 검색 페이지")
 	@GetMapping(value = "/list")
 	public ModelAndView list() throws Exception {
