@@ -145,6 +145,7 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 				<th>프로젝트코드</th>
 				<td class="indent5">
 					<input type="text" name="model" id="model" class="width-200">
+					<img src="/Windchill/extcore/images/delete.png" class="delete" title="삭제" onclick="clearUser('model')">
 				</td>
 			</tr>
 			<tr>

@@ -10,7 +10,7 @@
 <%@page import="com.e3ps.common.util.StringUtil"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%
-ArrayList<NumberCode> modelList = (ArrayList<NumberCode>) request.getAttribute("modelList");
+// ArrayList<NumberCode> modelList = (ArrayList<NumberCode>) request.getAttribute("modelList");
 ArrayList<NumberCode> deptcodeList = (ArrayList<NumberCode>) request.getAttribute("deptcodeList");
 ArrayList<NumberCode> matList = (ArrayList<NumberCode>) request.getAttribute("matList");
 ArrayList<NumberCode> productmethodList = (ArrayList<NumberCode>) request.getAttribute("productmethodList");
@@ -97,16 +97,8 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 			<tr>
 				<th>프로젝트코드</th>
 				<td class="indent5">
-					<select name="model" id="model" class="width-200">
-						<option value="">선택</option>
-						<%
-						for (NumberCode model : modelList) {
-						%>
-						<option value="<%=model.getCode()%>"><%=model.getName()%></option>
-						<%
-						}
-						%>
-					</select>
+					<input type="text" name="model" id="model" class="width-200">
+					<img src="/Windchill/extcore/images/delete.png" class="delete" title="삭제" onclick="clearUser('model')">
 				</td>
 				<th>상태</th>
 				<td class="indent5">
@@ -417,7 +409,7 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 					headerText : "수정일",
 					dataType : "date",
 					width : 100,
-				} ]
+				}]
 			}
 
 			function createAUIGrid(columnLayout) {
@@ -553,7 +545,7 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 				_createAUIGrid(_columns);
 				AUIGrid.resize(_myGridID);
 				selectbox("state");
-				selectbox("model");
+// 				selectbox("model");
 				selectbox("productmethod");
 				selectbox("deptcode");
 				selectbox("unit");
@@ -564,6 +556,7 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 				finderUser("creator");
 				twindate("created");
 				twindate("modified");
+				finderCode("model", "MODEL");
 			});
 
 			document.addEventListener("keydown", function(event) {
@@ -641,7 +634,8 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 						el.style.display = "table-row";
 						target.value = "▲접기";
 						selectbox("state");
-						selectbox("model");
+// 						selectbox("model");
+						finderCode("model", "MODEL");
 						selectbox("productmethod");
 						selectbox("deptcode");
 						selectbox("unit");
@@ -656,7 +650,8 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 						el.style.display = "none";
 						target.value = "▼펼치기";
 						selectbox("state");
-						selectbox("model");
+// 						selectbox("model");
+						finderCode("model", "MODEL");
 						selectbox("productmethod");
 						selectbox("deptcode");
 						selectbox("unit");

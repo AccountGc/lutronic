@@ -97,17 +97,21 @@ QuantityUnit[] unitList = (QuantityUnit[]) request.getAttribute("unitList");
 			</tr>
 			<tr>
 				<th>프로젝트코드</th>
+				<!-- 				<td class="indent5"> -->
+				<!-- 					<select name="model" id="model" class="width-200"> -->
+				<!-- 						<option value="">선택</option> -->
+				<%-- 						<% --%>
+<!-- 				// for (NumberCode model : modelList) { -->
+				<%-- 						%> --%>
+				<%-- 						<option value="<%=model.getCode()%>"><%=model.getName()%></option> --%>
+				<%-- 						<% --%>
+<!-- 				// } -->
+				<%-- 						%> --%>
+				<!-- 					</select> -->
+				<!-- 				</td> -->
 				<td class="indent5">
-					<select name="model" id="model" class="width-200">
-						<option value="">선택</option>
-						<%
-						for (NumberCode model : modelList) {
-						%>
-						<option value="<%=model.getCode()%>"><%=model.getName()%></option>
-						<%
-						}
-						%>
-					</select>
+					<input type="text" name="model" id="model" class="width-200">
+					<img src="/Windchill/extcore/images/delete.png" class="delete" title="삭제" onclick="clearUser('model')">
 				</td>
 				<th>CAD 타입</th>
 				<td class="indent5">
@@ -439,7 +443,7 @@ QuantityUnit[] unitList = (QuantityUnit[]) request.getAttribute("unitList");
 					hideContextMenu();
 				});
 			}
-			
+
 			function _auiContextMenuHandler(event) {
 				if (event.target == "header") { // 헤더 컨텍스트
 					if (nowHeaderMenuVisible) {
@@ -476,7 +480,6 @@ QuantityUnit[] unitList = (QuantityUnit[]) request.getAttribute("unitList");
 				}
 			}
 
-			
 			function auiContextHandler(event) {
 				const item = event.item;
 				const oid = item.oid;
@@ -497,7 +500,7 @@ QuantityUnit[] unitList = (QuantityUnit[]) request.getAttribute("unitList");
 					parent.closeLayer();
 				}, "GET");
 			}
-			
+
 			function loadGridData(movePage) {
 				if (movePage === undefined) {
 					document.getElementById("sessionid").value = 0;
@@ -570,7 +573,7 @@ QuantityUnit[] unitList = (QuantityUnit[]) request.getAttribute("unitList");
 				selectbox("state");
 				selectbox("cadDivision");
 				selectbox("cadType");
-				selectbox("model");
+				// 				selectbox("model");
 				selectbox("productmethod");
 				selectbox("deptcode");
 				selectbox("manufacture");
@@ -581,6 +584,7 @@ QuantityUnit[] unitList = (QuantityUnit[]) request.getAttribute("unitList");
 				twindate("created");
 				twindate("modified");
 				selectbox("_psize");
+				finderCode("model", "MODEL");
 			});
 
 			function exportExcel() {
@@ -617,7 +621,7 @@ QuantityUnit[] unitList = (QuantityUnit[]) request.getAttribute("unitList");
 						el.style.display = "table-row";
 						target.value = "접기";
 						selectbox("state");
-						selectbox("model");
+						// 						selectbox("model");
 						selectbox("productmethod");
 						selectbox("deptcode");
 						selectbox("unit");
@@ -628,11 +632,12 @@ QuantityUnit[] unitList = (QuantityUnit[]) request.getAttribute("unitList");
 						finderUser("creator");
 						twindate("created");
 						twindate("modified");
+						finderCode("model", "MODEL");
 					} else {
 						el.style.display = "none";
 						target.value = "펼치기";
 						selectbox("state");
-						selectbox("model");
+						// 						selectbox("model");
 						selectbox("productmethod");
 						selectbox("deptcode");
 						selectbox("unit");
@@ -643,6 +648,7 @@ QuantityUnit[] unitList = (QuantityUnit[]) request.getAttribute("unitList");
 						finderUser("creator");
 						twindate("created");
 						twindate("modified");
+						finderCode("model", "MODEL");
 					}
 				}
 			}

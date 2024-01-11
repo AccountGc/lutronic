@@ -161,16 +161,8 @@ ArrayList<Map<String, String>> classTypes1 = (ArrayList<Map<String, String>>) re
 		</td>
 		<th>프로젝트코드</th>
 		<td class="indent5">
-			<select name="model" id="model" class="width-200">
-				<option value="">선택</option>
-				<%
-				for (NumberCode model : modelList) {
-				%>
-				<option value="<%=model.getCode()%>"><%=model.getName()%></option>
-				<%
-				}
-				%>
-			</select>
+			<input type="text" name="model" id="model" class="width-200">
+			<img src="/Windchill/extcore/images/delete.png" class="delete" title="삭제" onclick="clearUser('model')">
 		</td>
 	</tr>
 	<tr>
@@ -229,8 +221,7 @@ ArrayList<Map<String, String>> classTypes1 = (ArrayList<Map<String, String>>) re
 </table>
 <table class="button-table">
 	<tr>
-		<td class="left">
-		</td>
+		<td class="left"></td>
 		<td class="right">
 			<select name="_psize" id="_psize">
 				<option value="10">10</option>
@@ -446,7 +437,6 @@ document.addEventListener("DOMContentLoaded", function() {
 	selectbox("_psize");
 	selectbox("documentType");
 	selectbox("preseration");
-	selectbox("model");
 	selectbox("deptcode");
 	finderUser("writer");
 	<%if (StringUtil.checkString(state)) {%>
@@ -456,7 +446,8 @@ document.addEventListener("DOMContentLoaded", function() {
 	selectbox("classType1");
 	selectbox("classType2");
 	selectbox("classType3");	
-});
+	finderCode("model", "MODEL");
+;});
 
 function <%=method%>() {
 	const checkedItems = AUIGrid.getCheckedRowItems(myGridID);

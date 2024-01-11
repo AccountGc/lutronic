@@ -140,16 +140,8 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 				</td>
 				<th>프로젝트코드</th>
 				<td class="indent5">
-					<select name="model" id="model" class="width-200">
-						<option value="">선택</option>
-						<%
-						for (NumberCode model : modelList) {
-						%>
-						<option value="<%=model.getCode()%>"><%=model.getName()%></option>
-						<%
-						}
-						%>
-					</select>
+					<input type="text" name="model" id="model" class="width-200">
+					<img src="/Windchill/extcore/images/delete.png" class="delete" title="삭제" onclick="clearUser('model')">
 				</td>
 			</tr>
 			<tr>
@@ -551,12 +543,12 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 				twindate("modified");
 				selectbox("_psize");
 				selectbox("preseration");
-				selectbox("model");
 				selectbox("deptcode");
 				finderUser("writer");
 				selectbox("classType1");
 				selectbox("classType2");
 				selectbox("classType3");
+				finderCode("model", "MODEL");
 			});
 
 			function exportExcel() {
