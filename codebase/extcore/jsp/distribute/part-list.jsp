@@ -494,6 +494,7 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 			function loadGridData(movePage) {
 				if (movePage === undefined) {
 					document.getElementById("sessionid").value = 0;
+					document.getElementById("curPage").value = 1;
 				}
 				let params = new Object();
 				const field = [ "location", "partNumber", "partName", "createdFrom", "createdTo", "modifiedFrom", "modifiedTo", "state", "model", "productmethod", "deptcode", "unit", "weight", "mat", "finish", "remarks", "ecoNo", "eoNo", "creatorOid", "specification" ];

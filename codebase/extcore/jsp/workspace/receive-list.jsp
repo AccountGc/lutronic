@@ -132,7 +132,10 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 					width : 60,
 					renderer : {
 						type : "CheckBoxEditRenderer",
-					}
+					},
+					filter : {
+						inline : false
+					},
 				}, {
 					dataField : "type",
 					headerText : "구분",
@@ -182,6 +185,9 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 					style : "right",
 					renderer : {
 						type : "TemplateRenderer"
+					},
+					filter : {
+						inline : false
 					},
 				}, {
 					dataField : "submiter",

@@ -286,6 +286,7 @@ WTUser user = (WTUser) request.getAttribute("sessionUser");
 			function loadGridData(movePage) {
 				if (movePage === undefined) {
 					document.getElementById("sessionid").value = 0;
+					document.getElementById("curPage").value = 1;
 				}
 				let params = new Object();
 				const url = getCallUrl("/mold/list");

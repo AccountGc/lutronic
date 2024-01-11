@@ -267,6 +267,9 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 					renderer : {
 						type : "TemplateRenderer"
 					},
+					filter : {
+						inline : false
+					},
 				}, {
 					dataField : "secondary",
 					headerText : "첨부파일",
@@ -274,6 +277,9 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 					width : 100,
 					renderer : {
 						type : "TemplateRenderer"
+					},
+					filter : {
+						inline : false
 					},
 				} ]
 			}
@@ -308,6 +314,7 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 			function loadGridData(movePage) {
 				if (movePage === undefined) {
 					document.getElementById("sessionid").value = 0;
+					document.getElementById("curPage").value = 1;
 				}
 				let params = new Object();
 				const url = getCallUrl("/etc/list");

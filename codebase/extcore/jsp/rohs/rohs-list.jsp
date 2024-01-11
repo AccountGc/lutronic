@@ -239,6 +239,7 @@ List<Map<String, String>> lifecycleList = (List<Map<String, String>>) request.ge
 			function loadGridData(movePage) {
 				if (movePage === undefined) {
 					document.getElementById("sessionid").value = 0;
+					document.getElementById("curPage").value = 1;
 				}
 				let params = new Object();
 				const url = getCallUrl("/rohs/list");

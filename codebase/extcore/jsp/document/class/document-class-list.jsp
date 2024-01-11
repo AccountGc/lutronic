@@ -130,7 +130,10 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 					renderer : {
 						type : "CheckBoxEditRenderer",
 						editable : true,
-					}
+					},
+					filter : {
+						inline : false
+					},
 				} ]
 			}
 

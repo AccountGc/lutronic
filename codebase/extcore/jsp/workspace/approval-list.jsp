@@ -93,7 +93,10 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 					width : 60,
 					renderer : {
 						type : "CheckBoxEditRenderer",
-					}
+					},
+					filter : {
+						inline : false
+					},
 				}, {
 					dataField : "persistType",
 					headerText : "객체유형",
@@ -158,6 +161,9 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 					renderer : {
 						type : "TemplateRenderer"
 					},
+					filter : {
+						inline : false
+					},
 				}, {
 					dataField : "submiter",
 					headerText : "기안자",
@@ -209,6 +215,7 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 			function loadGridData(movePage) {
 				if (movePage === undefined) {
 					document.getElementById("sessionid").value = 0;
+					document.getElementById("curPage").value = 1;
 				}
 				let params = new Object();
 				const url = getCallUrl("/workspace/approval");

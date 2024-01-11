@@ -89,6 +89,9 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 					headerText : "ROHS 상태",
 					dataType : "string",
 					width : 100,
+					filter : {
+						inline : false
+					},
 					renderer : {
 						type : "ImageRenderer",
 						imgHeight : 16, // 이미지 높이, 지정하지 않으면 rowHeight에 맞게 자동 조절되지만 빠른 렌더링을 위해 설정을 추천합니다.

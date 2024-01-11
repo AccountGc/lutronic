@@ -152,7 +152,10 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 						editable : true,
 					// 						checkValue: "true",
 					// 						unCheckValue: "false",
-					}
+					},
+					filter : {
+						inline : false
+					},
 				} ]
 			}
 

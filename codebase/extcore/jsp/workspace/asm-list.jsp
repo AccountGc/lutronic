@@ -1,3 +1,4 @@
+
 <%@page import="java.util.Map"%>
 <%@page import="java.util.List"%>
 <%@page import="wt.session.SessionHelper"%>
@@ -162,6 +163,9 @@ boolean isAdmin = (boolean) request.getAttribute("isAdmin");
 					headerText : "타입",
 					dataType : "string",
 					width : 100,
+					filter : {
+						inline : false
+					},
 				}, {
 					dataField : "state",
 					headerText : "상태",
@@ -212,6 +216,7 @@ boolean isAdmin = (boolean) request.getAttribute("isAdmin");
 			function loadGridData(movePage) {
 				if (movePage === undefined) {
 					document.getElementById("sessionid").value = 0;
+					document.getElementById("curPage").value = 1;
 				}
 				let params = new Object();
 				const field = [ "name", "createdFrom", "createdTo", "creatorOid", "state" ];

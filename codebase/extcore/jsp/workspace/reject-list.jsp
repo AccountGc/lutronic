@@ -90,6 +90,9 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 					renderer : {
 						type : "TemplateRenderer"
 					},
+					filter : {
+						inline : false
+					},
 				}, {
 					dataField : "completeTime",
 					headerText : "반려일",
