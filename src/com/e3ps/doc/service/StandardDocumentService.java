@@ -206,7 +206,6 @@ public class StandardDocumentService extends StandardManager implements Document
 		String classType3_oid = dto.getClassType3_oid();
 		Transaction trs = new Transaction();
 		try {
-			CommonClientHelper
 			trs.start();
 
 			WTDocument doc = WTDocument.newWTDocument();
