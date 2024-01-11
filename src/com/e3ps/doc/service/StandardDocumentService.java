@@ -203,7 +203,6 @@ public class StandardDocumentService extends StandardManager implements Document
 		String classType1_code = dto.getClassType1_code();
 		String classType2_oid = dto.getClassType2_oid();
 		String classType3_oid = dto.getClassType3_oid();
-		String formType_oid = dto.getFormType_oid();
 		Transaction trs = new Transaction();
 		try {
 			trs.start();
@@ -219,11 +218,6 @@ public class StandardDocumentService extends StandardManager implements Document
 				info.setPtc_str_1(product);
 			}
 
-			if (StringUtil.checkString(formType_oid)) {
-				FormTemplate form = (FormTemplate) CommonUtil.getObject(formType_oid);
-				ObjectReference ref = ObjectReference.newObjectReference(form);
-				info.setPtc_ref_1(ref);
-			}
 			if (StringUtil.checkString(classType2_oid)) {
 				DocumentClass classType2 = (DocumentClass) CommonUtil.getObject(classType2_oid);
 				ObjectReference ref = ObjectReference.newObjectReference(classType2);

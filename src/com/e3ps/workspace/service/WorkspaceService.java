@@ -116,4 +116,12 @@ public interface WorkspaceService {
 	 * 모든 결재 정보를 초기화한다
 	 */
 	public abstract void resetLines(WorkData data) throws Exception;
+
+	/**
+	 * 마스터 포함 모든 결재선 삭제
+	 * 
+	 * @param per
+	 * @throws Exception
+	 */
+	public abstract void deleteAllLines(Persistable per) throws Exception;
 }

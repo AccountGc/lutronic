@@ -21,6 +21,7 @@ import com.e3ps.common.util.DateUtil;
 import com.e3ps.common.util.StringUtil;
 import com.e3ps.common.util.WCUtil;
 import com.e3ps.part.service.PartHelper;
+import com.e3ps.workspace.ApprovalLine;
 import com.e3ps.workspace.WorkData;
 import com.e3ps.workspace.service.WorkDataHelper;
 import com.e3ps.workspace.service.WorkspaceHelper;
@@ -403,6 +404,8 @@ public class StandardEcoService extends StandardManager implements EcoService {
 			if (dd != null) {
 				PersistenceHelper.manager.delete(dd);
 			}
+			
+			
 
 			PersistenceHelper.manager.delete(eco);
 
