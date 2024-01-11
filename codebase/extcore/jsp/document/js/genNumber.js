@@ -205,7 +205,7 @@ function preNumberCheck(obj) {
 		const classType1 = document.getElementById(classType1Id);
 		const classType2 = document.getElementById(classType2Id);
 		const text = classType2.value;
-		const clazz2 = document.getElementById("clazz").getAttribute("data-clazz");
+		const clazz2 = document.getElementById("clazz").value;
 		if (classType1.value === "DEV") {
 			tag.value = "";
 			tag.value += clazz2 + "-" + value + "-";
@@ -306,11 +306,9 @@ function lastNumber(value, classType1) {
 // 채번할지 말지 여부 체크
 function autoNumberChecker(classType1) {
 	if ("RND" === classType1 || "ELEC" === classType1 || "SOURCE" === classType1 || "APPROVAL" === classType1 || "ETC" === classType1) {
-		$("#" + classType2Id).bindSelectDisabled(true);
 		$("#" + classType3Id).bindSelectDisabled(true);
 		return true;
 	} else {
-		$("#" + classType2Id).bindSelectDisabled(true);
 		$("#" + classType3Id).bindSelectDisabled(true);
 		return false;
 	}
@@ -339,4 +337,12 @@ function loadForm(classType2) {
 		}
 		parent.closeLayer();
 	}, "GET");
+}
+
+// 중분류 값 삭제
+function clearSecond() {
+	const classType2 = document.getElementById("classType2");
+	classType2.value = "";
+	removeClazz();
+	clearValue();
 }
