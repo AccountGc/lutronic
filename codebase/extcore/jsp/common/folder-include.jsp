@@ -46,19 +46,9 @@ String height = request.getParameter("height");
 <%if (isAdmin) {%>
 	AUIGrid.bind(_myGridID, "contextMenu", auiContextMenuHandler_);
 <%}%>
-// 	AUIGrid.bind(_myGridID, "cellDoubleClick", auiCellDoubleClick);
 		AUIGrid.bind(_myGridID, "cellClick", auiCellClick);
 		AUIGrid.bind(_myGridID, "ready", auiReadyHandler);
-		AUIGrid.bind(_myGridID, "cellEditBegin", auiCellEditBeginHandler);
 		tree();
-	}
-
-	function auiCellEditBeginHandler(event) {
-		const item = event.item;
-		if(!item.isNew) {
-// 			return false;
-		}
-		return true;
 	}
 
 	function auiContextMenuHandler_(event) {
@@ -75,6 +65,9 @@ String height = request.getParameter("height");
 			callback : auiContextHandler_
 		}, {
 			label : "폴더 생성(동일레벨)",
+			callback : auiContextHandler_
+		}, {
+			label : "폴더삭제",
 			callback : auiContextHandler_
 		}, {
 			label : "_$line" // label 에 _$line 을 설정하면 라인을 긋는 아이템으로 인식합니다.
@@ -111,8 +104,9 @@ String height = request.getParameter("height");
 			addRow(poid, isNew);
 			break;
 		case 5:
+			deleteRow();
 			break;
-		case 6:
+		case 7:
 			treeSave();
 			break;
 		}
@@ -142,37 +136,25 @@ String height = request.getParameter("height");
 		AUIGrid.showItemsOnDepth(_myGridID, 2);
 	}
 
+	let timerId = null;
 	function auiCellClick(event) {
 		const item = event.item;
 		if(item.isNew) {
 			return;
 		}
-		const oid = item.oid;
-		const location = item.location;
-		document.getElementById("oid").value = oid;
-		document.getElementById("location").value = location;
-		document.getElementById("locationText").innerText = location;
-		loadGridData();
-	}
-	
-	let timerId = null;
-	function auiCellDoubleClick(event) {
-<%if ("list".equals(mode)) {%>
-	// 500ms 보다 빠르게 그리드 선택자가 변경된다면 데이터 요청 안함
+		
 		if (timerId) {
 			clearTimeout(timerId);
 		}
-
+		
 		timerId = setTimeout(function() {
-			const primeCell = event.item;
-			const oid = primeCell.oid;
-			const location = primeCell.location;
+			const oid = item.oid;
+			const location = item.location;
 			document.getElementById("oid").value = oid;
 			document.getElementById("location").value = location;
 			document.getElementById("locationText").innerText = location;
 			loadGridData();
 		}, 500);
-<%}%>
 	}
 	
 	function addTreeRow(oid) {

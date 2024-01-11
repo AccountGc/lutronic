@@ -74,6 +74,7 @@ public class DocumentDTO {
 	private String classType3_oid;
 
 	private String product;
+	private boolean _product = false;
 
 	/**
 	 * 병합PDF용
@@ -160,6 +161,10 @@ public class DocumentDTO {
 					setClassType2_name(classType2.getName());
 					setClassType2_oid(classType2.getPersistInfo().getObjectIdentifier().getStringValue());
 					setClassType2_code(classType2.getClazz());
+
+					if ("DMR".equals(classType2.getClazz())) {
+						set_product(true);
+					}
 				}
 			}
 

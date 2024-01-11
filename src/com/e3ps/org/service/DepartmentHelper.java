@@ -219,6 +219,7 @@ public class DepartmentHelper {
 		}
 
 		JSONObject rootNode = new JSONObject();
+		rootNode.put("isNew", false);
 		rootNode.put("oid", root.getPersistInfo().getObjectIdentifier().getStringValue());
 		rootNode.put("name", root.getName());
 		rootNode.put("location", "루트로닉");
@@ -235,6 +236,8 @@ public class DepartmentHelper {
 			Object[] obj = (Object[]) result.nextElement();
 			Department child = (Department) obj[0];
 			JSONObject node = new JSONObject();
+			node.put("isNew", false);
+			node.put("poid", root.getPersistInfo().getObjectIdentifier().getStringValue());
 			node.put("oid", child.getPersistInfo().getObjectIdentifier().getStringValue());
 			node.put("name", child.getName());
 			node.put("location", "루트로닉/" + child.getName());
@@ -262,6 +265,8 @@ public class DepartmentHelper {
 			Object[] obj = (Object[]) result.nextElement();
 			Department child = (Department) obj[0];
 			JSONObject node = new JSONObject();
+			node.put("isNew", false);
+			node.put("poid", parent.getPersistInfo().getObjectIdentifier().getStringValue());
 			node.put("oid", child.getPersistInfo().getObjectIdentifier().getStringValue());
 			node.put("name", child.getName());
 			node.put("location", pLoc + "/" + child.getName());

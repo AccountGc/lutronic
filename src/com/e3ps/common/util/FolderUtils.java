@@ -29,13 +29,11 @@ public class FolderUtils {
 	public static JSONArray tree(Map<String, String> params) throws Exception {
 		String location = params.get("location");
 		SubFolder root = (SubFolder) FolderHelper.service.getFolder(location, WCUtil.getWTContainerRef());
-		SubFolder proot = (SubFolder) root.getParentFolder().getObject();
 
 		JSONArray list = new JSONArray();
 		JSONObject rootNode = new JSONObject();
 
 		rootNode.put("isNew", false);
-		rootNode.put("poid", proot != null ? proot.getPersistInfo().getObjectIdentifier().getStringValue() : "");
 		rootNode.put("oid", root.getPersistInfo().getObjectIdentifier().getStringValue());
 		rootNode.put("location", root.getFolderPath());
 		rootNode.put("name", root.getName());
@@ -104,7 +102,7 @@ public class FolderUtils {
 			root = FolderTaskLogic.getFolder(location, CommonUtil.getWTLibraryContainer());
 		}
 
-	)	ArrayList<Folder> list = new ArrayList<>();
+		ArrayList<Folder> list = new ArrayList<>();
 
 		Enumeration result = FolderTaskLogic.getSubFolders(root);
 		while (result.hasMoreElements()) {

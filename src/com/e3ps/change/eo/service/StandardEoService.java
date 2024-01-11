@@ -266,8 +266,8 @@ public class StandardEoService extends StandardManager implements EoService {
 				PersistenceHelper.manager.delete(dd);
 			}
 
-			WorkspaceHelper.service.deleteAllLines(doc);
-			
+			WorkspaceHelper.service.deleteAllLines(eo);
+
 			PersistenceHelper.manager.delete(eo);
 
 			trs.commit();

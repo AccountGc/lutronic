@@ -14,9 +14,7 @@
 boolean isAdmin = (boolean) request.getAttribute("isAdmin");
 DocumentDTO dto = (DocumentDTO) request.getAttribute("dto");
 ArrayList<CommentsDTO> list = dto.getComments();
-WTDocument d = (WTDocument)CommonUtil.getObject(dto.getOid());
-out.println(d.getTypeInfoWTDocument().getPtc_str_1());
-
+WTDocument d = (WTDocument) CommonUtil.getObject(dto.getOid());
 %>
 <style type="text/css">
 iframe {
@@ -152,8 +150,6 @@ iframe {
 				<td class="indent5"><%=dto.getModifier()%></td>
 			</tr>
 			<tr>
-				<!-- 				<th class="lb">결재방식</th> -->
-				<%-- 				<td class="indent5"><%=dto.getApprovaltype_name()%></td> --%>
 				<th class="lb">프로젝트 코드</th>
 				<td class="indent5"><%=dto.getModel_name()%></td>
 				<th>보존년한</th>
@@ -163,6 +159,16 @@ iframe {
 				<th>작성자</th>
 				<td class="indent5"><%=dto.getWriter()%></td>
 			</tr>
+			<%
+			if (dto.is_product()) {
+			%>
+			<tr>
+				<th class="lb">제품명</th>
+				<td class="indent5" colspan="7"><%=dto.getProduct()%></td>
+			</tr>
+			<%
+			}
+			%>
 			<%
 			if (dto.getContent() != null) {
 			%>
@@ -395,7 +401,7 @@ iframe {
 		const url = getCallUrl("/doc/latest?oid=" + oid);
 		document.location.href = url;
 	}
-	
+
 	document.addEventListener("DOMContentLoaded", function() {
 		$("#tabs").tabs({
 			active : 0,

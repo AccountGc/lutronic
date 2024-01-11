@@ -20,6 +20,7 @@ import com.e3ps.common.util.WCUtil;
 import com.e3ps.org.dto.PeopleDTO;
 import com.e3ps.org.service.MailUserHelper;
 import com.e3ps.workspace.service.WorkDataHelper;
+import com.e3ps.workspace.service.WorkspaceHelper;
 
 import wt.content.ApplicationData;
 import wt.content.ContentHelper;
@@ -213,6 +214,10 @@ public class StandardCrService extends StandardManager implements CrService {
 			EChangeRequest cr = (EChangeRequest) CommonUtil.getObject(oid);
 			// 외부 메일 링크 삭제
 			MailUserHelper.service.deleteLink(oid);
+
+			WorkspaceHelper.service.deleteAllLines(cr);
+
+			cr = (EChangeRequest) PersistenceHelper.manager.refresh(cr);
 
 			PersistenceHelper.manager.delete(cr);
 
