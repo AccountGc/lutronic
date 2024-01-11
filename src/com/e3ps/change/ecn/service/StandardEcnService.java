@@ -13,6 +13,7 @@ import com.e3ps.change.EOCompletePartLink;
 import com.e3ps.change.EcnToPartLink;
 import com.e3ps.change.EcoPartLink;
 import com.e3ps.change.PartToSendLink;
+import com.e3ps.change.RequestOrderLink;
 import com.e3ps.change.util.EChangeUtils;
 import com.e3ps.common.code.service.NumberCodeHelper;
 import com.e3ps.common.util.CommonUtil;
@@ -107,6 +108,9 @@ public class StandardEcnService extends StandardManager implements EcnService {
 		try {
 			trs.start();
 
+			// CR 개수를 들고온다..
+			QueryResult qr = PersistenceHelper.manager.navigate(eco, "ecr", RequestOrderLink.class);
+
 			// 완제품 개수 만큼 일단 ECN이 생성되야 생성
 			DecimalFormat df = new DecimalFormat("00");
 			int idx = 0;
@@ -130,7 +134,7 @@ public class StandardEcnService extends StandardManager implements EcnService {
 				ecn.setRate(0D);
 
 //				VersionControlHelper.service.assignIterationCreator(ecn, eco.getOwner());
-				
+
 				String location = "/Default/설계변경/ECN";
 				String lifecycle = "LC_ECN";
 

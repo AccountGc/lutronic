@@ -19,6 +19,7 @@ function toUI() {
 	// 초기 사용 불가 상태
 	$("#" + classType3Id).bindSelectDisabled(true);
 	$("#" + modelId).bindSelectDisabled(true);
+	productDisable();
 }
 
 function requiredAdd() {
@@ -137,6 +138,11 @@ function second() {
 			nameTag.value = "";
 			tag.value = "";
 			tag.value += clazz + "-";
+			if (clazz === "DMR") {
+				productEnable();
+			} else {
+				productDisable();
+			}
 			modelEnable();
 		} else if ("REPORT" === classType1) {
 			nameTag.value = "";
@@ -342,8 +348,27 @@ function loadForm(classType2) {
 
 // 중분류 값 삭제
 function clearSecond() {
-	const classType2 = document.getElementById("classType2");
-	classType2.value = "";
+	const classType1 = document.getElementById("classType1").value;
+	document.getElementById("classType2").value = "";
 	removeClazz();
 	clearValue();
+	productDisable();
+	classType2(classType1);
+}
+
+
+// 제품명 코드 활성화
+function productEnable() {
+	const product = document.getElementById("product");
+	const preq = document.getElementById("preq");
+	product.removeAttribute("readonly");
+	preq.classList.add("req"); // 클래스를 제거
+}
+
+// 제품명 코드 비활성화
+function productDisable() {
+	const product = document.getElementById("product");
+	const preq = document.getElementById("preq");
+	product.setAttribute("readonly", "readonly");
+	preq.classList.remove("req"); // 클래스를 제거
 }

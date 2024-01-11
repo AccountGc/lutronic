@@ -8,6 +8,9 @@ import com.e3ps.common.util.CommonUtil;
 import com.e3ps.common.util.StringUtil;
 import com.e3ps.part.PartToPartLink;
 import com.e3ps.part.service.PartHelper;
+import com.ptc.cat.ui.client.action.OpenInCreoViewAction;
+import com.ptc.windchill.enterprise.wvs.common.WVSVisualizationDelegate;
+import com.ptc.wvs.common.ui.VisualizationHelper;
 
 import wt.fc.PersistenceHelper;
 import wt.fc.QueryResult;
@@ -191,5 +194,4 @@ public class Test {
 			descendants(p, list);
 		}
 	}
-
 }

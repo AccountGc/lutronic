@@ -28,7 +28,7 @@ iframe {
 <%@include file="/extcore/jsp/common/auigrid.jsp"%>
 
 <!-- 채번스크립트 -->
-<script type="text/javascript" src="/Windchill/extcore/jsp/document/js/genNumber.js?v=100099091"></script>
+<script type="text/javascript" src="/Windchill/extcore/jsp/document/js/genNumber.js?v=0011001091"></script>
 </head>
 <body>
 	<form>
@@ -99,7 +99,7 @@ iframe {
 				</td>
 				<th>중분류</th>
 				<td class="indent5">
-					<input type="text" name="classType2" id="classType2" class="width-300" readonly="readonly">
+					<input type="text" name="classType2" id="classType2" class="width-400" readonly="readonly">
 					<img src="/Windchill/extcore/images/delete.png" class="delete" title="삭제" onclick="clearSecond();">
 				</td>
 				<th>소분류</th>
@@ -123,8 +123,20 @@ iframe {
 						%>
 					</select>
 				</td>
+				<th id="preq">제품명</th>
+				<td class="indent5" colspan="3">
+					<input type="text" name="product" id="product" style="width: 95%;" readonly="readonly">
+				</td>
+			</tr>
+			<tr>
+				<th class="lb req">문서명</th>
+				<td class="indent5" colspan="3">
+					<input type="text" name="preFix" id="preFix" class="width-500" readonly="readonly">
+					&nbsp;&nbsp;
+					<input type="text" name="suffix" id="suffix" class="width-400" readonly="readonly">
+				</td>
 				<th class="req">결재방식</th>
-				<td colspan="3">
+				<td>
 					&nbsp;
 					<div class="pretty p-switch">
 						<input type="radio" name="lifecycle" value="LC_Default" checked="checked">
@@ -143,14 +155,6 @@ iframe {
 							</label>
 						</div>
 					</div>
-				</td>
-			</tr>
-			<tr>
-				<th class="lb req">문서명</th>
-				<td class="indent5" colspan="5">
-					<input type="text" name="preFix" id="preFix" class="width-500" readonly="readonly">
-					&nbsp;&nbsp;
-					<input type="text" name="suffix" id="suffix" class="width-400" readonly="readonly">
 				</td>
 			</tr>
 			<tr>
@@ -269,7 +273,6 @@ iframe {
 				const classType1_code = document.getElementById("classType1").value;
 				const classType2_oid = clazz2.getAttribute("data-oid");
 				const classType2 = document.getElementById(classType2Id);
-				
 
 				const classType3_oid = document.getElementById("classType3").value;
 
@@ -324,11 +327,11 @@ iframe {
 					name = suffix.value;
 				}
 
-// 				if (isNull(name)) {
-// 					alert("문서명을 입력하세요.");
-// 					name.focus();
-// 					return false;
-// 				}
+				// 				if (isNull(name)) {
+				// 					alert("문서명을 입력하세요.");
+				// 					name.focus();
+				// 					return false;
+				// 				}
 
 				if (isNull(interalnumber.value)) {
 					interalnumber.focus();

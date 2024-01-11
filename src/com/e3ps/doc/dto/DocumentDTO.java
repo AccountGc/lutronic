@@ -73,7 +73,7 @@ public class DocumentDTO {
 	private String classType3_name;
 	private String classType3_oid;
 
-	private String formType_oid;
+	private String product;
 
 	/**
 	 * 병합PDF용
@@ -158,6 +158,8 @@ public class DocumentDTO {
 					setClassType2_code(classType2.getClazz());
 				}
 			}
+
+			setProduct(info.getPtc_str_1());
 		}
 	}
 
@@ -255,7 +257,10 @@ public class DocumentDTO {
 		boolean isAdmin = CommonUtil.isAdmin();
 		// 승인된경우 프린트
 		if (check(doc, "APPROVED")) {
-			set_print(true);
+			String s = getClassType1_code();
+			if (!"DEV".equals(s) && !"INSTRUCTION".equals(s)) {
+				set_print(true);
+			}
 		}
 
 		if (isAdmin && isLatest()) {
