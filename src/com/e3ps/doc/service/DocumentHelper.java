@@ -720,6 +720,11 @@ public class DocumentHelper {
 			nameCell.putValue("");
 		}
 
+		if ("DMR".equals(classType2)) {
+			Cell productCell = worksheet.getCells().get(8, 0);
+			productCell.putValue(d.getTypeInfoWTDocument().getPtc_str_1());
+		}
+
 		Cell numberCell = worksheet.getCells().get(10, 3);
 		numberCell.putValue(number);
 

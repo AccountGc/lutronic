@@ -28,7 +28,7 @@ iframe {
 <%@include file="/extcore/jsp/common/auigrid.jsp"%>
 
 <!-- 채번스크립트 -->
-<script type="text/javascript" src="/Windchill/extcore/jsp/document/js/genNumber.js?v=0011001091"></script>
+<script type="text/javascript" src="/Windchill/extcore/jsp/document/js/genNumber.js?v=066011011091"></script>
 </head>
 <body>
 	<form>
@@ -110,7 +110,7 @@ iframe {
 				</td>
 			</tr>
 			<tr>
-				<th class="lb">프로젝트코드</th>
+				<th class="lb" id="modelreq">프로젝트코드</th>
 				<td class="indent5">
 					<select name="model" id="model" class="width-200" onchange="preNumberCheck(this);">
 						<option value="">선택</option>
@@ -327,16 +327,28 @@ iframe {
 					name = suffix.value;
 				}
 
-				// 				if (isNull(name)) {
-				// 					alert("문서명을 입력하세요.");
-				// 					name.focus();
-				// 					return false;
-				// 				}
+				if ("DEV" === classType1_code || "INSTRUCTION" === classType1_code) {
+					if (model === "") {
+						alert("프로젝트 코드를 선택하세요.");
+						return false;
+					}
+				}
 
-				if (isNull(interalnumber.value)) {
+				if (interalnumber.value === "") {
 					interalnumber.focus();
 					alert("문서번호를 입력해주세요.");
 					return false;
+				}
+
+				const product = document.getElementById("product").value;
+				if ("DEV" === classType1_code) {
+					if ("DMR" === clazz2.value) {
+						if (product === "") {
+							alert("제품명을 입력하세요.");
+							product.focus();
+							return false;
+						}
+					}
 				}
 
 				if ("DEV" === classType1_code || "INSTRUCTION" === classType1_code) {
@@ -346,7 +358,6 @@ iframe {
 					}
 				}
 
-				// 					if (!confirm("등록 후 문서번호의 변경은 관리자에게 문의해야합니다.\n저장하시겠습니까?")) {
 				if (!confirm("저장하시겠습니까?")) {
 					return false;
 				}

@@ -193,6 +193,7 @@ public class StandardDocumentService extends StandardManager implements Document
 
 	@Override
 	public void create(DocumentDTO dto) throws Exception {
+		String product = dto.getProduct();
 		String name = dto.getName();
 		String location = dto.getLocation();
 		String description = dto.getDescription();
@@ -213,6 +214,10 @@ public class StandardDocumentService extends StandardManager implements Document
 			WTDocumentTypeInfo info = WTDocumentTypeInfo.newWTDocumentTypeInfo();
 			DocumentClassType docClassType = DocumentClassType.toDocumentClassType(classType1_code);
 			info.setPtc_str_2(docClassType.toString());
+
+			if (StringUtil.checkString(product)) {
+				info.setPtc_str_1(product);
+			}
 
 			if (StringUtil.checkString(formType_oid)) {
 				FormTemplate form = (FormTemplate) CommonUtil.getObject(formType_oid);

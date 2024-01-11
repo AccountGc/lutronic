@@ -11,7 +11,6 @@ const requiredId = "required";
 function toUI() {
 	selectbox(classType1Id);
 	selectbox(classType3Id);
-
 	const numberTag = document.querySelector("#" + interalnumberId);
 	const nameTag = document.querySelector("#" + preFixId);
 	numberTag.setAttribute("readonly", "readonly");
@@ -127,6 +126,7 @@ function second() {
 	const classType2 = document.getElementById(classType2Id).value;
 	const tag = document.querySelector("#" + interalnumberId);
 	const nameTag = document.querySelector("#" + preFixId);
+	const modelreq = document.getElementById("modelreq");
 	if (value !== "") {
 		if ("INSTRUCTION" == classType1) {
 			nameTag.value = "";
@@ -134,6 +134,7 @@ function second() {
 			setFirstNumber("INSTRUCTION");
 			tag.value += clazz + "-";
 			modelEnable();
+			modelreq.classList.add("req");
 		} else if ("DEV" === classType1) {
 			nameTag.value = "";
 			tag.value = "";
@@ -144,6 +145,7 @@ function second() {
 				productDisable();
 			}
 			modelEnable();
+			modelreq.classList.add("req");
 		} else if ("REPORT" === classType1) {
 			nameTag.value = "";
 			tag.value = "";
@@ -266,9 +268,11 @@ function modelEnable() {
 
 // 값 초기화 + 읽기전용처리
 function clearValue() {
+	const modelreq = document.getElementById("modelreq");
 	const numberTag = document.querySelector("#" + interalnumberId);
 	const preFixTag = document.querySelector("#" + preFixId);
 	const suffixTag = document.querySelector("#" + suffixId);
+	modelreq.classList.remove("req");
 	numberTag.value = "";
 	preFixTag.value = "";
 	suffixTag.value = "";
