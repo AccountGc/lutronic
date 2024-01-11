@@ -39,6 +39,7 @@ import com.e3ps.workspace.AppPerLink;
 import com.e3ps.workspace.AsmApproval;
 import com.e3ps.workspace.WorkData;
 import com.e3ps.workspace.service.WorkDataHelper;
+import com.e3ps.workspace.service.WorkspaceHelper;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ptc.windchill.enterprise.wvs.common.utils.CommonClientHelper;
@@ -177,6 +178,10 @@ public class StandardDocumentService extends StandardManager implements Document
 				PersistenceHelper.manager.delete(dd);
 			}
 
+			
+			WorkspaceHelper.service.deleteAllLines(doc);
+			
+			
 			PersistenceHelper.manager.delete(doc);
 
 			trs.commit();

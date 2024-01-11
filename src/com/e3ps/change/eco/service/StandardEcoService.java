@@ -405,7 +405,7 @@ public class StandardEcoService extends StandardManager implements EcoService {
 				PersistenceHelper.manager.delete(dd);
 			}
 			
-			
+			WorkspaceHelper.service.deleteAllLines(eco);			
 
 			PersistenceHelper.manager.delete(eco);
 

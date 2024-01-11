@@ -384,6 +384,7 @@ iframe {
 					classType1_code : classType1_code,
 					classType2_oid : classType2_oid,
 					classType3_oid : classType3_oid,
+					product : product
 				};
 				logger(params);
 				parent.openLayer();

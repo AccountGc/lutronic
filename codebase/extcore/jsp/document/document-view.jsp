@@ -15,9 +15,6 @@ boolean isAdmin = (boolean) request.getAttribute("isAdmin");
 DocumentDTO dto = (DocumentDTO) request.getAttribute("dto");
 ArrayList<CommentsDTO> list = dto.getComments();
 WTDocument d = (WTDocument)CommonUtil.getObject(dto.getOid());
-QueryResult qr = ContentHelper.service.getContentsByRole(d, ContentRoleType.toContentRoleType("PDF"));
-out.println(qr.size());
-
 %>
 <style type="text/css">
 iframe {

@@ -28,6 +28,7 @@ import com.e3ps.common.util.StringUtil;
 import com.e3ps.common.util.WCUtil;
 import com.e3ps.org.dto.PeopleDTO;
 import com.e3ps.workspace.service.WorkDataHelper;
+import com.e3ps.workspace.service.WorkspaceHelper;
 
 import wt.content.ApplicationData;
 import wt.content.ContentHelper;
@@ -322,6 +323,9 @@ public class StandardEcrmService extends StandardManager implements EcrmService 
 		try {
 			trs.start();
 
+			ECRMRequest ecrm = (ECRMRequest) CommonUtil.getObject(oid);
+			WorkspaceHelper.service.deleteAllLines(ecrm);
+			PersistenceHelper.manager.delete(ecrm);
 			trs.commit();
 			trs = null;
 		} catch (Exception e) {

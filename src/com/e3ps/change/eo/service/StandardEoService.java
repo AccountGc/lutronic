@@ -26,6 +26,7 @@ import com.e3ps.doc.DocumentEOLink;
 import com.e3ps.part.service.PartHelper;
 import com.e3ps.workspace.WorkData;
 import com.e3ps.workspace.service.WorkDataHelper;
+import com.e3ps.workspace.service.WorkspaceHelper;
 
 import wt.content.ApplicationData;
 import wt.content.ContentHelper;
@@ -265,6 +266,8 @@ public class StandardEoService extends StandardManager implements EoService {
 				PersistenceHelper.manager.delete(dd);
 			}
 
+			WorkspaceHelper.service.deleteAllLines(doc);
+			
 			PersistenceHelper.manager.delete(eo);
 
 			trs.commit();

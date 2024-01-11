@@ -23,6 +23,7 @@ import com.e3ps.common.util.StringUtil;
 import com.e3ps.common.util.WCUtil;
 import com.e3ps.org.dto.PeopleDTO;
 import com.e3ps.workspace.service.WorkDataHelper;
+import com.e3ps.workspace.service.WorkspaceHelper;
 
 import wt.content.ApplicationData;
 import wt.content.ContentHelper;
@@ -320,6 +321,9 @@ public class StandardEcprService extends StandardManager implements EcprService 
 			trs.start();
 
 			ECPRRequest ecpr = (ECPRRequest) CommonUtil.getObject(oid);
+			
+			WorkspaceHelper.service.deleteAllLines(ecpr);
+			
 			PersistenceHelper.manager.delete(ecpr);
 
 			trs.commit();
