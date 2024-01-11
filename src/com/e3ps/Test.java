@@ -10,6 +10,7 @@ import com.e3ps.part.PartToPartLink;
 import com.e3ps.part.service.PartHelper;
 import com.ptc.cat.ui.client.action.OpenInCreoViewAction;
 import com.ptc.windchill.enterprise.wvs.common.WVSVisualizationDelegate;
+import com.ptc.windchill.enterprise.wvs.common.utils.CommonClientHelper;
 import com.ptc.wvs.common.ui.VisualizationHelper;
 
 import wt.fc.PersistenceHelper;
@@ -194,4 +195,5 @@ public class Test {
 			descendants(p, list);
 		}
 	}
+	CommonClientHelper
 }
