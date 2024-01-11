@@ -725,7 +725,7 @@ public class DocumentHelper {
 			System.out.println("cc=" + cc);
 			if ("DMR".equals(cc)) {
 				System.out.println("제품명 = " + d.getTypeInfoWTDocument().getPtc_str_1());
-				Cell productCell = worksheet.getCells().get(8, 0);
+				Cell productCell = worksheet.getCells().get(7, 0);
 				productCell.putValue(d.getTypeInfoWTDocument().getPtc_str_1());
 			}
 		}
