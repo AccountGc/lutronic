@@ -276,9 +276,6 @@ iframe {
 		const classType1 = document.getElementById("classType1").value;
 		const classType2 = document.getElementById("classType2").value;
 		
-		alert(classType1);
-		alert(classType2);
-		
 		let name;
 		let checker = true;
 		if("DEV" === classType1) {

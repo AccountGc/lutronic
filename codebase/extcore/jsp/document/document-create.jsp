@@ -28,7 +28,7 @@ iframe {
 <%@include file="/extcore/jsp/common/auigrid.jsp"%>
 
 <!-- 채번스크립트 -->
-<script type="text/javascript" src="/Windchill/extcore/jsp/document/js/genNumber.js?v=1099091"></script>
+<script type="text/javascript" src="/Windchill/extcore/jsp/document/js/genNumber.js?v=100099091"></script>
 </head>
 <body>
 	<form>
@@ -268,8 +268,7 @@ iframe {
 				const classType1_code = document.getElementById("classType1").value;
 				const classType2_oid = document.getElementById("classType2").value;
 				const classType2 = document.getElementById(classType2Id);
-				const selectedIndex = classType2.selectedIndex;
-				const clazz2 = classType2.options[selectedIndex].getAttribute("data-clazz");
+				const clazz2 = document.getElementById("clazz").value;
 
 				const classType3_oid = document.getElementById("classType3").value;
 

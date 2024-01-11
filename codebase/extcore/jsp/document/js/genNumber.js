@@ -123,6 +123,7 @@ function second() {
 	const value = document.getElementById("clazz").getAttribute("data-oid");
 	const clazz = document.getElementById("clazz").value;
 	const classType1 = document.getElementById(classType1Id).value;
+	const classType2 = document.getElementById(classType2Id).value;
 	const tag = document.querySelector("#" + interalnumberId);
 	const nameTag = document.querySelector("#" + preFixId);
 	if (value !== "") {
@@ -156,7 +157,7 @@ function second() {
 			tag.value += clazz + "-";
 			suffixEnable();
 			if (clazz !== "회의록") {
-				nameTag.value = text + "_"
+				nameTag.value = classType2 + "_"
 			}
 			loadForm(clazz);
 			lastNumber(tag.value, classType1);
