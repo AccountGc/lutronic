@@ -1377,9 +1377,8 @@ public class BomHelper {
 	/**
 	 * 베이스 라인 역전개 레이즈 로드 여부 확인
 	 */
-	QuerySpec query = new QuerySpec();
-
 	private boolean isLazy(WTPartMaster master, String baseline, String state, boolean skip) throws Exception {
+		QuerySpec query = new QuerySpec();
 		int idx_usage = query.appendClassList(WTPartUsageLink.class, true);
 		int idx_part = query.appendClassList(WTPart.class, true);
 
