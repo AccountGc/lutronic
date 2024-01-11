@@ -324,11 +324,11 @@ iframe {
 					name = suffix.value;
 				}
 
-				if (isNull(name)) {
-					alert("문서명을 입력하세요.");
-					name.focus();
-					return false;
-				}
+// 				if (isNull(name)) {
+// 					alert("문서명을 입력하세요.");
+// 					name.focus();
+// 					return false;
+// 				}
 
 				if (isNull(interalnumber.value)) {
 					interalnumber.focus();

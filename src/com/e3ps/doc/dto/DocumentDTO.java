@@ -139,8 +139,8 @@ public class DocumentDTO {
 		setAuth(doc);
 		setComments(CommentsHelper.manager.comments(doc));
 		setPdf(ContentUtils.getContentData(getOid(), "MERGE"));
-		setNameInfo(doc);
 		setClassTypeInfo(doc);
+		setNameInfo(doc);
 	}
 
 	/**
@@ -177,18 +177,23 @@ public class DocumentDTO {
 					|| "VALIDATION".equals(classType1) || "MEETING".equals(classType1)) {
 				// _ 무조건 붙이게하도록...
 				String name = doc.getName();
-				int idx = name.lastIndexOf("_");
-				String prefix = "";
-				String suffix = "";
-				if (idx > -1) {
-					prefix = name.substring(0, idx);
-					suffix = name.substring(idx + 1);
+
+				if (!getClassType2_code().equals("회의록")) {
+					int idx = name.lastIndexOf("_");
+					String prefix = "";
+					String suffix = "";
+					if (idx > -1) {
+						prefix = name.substring(0, idx);
+						suffix = name.substring(idx + 1);
+					} else {
+						prefix = name;
+						suffix = "";
+					}
+					setPrefix(prefix);
+					setSuffix(suffix);
 				} else {
-					prefix = name;
-					suffix = "";
+					setSuffix(name);
 				}
-				setPrefix(prefix);
-				setSuffix(suffix);
 			} else {
 				setPrefix("");
 				setSuffix(doc.getName());

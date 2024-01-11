@@ -295,6 +295,7 @@ iframe {
 		if(checker) {
 			if (suffix === "") {
 				alert("문서명을 입력하세요,");
+				suffix.focus();
 				return false;
 			}
 		}
