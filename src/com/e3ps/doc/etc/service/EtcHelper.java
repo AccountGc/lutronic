@@ -502,17 +502,17 @@ public class EtcHelper {
 		DecimalFormat df = new DecimalFormat("00");
 		String rtn = null;
 		QuerySpec query = new QuerySpec();
-		int idx = query.appendClassList(EChangeOrder.class, true);
-		SearchCondition sc = new SearchCondition(EChangeOrder.class, EChangeOrder.EO_NUMBER, "LIKE", number + "%");
+		int idx = query.appendClassList(WTDocument.class, true);
+		SearchCondition sc = new SearchCondition(WTDocument.class, WTDocument.NUMBER, "LIKE", number + "%");
 		query.appendWhere(sc, new int[] { idx });
-		QuerySpecUtils.toOrderBy(query, idx, EChangeOrder.class, EChangeOrder.CREATE_TIMESTAMP, true);
+		QuerySpecUtils.toOrderBy(query, idx, WTDocument.class, WTDocument.CREATE_TIMESTAMP, true);
 		QueryResult qr = PersistenceHelper.manager.find(query);
-		// E2312N45
 		if (qr.hasMoreElements()) {
 			Object[] obj = (Object[]) qr.nextElement();
-			EChangeOrder eco = (EChangeOrder) obj[0];
-			String ecoNumber = eco.getEoNumber();
-			String next = ecoNumber.substring(6); // 00
+			WTDocument etc = (WTDocument) obj[0];
+			String etcNumber = etc.getNumber();
+			int ii = etcNumber.lastIndexOf("-");
+			String next = etcNumber.substring(ii + 1); // 00
 			int n = Integer.parseInt(next) + 1;
 			rtn = number + df.format(n);
 		} else {

@@ -20,6 +20,7 @@ import com.e3ps.common.util.CommonUtil;
 import com.e3ps.common.util.DateUtil;
 import com.e3ps.common.util.StringUtil;
 import com.e3ps.common.util.WCUtil;
+import com.e3ps.org.service.MailUserHelper;
 import com.e3ps.part.service.PartHelper;
 import com.e3ps.workspace.ApprovalLine;
 import com.e3ps.workspace.WorkData;
@@ -393,20 +394,24 @@ public class StandardEcoService extends StandardManager implements EcoService {
 
 			EChangeOrder eco = (EChangeOrder) CommonUtil.getObject(oid);
 
-			// ECA 삭제
+			// 설변활동 삭제
 			ArrayList<EChangeActivity> list = ActivityHelper.manager.getActivity(eco);
 			for (EChangeActivity eca : list) {
 				PersistenceHelper.manager.delete(eca);
 			}
 
+			// 관련 링크 삭제
+			deleteLink(eco);
 			// 결재선 지정 삭제
 			WorkData dd = WorkDataHelper.manager.getWorkData(eco);
 			if (dd != null) {
 				PersistenceHelper.manager.delete(dd);
 			}
-			
-			WorkspaceHelper.service.deleteAllLines(eco);			
-
+			// 외부 메일 삭제
+			MailUserHelper.service.deleteLink(oid);
+			// 모든 결재선 삭제
+			WorkspaceHelper.service.deleteAllLines(eco);
+			// 데이터 삭제
 			PersistenceHelper.manager.delete(eco);
 
 			trs.commit();

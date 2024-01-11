@@ -3,6 +3,7 @@ package com.e3ps.workspace.service;
 import java.util.ArrayList;
 import java.util.Map;
 
+import com.e3ps.workspace.ApprovalMaster;
 import com.e3ps.workspace.WorkData;
 
 import wt.fc.Persistable;
@@ -119,9 +120,11 @@ public interface WorkspaceService {
 
 	/**
 	 * 마스터 포함 모든 결재선 삭제
-	 * 
-	 * @param per
-	 * @throws Exception
 	 */
 	public abstract void deleteAllLines(Persistable per) throws Exception;
+	
+	/**
+	 * 마스터로 모든 결재 라인 삭제
+	 */
+	public abstract void deleteAllLines(ApprovalMaster m) throws Exception;
 }

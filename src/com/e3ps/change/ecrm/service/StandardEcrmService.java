@@ -27,6 +27,8 @@ import com.e3ps.common.util.CommonUtil;
 import com.e3ps.common.util.StringUtil;
 import com.e3ps.common.util.WCUtil;
 import com.e3ps.org.dto.PeopleDTO;
+import com.e3ps.org.service.MailUserHelper;
+import com.e3ps.workspace.WorkData;
 import com.e3ps.workspace.service.WorkDataHelper;
 import com.e3ps.workspace.service.WorkspaceHelper;
 
@@ -324,8 +326,20 @@ public class StandardEcrmService extends StandardManager implements EcrmService 
 			trs.start();
 
 			ECRMRequest ecrm = (ECRMRequest) CommonUtil.getObject(oid);
+			// 관련 링크 삭제
+			deleteLink(ecrm);
+			// 결재선 지정 삭제
+			WorkData dd = WorkDataHelper.manager.getWorkData(ecrm);
+			if (dd != null) {
+				PersistenceHelper.manager.delete(dd);
+			}
+			// 외부 메일 삭제
+			MailUserHelper.service.deleteLink(oid);
+			// 모든 결재선 삭제
 			WorkspaceHelper.service.deleteAllLines(ecrm);
+			// 데이터 삭제
 			PersistenceHelper.manager.delete(ecrm);
+
 			trs.commit();
 			trs = null;
 		} catch (Exception e) {

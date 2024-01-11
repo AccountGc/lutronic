@@ -66,12 +66,13 @@ ApprovalLineDTO dto = (ApprovalLineDTO) request.getAttribute("dto");
 		const url = "<%=dto.getViewUrl()%>";
 		_popup(url, 1600, 800, "n");
 	}
-	
+
 	document.addEventListener("DOMContentLoaded", function() {
 		toFocus("description");
 		createAUIGrid10000(columns10000);
 		AUIGrid.resize(myGridID10000);
 		finderUser("reassignUser");
+		autoTextarea();
 	})
 
 	window.addEventListener("resize", function() {

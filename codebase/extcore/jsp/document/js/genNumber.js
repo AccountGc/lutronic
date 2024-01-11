@@ -64,6 +64,10 @@ function first(obj) {
 			modelEnable();
 			removeReadOnly();
 			requiredRemove();
+			if ("SOURCE" === classType1) {
+				const reqNum = document.getElementById("reqNum");
+				reqNum.classList.remove("req");
+			}
 		}
 	}
 }

@@ -322,7 +322,7 @@ public class StandardOrgService extends StandardManager implements OrgService {
 			for (LinkedHashMap<String, Object> edit : editRows) {
 				String oid = (String) edit.get("poid");
 				String auth = (String) edit.get("auth");
-				String department_oid = (String) edit.get("department_name");
+				String department_oid = (String) edit.get("department_oid");
 				String duty = (String) edit.get("duty");
 				String email = (String) edit.get("email");
 				boolean fire = (boolean) edit.get("fire");

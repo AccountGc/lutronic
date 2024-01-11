@@ -275,8 +275,6 @@ iframe {
 		
 		const classType1 = document.getElementById("classType1").value;
 		const classType2 = document.getElementById("classType2").value;
-		alert(classType1);
-		alert(classType2);
 		
 		let name;
 		let checker = true;
@@ -334,7 +332,7 @@ iframe {
 			primary : primary==null ? '' : primary.value,
 			location : location.value,
 			model_code : model,
-			interalnumber : interalnumber,
+// 			interalnumber : interalnumber,
 			preseration_code : preseration,
 			iterationNote : iterationNote.value,
 			// 링크 데이터

@@ -132,6 +132,11 @@ public class WorkspaceHelper {
 		while (result.hasMoreElements()) {
 			Object[] obj = (Object[]) result.nextElement();
 			ApprovalMaster master = (ApprovalMaster) obj[0];
+			Persistable per = master.getPersist();
+			if (per == null) {
+				System.out.println("삭제된(완료) 데이터");
+				WorkspaceHelper.service.deleteAllLines(master);
+			}
 			ApprovalLineColumn column = new ApprovalLineColumn(master, "COMPLETE_COLUMN");
 			list.add(column);
 		}
@@ -185,6 +190,12 @@ public class WorkspaceHelper {
 		while (result.hasMoreElements()) {
 			Object[] obj = (Object[]) result.nextElement();
 			ApprovalLine approvalLine = (ApprovalLine) obj[0];
+			ApprovalMaster m = approvalLine.getMaster();
+			Persistable per = m.getPersist();
+			if (per == null) {
+				System.out.println("삭제된(결재) 데이터");
+				WorkspaceHelper.service.deleteAllLines(m);
+			}
 			ApprovalLineColumn column = new ApprovalLineColumn(approvalLine, "APPROVAL_COLUMN");
 			list.add(column);
 		}
@@ -250,6 +261,12 @@ public class WorkspaceHelper {
 		while (result.hasMoreElements()) {
 			Object[] obj = (Object[]) result.nextElement();
 			ApprovalLine line = (ApprovalLine) obj[0];
+			ApprovalMaster m = line.getMaster();
+			Persistable per = m.getPersist();
+			if (per == null) {
+				System.out.println("삭제된(합의) 데이터");
+				WorkspaceHelper.service.deleteAllLines(m);
+			}
 			ApprovalLineColumn column = new ApprovalLineColumn(line, "RECEIVE_COLUMN");
 			list.add(column);
 		}
@@ -296,6 +313,11 @@ public class WorkspaceHelper {
 		while (result.hasMoreElements()) {
 			Object[] obj = (Object[]) result.nextElement();
 			ApprovalMaster master = (ApprovalMaster) obj[0];
+			Persistable per = master.getPersist();
+			if (per == null) {
+				System.out.println("삭제된(진행) 데이터");
+				WorkspaceHelper.service.deleteAllLines(master);
+			}
 			ApprovalLineColumn column = new ApprovalLineColumn(master, "PROGRESS_COLUMN");
 			list.add(column);
 		}
@@ -344,6 +366,11 @@ public class WorkspaceHelper {
 		while (result.hasMoreElements()) {
 			Object[] obj = (Object[]) result.nextElement();
 			ApprovalMaster master = (ApprovalMaster) obj[0];
+			Persistable per = master.getPersist();
+			if (per == null) {
+				System.out.println("삭제된(반려) 데이터");
+				WorkspaceHelper.service.deleteAllLines(master);
+			}
 			ApprovalLineColumn column = new ApprovalLineColumn(master, "REJECT_COLUMN");
 			list.add(column);
 		}
@@ -849,6 +876,12 @@ public class WorkspaceHelper {
 		while (result.hasMoreElements()) {
 			Object[] obj = (Object[]) result.nextElement();
 			ApprovalLine approvalLine = (ApprovalLine) obj[0];
+			ApprovalMaster m = approvalLine.getMaster();
+			Persistable per = m.getPersist();
+			if (per == null) {
+				System.out.println("삭제된(합의) 데이터");
+				WorkspaceHelper.service.deleteAllLines(m);
+			}
 			ApprovalLineColumn column = new ApprovalLineColumn(approvalLine, "AGREE_COLUMN");
 			list.add(column);
 		}

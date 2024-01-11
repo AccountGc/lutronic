@@ -20,7 +20,7 @@ iframe {
 		<td class="left">
 			<div class="header">
 				<img src="/Windchill/extcore/images/header.png">
-				ECPR 상세보기
+				ECRM 상세보기
 			</div>
 		</td>
 		<td class="right">

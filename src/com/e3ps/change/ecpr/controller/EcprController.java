@@ -169,13 +169,6 @@ public class EcprController extends BaseController {
 	public Map<String, Object> delete(@RequestParam String oid) throws Exception {
 		Map<String, Object> result = new HashMap<String, Object>();
 		try {
-			// true 연결 있음
-//			if (EcprHelper.manager.isConnect(oid)) {
-//				result.put("result", false);
-//				result.put("msg", "ECPR과 연결된 CE이 있습니다.");
-//				return result;
-//			}
-
 			EcprHelper.service.delete(oid);
 			result.put("msg", DELETE_MSG);
 			result.put("result", SUCCESS);

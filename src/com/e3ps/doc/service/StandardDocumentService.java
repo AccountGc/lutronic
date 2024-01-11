@@ -34,6 +34,7 @@ import com.e3ps.doc.DocumentECPRLink;
 import com.e3ps.doc.DocumentEOLink;
 import com.e3ps.doc.DocumentToDocumentLink;
 import com.e3ps.doc.dto.DocumentDTO;
+import com.e3ps.doc.etc.service.EtcHelper;
 import com.e3ps.org.dto.PeopleDTO;
 import com.e3ps.workspace.AppPerLink;
 import com.e3ps.workspace.AsmApproval;
@@ -178,10 +179,8 @@ public class StandardDocumentService extends StandardManager implements Document
 				PersistenceHelper.manager.delete(dd);
 			}
 
-			
 			WorkspaceHelper.service.deleteAllLines(doc);
-			
-			
+
 			PersistenceHelper.manager.delete(doc);
 
 			trs.commit();
@@ -239,7 +238,14 @@ public class StandardDocumentService extends StandardManager implements Document
 			doc.setTypeInfoWTDocument(info);
 			String interalnumber = dto.getInteralnumber();
 			doc.setName(name); // 하나의 번호로 세팅합니다.
-			doc.setNumber(interalnumber);
+
+			if ("SOURCE".equals(classType1_code)) {
+				String number = "SOURCE" + DateUtil.getCurrentDateString("ym");
+				number = DocumentHelper.manager.getNextNumber(number + "-");
+				doc.setNumber(number);
+			} else {
+				doc.setNumber(interalnumber);
+			}
 			doc.setDescription(description);
 			doc.getTypeInfoWTDocument().setPtc_rht_1(content);
 

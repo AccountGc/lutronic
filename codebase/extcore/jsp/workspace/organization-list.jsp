@@ -202,7 +202,7 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 // 					}
 // 				},
 				{
-					dataField : "department_name",
+					dataField : "department_oid",
 					headerText : "부서",
 					dataType : "string",
 					width : 150,

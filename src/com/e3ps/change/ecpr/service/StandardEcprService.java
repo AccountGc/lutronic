@@ -22,6 +22,8 @@ import com.e3ps.common.util.CommonUtil;
 import com.e3ps.common.util.StringUtil;
 import com.e3ps.common.util.WCUtil;
 import com.e3ps.org.dto.PeopleDTO;
+import com.e3ps.org.service.MailUserHelper;
+import com.e3ps.workspace.WorkData;
 import com.e3ps.workspace.service.WorkDataHelper;
 import com.e3ps.workspace.service.WorkspaceHelper;
 
@@ -321,9 +323,18 @@ public class StandardEcprService extends StandardManager implements EcprService 
 			trs.start();
 
 			ECPRRequest ecpr = (ECPRRequest) CommonUtil.getObject(oid);
-			
+			// 관련 링크 삭제
+			deleteLink(ecpr);
+			// 결재선 지정 삭제
+			WorkData dd = WorkDataHelper.manager.getWorkData(ecpr);
+			if (dd != null) {
+				PersistenceHelper.manager.delete(dd);
+			}
+			// 외부 메일 삭제
+			MailUserHelper.service.deleteLink(oid);
+			// 모든 결재선 삭제
 			WorkspaceHelper.service.deleteAllLines(ecpr);
-			
+			// 데이터 삭제
 			PersistenceHelper.manager.delete(ecpr);
 
 			trs.commit();

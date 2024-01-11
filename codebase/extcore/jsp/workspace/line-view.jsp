@@ -285,6 +285,7 @@ String tapOid = dto.getPersist().getPersistInfo().getObjectIdentifier().getStrin
 		AUIGrid.resize(myGridID10001);
 		finderUser("reassignUser");
 		read();
+		autoTextarea();
 	})
 
 	window.addEventListener("resize", function() {

@@ -23,6 +23,7 @@ import com.e3ps.common.util.SequenceDao;
 import com.e3ps.common.util.StringUtil;
 import com.e3ps.common.util.WCUtil;
 import com.e3ps.doc.DocumentEOLink;
+import com.e3ps.org.service.MailUserHelper;
 import com.e3ps.part.service.PartHelper;
 import com.e3ps.workspace.WorkData;
 import com.e3ps.workspace.service.WorkDataHelper;
@@ -243,31 +244,24 @@ public class StandardEoService extends StandardManager implements EoService {
 
 			EChangeOrder eo = (EChangeOrder) CommonUtil.getObject(oid);
 
-			// 연관 문서 링크 삭제
-			deleteLink(eo);
-
-			// 관련 완제품 품목 삭제
-			QueryResult result = PersistenceHelper.manager.navigate(eo, "completePart", EOCompletePartLink.class,
-					false);
-			while (result.hasMoreElements()) {
-				EOCompletePartLink link = (EOCompletePartLink) result.nextElement();
-				PersistenceHelper.manager.delete(link);
-			}
-
-			// ECA 삭제
+			// 설변활동 삭제
 			ArrayList<EChangeActivity> list = ActivityHelper.manager.getActivity(eo);
 			for (EChangeActivity eca : list) {
 				PersistenceHelper.manager.delete(eca);
 			}
 
+			// 관련 링크 삭제
+			deleteLink(eo);
 			// 결재선 지정 삭제
 			WorkData dd = WorkDataHelper.manager.getWorkData(eo);
 			if (dd != null) {
 				PersistenceHelper.manager.delete(dd);
 			}
-
+			// 외부 메일 삭제
+			MailUserHelper.service.deleteLink(oid);
+			// 모든 결재선 삭제
 			WorkspaceHelper.service.deleteAllLines(eo);
-
+			// 데이터 삭제
 			PersistenceHelper.manager.delete(eo);
 
 			trs.commit();

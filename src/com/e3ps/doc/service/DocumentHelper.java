@@ -1013,4 +1013,29 @@ public class DocumentHelper {
 		return "";
 	}
 
+	/**
+	 * 일반문서 다음 번호
+	 */
+	public String getNextNumber(String number) throws Exception {
+		DecimalFormat df = new DecimalFormat("00");
+		String rtn = null;
+		QuerySpec query = new QuerySpec();
+		int idx = query.appendClassList(WTDocument.class, true);
+		SearchCondition sc = new SearchCondition(WTDocument.class, WTDocument.NUMBER, "LIKE", number + "%");
+		query.appendWhere(sc, new int[] { idx });
+		QuerySpecUtils.toOrderBy(query, idx, WTDocument.class, WTDocument.CREATE_TIMESTAMP, true);
+		QueryResult qr = PersistenceHelper.manager.find(query);
+		if (qr.hasMoreElements()) {
+			Object[] obj = (Object[]) qr.nextElement();
+			WTDocument etc = (WTDocument) obj[0];
+			String etcNumber = etc.getNumber();
+			int ii = etcNumber.lastIndexOf("-");
+			String next = etcNumber.substring(ii + 1); // 00
+			int n = Integer.parseInt(next) + 1;
+			rtn = number + df.format(n);
+		} else {
+			rtn = number + "01";
+		}
+		return rtn;
+	}
 }

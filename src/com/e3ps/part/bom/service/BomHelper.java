@@ -11,6 +11,8 @@ import java.util.regex.Pattern;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
+import com.e3ps.common.code.NumberCode;
+import com.e3ps.common.code.service.NumberCodeHelper;
 import com.e3ps.common.iba.IBAUtils;
 import com.e3ps.common.util.CommonUtil;
 import com.e3ps.common.util.QuerySpecUtils;
@@ -75,16 +77,14 @@ public class BomHelper {
 		String oid = (String) params.get("oid");
 		boolean skip = Boolean.parseBoolean((String) params.get("skip"));
 		WTPart root = (WTPart) CommonUtil.getObject(oid);
-//		boolean isCheckOut = WorkInProgressHelper.isCheckedOut(root);
+		boolean isCheckOut = WorkInProgressHelper.isCheckedOut(root);
 //		// 체크아웃시 체크아웃된 데이터 가져오기
 //		System.out.println("isCheckOut=" + isCheckOut);
-//		if (isCheckOut) {
-//			return loadEditor(root, skip);
-//		} else {
-//			if (!WorkInProgressHelper.isWorkingCopy(root))
-//				root = (WTPart) WorkInProgressHelper.service.workingCopyOf(root);
-//		}
-		return loadEditor(root, skip);
+		if (isCheckOut) {
+			return loadEditor(root, skip);
+		} else {
+			return loadEditor(root, skip);
+		}
 	}
 
 	/**
@@ -240,7 +240,11 @@ public class BomHelper {
 	private JSONArray ancestor(JSONArray list, String oid, boolean skip) throws Exception {
 		WTPart end = (WTPart) CommonUtil.getObject(oid);
 		String[] endRtn = getDwgInfo(end);
-		View view = ViewHelper.service.getView(end.getViewName());
+		String viewName = end.getViewName();
+		if (!StringUtil.checkString(viewName)) {
+			viewName = "Design";
+		}
+		View view = ViewHelper.service.getView(viewName);
 		String state = end.getLifeCycleState().toString();
 
 		// 역전개 루트
@@ -258,7 +262,13 @@ public class BomHelper {
 				+ end.getIterationIdentifier().getSeries().getValue());
 		rootNode.put("modifier", end.getModifierFullName());
 		rootNode.put("qty", 1);
-		rootNode.put("model", IBAUtils.getStringValue(end, "MODEL"));
+		String c = IBAUtils.getStringValue(end, "MODEL");
+		NumberCode n = NumberCodeHelper.manager.getNumberCode(c, "MODEL");
+		if (n != null) {
+			rootNode.put("model", "");
+		} else {
+			rootNode.put("model", c + ":" + n.getName());
+		}
 		rootNode.put("remarks", IBAUtils.getStringValue(end, "REMARKS"));
 		rootNode.put("specification", IBAUtils.getStringValue(end, "SPECIFICATION"));
 		rootNode.put("deptcode", IBAUtils.getStringValue(end, "DEPTCODE"));
@@ -314,6 +324,7 @@ public class BomHelper {
 			}
 			WTPartUsageLink link = (WTPartUsageLink) obj[0];
 			WTPart p = (WTPart) obj[1];
+			WTPartMaster mm = link.getUses();
 
 			if (skip) {
 				if (skip(p)) {
@@ -335,7 +346,13 @@ public class BomHelper {
 					+ p.getIterationIdentifier().getSeries().getValue());
 			node.put("modifier", p.getModifierFullName());
 			node.put("qty", link.getQuantity().getAmount());
-			node.put("model", IBAUtils.getStringValue(p, "MODEL"));
+			String _c = IBAUtils.getStringValue(p, "MODEL");
+			NumberCode _n = NumberCodeHelper.manager.getNumberCode(_c, "MODEL");
+			if (_n != null) {
+				node.put("model", "");
+			} else {
+				node.put("model", _c + ":" + _n.getName());
+			}
 			node.put("remarks", IBAUtils.getStringValue(p, "REMARKS"));
 			node.put("specification", IBAUtils.getStringValue(p, "SPECIFICATION"));
 			node.put("deptcode", IBAUtils.getStringValue(p, "DEPTCODE"));
@@ -352,7 +369,7 @@ public class BomHelper {
 //				node.put("isWorkCopy", isWorkCopy);
 //			}
 
-			boolean isLazy = isLazy(master, view, state, skip);
+			boolean isLazy = isLazy(mm, view, state, skip);
 			if (!isLazy) {
 				node.put("isLazy", false);
 				node.put("children", new JSONArray());
@@ -390,7 +407,13 @@ public class BomHelper {
 				+ end.getIterationIdentifier().getSeries().getValue());
 		rootNode.put("modifier", end.getModifierFullName());
 		rootNode.put("qty", 1);
-		rootNode.put("model", IBAUtils.getStringValue(end, "MODEL"));
+		String c = IBAUtils.getStringValue(end, "MODEL");
+		NumberCode n = NumberCodeHelper.manager.getNumberCode(c, "MODEL");
+		if (n != null) {
+			rootNode.put("model", "");
+		} else {
+			rootNode.put("model", c + ":" + n.getName());
+		}
 		rootNode.put("remarks", IBAUtils.getStringValue(end, "REMARKS"));
 		rootNode.put("specification", IBAUtils.getStringValue(end, "SPECIFICATION"));
 		rootNode.put("deptcode", IBAUtils.getStringValue(end, "DEPTCODE"));
@@ -448,6 +471,7 @@ public class BomHelper {
 			}
 			WTPartUsageLink link = (WTPartUsageLink) obj[0];
 			WTPart p = (WTPart) obj[1];
+			WTPartMaster mm = link.getUses();
 
 			if (skip) {
 				if (skip(p)) {
@@ -469,7 +493,13 @@ public class BomHelper {
 					+ p.getIterationIdentifier().getSeries().getValue());
 			node.put("modifier", p.getModifierFullName());
 			node.put("qty", link.getQuantity().getAmount());
-			node.put("model", IBAUtils.getStringValue(p, "MODEL"));
+			String _c = IBAUtils.getStringValue(p, "MODEL");
+			NumberCode _n = NumberCodeHelper.manager.getNumberCode(_c, "MODEL");
+			if (_n != null) {
+				node.put("model", "");
+			} else {
+				node.put("model", _c + ":" + _n.getName());
+			}
 			node.put("remarks", IBAUtils.getStringValue(p, "REMARKS"));
 			node.put("specification", IBAUtils.getStringValue(p, "SPECIFICATION"));
 			node.put("deptcode", IBAUtils.getStringValue(p, "DEPTCODE"));
@@ -486,7 +516,7 @@ public class BomHelper {
 //				node.put("isWorkCopy", isWorkCopy);
 //			}
 
-			boolean isLazy = isLazy(master, baseline, state, skip);
+			boolean isLazy = isLazy(mm, baseline, state, skip);
 			if (!isLazy) {
 				node.put("isLazy", false);
 				node.put("children", new JSONArray());
@@ -522,7 +552,13 @@ public class BomHelper {
 				+ root.getIterationIdentifier().getSeries().getValue());
 		rootNode.put("modifier", root.getModifierFullName());
 		rootNode.put("qty", 1);
-		rootNode.put("model", IBAUtils.getStringValue(root, "MODEL"));
+		String c = IBAUtils.getStringValue(root, "MODEL");
+		NumberCode n = NumberCodeHelper.manager.getNumberCode(c, "MODEL");
+		if (n != null) {
+			rootNode.put("model", "");
+		} else {
+			rootNode.put("model", c + ":" + n.getName());
+		}
 		rootNode.put("remarks", IBAUtils.getStringValue(root, "REMARKS"));
 		rootNode.put("specification", IBAUtils.getStringValue(root, "SPECIFICATION"));
 		rootNode.put("deptcode", IBAUtils.getStringValue(root, "DEPTCODE"));
@@ -539,7 +575,11 @@ public class BomHelper {
 //			rootNode.put("isWorkCopy", isWorkCopy);
 //		}
 
-		View view = ViewHelper.service.getView(root.getViewName());
+		String viewName = root.getViewName();
+		if (!StringUtil.checkString(viewName)) {
+			viewName = "Design";
+		}
+		View view = ViewHelper.service.getView(viewName);
 		State state = root.getLifeCycleState();
 		JSONArray children = new JSONArray();
 
@@ -575,7 +615,13 @@ public class BomHelper {
 					+ p.getIterationIdentifier().getSeries().getValue());
 			node.put("modifier", p.getModifierFullName());
 			node.put("qty", link.getQuantity().getAmount());
-			node.put("model", IBAUtils.getStringValue(p, "MODEL"));
+			String _c = IBAUtils.getStringValue(root, "MODEL");
+			NumberCode _n = NumberCodeHelper.manager.getNumberCode(_c, "MODEL");
+			if (_n != null) {
+				node.put("model", "");
+			} else {
+				node.put("model", _c + ":" + _n.getName());
+			}
 			node.put("remarks", IBAUtils.getStringValue(p, "REMARKS"));
 			node.put("specification", IBAUtils.getStringValue(p, "SPECIFICATION"));
 			node.put("deptcode", IBAUtils.getStringValue(p, "DEPTCODE"));
@@ -627,8 +673,14 @@ public class BomHelper {
 				+ root.getIterationIdentifier().getSeries().getValue());
 		rootNode.put("modifier", root.getModifierFullName());
 		rootNode.put("qty", 1);
-		//
-		rootNode.put("model", IBAUtils.getStringValue(root, "MODEL"));
+
+		String c = IBAUtils.getStringValue(root, "MODEL");
+		NumberCode n = NumberCodeHelper.manager.getNumberCode(c, "MODEL");
+		if (n != null) {
+			rootNode.put("model", "");
+		} else {
+			rootNode.put("model", c + ":" + n.getName());
+		}
 		rootNode.put("remarks", IBAUtils.getStringValue(root, "REMARKS"));
 		rootNode.put("specification", IBAUtils.getStringValue(root, "SPECIFICATION"));
 		rootNode.put("deptcode", IBAUtils.getStringValue(root, "DEPTCODE"));
@@ -680,7 +732,13 @@ public class BomHelper {
 			node.put("modifier", p.getModifierFullName());
 			node.put("qty", link.getQuantity().getAmount());
 
-			node.put("model", IBAUtils.getStringValue(p, "MODEL"));
+			String _c = IBAUtils.getStringValue(root, "MODEL");
+			NumberCode _n = NumberCodeHelper.manager.getNumberCode(_c, "MODEL");
+			if (_n != null) {
+				node.put("model", "");
+			} else {
+				node.put("model", _c + ":" + _n.getName());
+			}
 			node.put("remarks", IBAUtils.getStringValue(p, "REMARKS"));
 			node.put("specification", IBAUtils.getStringValue(p, "SPECIFICATION"));
 			node.put("deptcode", IBAUtils.getStringValue(p, "DEPTCODE"));
@@ -744,7 +802,11 @@ public class BomHelper {
 	private ArrayList<Map<String, Object>> ancestor(ArrayList<Map<String, Object>> list, String oid, boolean skip,
 			int level) throws Exception {
 		WTPart end = (WTPart) CommonUtil.getObject(oid);
-		View view = ViewHelper.service.getView(end.getViewName());
+		String viewName = end.getViewName();
+		if (!StringUtil.checkString(viewName)) {
+			viewName = "Design";
+		}
+		View view = ViewHelper.service.getView(viewName);
 		String state = end.getLifeCycleState().toString();
 		WTPartMaster master = (WTPartMaster) end.getMaster();
 		QuerySpec query = new QuerySpec();
@@ -784,6 +846,7 @@ public class BomHelper {
 			}
 			WTPartUsageLink link = (WTPartUsageLink) obj[0];
 			WTPart p = (WTPart) obj[1];
+			WTPartMaster mm = link.getUses();
 
 			if (skip) {
 				if (skip(p)) {
@@ -821,7 +884,7 @@ public class BomHelper {
 //				node.put("isWorkCopy", isWorkCopy);
 //			}
 
-			boolean isLazy = isLazy(master, view, state, skip);
+			boolean isLazy = isLazy(mm, view, state, skip);
 			if (!isLazy) {
 				node.put("isLazy", false);
 				node.put("children", new JSONArray());
@@ -881,6 +944,7 @@ public class BomHelper {
 			}
 			WTPartUsageLink link = (WTPartUsageLink) obj[0];
 			WTPart p = (WTPart) obj[1];
+			WTPartMaster mm = link.getUses();
 
 			if (skip) {
 				if (skip(p)) {
@@ -918,7 +982,7 @@ public class BomHelper {
 //				node.put("isWorkCopy", isWorkCopy);
 //			}
 
-			boolean isLazy = isLazy(master, baseline, state, skip);
+			boolean isLazy = isLazy(mm, baseline, state, skip);
 			if (!isLazy) {
 				node.put("isLazy", false);
 				node.put("children", new JSONArray());
@@ -937,7 +1001,11 @@ public class BomHelper {
 	private ArrayList<Map<String, Object>> descendants(ArrayList<Map<String, Object>> list, String oid, boolean skip,
 			int level) throws Exception {
 		WTPart part = (WTPart) CommonUtil.getObject(oid);
-		View view = ViewHelper.service.getView(part.getViewName());
+		String viewName = part.getAuthoringLanguage();
+		if (!StringUtil.checkString(viewName)) {
+			viewName = "Design";
+		}
+		View view = ViewHelper.service.getView(viewName);
 		State state = part.getLifeCycleState();
 //		WTPartStandardConfigSpec configSpec = WTPartStandardConfigSpec.newWTPartStandardConfigSpec(view, null);
 		WTPartConfigSpec configSpec = WTPartConfigSpec

@@ -62,7 +62,7 @@ iframe {
 					<input type="button" value="폴더선택" title="폴더선택" onclick="folder();" class="blue">
 					<!-- 					<input type="button" value="문서채번확인" title="문서채번확인" onclick="numberView();" class="red"> -->
 				</td>
-				<th class="req">문서번호</th>
+				<th class="req" id="reqNum">문서번호</th>
 				<td class="indent5">
 					<input type="text" name="interalnumber" id="interalnumber" class="width-300" readonly="readonly">
 				</td>
@@ -270,8 +270,11 @@ iframe {
 
 				// 클래스타입
 				const clazz2 = document.getElementById("clazz");
+				let classType2_oid;
+				if(clazz2 !== null) {
+					classType2_oid  = clazz2.getAttribute("data-oid");
+				}
 				const classType1_code = document.getElementById("classType1").value;
-				const classType2_oid = clazz2.getAttribute("data-oid");
 				const classType2 = document.getElementById(classType2Id);
 
 				const classType3_oid = document.getElementById("classType3").value;
@@ -333,11 +336,13 @@ iframe {
 						return false;
 					}
 				}
-
-				if (interalnumber.value === "") {
-					interalnumber.focus();
-					alert("문서번호를 입력해주세요.");
-					return false;
+				
+				if("SOURCE" !== classType1_code) {
+					if (interalnumber.value === "") {
+						interalnumber.focus();
+						alert("문서번호를 입력해주세요.");
+						return false;
+					}
 				}
 
 				const product = document.getElementById("product").value;

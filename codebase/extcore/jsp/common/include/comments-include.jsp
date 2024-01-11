@@ -92,7 +92,6 @@
 		document.getElementById("mdepth").value = mdepth;
 		const url = getCallUrl("/comments/get?oid=" + oid);
 		call(url, null, function(data) {
-			openLayer();
 			if(data.result) {
 				document.getElementById("moid").value = oid;
 				const comment = data.comments;
@@ -100,7 +99,6 @@
 				document.getElementsByName("data")[1].value = comment;
 			} else {
 				alert(data.msg);
-				closeLayer();
 			}
 		}, "GET");
 	}

@@ -19,6 +19,7 @@ import com.e3ps.common.util.StringUtil;
 import com.e3ps.common.util.WCUtil;
 import com.e3ps.org.dto.PeopleDTO;
 import com.e3ps.org.service.MailUserHelper;
+import com.e3ps.workspace.WorkData;
 import com.e3ps.workspace.service.WorkDataHelper;
 import com.e3ps.workspace.service.WorkspaceHelper;
 
@@ -212,13 +213,18 @@ public class StandardCrService extends StandardManager implements CrService {
 			trs.start();
 
 			EChangeRequest cr = (EChangeRequest) CommonUtil.getObject(oid);
-			// 외부 메일 링크 삭제
+			// 관련 링크 삭제
+			deleteLink(cr);
+			// 결재선 지정 삭제
+			WorkData dd = WorkDataHelper.manager.getWorkData(cr);
+			if (dd != null) {
+				PersistenceHelper.manager.delete(dd);
+			}
+			// 외부 메일 삭제
 			MailUserHelper.service.deleteLink(oid);
-
+			// 모든 결재선 삭제
 			WorkspaceHelper.service.deleteAllLines(cr);
-
-			cr = (EChangeRequest) PersistenceHelper.manager.refresh(cr);
-
+			// 데이터 삭제
 			PersistenceHelper.manager.delete(cr);
 
 			trs.commit();

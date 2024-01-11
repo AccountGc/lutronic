@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import com.e3ps.change.EChangeRequest;
+import com.e3ps.change.cr.service.CrHelper;
 import com.e3ps.common.code.NumberCode;
 import com.e3ps.common.code.service.NumberCodeHelper;
 import com.e3ps.common.util.CommonUtil;
@@ -101,7 +102,7 @@ public class CrDTO {
 		setCreator(cr.getCreatorFullName());
 		setWriteDate(StringUtil.checkNull(cr.getCreateDate()));
 		setProposer(StringUtil.checkNull(cr.getProposer()));
-		setModel(cr.getModel());
+		setModel(CrHelper.manager.displayToModel(cr.getModel()));
 		setContentMap(ContentUtils.getContentByRole(cr, "ECR"));
 		set_isNew(cr.getIsNew()); // true 신규
 

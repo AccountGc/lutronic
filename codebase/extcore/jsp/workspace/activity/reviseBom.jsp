@@ -221,9 +221,7 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 					}
 				}
 			}, 
-			<%
-				if(isOrder) {
-			%>	
+			<%if (isOrder) {%>	
 			{
 				headerText : "선구매<br>여부",
 				dataField : "preOrder",
@@ -236,9 +234,7 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 					editable : true
 				}
 			}, 
-			<%
-				}
-			%>
+			<%}%>
 			{
 				headerText : "개정 전",
 				children : [ {
@@ -399,10 +395,19 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 					valueField : "value",
 					validator : function(oldValue, newValue, item, dataField, fromClipboard, which) {
 						let isValid = false;
-						for (let i = 0, len = part_state_code.length; i < len; i++) {
-							if (part_state_code[i]["value"] == newValue) {
-								isValid = true;
-								break;
+						if(!fromClipboard) {
+							for (let i = 0, len = part_state_code.length; i < len; i++) {
+								if (part_state_code[i]["value"] == newValue) {
+									isValid = true;
+									break;
+								}
+							}
+						} else {
+							for (let i = 0, len = part_state_code.length; i < len; i++) {
+								if (part_state_code[i]["key"] == newValue) {
+									isValid = true;
+									break;
+								}
 							}
 						}
 						return {
@@ -451,11 +456,20 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 						valueField : "value",
 						validator : function(oldValue, newValue, item, dataField, fromClipboard, which) {
 							let isValid = false;
-							for (let i = 0, len = part_result_code.length; i < len; i++) {
-								if (part_result_code[i]["value"] == newValue) {
-									isValid = true;
-									break;
+							if(!fromClipboard) {
+								for (let i = 0, len = part_result_code.length; i < len; i++) {
+									if (part_result_code[i]["value"] == newValue) {
+										isValid = true;
+										break;
+									}
 								}
+							} else {
+								for (let i = 0, len = part_result_code.length; i < len; i++) {
+									if (part_result_code[i]["key"] == newValue) {
+										isValid = true;
+										break;
+									}
+								}	
 							}
 							return {
 								"validate" : isValid,
@@ -501,11 +515,20 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 						valueField : "value",
 						validator : function(oldValue, newValue, item, dataField, fromClipboard, which) {
 							let isValid = false;
-							for (let i = 0, len = part_result_code.length; i < len; i++) {
-								if (part_result_code[i]["value"] == newValue) {
-									isValid = true;
-									break;
+							if(!fromClipboard) {
+								for (let i = 0, len = part_result_code.length; i < len; i++) {
+									if (part_result_code[i]["value"] == newValue) {
+										isValid = true;
+										break;
+									}
 								}
+							} else {
+								for (let i = 0, len = part_result_code.length; i < len; i++) {
+									if (part_result_code[i]["key"] == newValue) {
+										isValid = true;
+										break;
+									}
+								}	
 							}
 							return {
 								"validate" : isValid,
@@ -551,11 +574,20 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 						valueField : "value",
 						validator : function(oldValue, newValue, item, dataField, fromClipboard, which) {
 							let isValid = false;
-							for (let i = 0, len = part_result_code.length; i < len; i++) {
-								if (part_result_code[i]["value"] == newValue) {
-									isValid = true;
-									break;
+							if(!fromClipboard) {
+								for (let i = 0, len = part_result_code.length; i < len; i++) {
+									if (part_result_code[i]["value"] == newValue) {
+										isValid = true;
+										break;
+									}
 								}
+							} else {
+								for (let i = 0, len = part_result_code.length; i < len; i++) {
+									if (part_result_code[i]["key"] == newValue) {
+										isValid = true;
+										break;
+									}
+								}	
 							}
 							return {
 								"validate" : isValid,
@@ -601,11 +633,20 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 						valueField : "value",
 						validator : function(oldValue, newValue, item, dataField, fromClipboard, which) {
 							let isValid = false;
-							for (let i = 0, len = part_result_code.length; i < len; i++) {
-								if (part_result_code[i]["value"] == newValue) {
-									isValid = true;
-									break;
+							if(!fromClipboard) {
+								for (let i = 0, len = part_result_code.length; i < len; i++) {
+									if (part_result_code[i]["value"] == newValue) {
+										isValid = true;
+										break;
+									}
 								}
+							} else {
+								for (let i = 0, len = part_result_code.length; i < len; i++) {
+									if (part_result_code[i]["key"] == newValue) {
+										isValid = true;
+										break;
+									}
+								}	
 							}
 							return {
 								"validate" : isValid,
@@ -914,7 +955,7 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 				createAUIGrid(columns);
 				AUIGrid.resize(myGridID);
 				finderUser("reassignUser");
-				// 				finderUser("ecnUser");
+				autoTextarea();
 			})
 
 			window.addEventListener("resize", function() {

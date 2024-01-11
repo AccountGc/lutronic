@@ -8,15 +8,12 @@ import java.util.Hashtable;
 import java.util.Map;
 
 import com.e3ps.change.CrToEcprLink;
-import com.e3ps.change.ECOChange;
 import com.e3ps.change.ECPRRequest;
 import com.e3ps.change.ECRMRequest;
 import com.e3ps.change.EChangeOrder;
 import com.e3ps.change.EChangeRequest;
-import com.e3ps.change.eco.service.EcoHelper;
 import com.e3ps.change.eo.service.EoHelper;
 import com.e3ps.change.util.EChangeUtils;
-import com.e3ps.common.aspose.AsposeUtils;
 import com.e3ps.common.mail.MailHtmlContentTemplate;
 import com.e3ps.common.mail.MailUtil;
 import com.e3ps.common.util.CommonUtil;
@@ -1184,4 +1181,30 @@ public class StandardWorkspaceService extends StandardManager implements Workspa
 		}
 
 	}
+
+	@Override
+	public void deleteAllLines(ApprovalMaster m) throws Exception {
+		Transaction trs = new Transaction();
+		try {
+			trs.start();
+
+			ArrayList<ApprovalLine> list = WorkspaceHelper.manager.getAllLines(m);
+			for (ApprovalLine line : list) {
+				PersistenceHelper.manager.delete(line);
+			}
+			PersistenceHelper.manager.delete(m);
+
+			trs.commit();
+			trs = null;
+		} catch (Exception e) {
+			e.printStackTrace();
+			trs.rollback();
+			throw e;
+		} finally {
+			if (trs != null)
+				trs.rollback();
+		}
+
+	}
+
 }

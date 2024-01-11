@@ -12,6 +12,7 @@ import com.e3ps.change.ECPRRequest;
 import com.e3ps.change.EChangeActivity;
 import com.e3ps.change.EChangeOrder;
 import com.e3ps.change.EChangeRequest;
+import com.e3ps.change.eco.service.EcoHelper;
 import com.e3ps.common.content.service.CommonContentHelper;
 import com.e3ps.common.util.CommonUtil;
 import com.e3ps.common.util.DateUtil;
@@ -81,7 +82,8 @@ public class StandardEtcService extends StandardManager implements EtcService {
 			trs.start();
 			// 기본설정으로..
 			WTDocument doc = WTDocument.newWTDocument();
-			String number = EtcHelper.manager.getNextNumber(type.toUpperCase() + "-");
+			String number = type.toUpperCase() + DateUtil.getCurrentDateString("ym");
+			number = EtcHelper.manager.getNextNumber(number + "-");
 
 			// 문서 이름 세팅..
 			doc.setName(name);

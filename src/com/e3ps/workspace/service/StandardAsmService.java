@@ -81,7 +81,6 @@ public class StandardAsmService extends StandardManager implements AsmService {
 				WTDocument doc = (WTDocument) CommonUtil.getObject(oid);
 				AppPerLink link = AppPerLink.newAppPerLink(doc, asm);
 				LifeCycleHelper.service.setLifeCycleState(doc, State.toState(asm.getLifeCycleState().toString()));
-//				E3PSWorkflowHelper.service.changeLCState((LifeCycleManaged) doc, asm.getLifeCycleState().toString());
 				PersistenceHelper.manager.save(link);
 			}
 
