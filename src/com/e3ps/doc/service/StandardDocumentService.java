@@ -41,6 +41,7 @@ import com.e3ps.workspace.WorkData;
 import com.e3ps.workspace.service.WorkDataHelper;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.ptc.windchill.enterprise.wvs.common.utils.CommonClientHelper;
 
 import wt.clients.folder.FolderTaskLogic;
 import wt.clients.vc.CheckInOutTaskLogic;
@@ -205,6 +206,7 @@ public class StandardDocumentService extends StandardManager implements Document
 		String classType3_oid = dto.getClassType3_oid();
 		Transaction trs = new Transaction();
 		try {
+			CommonClientHelper
 			trs.start();
 
 			WTDocument doc = WTDocument.newWTDocument();
