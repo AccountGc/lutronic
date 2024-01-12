@@ -12,6 +12,7 @@ import com.e3ps.common.util.CommonUtil;
 
 import lombok.Getter;
 import lombok.Setter;
+import wt.org.WTUser;
 
 @Getter
 @Setter
@@ -34,6 +35,7 @@ public class EoDTO {
 	// auth
 	private boolean _delete = false;
 	private boolean _modify = false;
+	private boolean _validate = false;
 
 	// 변수용
 	private ArrayList<String> secondarys = new ArrayList<>();
@@ -119,6 +121,11 @@ public class EoDTO {
 
 		if (isAdmin) {
 			set_delete(true);
+		}
+		WTUser sessionUser = CommonUtil.sessionUser();
+		boolean creator = eo.getCreatorName().equals(sessionUser.getName());
+		if ((isAdmin || creator) && check(eo, "APPROVING")) {
+			set_validate(true);
 		}
 	}
 

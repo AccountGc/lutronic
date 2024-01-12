@@ -197,13 +197,13 @@ public class OrgHelper {
 
 		QuerySpec query = new QuerySpec();
 		int idx = query.appendClassList(People.class, true);
-		int idx_d = query.appendClassList(Department.class, false);
+//		int idx_d = query.appendClassList(Department.class, false);
 //		int idx_w = query.appendClassList(WTUser.class, false);
 
 //		QuerySpecUtils.toInnerJoin(query, People.class, WTUser.class, "userReference.key.id",
 //				WTAttributeNameIfc.ID_NAME, idx, idx_w);
-		QuerySpecUtils.toInnerJoin(query, People.class, Department.class, "departmentReference.key.id",
-				WTAttributeNameIfc.ID_NAME, idx, idx_d);
+//		QuerySpecUtils.toInnerJoin(query, People.class, Department.class, "departmentReference.key.id",
+//				WTAttributeNameIfc.ID_NAME, idx, idx_d);
 		QuerySpecUtils.toBooleanAnd(query, idx, People.class, People.IS_DISABLE, false);
 
 		query.appendAnd();

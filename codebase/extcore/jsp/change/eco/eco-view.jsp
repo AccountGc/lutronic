@@ -17,6 +17,13 @@ boolean isAdmin = (boolean) request.getAttribute("isAdmin");
 		</td>
 		<td class="right">
 			<%
+			if(dto.is_validate()) {
+			%>
+			<input type="button" value="SAP검증" title="SAP검증" class="gray" onclick="validate();">
+			<%
+			}
+			%>
+			<%
 			if (dto.is_modify()) {
 			%>
 			<input type="button" value="수정" title="수정" class="blue" onclick="modify();">

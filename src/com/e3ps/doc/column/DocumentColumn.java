@@ -69,7 +69,7 @@ public class DocumentColumn {
 		setVersion(setVersionInfo(doc));
 		setState(doc.getLifeCycleState().getDisplay());
 		setWriter(IBAUtils.getStringValue(doc, "DSGN"));
-		setCreator(doc.getCreatorName());
+		setCreator(doc.getCreatorFullName());
 		setCreatedDate(doc.getCreateTimestamp());
 		setCreatedDate_txt(doc.getCreateTimestamp().toString().substring(0, 10));
 		setModifier(doc.getModifierFullName());

@@ -15,9 +15,9 @@ boolean isAdmin = (boolean) request.getAttribute("isAdmin");
 		</td>
 		<td class="right">
 			<%
-			if (isAdmin) {
+			if (dto.is_validate()) {
 			%>
-			<input type="button" value="SAP재전송" title="SAP재전송" class="blue" onclick="sendEoSap();">
+			<input type="button" value="SAP검증" title="SAP검증" class="gray" onclick="validate();">
 			<%
 			}
 			%>

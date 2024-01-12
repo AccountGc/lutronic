@@ -130,7 +130,7 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 					</div>
 				</td>
 				<th>위험통제</th>
-				<td colspan="3">
+				<td>
 					&nbsp;
 					<div class="pretty p-switch">
 						<input type="radio" name="riskType" value="" checked="checked">
@@ -168,6 +168,11 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 						</div>
 					</div>
 				</td>
+				<th>프로젝트코드</th>
+				<td class="indent5">
+					<input type="text" name="model" id="model" class="width-200">
+					<img src="/Windchill/extcore/images/delete.png" class="delete" title="삭제" onclick="clearUser('model')">
+				</td>
 			</tr>
 			<tr>
 				<th class="lb pt5">완제품 품목</th>
@@ -191,7 +196,7 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 				</td>
 				<td class="right">
 					<select name="_psize" id="_psize">
-					<option value="10">10</option>
+						<option value="10">10</option>
 						<option value="30">30</option>
 						<option value="50">50</option>
 						<option value="100">100</option>
@@ -357,7 +362,8 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 				twindate("created");
 				twindate("approve");
 				selectbox("_psize");
-				selectbox("model");
+				// 				selectbox("model");
+				finderCode("model", "MODEL", "code");
 			});
 
 			document.addEventListener("keydown", function(event) {

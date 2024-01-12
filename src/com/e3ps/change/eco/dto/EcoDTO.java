@@ -136,7 +136,11 @@ public class EcoDTO {
 			set_delete(true);
 		}
 
-		WTUser sessionUser = CommonUtil.sessionUser();s
+		WTUser sessionUser = CommonUtil.sessionUser();
+		boolean creator = eco.getCreatorName().equals(sessionUser.getName());
+		if ((isAdmin || creator) && check(eco, "APPROVING")) {
+			set_validate(true);
+		}
 	}
 
 	/**
