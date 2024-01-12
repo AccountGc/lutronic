@@ -18,7 +18,7 @@ import com.e3ps.common.util.CommonUtil;
 import com.e3ps.common.util.DateUtil;
 import com.e3ps.common.util.StringUtil;
 import com.e3ps.download.DownloadHistory;
-import com.e3ps.download.beans.DownloadDTO;
+import com.e3ps.download.dto.DownloadDTO;
 import com.e3ps.org.Department;
 import com.e3ps.org.People;
 import com.e3ps.org.dto.CompanyState;

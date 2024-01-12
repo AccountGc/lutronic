@@ -74,6 +74,7 @@ public class SAPDev600Connection {
 		}
 		try {
 			FileOutputStream fos = new FileOutputStream(destCfg, false);
+			System.out.println("ASD");
 			connectProperties.store(fos, "for tests only !");
 			fos.close();
 		} catch (Exception e) {

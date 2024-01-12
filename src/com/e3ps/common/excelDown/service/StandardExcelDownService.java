@@ -72,7 +72,7 @@ import com.e3ps.development.service.DevelopmentQueryHelper;
 import com.e3ps.doc.dto.DocumentDTO;
 import com.e3ps.doc.service.DocumentQueryHelper;
 import com.e3ps.download.DownloadHistory;
-import com.e3ps.download.beans.DownloadDTO;
+import com.e3ps.download.dto.DownloadDTO;
 import com.e3ps.drawing.service.DrawingHelper;
 import com.e3ps.org.People;
 import com.e3ps.part.dto.PartData;

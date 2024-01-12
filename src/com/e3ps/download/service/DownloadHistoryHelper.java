@@ -7,7 +7,7 @@ import java.util.Map;
 import com.e3ps.common.util.CommonUtil;
 import com.e3ps.common.util.QuerySpecUtils;
 import com.e3ps.download.DownloadHistory;
-import com.e3ps.download.beans.DownloadDTO;
+import com.e3ps.download.dto.DownloadDTO;
 
 import net.sf.json.JSONArray;
 import wt.fc.Persistable;

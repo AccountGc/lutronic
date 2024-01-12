@@ -18,7 +18,7 @@ import com.e3ps.common.util.PageQueryUtils;
 import com.e3ps.common.util.QuerySpecUtils;
 import com.e3ps.common.util.StringUtil;
 import com.e3ps.download.DownloadHistory;
-import com.e3ps.download.beans.DownloadDTO;
+import com.e3ps.download.dto.DownloadDTO;
 import com.e3ps.org.MailUser;
 
 import wt.fc.PagingQueryResult;

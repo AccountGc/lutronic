@@ -1,4 +1,4 @@
-package com.e3ps.download.beans;
+package com.e3ps.download.dto;
 
 import java.sql.Timestamp;
 

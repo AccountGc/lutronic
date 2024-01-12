@@ -82,19 +82,13 @@ public class SAPConnection {
 	}
 
 	public static void createDestinationDataFile(String destinationName, Properties connectProperties) {
-
 		File destCfg = new File(destinationName + ".jcoDestination");
 		if (!destCfg.isFile()) {
 			return;
 		}
-
-		// System.out.println("destCfg.isFile() =" + destCfg.isFile());
-		// System.out.println(destCfg.getAbsolutePath());
 		try {
 			FileOutputStream fos = new FileOutputStream(destCfg, false);
 			connectProperties.store(fos, "for tests only !");
-			// System.out.println("connectProperties =" +connectProperties);
-			// System.out.println("fos =" + fos.getFD().toString());
 			fos.close();
 		} catch (Exception e) {
 			throw new RuntimeException("Unable to create the destination files", e);
