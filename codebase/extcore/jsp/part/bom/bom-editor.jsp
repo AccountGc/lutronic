@@ -187,6 +187,9 @@ WTPart root = (WTPart) request.getAttribute("root");
 					return true;
 				},
 				dragEnter : function(node, data) {
+					if(node.data.state === "승인됨") {
+						return false;
+					}
 					const sameTree = (data.otherNode.tree === data.tree);
 					if (sameTree) {
 						return false;
