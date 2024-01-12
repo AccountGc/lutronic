@@ -368,6 +368,7 @@ public class NumberCodeHelper {
 	public ArrayList<Map<String, String>> finder(Map<String, String> params) throws Exception {
 		ArrayList<Map<String, String>> list = new ArrayList<>();
 		String value = params.get("value");
+		String valueType = params.get("valueType");
 		String codeType = params.get("codeType");
 		QuerySpec query = new QuerySpec();
 		int idx = query.appendClassList(NumberCode.class, true);
@@ -380,8 +381,12 @@ public class NumberCodeHelper {
 			Object[] obj = (Object[]) result.nextElement();
 			NumberCode n = (NumberCode) obj[0];
 			Map<String, String> map = new HashMap<>();
-			map.put("oid", n.getPersistInfo().getObjectIdentifier().getStringValue());
-			map.put("name", n.getName());
+			if (valueType.equals("code")) {
+				map.put("oid", n.getCode());
+			} else if (valueType.equals("oid")) {
+				map.put("oid", n.getPersistInfo().getObjectIdentifier().getStringValue());
+			}
+			map.put("name", "[" + n.getCode() + "]&nbsp;" + n.getName());
 			list.add(map);
 		}
 		return list;

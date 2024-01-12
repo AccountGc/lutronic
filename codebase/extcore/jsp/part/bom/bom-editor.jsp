@@ -212,8 +212,11 @@ WTPart root = (WTPart) request.getAttribute("root");
 					
 					for(let i=0; i<sourceNodes.length; i++) {
 						const nn = sourceNodes[i];
+						nn.copy = true;
+						nn.renderTitle();
 						nn.copyTo(node, data.hitMode);
 					}
+					logger(node);
 					drop(node, sourceNodes);
 				},
 			},
@@ -848,6 +851,7 @@ WTPart root = (WTPart) request.getAttribute("root");
 		});
 		if (node.isLazy()) {
 			node.load(true);
+// 			node.setExpanded(true);
 		}
 	}
 

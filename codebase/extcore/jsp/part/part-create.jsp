@@ -163,17 +163,7 @@ QuantityUnit[] unitList = (QuantityUnit[]) request.getAttribute("unitList");
 			<tr>
 				<th class="req lb">프로젝트코드</th>
 				<td class="indent5">
-					<select name="model" id="model" class="width-200">
-						<option value="">선택</option>
-						<%
-						for (NumberCode model : modelList) {
-						%>
-						<option value="<%=model.getCode()%>">[<%=model.getCode()%>]
-							<%=model.getName()%></option>
-						<%
-						}
-						%>
-					</select>
+					<input type="text" name="model" id="model" class="width-300">
 				</td>
 				<th class="req">제작방법</th>
 				<td class="indent5">
@@ -471,7 +461,7 @@ QuantityUnit[] unitList = (QuantityUnit[]) request.getAttribute("unitList");
 				selectbox("partType2");
 				selectbox("partType3");
 				selectbox("state");
-				selectbox("model");
+// 				selectbox("model");
 				selectbox("productmethod");
 				selectbox("deptcode");
 				selectbox("unit");
@@ -482,33 +472,8 @@ QuantityUnit[] unitList = (QuantityUnit[]) request.getAttribute("unitList");
 				twindate("created");
 				twindate("modified");
 				$("#unit").bindSelectSetValue("ea");
-				
-				axdom("#manufacture").bindSelector({
-					reserveKeys: {
-						options: "list",
-						optionValue: "oid",
-						optionText: "name"
-					},
-					optionPrintLength: "all",
-					onsearch: function(id, obj, callBack) {
-						const value = document.getElementById(id).value;
-						const params = new Object();
-						const url = getCallUrl("/code/finder");
-						params.value = value;
-						params.codeType = "MANUFACTURE";
-						params.obj = obj;
-						call(url, params, function(data) {
-							callBack({
-								options: data.list
-							})
-						})
-					},
-					onchange: function() {
-						const id = this.targetID;
-						const value = this.selectedOption.oid
-						document.getElementById(id + "Oid").value = value;
-					},
-				})
+				finderCode("model", "MODEL", "code");
+				finderCode("manufacture", "MANUFACTURE", "code");
 			});
 			
 			window.addEventListener("resize", function() {

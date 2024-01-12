@@ -183,7 +183,7 @@ function isNull(value) {
 }
 
 // numbercode finder
-function finderCode(tag, key) {
+function finderCode(tag, key, valueType) {
 	axdom("#" + tag).bindSelector({
 		reserveKeys: {
 			options: "list",
@@ -196,6 +196,7 @@ function finderCode(tag, key) {
 			const params = new Object();
 			const url = getCallUrl("/code/finder");
 			params.value = value;
+			params.valueType = valueType;
 			params.codeType = key;
 			call(url, params, function(data) {
 				callBack({

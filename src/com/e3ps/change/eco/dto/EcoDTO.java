@@ -2,9 +2,6 @@ package com.e3ps.change.eco.dto;
 
 import java.sql.Timestamp;
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashMap;
-import java.util.HashMap;
 import java.util.Map;
 
 import com.e3ps.change.EChangeOrder;
@@ -12,11 +9,11 @@ import com.e3ps.change.eco.service.EcoHelper;
 import com.e3ps.common.util.CommonUtil;
 import com.e3ps.common.util.ContentUtils;
 import com.e3ps.common.util.StringUtil;
-import com.e3ps.org.service.MailUserHelper;
 import com.fasterxml.jackson.annotation.JsonFormat;
 
 import lombok.Getter;
 import lombok.Setter;
+import wt.org.WTUser;
 
 @Getter
 @Setter
@@ -49,6 +46,7 @@ public class EcoDTO {
 	// auth
 	private boolean _modify = false;
 	private boolean _delete = false;
+	private boolean _validate = false;
 
 	// 변수용
 	private String primary;
@@ -137,6 +135,8 @@ public class EcoDTO {
 		if (isAdmin) {
 			set_delete(true);
 		}
+
+		WTUser sessionUser = CommonUtil.sessionUser();s
 	}
 
 	/**
