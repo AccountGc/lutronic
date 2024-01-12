@@ -429,7 +429,7 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 			}, {
 				headerText : "기존 부품/장비",
 				children : [ {
-					headerText : "납풍 장비",
+					headerText : "납품 장비",
 					dataField : "delivery",
 					dataType : "string",
 					width : 120,

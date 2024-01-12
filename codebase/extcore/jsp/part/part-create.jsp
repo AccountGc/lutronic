@@ -567,7 +567,7 @@ QuantityUnit[] unitList = (QuantityUnit[]) request.getAttribute("unitList");
 // 					return false;
 // 				}
 				const url = getCallUrl("/part/seq?partNumber=" + partNumber);
-				_popup(url, 900, 450, "n");
+				_popup(url, 1100, 550, "n");
 			}
 		    
 			// 기타 입력 중 발생 메서드

@@ -1407,16 +1407,25 @@ public class PartHelper {
 		Map<String, Object> map = new HashMap<>();
 		ArrayList<Map<String, String>> list = new ArrayList<>();
 		String partNumber = (String) params.get("partNumber");
+		String sortKey = (String) params.get("sortKey");
+		String sortType = (String) params.get("sortType"); // 1오름 -1 내림
 		QuerySpec query = new QuerySpec();
 
 		int idx = query.appendClassList(WTPart.class, true);
 		QuerySpecUtils.toLikeRightAnd(query, idx, WTPart.class, WTPart.NUMBER, partNumber);
 		QuerySpecUtils.toLatest(query, idx, WTPart.class);
 
-		QuerySpecUtils.toOrderBy(query, idx, WTPart.class, WTPart.MODIFY_TIMESTAMP, true);
-		QueryResult result = PersistenceHelper.manager.find(query);
-		// PageQueryUtils pager = new PageQueryUtils(params, query);
-//		PagingQueryResult result = pager.find();
+		if (StringUtil.checkString(sortKey)) {
+			if ("1".equals(sortType)) {
+				QuerySpecUtils.toOrderBy(query, idx, WTPart.class, WTPart.NUMBER, false);
+			} else if ("-1".equals(sortType)) {
+				QuerySpecUtils.toOrderBy(query, idx, WTPart.class, WTPart.NUMBER, true);
+			}
+		} else {
+			QuerySpecUtils.toOrderBy(query, idx, WTPart.class, WTPart.CREATE_TIMESTAMP, true);
+		}
+		PageQueryUtils pager = new PageQueryUtils(params, query);
+		PagingQueryResult result = pager.find();
 		while (result.hasMoreElements()) {
 			Object[] obj = (Object[]) result.nextElement();
 			WTPart part = (WTPart) obj[0];
@@ -1435,6 +1444,11 @@ public class PartHelper {
 		}
 
 		map.put("list", list);
+		map.put("topListCount", pager.getTotal());
+		map.put("pageSize", pager.getPsize());
+		map.put("total", pager.getTotalSize());
+		map.put("sessionid", pager.getSessionId());
+		map.put("curPage", pager.getCpage());
 		return map;
 	}
 

@@ -1,4 +1,3 @@
-
 <%@page import="java.util.Map"%>
 <%@page import="java.util.List"%>
 <%@page import="wt.session.SessionHelper"%>
@@ -223,13 +222,9 @@ boolean isAdmin = (boolean) request.getAttribute("isAdmin");
 				params = toField(params, field);
 				const number = toId("number");
 				const numberType = toId("numberType");
-				if (number == "") {
-					params.number = numberType;
-				} else {
-					params.number = number;
-				}
+				params.numberType = numberType;
+				logger(params);
 				const url = getCallUrl("/asm/list");
-
 				AUIGrid.showAjaxLoader(myGridID);
 				parent.openLayer();
 				call(url, params, function(data) {

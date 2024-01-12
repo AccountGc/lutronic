@@ -19,7 +19,7 @@ String title = (String) request.getAttribute("title");
 			<%
 			if (isAdmin) {
 			%>
-			<input type="button" value="삭제" title="삭제" class="red" onclick="_de;ete();">
+			<input type="button" value="삭제" title="삭제" class="red" onclick="_delete();">
 			<%
 			}
 			%>

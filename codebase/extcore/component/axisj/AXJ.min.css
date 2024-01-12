@@ -6441,7 +6441,7 @@ button, button:hover {
 }
 
 .AXselectExpandBox {
-	height: 350px !important; 
+/*	height: 350px !important; */
 	z-index: 5002;
 	position: absolute;
 	left: 0;
