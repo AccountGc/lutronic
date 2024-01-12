@@ -380,7 +380,7 @@ public class NumberCodeHelper {
 			}
 			query.appendOpenParen();
 			QuerySpecUtils.toLike(query, idx, NumberCode.class, NumberCode.CODE, value);
-			QuerySpecUtils.toLikeOrquery, idx, NumberCode.class, NumberCode.NAME, value);
+			QuerySpecUtils.toLikeOr(query, idx, NumberCode.class, NumberCode.NAME, value);
 			query.appendCloseParen();
 		}
 

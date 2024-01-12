@@ -184,6 +184,11 @@ function isNull(value) {
 
 // numbercode finder
 function finderCode(tag, key, valueType) {
+	
+	if(valueType === undefined) {
+		valueType = "code";
+	}
+	
 	axdom("#" + tag).bindSelector({
 		reserveKeys: {
 			options: "list",
