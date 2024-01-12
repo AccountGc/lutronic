@@ -34,6 +34,7 @@ public class AsmHelper {
 		ArrayList<Map<String, String>> list = new ArrayList<Map<String, String>>();
 		String name = (String) params.get("name");
 		String number = (String) params.get("number");
+		String numberType = (String) params.get("numberType");
 		String creatorOid = (String) params.get("creatorOid");
 		String state = (String) params.get("state");
 		String createdFrom = (String) params.get("createdFrom");
@@ -44,6 +45,7 @@ public class AsmHelper {
 		// 검색 조건 추가
 		// 구분
 		QuerySpecUtils.toLike(query, idx, AsmApproval.class, AsmApproval.NAME, name);
+		QuerySpecUtils.toLikeRightAnd(query, idx, AsmApproval.class, AsmApproval.NUMBER, numberType);
 		QuerySpecUtils.toLikeAnd(query, idx, AsmApproval.class, AsmApproval.NUMBER, number);
 		QuerySpecUtils.toState(query, idx, AsmApproval.class, state);
 		QuerySpecUtils.toCreatorQuery(query, idx, AsmApproval.class, creatorOid);

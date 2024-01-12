@@ -55,6 +55,14 @@ import wt.vc.views.ViewHelper;
 @RequestMapping(value = "/part/**")
 public class PartController extends BaseController {
 
+	@Description(value = "새이름으로 저장")
+	@GetMapping(value = "/saveAs")
+	public ModelAndView saveAs() throws Exception {
+		ModelAndView model = new ModelAndView();
+		model.setViewName("/extcore/jsp/part/part-saveAs.jsp");
+		return model;
+	}
+
 	@Description(value = "새 채번 페이지")
 	@GetMapping(value = "/order")
 	public ModelAndView order(@RequestParam String oid) {

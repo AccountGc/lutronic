@@ -198,6 +198,9 @@ int eca = (int) request.getAttribute("eca");
 						<a onclick="moveToPage(this, '/part/create', '> 품목관리 > 제품/품목 등록');">제품/품목 등록</a>
 					</li>
 					<li>
+						<a onclick="moveToPage(this, '/part/saveAs', '> 품목관리 > 새이름으로 저장');">새이름으로 저장</a>
+					</li>					
+					<li>
 						<a onclick="moveToPage(this, '/part/batch', '> 품목관리 > 제품/품목 일괄 등록');">제품/품목 일괄 등록</a>
 					</li>
 					<!-- 					<li> -->

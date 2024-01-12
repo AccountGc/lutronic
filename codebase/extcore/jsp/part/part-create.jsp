@@ -168,7 +168,8 @@ QuantityUnit[] unitList = (QuantityUnit[]) request.getAttribute("unitList");
 						<%
 						for (NumberCode model : modelList) {
 						%>
-						<option value="<%=model.getCode()%>"><%=model.getName()%></option>
+						<option value="<%=model.getCode()%>">[<%=model.getCode()%>]
+							<%=model.getName()%></option>
 						<%
 						}
 						%>
