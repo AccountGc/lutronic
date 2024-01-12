@@ -103,6 +103,7 @@ boolean isEdit = (boolean) request.getAttribute("isEdit");
 				<td class="right">
 					<select name="_psize" id="_psize">
 						<option value="10">10</option>
+						<option value="20" selected="selected">20</option>
 						<option value="30">30</option>
 						<option value="50">50</option>
 						<option value="100">100</option>
@@ -369,6 +370,7 @@ boolean isEdit = (boolean) request.getAttribute("isEdit");
 				twindate("modified");
 				selectbox("_psize");
 				finderCode("model", "MODEL");
+				$("#_psize").bindSelectSetValue("20");
 			});
 
 			document.addEventListener("keydown", function(event) {
