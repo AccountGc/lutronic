@@ -126,6 +126,7 @@ List<Map<String, String>> lifecycleList = (List<Map<String, String>>) request.ge
 				<td class="right">
 					<select name="_psize" id="_psize">
 						<option value="10">10</option>
+						<option value="20" selected="selected">20</option>
 						<option value="30">30</option>
 						<option value="50">50</option>
 						<option value="100">100</option>
@@ -276,6 +277,7 @@ List<Map<String, String>> lifecycleList = (List<Map<String, String>>) request.ge
 				twindate("created");
 				twindate("modified");
 				selectbox("_psize");
+				$("#_psize").bindSelectSetValue("20");
 			});
 
 			document.addEventListener("keydown", function(event) {

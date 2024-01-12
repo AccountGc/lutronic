@@ -225,6 +225,7 @@ ArrayList<Map<String, String>> classTypes1 = (ArrayList<Map<String, String>>) re
 		<td class="right">
 			<select name="_psize" id="_psize">
 				<option value="10">10</option>
+				<option value="20" selected="selected">20</option>
 				<option value="30">30</option>
 				<option value="50">50</option>
 				<option value="100">100</option>
@@ -448,6 +449,7 @@ document.addEventListener("DOMContentLoaded", function() {
 	selectbox("classType2");
 	selectbox("classType3");	
 	finderCode("model", "MODEL");
+	$("#_psize").bindSelectSetValue("20");
 ;});
 
 function <%=method%>() {

@@ -268,6 +268,7 @@ QuantityUnit[] unitList = (QuantityUnit[]) request.getAttribute("unitList");
 				<td class="right">
 					<select name="_psize" id="_psize">
 						<option value="10">10</option>
+						<option value="20" selected="selected">20</option>
 						<option value="30">30</option>
 						<option value="50">50</option>
 						<option value="100">100</option>
@@ -578,6 +579,7 @@ QuantityUnit[] unitList = (QuantityUnit[]) request.getAttribute("unitList");
 				twindate("modified");
 				selectbox("_psize");
 				finderCode("model", "MODEL");
+				$("#_psize").bindSelectSetValue("20");
 			});
 
 			function exportExcel() {
@@ -626,6 +628,7 @@ QuantityUnit[] unitList = (QuantityUnit[]) request.getAttribute("unitList");
 						twindate("created");
 						twindate("modified");
 						finderCode("model", "MODEL");
+						$("#_psize").bindSelectSetValue("20");
 					} else {
 						el.style.display = "none";
 						target.value = "펼치기";
@@ -642,6 +645,7 @@ QuantityUnit[] unitList = (QuantityUnit[]) request.getAttribute("unitList");
 						twindate("created");
 						twindate("modified");
 						finderCode("model", "MODEL");
+						$("#_psize").bindSelectSetValue("20");
 					}
 				}
 			}

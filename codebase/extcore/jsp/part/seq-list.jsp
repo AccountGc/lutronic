@@ -19,6 +19,7 @@ String partNumber = request.getParameter("partNumber");
 		<td class="right">
 			<select name="_psize" id="_psize" onchange="loadGridData();">
 				<option value="10">10</option>
+				<option value="20" selected="selected">20</option>
 				<option value="30">30</option>
 				<option value="50">50</option>
 				<option value="100">100</option>
@@ -157,6 +158,7 @@ String partNumber = request.getParameter("partNumber");
 		createAUIGrid(columns);
 		AUIGrid.resize(myGridID);
 		selectbox("_psize");
+		$("#_psize").bindSelectSetValue("20");
 	});
 
 	window.addEventListener("resize", function() {
