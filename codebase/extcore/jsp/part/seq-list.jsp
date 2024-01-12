@@ -20,8 +20,8 @@ String partNumber = request.getParameter("partNumber");
 		</td>
 	</tr>
 </table>
-<div id="grid_wrap" style="height: 330px; border-top: 1px solid #3180c3;"></div>
-<div id="grid_paging" class="aui-grid-paging-panel my-grid-paging-panel"></div>
+<div id="grid_wrap" style="height: 350px; border-top: 1px solid #3180c3;"></div>
+<!-- <div id="grid_paging" class="aui-grid-paging-panel my-grid-paging-panel"></div> -->
 <script type="text/javascript">
 	let myGridID;
 	const columns = [ {
@@ -82,10 +82,11 @@ String partNumber = request.getParameter("partNumber");
 			selectionMode : "multipleCells",
 			hoverMode : "singleRow",
 			enableFilter : true,
-			showInlineFilter : false,
+			showInlineFilter : true,
 			enableRightDownFocus : true,
 			filterLayerWidth : 320,
 			filterItemMoreMessage : "필터링 검색이 너무 많습니다. 검색을 이용해주세요.",
+			usePaging : true,
 		};
 		myGridID = AUIGrid.create("#grid_wrap", columnLayout, props);
 		loadGridData();
@@ -101,9 +102,6 @@ String partNumber = request.getParameter("partNumber");
 		call(url, params, function(data) {
 			AUIGrid.removeAjaxLoader(myGridID);
 			if (data.result) {
-				totalPage = Math.ceil(data.total / data.pageSize);
-				document.getElementById("sessionid").value = data.sessionid;
-				createPagingNavigator(data.curPage);
 				AUIGrid.setGridData(myGridID, data.list);
 			} else {
 				alert(data.msg);

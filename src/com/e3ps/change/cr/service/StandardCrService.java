@@ -1,6 +1,7 @@
 package com.e3ps.change.cr.service;
 
 import java.io.File;
+import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -100,7 +101,8 @@ public class StandardCrService extends StandardManager implements CrService {
 			EChangeRequest cr = EChangeRequest.newEChangeRequest();
 			cr.setEoName(name);
 			cr.setEoNumber(number);
-			cr.setCreateDate(currentDate.toString().substring(0, 10)); // 작성하는 날짜
+			Timestamp today = new Timestamp(currentDate.getTime());
+			cr.setCreateDate(today.toString().substring(0, 10));
 			cr.setWriter(sessionUser.getFullName());
 			cr.setIsNew(true);
 			PeopleDTO data = new PeopleDTO(sessionUser);

@@ -47,7 +47,7 @@ ArrayList<NumberCode> productmethod = (ArrayList<NumberCode>) request.getAttribu
 			<%
 			if (isAdmin) {
 			%>
-			<select style="position: relative; width: 200px;" name="model" id="model" class="AXSelect" style="width: 250px; position: relative; bottom: 1px;">
+			<select style="position: relative; width: 250px;" name="model" id="model" class="AXSelect" style="width: 250px; position: relative; bottom: 1px;">
 				<option value="">선택</option>
 				<%
 				for (NumberCode n : model) {

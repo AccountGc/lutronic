@@ -1414,8 +1414,9 @@ public class PartHelper {
 		QuerySpecUtils.toLatest(query, idx, WTPart.class);
 
 		QuerySpecUtils.toOrderBy(query, idx, WTPart.class, WTPart.MODIFY_TIMESTAMP, true);
-		PageQueryUtils pager = new PageQueryUtils(params, query);
-		PagingQueryResult result = pager.find();
+		QueryResult result = PersistenceHelper.manager.find(query);
+		// PageQueryUtils pager = new PageQueryUtils(params, query);
+//		PagingQueryResult result = pager.find();
 		while (result.hasMoreElements()) {
 			Object[] obj = (Object[]) result.nextElement();
 			WTPart part = (WTPart) obj[0];
@@ -1434,11 +1435,6 @@ public class PartHelper {
 		}
 
 		map.put("list", list);
-		map.put("topListCount", pager.getTotal());
-		map.put("pageSize", pager.getPsize());
-		map.put("total", pager.getTotalSize());
-		map.put("sessionid", pager.getSessionId());
-		map.put("curPage", pager.getCpage());
 		return map;
 	}
 
@@ -1747,5 +1743,51 @@ public class PartHelper {
 				list.add(map);
 			}
 		}
+	}
+
+	/**
+	 * 채번 리스트
+	 */
+	public List<Map<String, Object>> order(String oid) throws Exception {
+		List<Map<String, Object>> list = new ArrayList<Map<String, Object>>();
+		WTPart part = (WTPart) CommonUtil.getObject(oid);
+		View[] views = ViewHelper.service.getAllViews();
+
+		ArrayList result = new ArrayList();
+
+		BomBroker broker = new BomBroker();
+		PartTreeData root = broker.getTree(part, !"false".equals(null), null,
+				ViewHelper.service.getView(views[0].getName()));
+		broker.setHtmlForm(root, result);
+
+		String[] lineStack = new String[50];
+
+		for (int i = 0; i < result.size(); i++) {
+			Map<String, Object> map = new HashMap<String, Object>();
+			PartTreeData data = (PartTreeData) result.get(i);
+
+			String checked = "";
+			String disabled = "";
+
+			if (!data.isChange()) {
+				disabled = "disabled";
+			} else {
+				checked = "checked";
+			}
+
+			map.put("disabled", disabled);
+			map.put("checked", checked);
+
+//			String icon = CommonUtil.getObjectIconImageTag(data.part);
+			map.put("icon", "/Windchill/wtcore/images/part.gif");
+
+			map.put("partOid", data.part.getPersistInfo().getObjectIdentifier().toString());
+			map.put("number", data.number);
+			map.put("name", data.name);
+			map.put("level", data.version);
+
+			list.add(map);
+		}
+		return list;
 	}
 }

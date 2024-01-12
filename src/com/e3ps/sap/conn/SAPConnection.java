@@ -83,9 +83,10 @@ public class SAPConnection {
 
 	public static void createDestinationDataFile(String destinationName, Properties connectProperties) {
 		File destCfg = new File(destinationName + ".jcoDestination");
-		if (!destCfg.isFile()) {
-			return;
-		}
+		System.out.println(destCfg.isFile());
+//		if (!destCfg.isFile()) {
+//			return;
+//		}
 		try {
 			FileOutputStream fos = new FileOutputStream(destCfg, false);
 			connectProperties.store(fos, "for tests only !");

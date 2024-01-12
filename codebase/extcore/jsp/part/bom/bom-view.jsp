@@ -256,7 +256,7 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 			enableSorting : false,
 			fixedColumnCount : 4,
 			treeLazyMode : true,
-			treeLevelIndent : 17,
+			treeLevelIndent : 28,
 			useContextMenu : true,
 			enableRightDownFocus : true,
 		};

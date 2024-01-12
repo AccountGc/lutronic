@@ -214,8 +214,6 @@ WTPart root = (WTPart) request.getAttribute("root");
 						const nn = sourceNodes[i];
 						nn.copyTo(node, data.hitMode);
 					}
-// 					logger(data.otherNode);
-// 					data.otherNode.copyTo(node, data.hitMode);
 					drop(node, sourceNodes);
 				},
 			},
@@ -704,6 +702,8 @@ WTPart root = (WTPart) request.getAttribute("root");
 		call(url, params, function(data) {
 			if (data.result) {
 				const resNode = data.resNode;
+// 				resNode.icon = "/Windchill/extcore/images/icon/partcheckout.gif";
+// 				resNode.renderTitle();
 				updateNode(node, resNode);
 			}
 			closeLayer();

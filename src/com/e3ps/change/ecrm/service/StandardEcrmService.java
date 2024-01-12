@@ -1,6 +1,7 @@
 package com.e3ps.change.ecrm.service;
 
 import java.io.File;
+import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -108,7 +109,9 @@ public class StandardEcrmService extends StandardManager implements EcrmService 
 			ECRMRequest ecrm = ECRMRequest.newECRMRequest();
 			ecrm.setEoName(name);
 			ecrm.setEoNumber(number);
-			ecrm.setCreateDate(currentDate.toString().substring(0, 10));
+			
+			Timestamp today = new Timestamp(currentDate.getTime());
+			ecrm.setCreateDate(today.toString().substring(0, 10));
 			ecrm.setWriter(sessionUser.getFullName());
 			ecrm.setCreateDepart(data.getDepartment_name());
 			ecrm.setModel(model);

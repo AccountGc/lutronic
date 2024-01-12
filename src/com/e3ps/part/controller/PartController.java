@@ -495,14 +495,14 @@ public class PartController extends BaseController {
 
 	@Description(value = "채번 리스트 가져오기")
 	@ResponseBody
-	@PostMapping(value = "/partChange")
-	public Map<String, Object> partChange(@RequestBody Map<String, Object> params) throws Exception {
+	@PostMapping(value = "/order")
+	public Map<String, Object> order(@RequestBody Map<String, Object> params) throws Exception {
 		List<Map<String, Object>> list = null;
 		Map<String, Object> result = new HashMap<String, Object>();
 		List<NumberCodeDTO> partType = CodeHelper.service.topCodeToList("PARTTYPE");
 		String oid = (String) params.get("oid");
 		try {
-			list = PartHelper.service.partChange(oid);
+			list = PartHelper.manager.order(oid);
 			result.put("result", SUCCESS);
 		} catch (Exception e) {
 			e.printStackTrace();

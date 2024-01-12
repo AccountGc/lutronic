@@ -104,7 +104,9 @@ public class StandardEcprService extends StandardManager implements EcprService 
 			ecpr.setEoName(name);
 			ecpr.setEoNumber(number);
 			ecpr.setPeriod(period);
-			ecpr.setCreateDate(currentDate.toString().substring(0, 10));
+			
+			Timestamp today = new Timestamp(currentDate.getTime());
+			ecpr.setCreateDate(today.toString().substring(0, 10));
 			ecpr.setWriter(sessionUser.getFullName());
 
 			PeopleDTO data = new PeopleDTO(sessionUser);

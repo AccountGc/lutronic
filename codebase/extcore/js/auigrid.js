@@ -263,7 +263,6 @@ function createPagingNavigator(goPage, sessionid) {
 	nextPage = Math.min(nextPage, totalPage);
 	// 처음
 	retStr += "<a href='javascript:moveToPage(1, " + sessionid + ")'><span class='aui-grid-paging-number aui-grid-paging-first'>first</span></a>";
-
 	// 이전
 	retStr += "<a href='javascript:moveToPage(" + Math.max(1, prevPage) + ", " + sessionid + ")'><span class='aui-grid-paging-number aui-grid-paging-prev'>prev</span></a>";
 
@@ -283,7 +282,6 @@ function createPagingNavigator(goPage, sessionid) {
 
 	// 다음
 	retStr += "<a href='javascript:moveToPage(" + nextPage + ", " + sessionid + ")'><span class='aui-grid-paging-number aui-grid-paging-next'>next</span></a>";
-
 	// 마지막
 	retStr += "<a href='javascript:moveToPage(" + totalPage + ", " + sessionid + ")'><span class='aui-grid-paging-number aui-grid-paging-last'>last</span></a>";
 

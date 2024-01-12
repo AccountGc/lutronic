@@ -114,7 +114,8 @@ iframe {
 					<%
 					String[] ss = new String[]{"영업/마케팅", "원가 절감", "기능/성능 변경", "공정 변경", "자재 변경", "허가/규제 변경", "품질 개선", "라벨링", "기타"};
 					for (String s : ss) {
-						int include = dto.getChangeSection().indexOf(s);
+						if(dto.getChangeSection() != null) {
+							int include = dto.getChangeSection().indexOf(s);
 					%>
 					<div class="pretty p-switch">
 						<input type="checkbox" name="changeSection" disabled="disabled" value="<%=s%>" <%if (include > -1) {%> checked="checked" <%}%>>
@@ -126,6 +127,7 @@ iframe {
 					</div>
 					&nbsp;
 					<%
+						}
 					}
 					%>
 				</td>
