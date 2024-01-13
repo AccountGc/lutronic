@@ -1,5 +1,5 @@
-package com.e3ps.drawing.column;
 
+package com.e3ps.drawing.column;
 import java.sql.Timestamp;
 
 import com.e3ps.common.util.ThumbnailUtil;

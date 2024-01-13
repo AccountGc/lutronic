@@ -439,8 +439,10 @@ QuantityUnit[] unitList = (QuantityUnit[]) request.getAttribute("unitList");
 
 			function auiCellClickHandler(event) {
 				const dataField = event.dataField;
+				const item = event.item;
+				const oid = item.epm_oid;
 				if ("thumb" === dataField) {
-					openCreoView();
+					openCreoView(oid);
 				}
 			}
 
@@ -611,14 +613,21 @@ QuantityUnit[] unitList = (QuantityUnit[]) request.getAttribute("unitList");
 				AUIGrid.resize(_myGridID);
 			});
 
-			function openCreoView() {
-				const url = "/Windchill/netmarkets/jsp/wvs/wvsGW.jsp?class=com.ptc.wvs.server.ui.UIHelper&method=getOpenInCreoViewServiceCustomURI";
-				const params = {
-					browser : "chrome"
-				};
-				call(url, params, function(data) {
-					document.location.href = data.uri;
-				})
+			function openCreoView(oid) {
+				const callUrl = getCallUrl("/drawing/getCreoViewUrl?oid=" + oid);
+				call(callUrl, null, function(res) {
+					if (res.result) {
+						const url = "/Windchill/netmarkets/jsp/wvs/wvsGW.jsp?class=com.ptc.wvs.server.ui.UIHelper&method=getOpenInCreoViewServiceCustomURI";
+						const params = {
+							browser : "chrome",
+							linkurl : "/Windchill/wtcore/jsp/wvs/edrview.jsp?url=" + res.url,
+						};
+						logger(params);
+						call(url, params, function(data) {
+							document.location.href = data.uri;
+						})
+					}
+				}, "GET");
 			}
 
 			function spread(target) {

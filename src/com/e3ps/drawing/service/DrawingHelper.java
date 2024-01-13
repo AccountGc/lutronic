@@ -12,6 +12,8 @@ import java.util.Vector;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
+import javax.servlet.http.HttpServletRequest;
+
 import com.e3ps.common.folder.beans.CommonFolderHelper;
 import com.e3ps.common.iba.AttributeKey;
 import com.e3ps.common.message.Message;
@@ -34,6 +36,7 @@ import wt.content.ApplicationData;
 import wt.content.ContentHelper;
 import wt.content.ContentRoleType;
 import wt.content.ContentServerHelper;
+import wt.content.HolderToContent;
 import wt.epm.EPMDocument;
 import wt.epm.EPMDocumentMaster;
 import wt.epm.EPMDocumentType;
@@ -52,6 +55,7 @@ import wt.iba.value.FloatValue;
 import wt.iba.value.StringValue;
 import wt.org.WTUser;
 import wt.part.WTPart;
+import wt.pdmlink.PDMLinkProduct;
 import wt.query.ClassAttribute;
 import wt.query.QuerySpec;
 import wt.query.SearchCondition;
@@ -62,6 +66,7 @@ import wt.util.WTProperties;
 import wt.vc.VersionControlHelper;
 import wt.vc.config.ConfigHelper;
 import wt.vc.config.LatestConfigSpec;
+import wt.viewmarkup.DerivedImage;
 
 public class DrawingHelper {
 	public static final DrawingService service = ServiceFactory.getService(DrawingService.class);
@@ -634,22 +639,6 @@ public class DrawingHelper {
 
 				}
 			} else if ("active".equals(moduleType)) {
-				devActive m = (devActive) CommonUtil.getObject(oid);
-				QueryResult qr = PersistenceHelper.manager.navigate(m, "output", devOutPutLink.class);
-
-				while (qr.hasMoreElements()) {
-					Object p = (Object) qr.nextElement();
-					if (p instanceof EPMDocument) {
-						EpmData data = new EpmData((EPMDocument) p);
-
-						map.put("number", data.getNumber());
-						map.put("name", data.getName());
-						map.put("state", data.getState());
-//						map.put("version", data.getVersion());
-						map.put("creator", data.getCreator());
-//						map.put("description", data.getDescription());
-					}
-				}
 			}
 
 		} catch (Exception e) {
@@ -853,7 +842,7 @@ public class DrawingHelper {
 		}
 		fis.close();
 	}
-	
+
 	/**
 	 * 최신버전 도면인지 확인
 	 */
@@ -868,5 +857,69 @@ public class DrawingHelper {
 			}
 		}
 		return false;
+	}
+
+	/**
+	 * CREO VIEW 접속 URL 만들기
+	 */
+	public String getCreoViewUrl(HttpServletRequest request, String oid) throws Exception {
+		EPMDocument epm = (EPMDocument) CommonUtil.getObject(oid);
+
+		QuerySpec query = new QuerySpec();
+		int idx = query.appendClassList(EPMDocument.class, true);
+		int idx_d = query.appendClassList(DerivedImage.class, true);
+		int idx_h = query.appendClassList(HolderToContent.class, false);
+		int idx_a = query.appendClassList(ApplicationData.class, true);
+
+		SearchCondition sc = new SearchCondition(EPMDocument.class, "thePersistInfo.theObjectIdentifier.id",
+				DerivedImage.class, "derivedFromReference.key.id");
+		query.appendWhere(sc, new int[] { idx, idx_d });
+		query.appendAnd();
+
+		sc = new SearchCondition(DerivedImage.class, "thePersistInfo.theObjectIdentifier.id", HolderToContent.class,
+				"roleAObjectRef.key.id");
+		query.appendWhere(sc, new int[] { idx_d, idx_h });
+		query.appendAnd();
+
+		sc = new SearchCondition(ApplicationData.class, "thePersistInfo.theObjectIdentifier.id", HolderToContent.class,
+				"roleBObjectRef.key.id");
+		query.appendWhere(sc, new int[] { idx_a, idx_h });
+		query.appendAnd();
+
+		sc = new SearchCondition(EPMDocument.class, "thePersistInfo.theObjectIdentifier.id", "=",
+				epm.getPersistInfo().getObjectIdentifier().getId());
+		query.appendWhere(sc, new int[] { idx });
+		query.appendAnd();
+
+		sc = new SearchCondition(ApplicationData.class, ApplicationData.FILE_NAME, "LIKE", "%.pvs");
+		query.appendWhere(sc, new int[] { idx_a });
+
+		QueryResult qr = PersistenceHelper.manager.find(query);
+		String doid = "";
+		String aoid = "";
+		String fileName = "";
+		if (qr.hasMoreElements()) {
+			Object[] obj = (Object[]) qr.nextElement();
+			DerivedImage image = (DerivedImage) obj[1];
+			ApplicationData dd = (ApplicationData) obj[2];
+			doid = image.getPersistInfo().getObjectIdentifier().getStringValue();
+			aoid = dd.getPersistInfo().getObjectIdentifier().getStringValue();
+			fileName = dd.getFileName();
+		}
+
+		PDMLinkProduct product = WCUtil.getPDMLinkProduct();
+
+		String url = request.getRequestURL().toString();
+		url = url.substring(0, url.indexOf(request.getContextPath()));
+
+		StringBuilder sb = new StringBuilder(url);
+		sb.append(request.getContextPath());
+		sb.append("/servlet/WindchillAuthGW/com.ptc.wvs.server.util.WVSContentHelper/redirectDownload/");
+		sb.append(fileName);
+		sb.append("?ContentHolder=").append(doid);
+		sb.append("&HttpOperationItem=").append(aoid);
+		sb.append("&u8=1&objref=").append(doid);
+		sb.append("&ContainerOid=").append(product.toString());
+		return sb.toString();
 	}
 }

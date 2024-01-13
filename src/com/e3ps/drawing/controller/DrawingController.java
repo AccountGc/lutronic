@@ -64,6 +64,23 @@ import wt.util.WTException;
 @RequestMapping(value = "/drawing/**")
 public class DrawingController extends BaseController {
 
+	@Description(value = "크레오 뷰 URL 얻기")
+	@ResponseBody
+	@GetMapping(value = "/getCreoViewUrl")
+	public Map<String, Object> getCreoViewUrl(HttpServletRequest request, @RequestParam String oid) throws Exception {
+		Map<String, Object> result = new HashMap<>();
+		try {
+			String url = DrawingHelper.manager.getCreoViewUrl(request, oid);
+			result.put("result", SUCCESS);
+			result.put("url", url);
+		} catch (Exception e) {
+			e.printStackTrace();
+			result.put("msg", e.toString());
+			result.put("result", FAIL);
+		}
+		return result;
+	}
+
 	@Description(value = "도면 재변환")
 	@ResponseBody
 	@GetMapping(value = "/publish")
