@@ -17,7 +17,14 @@ boolean isAdmin = (boolean) request.getAttribute("isAdmin");
 		</td>
 		<td class="right">
 			<%
-			if(dto.is_validate()) {
+			if (dto.is_excel()) {
+			%>
+			<input type="button" value="엑셀다운" title="엑셀다운" class="red" onclick="excel();">
+			<%
+			}
+			%>
+			<%
+			if (dto.is_validate()) {
 			%>
 			<input type="button" value="SAP검증" title="SAP검증" class="gray" onclick="validate();">
 			<%
@@ -255,6 +262,10 @@ boolean isAdmin = (boolean) request.getAttribute("isAdmin");
 
 	function modify() {
 		document.location.href = getCallUrl("/eco/modify?oid=" + oid);
+	}
+
+	function excel() {
+		const oid = document.getElementById("oid").value;
 	}
 
 	function _delete() {

@@ -13,16 +13,6 @@ import wt.part.WTPart;
 public interface SAPService {
 
 	/**
-	 * BOM 샘플 데이터 업로드(운영서버 BOM 다운받은것으로 진행)
-	 */
-	public abstract void loaderBom(String path) throws Exception;
-
-	/**
-	 * SAP 샘플용 데이터 부품 만들기
-	 */
-	public abstract WTPart create(String number, String name, String version) throws Exception;
-
-	/**
 	 * SAP EO 전송
 	 */
 	public abstract void sendSapToEo(EChangeOrder e, ArrayList<EOCompletePartLink> completeParts,

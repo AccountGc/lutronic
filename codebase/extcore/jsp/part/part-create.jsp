@@ -106,7 +106,7 @@ QuantityUnit[] unitList = (QuantityUnit[]) request.getAttribute("unitList");
 						<option value="">선택</option>
 					</select>
 				</td>
-				<th class="lb req">사용자 KEY IN</th>
+				<th class="lb">사용자 KEY IN</th>
 				<td class="indent5">
 					<input type="text" class="partName width-200" name="partName4" id="partName4">
 				</td>
@@ -348,8 +348,17 @@ QuantityUnit[] unitList = (QuantityUnit[]) request.getAttribute("unitList");
 				const partType2 = document.getElementById("partType2").value;
 				const partName3 = document.getElementById("partName3").value;
 				const partType3 = document.getElementById("partType3").value;
-				const partName4 = document.getElementById("partName4");
-				const model = document.getElementById("model").value;
+				const partName4 = document.getElementById("partName4").value;
+				const modelTag = document.getElementById("modelcode");
+				let model;
+				if(modelTag != null) {
+					model = modelTag.value;
+				}
+				const manufactureTag = document.getElementById("manufacturecode");
+				let manufacture;
+				if(manufactureTag != null) {
+					manufacture = manufactureTag.value;
+				}		
 				const productmethod = document.getElementById("productmethod").value;
 				const deptcode = document.getElementById("deptcode").value;
 				const unit =  document.getElementById("unit").value;
@@ -382,9 +391,8 @@ QuantityUnit[] unitList = (QuantityUnit[]) request.getAttribute("unitList");
 					alert("중분류를 입력하세요.");
 					return;					
 				}
-				if(isEmpty(partName4.value)){
-					alert("품목명(KEY-IN)을 입력하세요.");
-					partName4.focus();
+				if(isEmpty(partName1)&&isEmpty(partName2)&&isEmpty(partName3)&&isEmpty(partName4)){
+					alert("품목명을 입력하세요.");
 					return;					
 				}
 				
@@ -413,7 +421,7 @@ QuantityUnit[] unitList = (QuantityUnit[]) request.getAttribute("unitList");
 						partName1 : partName1,
 						partName2 : partName2,
 						partName3 : partName3,
-						partName4 : partName4.value,
+						partName4 : partName4,
 						partType1 : partType1,
 						partType2 : partType2,
 						partType3 : partType3,
@@ -427,7 +435,7 @@ QuantityUnit[] unitList = (QuantityUnit[]) request.getAttribute("unitList");
 						seq : toId("seq"),
 						etc : toId("etc"),
 						weight : toId("weight"),
-						manufacture : toId("manufacture"),
+						manufacture : manufacture,
 						mat : toId("mat"),
 						finish : toId("finish"),
 						remarks : toId("remarks"),
@@ -477,7 +485,7 @@ QuantityUnit[] unitList = (QuantityUnit[]) request.getAttribute("unitList");
 			});
 			
 			window.addEventListener("resize", function() {
-				AUIGrid.resize(docGridID);
+				AUIGrid.resize(myGridID90);
 				AUIGrid.resize(myGridID106);
 			});
 			
@@ -730,9 +738,6 @@ QuantityUnit[] unitList = (QuantityUnit[]) request.getAttribute("unitList");
 				$(this).removeClass("hover") ;
 			})
 			
-			$('#partName4').focusout(function() {
-// 				$('#partName4').val(this.value.toUpperCase());
-			})
 			
 			$(".partName").focusout(function () {
 				$("#" + this.id + "Search").hide();

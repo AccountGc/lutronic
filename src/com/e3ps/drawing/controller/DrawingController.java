@@ -39,6 +39,7 @@ import com.e3ps.drawing.beans.EpmData;
 import com.e3ps.drawing.service.DrawingHelper;
 import com.e3ps.drawing.service.EpmSearchHelper;
 import com.e3ps.part.service.PartHelper;
+import com.ptc.wvs.server.ui.UIHelper;
 import com.ptc.wvs.server.util.PublishUtils;
 
 import wt.content.ApplicationData;
@@ -62,7 +63,7 @@ import wt.util.WTException;
 @Controller
 @RequestMapping(value = "/drawing/**")
 public class DrawingController extends BaseController {
-	
+
 	@Description(value = "도면 재변환")
 	@ResponseBody
 	@GetMapping(value = "/publish")

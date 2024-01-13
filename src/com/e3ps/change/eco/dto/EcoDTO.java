@@ -47,6 +47,7 @@ public class EcoDTO {
 	private boolean _modify = false;
 	private boolean _delete = false;
 	private boolean _validate = false;
+	private boolean _excel = false;
 
 	// 변수용
 	private String primary;
@@ -140,6 +141,10 @@ public class EcoDTO {
 		boolean creator = eco.getCreatorName().equals(sessionUser.getName());
 		if ((isAdmin || creator) && check(eco, "APPROVING")) {
 			set_validate(true);
+		}
+
+		if (isAdmin || check(eco, "APPROVED")) {
+			set_excel(true);
 		}
 	}
 

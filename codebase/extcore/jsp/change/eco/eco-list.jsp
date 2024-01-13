@@ -325,7 +325,7 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 				}
 				let params = new Object();
 				const url = getCallUrl("/eco/list");
-				const field = [ "name", "number", "creatorOid", "createdFrom", "createdTo", "approveFrom", "approveTo", "state" ];
+				const field = [ "name", "number", "model", "creatorOid", "createdFrom", "createdTo", "approveFrom", "approveTo", "state" ];
 				const rows104 = AUIGrid.getGridDataWithState(myGridID104, "gridState");
 				params.rows104 = rows104;
 				params.licensing = $('input[name=licensing]:checked').val();
@@ -333,6 +333,7 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 				params = toField(params, field);
 				AUIGrid.showAjaxLoader(myGridID);
 				parent.openLayer();
+				logger(params);
 				call(url, params, function(data) {
 					AUIGrid.removeAjaxLoader(myGridID);
 					if (data.result) {

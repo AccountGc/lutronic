@@ -184,11 +184,11 @@ function isNull(value) {
 
 // numbercode finder
 function finderCode(tag, key, valueType) {
-	
-	if(valueType === undefined) {
+
+	if (valueType === undefined) {
 		valueType = "code";
 	}
-	
+
 	axdom("#" + tag).bindSelector({
 		reserveKeys: {
 			options: "list",
@@ -208,6 +208,16 @@ function finderCode(tag, key, valueType) {
 					options: data.list
 				})
 			})
+		},
+		onchange: function() {
+			const el = document.getElementById(tag);
+			const clazzEl = document.createElement("input");
+//			clazzEl.setAttribute("data-" + valueType, this.selectedOption.oid);
+			clazzEl.type = "hidden";
+			clazzEl.name = tag + valueType;
+			clazzEl.id = tag + valueType;
+			clazzEl.value = this.selectedOption.oid;
+			el.parentNode.insertBefore(clazzEl, el.nextSibling);
 		},
 	})
 }

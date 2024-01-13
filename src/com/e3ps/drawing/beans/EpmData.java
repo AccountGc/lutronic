@@ -79,7 +79,7 @@ public class EpmData {
 			setUpdate(true);
 		}
 		// 최신객체여부
-//		setLatest(CommonUtil.isLatestVersion(epm));
+		setLatest(DrawingHelper.manager.isLatest(epm));
 
 		setLocation(StringUtil.checkNull(epm.getLocation()).replaceAll("/Default", ""));
 		setState(epm.getLifeCycleState().toString());

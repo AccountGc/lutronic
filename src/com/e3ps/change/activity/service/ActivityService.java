@@ -8,6 +8,7 @@ import java.util.Map;
 import com.e3ps.change.EChangeOrder;
 
 import wt.method.RemoteInterface;
+import wt.part.WTPart;
 
 @RemoteInterface
 public interface ActivityService {
@@ -78,4 +79,8 @@ public interface ActivityService {
 	 */
 	public abstract void saveData(Map<String, Object> params) throws Exception;
 
+	/**
+	 * 설변 삭제 품목 저장
+	 */
+	public abstract void saveRemoveData(WTPart part, EChangeOrder eco) throws Exception;
 }

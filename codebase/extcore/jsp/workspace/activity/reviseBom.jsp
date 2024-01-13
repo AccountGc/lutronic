@@ -207,19 +207,6 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 						return tempValueArr.sort().join(", "); // 정렬시켜서 보여주기.
 					}
 				},
-			}, {
-				headerText : "",
-				dataField : "",
-				width : 100,
-				renderer : {
-					type : "ButtonRenderer",
-					labelText : "BOM 편집",
-					onClick : function(event) {
-						const oid = event.item.next_oid;
-						url = getCallUrl("/bom/editor?oid=" + oid);
-						_popup(url, "", "", "f");
-					}
-				}
 			}, 
 			<%if (isOrder) {%>	
 			{
@@ -341,7 +328,7 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 						type : "LinkRenderer",
 						baseUrl : "javascript",
 						jsCallback : function(rowIndex, columnIndex, value, item) {
-							const oid = item.part_oid;
+							const oid = item.next_oid;
 							if (oid !== "") {
 								const url = getCallUrl("/part/view?oid=" + oid);
 								_popup(url, 1600, 800, "n");
@@ -367,6 +354,19 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 					headerText : "상태",
 					width : 100
 				} ]
+			}, {
+				headerText : "",
+				dataField : "",
+				width : 100,
+				renderer : {
+					type : "ButtonRenderer",
+					labelText : "BOM 편집",
+					onClick : function(event) {
+						const oid = event.item.next_oid;
+						url = getCallUrl("/bom/editor?oid=" + oid);
+						_popup(url, "", "", "f");
+					}
+				}
 			}, {
 				dataField : "part_state_code",
 				headerText : "부품<br>상태<br>코드",
@@ -712,13 +712,13 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 						label : "주 도면 및 참조도면",
 						callback : auiContextHandler
 					}, {
-						label : "BOM 에디터",
+						label : "BOM 편집",
 						callback : auiContextHandler
 					}, {
 						label : "BOM 비교",
 						callback : auiContextHandler
 					}, {
-						label : "BOM 역전개",
+						label : "BOM 보기",
 						callback : auiContextHandler
 					} ];
 					return menu;
@@ -750,8 +750,8 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 					_popup(url, 1600, 600, "n");
 					break;
 				case 3:
-					// bom 역전개
-					_popup(getCallUrl("/activity/reverse?oid=" + next_oid + "&eoid=" + oid), 1800, 750, "n");
+					url = getCallUrl("/bom/view?oid=" + next_oid);
+					_popup(url, 1600, 800, "n");
 					break;
 				}
 			};
@@ -939,11 +939,7 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 					alert("이전품목을 삭제할 행을 선택하세요.");
 					return false;
 				}
-
-				for (let i = checkedItems.length - 1; i >= 0; i--) {
-					const rowIndex = checkedItems[i].rowIndex;
-					AUIGrid.removeRow(myGridID, rowIndex);
-				}
+				AUIGrid.removeCheckedRows(myGridID);
 			}
 
 			function exportExcel() {

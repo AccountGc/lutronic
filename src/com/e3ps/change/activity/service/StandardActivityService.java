@@ -732,6 +732,27 @@ public class StandardActivityService extends StandardManager implements Activity
 
 			EChangeOrder eco = (EChangeOrder) CommonUtil.getObject(oid);
 
+			QueryResult rs = PersistenceHelper.manager.navigate(eco, "part", EcoPartLink.class);
+			boolean partExist = false;
+			while (rs.hasMoreElements()) {
+				WTPartMaster m = (WTPartMaster) rs.nextElement();
+				for (LinkedHashMap<String, Object> map : addRows) {
+					String part_oid = (String) map.get("part_oid");
+					WTPart part = (WTPart) CommonUtil.getObject(part_oid);
+					WTPartMaster master = (WTPartMaster) part.getMaster();
+
+					if (m.getPersistInfo().getObjectIdentifier().getId() == master.getPersistInfo()
+							.getObjectIdentifier().getId()) {
+						partExist = true;
+						break;
+					}
+				}
+
+//				if (exist) {
+//
+//				}
+			}
+
 			// 설변 진행중이 있는지 확인 하는 부분
 			for (LinkedHashMap<String, Object> map : addRows) {
 				String part_oid = (String) map.get("part_oid");
@@ -971,5 +992,34 @@ public class StandardActivityService extends StandardManager implements Activity
 			if (trs != null)
 				trs.rollback();
 		}
+	}
+
+	@Override
+	public void saveRemoveData(WTPart part, EChangeOrder eco) throws Exception {
+		Transaction trs = new Transaction();
+		try {
+			trs.start();
+
+			EcoPartLink link = EcoPartLink.newEcoPartLink(part.getMaster(), eco);
+			link.setVersion(part.getVersionIdentifier().getSeries().getValue());
+			link.setSendType("REMOVE");
+			link.setBaseline(true);
+			link.setPreOrder(false);
+			link.setRightPart(false);
+			link.setLeftPart(true);
+			link.setPast(false); // 과거 데이터가 아님
+			PersistenceHelper.manager.save(link);
+
+			trs.commit();
+			trs = null;
+		} catch (Exception e) {
+			e.printStackTrace();
+			trs.rollback();
+			throw e;
+		} finally {
+			if (trs != null)
+				trs.rollback();
+		}
+
 	}
 }

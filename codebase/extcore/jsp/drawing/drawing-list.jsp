@@ -1,3 +1,4 @@
+<%@page import="com.ptc.wvs.server.ui.UIHelper"%>
 <%@page import="wt.part.QuantityUnit"%>
 <%@page import="java.util.Map"%>
 <%@page import="java.util.List"%>
@@ -307,15 +308,13 @@ QuantityUnit[] unitList = (QuantityUnit[]) request.getAttribute("unitList");
 			function _layout() {
 				return [ {
 					dataField : "thumb",
-					headerText : "3D",
+					headerText : "뷰",
 					dataType : "string",
 					width : 50,
 					renderer : {
 						type : "ImageRenderer",
 						altField : null,
 						imgHeight : 16,
-						onClick : function(event) {
-						}
 					},
 					filter : {
 						inline : false
@@ -435,6 +434,14 @@ QuantityUnit[] unitList = (QuantityUnit[]) request.getAttribute("unitList");
 				AUIGrid.bind(myGridID, "hScrollChange", function(event) {
 					hideContextMenu();
 				});
+				AUIGrid.bind(myGridID, "cellClick", auiCellClickHandler);
+			}
+
+			function auiCellClickHandler(event) {
+				const dataField = event.dataField;
+				if ("thumb" === dataField) {
+					openCreoView();
+				}
 			}
 
 			function _auiContextMenuHandler(event) {
@@ -603,6 +610,16 @@ QuantityUnit[] unitList = (QuantityUnit[]) request.getAttribute("unitList");
 				AUIGrid.resize(myGridID);
 				AUIGrid.resize(_myGridID);
 			});
+
+			function openCreoView() {
+				const url = "/Windchill/netmarkets/jsp/wvs/wvsGW.jsp?class=com.ptc.wvs.server.ui.UIHelper&method=getOpenInCreoViewServiceCustomURI";
+				const params = {
+					browser : "chrome"
+				};
+				call(url, params, function(data) {
+					document.location.href = data.uri;
+				})
+			}
 
 			function spread(target) {
 				const e = document.querySelectorAll('.hidden');

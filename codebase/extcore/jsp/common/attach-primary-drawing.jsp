@@ -1,5 +1,4 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
-<script type="text/javascript" src="/Windchill/extcore/js/auigrid.js"></script>
 <%
 String oid = (String) request.getParameter("oid");
 String method = (String) request.getAttribute("method");
@@ -70,8 +69,6 @@ function load() {
 					form.appendChild(primaryTag);
 				}
 				primary.setUploadedList(data);
-				imgurl = data[0].filePath + data[0].name;
-				$("#sign_preview").attr("src", imgurl);
 			}
 		}
 	});
@@ -79,11 +76,6 @@ function load() {
 }
 	
 load();
-
-//이미지 미리보기
-function signPreview(uploadPath) {
-	$("#sign_preview").attr("src", uploadPath);
-}
 
 //첨부파일 업로드 시
 function fileUpload() {

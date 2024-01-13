@@ -41,7 +41,9 @@ import wt.util.WTException;
 
 				@GeneratedProperty(name = "preOrder", type = Boolean.class),
 
-				@GeneratedProperty(name = "weight", type = Double.class)
+				@GeneratedProperty(name = "weight", type = Double.class),
+
+				@GeneratedProperty(name = "sendType", type = String.class)
 
 		},
 

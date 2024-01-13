@@ -27,6 +27,22 @@ import com.e3ps.controller.BaseController;
 @RequestMapping(value = "/eco/**")
 public class EcoController extends BaseController {
 
+	@Description(value = "ECO 설계변경 통보서")
+	@ResponseBody
+	@PostMapping(value = "/excel")
+	public Map<String, Object> excel(@RequestBody Map<String, Object> params) throws Exception {
+		Map<String, Object> result = null;
+		try {
+			result = EcoHelper.manager.list(params);
+			result.put("result", SUCCESS);
+		} catch (Exception e) {
+			e.printStackTrace();
+			result.put("result", FAIL);
+			result.put("msg", e.toString());
+		}
+		return result;
+	}
+
 	@Description(value = "ECO 검색 페이지")
 	@GetMapping(value = "/list")
 	public ModelAndView list() throws Exception {
@@ -55,7 +71,7 @@ public class EcoController extends BaseController {
 	@ResponseBody
 	@PostMapping(value = "/list")
 	public Map<String, Object> list(@RequestBody Map<String, Object> params) throws Exception {
-		Map<String, Object> result = null;
+		Map<String, Object> result = new HashMap<>();
 		try {
 			result = EcoHelper.manager.list(params);
 			result.put("result", SUCCESS);
@@ -149,7 +165,7 @@ public class EcoController extends BaseController {
 		}
 		return result;
 	}
-	
+
 	@Description(value = "ECO 관련 도면 다운로드")
 	@ResponseBody
 	@PostMapping(value = "/summaryData")

@@ -216,15 +216,6 @@ QuantityUnit[] unitList = (QuantityUnit[]) request.getAttribute("unitList");
 			<input type="text" name="specification" id="specification" class="width-200" value="<% if (data.getSpecification() != null) { %><%= data.getSpecification() %><% } %>">
 		</td>
 	</tr>
-<!-- 	<tr> -->
-<!-- 		<th class="lb">결재</th> -->
-<!-- 		<td colspan="3"> -->
-<%-- 			<jsp:include page="/extcore/jsp/workspace/include/approval-register.jsp"> --%>
-<%-- 				<jsp:param value="" name="oid" /> --%>
-<%-- 				<jsp:param value="create" name="mode" /> --%>
-<%-- 			</jsp:include> --%>
-<!-- 		</td> -->
-<!-- 	</tr> -->
 </table>
 
 <!-- 	주도면 -->
