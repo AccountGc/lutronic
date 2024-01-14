@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.e3ps.common.util.FolderUtils;
 import com.e3ps.controller.BaseController;
 import com.e3ps.org.Department;
 import com.e3ps.org.service.DepartmentHelper;
@@ -71,6 +72,23 @@ public class DepartmentController extends BaseController {
 			e.printStackTrace();
 			result.put("msg", e.toString());
 			result.put("result", FAIL);
+		}
+		return result;
+	}
+
+	@Description(value = "부서 트리 저장")
+	@PostMapping(value = "/treeSave")
+	@ResponseBody
+	public Map<String, Object> treeSave(@RequestBody Map<String, Object> params) throws Exception {
+		Map<String, Object> result = new HashMap<String, Object>();
+		try {
+			DepartmentHelper.service.treeSave(params);
+			result.put("msg", SAVE_MSG);
+			result.put("result", SUCCESS);
+		} catch (Exception e) {
+			e.printStackTrace();
+			result.put("result", FAIL);
+			result.put("msg", e.toString());
 		}
 		return result;
 	}

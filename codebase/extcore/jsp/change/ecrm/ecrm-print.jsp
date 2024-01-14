@@ -305,8 +305,7 @@ if (agreeLines.size() > 0) {
 </div>
 
 <script type="text/javascript">
-	const data = window.data;
 	const content = document.getElementById("content");
-	content.innerHTML = data;
+	content.innerHTML = '<%%=dto.getContents()%>';
 	print();
 </script>

@@ -189,7 +189,7 @@ public class DocumentDTO {
 				// _ 무조건 붙이게하도록...
 				String name = doc.getName();
 
-				if (!getClassType2_code().equals("회의록")) {
+				if (!"회의록".equals(getClassType2_code())) {
 					int idx = name.lastIndexOf("_");
 					String prefix = "";
 					String suffix = "";

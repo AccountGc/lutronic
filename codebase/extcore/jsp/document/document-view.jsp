@@ -362,8 +362,6 @@ iframe {
 	function print() {
 		const url = getCallUrl("/doc/print?oid=" + oid);
 		const p = _popup(url, "", "", "f");
-		const content = DEXT5.getBodyValue("content");
-		p.data = content;
 	}
 
 	//수정 및 개정
@@ -387,8 +385,8 @@ iframe {
 		call(url, null, function(data) {
 			alert(data.msg);
 			if (data.result) {
-				self.close();
 				opener.loadGridData();
+				self.close();
 			} else {
 				closeLayer();
 			}

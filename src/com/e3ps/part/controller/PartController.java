@@ -33,6 +33,7 @@ import com.e3ps.common.service.CommonHelper;
 import com.e3ps.common.util.CommonUtil;
 import com.e3ps.common.util.StringUtil;
 import com.e3ps.controller.BaseController;
+import com.e3ps.drawing.service.DrawingHelper;
 import com.e3ps.part.dto.PartDTO;
 import com.e3ps.part.dto.PartData;
 import com.e3ps.part.service.BomSearchHelper;
@@ -61,6 +62,23 @@ public class PartController extends BaseController {
 		ModelAndView model = new ModelAndView();
 		model.setViewName("/extcore/jsp/part/part-saveAs.jsp");
 		return model;
+	}
+
+	@Description(value = "크레오 뷰 URL 얻기")
+	@ResponseBody
+	@GetMapping(value = "/getCreoViewUrl")
+	public Map<String, Object> getCreoViewUrl(HttpServletRequest request, @RequestParam String oid) throws Exception {
+		Map<String, Object> result = new HashMap<>();
+		try {
+			String url = PartHelper.manager.getCreoViewUrl(request, oid);
+			result.put("result", SUCCESS);
+			result.put("url", url);
+		} catch (Exception e) {
+			e.printStackTrace();
+			result.put("msg", e.toString());
+			result.put("result", FAIL);
+		}
+		return result;
 	}
 
 	@Description(value = "새 채번 페이지")

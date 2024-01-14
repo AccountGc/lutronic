@@ -22,8 +22,7 @@ public class PartColumn {
 
 //	private boolean latest = false;
 	private String part_oid; // 부품
-	private String epm_oid; // 3D
-	private String drawing_oid; // 2D
+	private String thumb;
 	private String number;
 	private String name;
 	private String location;
@@ -53,6 +52,7 @@ public class PartColumn {
 	public PartColumn(WTPart part) throws Exception {
 //		setLatest(CommonUtil.isLatestVersion(part));
 		setPart_oid(part.getPersistInfo().getObjectIdentifier().getStringValue());
+		setThumb(ThumbnailUtil.thumbnailSmall(part));
 		setNumber(part.getNumber());
 		setName(part.getName());
 		setLocation(part.getLocation());

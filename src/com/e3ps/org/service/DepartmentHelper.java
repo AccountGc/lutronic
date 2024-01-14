@@ -291,4 +291,18 @@ public class DepartmentHelper {
 		}
 		return null;
 	}
+
+	/**
+	 * 부서명 체크
+	 */
+	public boolean exist(String name) throws Exception {
+		QuerySpec query = new QuerySpec();
+		int idx = query.appendClassList(Department.class, true);
+		QuerySpecUtils.toEquals(query, idx, Department.class, Department.NAME, name);
+		QueryResult qr = PersistenceHelper.manager.find(query);
+		if (qr.size() > 0) {
+			return true;
+		}
+		return false;
+	}
 }

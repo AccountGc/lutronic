@@ -80,7 +80,6 @@ String height = request.getParameter("height");
 	}
 
 	function auiContextHandler_(event) {
-		const t = document.getElementById("type").value;
 		const item = event.item;
 		const oid = item.oid;
 		const poid = item.poid;

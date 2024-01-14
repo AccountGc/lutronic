@@ -316,6 +316,19 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 			let myGridID;
 			function _layout() {
 				return [ {
+					dataField : "thumb",
+					headerText : "뷰",
+					dataType : "string",
+					width : 50,
+					renderer : {
+						type : "ImageRenderer",
+						altField : null,
+						imgHeight : 16,
+					},
+					filter : {
+						inline : false
+					},
+				}, {
 					dataField : "icon",
 					headerText : "",
 					dataType : "string",
@@ -432,8 +445,72 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 				AUIGrid.bind(myGridID, "hScrollChange", function(event) {
 					hideContextMenu();
 				});
+				AUIGrid.bind(myGridID, "cellClick", auiCellClickHandler);
 			}
 
+			function auiCellClickHandler(event) {
+				const dataField = event.dataField;
+				const item = event.item;
+				const oid = item.part_oid;
+				if ("thumb" === dataField) {
+					openCreoView(oid);
+				}
+			}
+			
+			function openCreoView(oid) {
+				const callUrl = getCallUrl("/part/getCreoViewUrl?oid=" + oid);
+				call(callUrl, null, function(res) {
+					if (res.result) {
+						const params = {
+							browser : "chrome",
+							linkurl : "/Windchill/wtcore/jsp/wvs/edrview.jsp?url=" + res.url
+						};
+						if (!checkUrl(res.url)) {
+							alert("썸네일이 없습니다.\n자동 재변환을 진행합니다.");
+							publish(oid);
+							return false;
+						}
+						$.ajax({
+							type : "POST",
+							url : "/Windchill/netmarkets/jsp/wvs/wvsGW.jsp?class=com.ptc.wvs.server.ui.UIHelper&method=getOpenInCreoViewServiceCustomURI",
+							data : jQuery.param(params, true),
+							processData : false,
+							async : true,
+							dataType : "json",
+							cache : false,
+							timeout : 600000,
+							success : function(res) {
+								document.location.href = res.uri;
+							}
+						})
+					}
+				}, "GET");
+			}
+
+			function checkUrl(url) {
+				const index = url.indexOf("ContentHolder=");
+				if (index !== -1) {
+					const str = url.substring(index + "ContentHolder=".length, index + "ContentHolder=".length + 1);
+					if (str !== "&") {
+						return true;
+					} else {
+						return false;
+					}
+				} else {
+					return false;
+				}
+			}
+			
+			// 재변환
+			function publish(oid) {
+				const url = getCallUrl("/part/publish?oid=" + oid);
+				parent.openLayer();
+				call(url, null, function(data) {
+					alert(data.msg);
+					parent.closeLayer();
+				}, "GET");
+			}
+			
 			function _auiContextMenuHandler(event) {
 				if (event.target == "header") { // 헤더 컨텍스트
 					if (nowHeaderMenuVisible) {

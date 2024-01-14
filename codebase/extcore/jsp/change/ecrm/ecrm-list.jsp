@@ -123,12 +123,6 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 				</td>
 			</tr>
 			<tr>
-				<!-- 				<th>제안자</th> -->
-				<!-- 				<td class="indent5"> -->
-				<!-- 					<input type="text" name="proposer" id="proposer" data-multi="false" class="width-200"> -->
-				<!-- 					<input type="hidden" name="proposerOid" id="proposerOid"> -->
-				<!-- 					<img src="/Windchill/extcore/images/delete.png" class="delete" title="삭제" onclick="clearUser('proposer')"> -->
-				<!-- 				</td> -->
 				<th>변경구분</th>
 				<td class="indent5">
 					<select name="changeSection" id="changeSection" class="width-200">
@@ -278,13 +272,150 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 				};
 				myGridID = AUIGrid.create("#grid_wrap", columnLayout, props);
 				loadGridData();
-				AUIGrid.bind(myGridID, "contextMenu", auiContextMenuHandler);
+				AUIGrid.bind(myGridID, "contextMenu", _auiContextMenuHandler);
 				AUIGrid.bind(myGridID, "vScrollChange", function(event) {
 					hideContextMenu();
 				});
 				AUIGrid.bind(myGridID, "hScrollChange", function(event) {
 					hideContextMenu();
 				});
+			}
+
+			function _auiContextMenuHandler(event) {
+				const item = event.item;
+				if (event.target == "header") { // 헤더 컨텍스트
+					if (nowHeaderMenuVisible) {
+						hideContextMenu();
+					}
+
+					nowHeaderMenuVisible = true;
+
+					// 컨텍스트 메뉴 생성된 dataField 보관.
+					currentDataField = event.dataField;
+
+					if (event.dataField == "id") { // ID 칼럼은 숨기기 못하게 설정
+						$("#h_item_4").addClass("ui-state-disabled");
+					} else {
+						$("#h_item_4").removeClass("ui-state-disabled");
+					}
+
+					// 헤더 에서 사용할 메뉴 위젯 구성
+					$("#headerMenu").menu({
+						select : headerMenuSelectHandler
+					});
+
+					$("#headerMenu").css({
+						left : event.pageX,
+						top : event.pageY
+					}).show();
+				} else {
+					hideContextMenu();
+					const state = item.state;
+					let withdraw = true;
+					if ("승인중" === state) {
+						withdraw = false;
+					}
+					let print = true;
+					if ("승인됨" === state) {
+						print = false;
+					}
+					const menu = [ {
+						label : "ECRM 정보보기",
+						callback : auiContextHandler
+					}, {
+						label : "_$line" // label 에 _$line 을 설정하면 라인을 긋는 아이템으로 인식합니다.
+					}, {
+						label : "결재이력보기",
+						callback : auiContextHandler
+					}, {
+						label : "_$line" // label 에 _$line 을 설정하면 라인을 긋는 아이템으로 인식합니다.
+					}, {
+						label : "결재회수(결재선유지)",
+						callback : auiContextHandler,
+						disable : withdraw
+					}, {
+						label : "결재회수(결재선초기화)",
+						callback : auiContextHandler,
+						disable : withdraw
+					}, {
+						label : "인쇄하기",
+						callback : auiContextHandler,
+						disable : print
+					} ];
+					return menu;
+				}
+			}
+
+			function auiContextHandler(event) {
+				const item = event.item;
+				const oid = item.oid;
+				const state = item.state;
+				let url;
+				let withdraw = false
+				if ("승인중" === state) {
+					withdraw = true;
+				}
+				let print = false;
+				if ("승인됨" === state) {
+					print = true;
+				}
+				switch (event.contextIndex) {
+				case 0:
+					url = getCallUrl("/ecrm/view?oid=" + oid);
+					_popup(url, "", "", "f");
+					break;
+				case 1:
+					break;
+				case 2:
+					url = getCallUrl("/workspace/history?oid=" + oid + "&popup=true");
+					_popup(url, 1200, 400, "n");
+					break;
+				case 4:
+					if (!withdraw) {
+						return false;
+					}
+					if (!confirm("기존 지정한 결재선 유지한 상태로 결재회수를 합니다.\n진행하시겠습니까?")) {
+						return false;
+					}
+					url = getCallUrl("/workspace/withdraw?oid=" + oid + "&remove=false");
+					parent.openLayer();
+					call(url, null, function(data) {
+						alert(data.msg);
+						if (data.result) {
+							parent.updateHeader();
+							document.location.href = getCallUrl("/workData/list");
+						} else {
+							parent.closeLayer();
+						}
+					}, "GET");
+					break;
+				case 5:
+					if (!withdraw) {
+						return false;
+					}
+					if (!confirm("결재선을 초기화 상태로 결재회수를 합니다.\n진행하시겠습니까?")) {
+						return false;
+					}
+					url = getCallUrl("/workspace/withdraw?oid=" + oid + "&remove=true");
+					parent.openLayer();
+					call(url, null, function(data) {
+						alert(data.msg);
+						if (data.result) {
+							parent.updateHeader();
+							document.location.href = getCallUrl("/workData/list");
+						} else {
+							parent.closeLayer();
+						}
+					}, "GET");
+					break;
+				case 6:
+					if (!print) {
+						return false;
+					}
+					url = getCallUrl("/ecrm/print?oid=" + oid);
+					const p = _popup(url, "", "", "f");
+					break;
+				}
 			}
 
 			function loadGridData(movePage) {

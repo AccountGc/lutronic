@@ -73,6 +73,11 @@ String title = (String) request.getAttribute("title");
 
 <div id="grid90" style="height: 30px; border-top: 1px solid #3180c3; margin: 5px;"></div>
 
+<!-- 결재 이력 -->
+<jsp:include page="/extcore/jsp/workspace/include/approval-history.jsp">
+	<jsp:param value="<%=dto.getOid()%>" name="oid" />
+</jsp:include>
+
 <script type="text/javascript">
 	let myGridID90;
 	const columns90 = [ {
@@ -161,10 +166,13 @@ String title = (String) request.getAttribute("title");
 
 	document.addEventListener("DOMContentLoaded", function() {
 		createAUIGrid90(columns90);
+		createAUIGrid10000(columns10000);
 		AUIGrid.resize(myGridID90);
+		AUIGrid.resize(myGridID10000);
 	})
 
 	window.addEventListener("resize", function() {
 		AUIGrid.resize(myGridID90);
+		AUIGrid.resize(myGridID10000);
 	})
 </script>

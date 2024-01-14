@@ -148,6 +148,24 @@ WTUser sessionUser = (WTUser) SessionHelper.manager.getPrincipal();
 				<td class="indent5"><%=dto.getModifyDate()%></td>
 			</tr>
 			<tr>
+				<th class="lb">주 도면</th>
+				<td class="indent5" colspan="3">
+					<%
+					if (dto.getEpm_oid() != null) {
+					%>
+					<a href="javascript:viewPart('<%=dto.getEpm_oid()%>');"><%=dto.getEpm_value()%></a>
+					<%
+					} else {
+					%>
+					<font color="red">
+						<b>도면파일이 없습니다.</b>
+					</font>
+					<%
+					}
+					%>
+				</td>
+			</tr>
+			<tr>
 				<th class="lb">첨부파일</th>
 				<td class="indent5" colspan="5">
 					<jsp:include page="/extcore/jsp/common/secondary-view.jsp">
@@ -275,7 +293,7 @@ WTUser sessionUser = (WTUser) SessionHelper.manager.getPrincipal();
 	<div id="tabs-3">
 		<jsp:include page="/extcore/jsp/drawing/include_viewReferenceBy.jsp">
 			<jsp:param value="part" name="moduleType" />
-			<jsp:param value="<%=dto.getEpmOid()%>" name="oid" />
+			<jsp:param value="<%=dto.getEpm_oid()%>" name="oid" />
 		</jsp:include>
 	</div>
 
@@ -295,6 +313,11 @@ WTUser sessionUser = (WTUser) SessionHelper.manager.getPrincipal();
 
 </div>
 <script type="text/javascript">
+	function viewEpm(oid) {
+		const url = getCallUrl("/drawing/view?oid=" + oid);
+		_popup(url, 1300, 650, "n");
+	}
+
 	// BOM 뷰
 	function view() {
 		const oid = document.getElementById("oid").value;

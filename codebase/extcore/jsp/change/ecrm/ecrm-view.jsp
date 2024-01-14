@@ -267,7 +267,5 @@ iframe {
 		const oid = document.getElementById("oid").value;
 		const url = getCallUrl("/ecrm/print?oid=" + oid);
 		const p = _popup(url, "", "", "f");
-		const content = DEXT5.getBodyValue("content");
-		p.data = content;
 	}
 </script>

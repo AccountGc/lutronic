@@ -495,7 +495,7 @@ QuantityUnit[] unitList = (QuantityUnit[]) request.getAttribute("unitList");
 
 			// 재변환
 			function publish(oid) {
-				const url = getCallUrl("/part/publish?oid=" + oid);
+				const url = getCallUrl("/drawing/publish?oid=" + oid);
 				parent.openLayer();
 				call(url, null, function(data) {
 					alert(data.msg);
@@ -617,17 +617,44 @@ QuantityUnit[] unitList = (QuantityUnit[]) request.getAttribute("unitList");
 				const callUrl = getCallUrl("/drawing/getCreoViewUrl?oid=" + oid);
 				call(callUrl, null, function(res) {
 					if (res.result) {
-						const url = "/Windchill/netmarkets/jsp/wvs/wvsGW.jsp?class=com.ptc.wvs.server.ui.UIHelper&method=getOpenInCreoViewServiceCustomURI";
 						const params = {
 							browser : "chrome",
-							linkurl : "/Windchill/wtcore/jsp/wvs/edrview.jsp?url=" + res.url,
+							linkurl : "/Windchill/wtcore/jsp/wvs/edrview.jsp?url=" + res.url
 						};
-						logger(params);
-						call(url, params, function(data) {
-							document.location.href = data.uri;
+						if (!checkUrl(res.url)) {
+							alert("썸네일이 없습니다.\n자동 재변환을 진행합니다.");
+							publish(oid);
+							return false;
+						}
+						$.ajax({
+							type : "POST",
+							url : "/Windchill/netmarkets/jsp/wvs/wvsGW.jsp?class=com.ptc.wvs.server.ui.UIHelper&method=getOpenInCreoViewServiceCustomURI",
+							data : jQuery.param(params, true),
+							processData : false,
+							async : true,
+							dataType : "json",
+							cache : false,
+							timeout : 600000,
+							success : function(res) {
+								document.location.href = res.uri;
+							}
 						})
 					}
 				}, "GET");
+			}
+
+			function checkUrl(url) {
+				const index = url.indexOf("ContentHolder=");
+				if (index !== -1) {
+					const str = url.substring(index + "ContentHolder=".length, index + "ContentHolder=".length + 1);
+					if (str !== "&") {
+						return true;
+					} else {
+						return false;
+					}
+				} else {
+					return false;
+				}
 			}
 
 			function spread(target) {

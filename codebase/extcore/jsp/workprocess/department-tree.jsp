@@ -62,26 +62,43 @@ String height = request.getParameter("height");
 	}
 
 	function auiContextHandler_(event) {
-		const t = document.getElementById("type").value;
 		const item = event.item;
 		const oid = item.oid;
 		const poid = item.poid;
 		const isNew = item.isNew;
 		switch (event.contextIndex) {
 		case 0:
-			addTreeRow();
+			addTreeRow(poid);
 			break;
 		case 1:
-			addRow();
+			addRow(poid);
 			break;
 		case 2:
 			break;
-		case 3:
-			break;
 		case 4:
-			departmentSave();
+			treeSave();
 			break;
 		}
+	}
+	
+	function treeSave() {
+		const editRows = AUIGrid.getEditedRowItems(_myGridID);
+		const addRows = AUIGrid.getAddedRowItems(_myGridID);
+		
+		const url = getCallUrl("/department/treeSave");
+		const params = {
+			editRows:editRows,
+			addRows:addRows,
+		};
+		parent.openLayer();
+		logger(params);
+		call(url, params, function(data) {
+			alert(data.msg);
+			if(data.result) {
+				loadTree();
+			}
+			parent.closeLayer();
+		})
 	}
 	
 	function addTreeRow(oid) {
@@ -89,7 +106,7 @@ String height = request.getParameter("height");
 		const newItem = new Object();
 		newItem.parentRowId = parentRowId;
 		newItem.poid = oid;
-		newItem.name = "새 폴더";
+		newItem.name = "새 부서";
 		newItem.isNew = true;
 		AUIGrid.addTreeRow(_myGridID, newItem, parentRowId, "selectionDown");
 	}
@@ -99,7 +116,7 @@ String height = request.getParameter("height");
 		const newItem = new Object();
 		newItem.poid = poid;
 		newItem.parentRowId = parentRowId;
-		newItem.name = "새 폴더";
+		newItem.name = "새 부서";
 		newItem.isNew = true;
 		AUIGrid.addTreeRow(_myGridID, newItem, parentRowId, "selectionDown");
 	}

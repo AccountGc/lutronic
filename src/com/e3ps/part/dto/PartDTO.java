@@ -12,6 +12,7 @@ import com.e3ps.part.service.PartHelper;
 import lombok.Getter;
 import lombok.Setter;
 import wt.doc.WTDocument;
+import wt.epm.EPMDocument;
 import wt.part.WTPart;
 import wt.vc.views.View;
 import wt.vc.views.ViewHelper;
@@ -34,13 +35,14 @@ public class PartDTO {
 	private String ecoNo;
 	private boolean isLatest;
 
-	private String epmOid;
+	private String epm_oid;
+	private String epm_value;
 	private String viewName;
 
 	private boolean _delete = false;
 	private boolean _modify = false;
 	private boolean _revise = false;
-	
+
 	private Map<String, String> step = new HashMap<>();
 
 	// 댓글
@@ -64,6 +66,13 @@ public class PartDTO {
 		setModifyDate(part.getModifyTimestamp().toString().substring(0, 10));
 		setComments(CommentsHelper.manager.comments(part));
 		setLatest(PartHelper.manager.isLatest(part));
+
+		EPMDocument epm = PartHelper.manager.getEPMDocument(part);
+		if (epm != null) {
+			setEpm_oid(epm.getPersistInfo().getObjectIdentifier().getStringValue());
+			setEpm_value(epm.getNumber() + " [" + epm.getName() + "]");
+		}
+
 		View view = ViewHelper.getView(part);
 		setViewName(view == null ? "" : view.getName());
 		setAuth(part);

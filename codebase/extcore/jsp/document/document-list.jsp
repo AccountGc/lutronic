@@ -408,6 +408,7 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 			}
 
 			function _auiContextMenuHandler(event) {
+				const item = event.item;
 				if (event.target == "header") { // 헤더 컨텍스트
 					if (nowHeaderMenuVisible) {
 						hideContextMenu();
@@ -434,6 +435,16 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 						top : event.pageY
 					}).show();
 				} else {
+					hideContextMenu();
+					const state = item.state;
+					let withdraw = true;
+					if ("승인중" === state) {
+						withdraw = false;
+					}
+					let print = true;
+					if ("승인됨" === state) {
+						print = false;
+					}
 					const menu = [ {
 						label : "문서 정보보기",
 						callback : auiContextHandler
@@ -449,13 +460,16 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 						label : "_$line" // label 에 _$line 을 설정하면 라인을 긋는 아이템으로 인식합니다.
 					}, {
 						label : "결재회수(결재선유지)",
-						callback : auiContextHandler
+						callback : auiContextHandler,
+						disable : withdraw
 					}, {
 						label : "결재회수(결재선초기화)",
-						callback : auiContextHandler
+						callback : auiContextHandler,
+						disable : withdraw
 					}, {
 						label : "인쇄하기",
-						callback : auiContextHandler
+						callback : auiContextHandler,
+						disable : print
 					} ];
 					return menu;
 				}
@@ -465,6 +479,14 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 				const item = event.item;
 				const oid = item.oid;
 				const state = item.state;
+				let withdraw = false;
+				if ("승인중" === state) {
+					withdraw = true;
+				}
+				let print = false;
+				if ("승인됨" === state) {
+					print = true;
+				}
 				let permission = isPermission(oid);
 				if (!permission) {
 					authMsg();
@@ -472,22 +494,11 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 				}
 
 				let url;
-				const download = document.getElementById("download");
 				switch (event.contextIndex) {
 				case 0:
 					url = getCallUrl("/doc/view?oid=" + oid);
 					_popup(url, "", "", "f");
 					break;
-				case 1:
-					break;
-				// 				case 2:
-				// 					url = getCallUrl("/doc/asdf?oid=" + oid);
-				// 					download.src = url;
-				// 					break;
-				// 				case 3:
-				// 					url = getCallUrl("/doc/asdf?oid=" + oid);
-				// 					download.src = url;
-				// 					break;
 				case 2:
 					url = getCallUrl("/doc/iteration?oid=" + oid + "&popup=true");
 					_popup(url, 1600, 600, "n");
@@ -497,11 +508,9 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 					_popup(url, 1200, 400, "n");
 					break;
 				case 5:
-					if ("승인중" !== state) {
-						alert("승인중 상태의 문서만 결재회수가 가능합니다.");
+					if (!withdraw) {
 						return false;
 					}
-
 					if (!confirm("기존 지정한 결재선 유지한 상태로 결재회수를 합니다.\n진행하시겠습니까?")) {
 						return false;
 					}
@@ -510,6 +519,7 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 					call(url, null, function(data) {
 						alert(data.msg);
 						if (data.result) {
+							parent.updateHeader();
 							document.location.href = getCallUrl("/workData/list");
 						} else {
 							parent.closeLayer();
@@ -517,8 +527,7 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 					}, "GET");
 					break;
 				case 6:
-					if ("승인중" !== state) {
-						alert("승인중 상태의 문서만 결재회수가 가능합니다.");
+					if (!withdraw) {
 						return false;
 					}
 					if (!confirm("결재선을 초기화 상태로 결재회수를 합니다.\n진행하시겠습니까?")) {
@@ -529,11 +538,19 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 					call(url, null, function(data) {
 						alert(data.msg);
 						if (data.result) {
+							parent.updateHeader();
 							document.location.href = getCallUrl("/workData/list");
 						} else {
 							parent.closeLayer();
 						}
 					}, "GET");
+					break;
+				case 7:
+					if (!print) {
+						return false;
+					}
+					url = getCallUrl("/doc/print?oid=" + oid);
+					const p = _popup(url, "", "", "f");
 					break;
 				}
 			}

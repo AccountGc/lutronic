@@ -1074,10 +1074,10 @@ public class StandardWorkspaceService extends StandardManager implements Workspa
 					PersistenceHelper.manager.delete(d);
 				}
 				// 상태값 작업중으로 변경
-				if (per instanceof LifeCycleManaged) {
-					LifeCycleManaged lcm = (LifeCycleManaged) per;
-					LifeCycleHelper.service.setLifeCycleState(lcm, State.toState("LINE_REGISTER"));
-				}
+//				if (per instanceof LifeCycleManaged) {
+//					LifeCycleManaged lcm = (LifeCycleManaged) per;
+//					LifeCycleHelper.service.setLifeCycleState(lcm, State.toState("LINE_REGISTER"));
+//				}
 				WorkDataHelper.service.create(per);
 			} else {
 				QueryResult qr = PersistenceHelper.manager.navigate(per, "workData", PerWorkDataLink.class);
@@ -1097,6 +1097,16 @@ public class StandardWorkspaceService extends StandardManager implements Workspa
 				if (per instanceof LifeCycleManaged) {
 					LifeCycleManaged lcm = (LifeCycleManaged) per;
 					LifeCycleHelper.service.setLifeCycleState(lcm, State.toState("LINE_REGISTER"));
+				}
+
+				if (per instanceof AsmApproval) {
+					AsmApproval asm = (AsmApproval) per;
+					QueryResult rs = PersistenceHelper.manager.navigate(asm, "persistable", AppPerLink.class);
+					while (rs.hasMoreElements()) {
+						Persistable persistable = (Persistable) rs.nextElement();
+						LifeCycleHelper.service.setLifeCycleState((LifeCycleManaged) persistable,
+								State.toState("LINE_REGISTER"));
+					}
 				}
 			}
 

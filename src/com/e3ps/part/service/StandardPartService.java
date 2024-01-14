@@ -1333,22 +1333,6 @@ public class StandardPartService extends StandardManager implements PartService 
 					list.add(data);
 				}
 			} else if ("eco".equals(moduleType.toLowerCase())) {
-				EChangeOrder eco = (EChangeOrder) obj;
-				rt = ECOSearchHelper.service.ecoPartLink(eco);
-				while (rt.hasMoreElements()) {
-					Object[] o = (Object[]) rt.nextElement();
-
-					EcoPartLink link = (EcoPartLink) o[0];
-
-					WTPartMaster master = (WTPartMaster) link.getPart();
-					String version = link.getVersion();
-
-					WTPart part = PartHelper.service.getPart(master.getNumber());
-					PartDTO data = new PartDTO(part);
-					// if(link.isBaseline()) data.setBaseline("checked");
-
-					list.add(data);
-				}
 			} else if ("rohs".equals(moduleType)) {
 				ROHSMaterial rohs = (ROHSMaterial) CommonUtil.getObject(oid);
 				list = RohsHelper.manager.getROHSToPartList(rohs);

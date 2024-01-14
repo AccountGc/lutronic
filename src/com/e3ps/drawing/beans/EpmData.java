@@ -30,12 +30,10 @@ import wt.util.FileUtil;
 @Setter
 public class EpmData {
 
-//	public EPMDocument epm;
 	public String oid; // 도면번호
 	public String name; // 도면번호
 	public String number; // 도면번호
 	public String linkRefernceType;
-	public String icon;
 	public String cadType;
 	public String creator;
 	private String modifier;
@@ -48,7 +46,8 @@ public class EpmData {
 	public String state;
 	private String stateDisplay;
 	public String cadName;
-	public String pNum;
+	public String part_value;
+	public String part_oid;
 	public String applicationType;
 	private String version;
 	private String description;
@@ -61,8 +60,7 @@ public class EpmData {
 		setOid(CommonUtil.getOIDString(epm));
 		setName(epm.getName());
 		setNumber(epm.getNumber());
-		setIcon(BasicTemplateProcessor.getObjectIconImgTag(epm));
-		setCadType(epm.getDocType().toString());
+		setCadType(epm.getDocType().getDisplay());
 		setCreator(epm.getCreatorFullName());
 		setModifier(epm.getModifierFullName());
 		setCreateDate(epm.getCreateTimestamp().toString().substring(0, 10));
@@ -104,11 +102,11 @@ public class EpmData {
 			part = getDrawingPart(part);
 		}
 		if (part != null) {
-			pNum = part.getNumber();
+			setPart_oid(part.getPersistInfo().getObjectIdentifier().getStringValue());
+			setPart_value(part.getNumber() + " [" + part.getName() + "]");
 		}
-		setPNum(StringUtil.checkNull(pNum));
 
-		setApplicationType(epm.getOwnerApplication().toString());
+		setApplicationType(epm.getOwnerApplication().getDisplay());
 		setVersion(epm.getVersionIdentifier().getValue() + "." + epm.getIterationIdentifier().getValue());
 		// 삭제, 수정 권한 - (최신버전 && ( 임시저장 || 작업중 || 일괄결재중 || 재작업))
 		if (isLatest() && (getState().equals("INWORK") || getState().equals("TEMPRARY")

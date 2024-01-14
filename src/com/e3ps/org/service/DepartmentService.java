@@ -1,6 +1,7 @@
 package com.e3ps.org.service;
 
 import java.util.ArrayList;
+import java.util.Map;
 
 import com.e3ps.org.Department;
 
@@ -17,8 +18,14 @@ public interface DepartmentService {
 
 	ArrayList getAllChildList(Department department, ArrayList returnlist);
 
-	QuerySpec getChildQuerySpec(Department tree) throws WTPropertyVetoException, QueryException, WTIntrospectionException;
+	QuerySpec getChildQuerySpec(Department tree)
+			throws WTPropertyVetoException, QueryException, WTIntrospectionException;
 
 	QuerySpec getDepartmentPeopleAll(Department dept);
+
+	/**
+	 * 부서 트리 저장
+	 */
+	public void treeSave(Map<String, Object> params) throws Exception;
 
 }

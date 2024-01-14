@@ -37,6 +37,17 @@ import wt.session.SessionHelper;
 @RequestMapping(value = "/rohs/**")
 public class RohsController extends BaseController {
 
+	@Description(value = "버전 객체 이터레이션 정보 페이지")
+	@GetMapping(value = "/iteration")
+	public ModelAndView iteration(@RequestParam String oid) throws Exception {
+		ModelAndView model = new ModelAndView();
+		boolean isAdmin = CommonUtil.isAdmin();
+		model.addObject("oid", oid);
+		model.addObject("isAdmin", isAdmin);
+		model.setViewName("popup:/rohs/include/rohs-iteration-include");
+		return model;
+	}
+	
 	@ResponseBody
 	@RequestMapping("/rohsFileType")
 	public List<Map<String, String>> rohsFileType(HttpServletRequest request, HttpServletResponse response) {

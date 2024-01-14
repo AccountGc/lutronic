@@ -36,6 +36,19 @@ import wt.session.SessionHelper;
 @RequestMapping(value = "/mold/**")
 public class MoldController extends BaseController {
 
+
+	@Description(value = "버전 객체 이터레이션 정보 페이지")
+	@GetMapping(value = "/iteration")
+	public ModelAndView iteration(@RequestParam String oid) throws Exception {
+		ModelAndView model = new ModelAndView();
+		boolean isAdmin = CommonUtil.isAdmin();
+		model.addObject("oid", oid);
+		model.addObject("isAdmin", isAdmin);
+		model.setViewName("popup:/mold/include/mold-iteration-include");
+		return model;
+	}
+	
+	
 	@Description(value = "금형 팝업 페이지")
 	@GetMapping(value = "/popup")
 	public ModelAndView popup(@RequestParam String method, @RequestParam String multi,

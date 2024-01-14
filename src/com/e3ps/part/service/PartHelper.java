@@ -8,6 +8,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.regex.Pattern;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.springframework.web.bind.annotation.RequestBody;
 
 import com.e3ps.change.EChangeOrder;
@@ -44,6 +46,8 @@ import com.ptc.wpcfg.pdmabstr.PROEDependency;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 import wt.clients.folder.FolderTaskLogic;
+import wt.content.ApplicationData;
+import wt.content.HolderToContent;
 import wt.doc.WTDocument;
 import wt.epm.EPMDocument;
 import wt.epm.EPMDocumentMaster;
@@ -74,6 +78,7 @@ import wt.part.WTPartHelper;
 import wt.part.WTPartMaster;
 import wt.part.WTPartStandardConfigSpec;
 import wt.part.WTPartUsageLink;
+import wt.pdmlink.PDMLinkProduct;
 import wt.query.ClassAttribute;
 import wt.query.QuerySpec;
 import wt.query.SearchCondition;
@@ -86,6 +91,7 @@ import wt.vc.config.LatestConfigSpec;
 import wt.vc.views.View;
 import wt.vc.views.ViewHelper;
 import wt.vc.wip.WorkInProgressHelper;
+import wt.viewmarkup.DerivedImage;
 
 public class PartHelper {
 
@@ -93,6 +99,69 @@ public class PartHelper {
 
 	public static final PartService service = ServiceFactory.getService(PartService.class);
 	public static final PartHelper manager = new PartHelper();
+
+	/**
+	 * CREO VIEW 접속 URL 만들기
+	 */
+	public String getCreoViewUrl(HttpServletRequest request, String oid) throws Exception {
+		WTPart part = (WTPart) CommonUtil.getObject(oid);
+		QuerySpec query = new QuerySpec();
+		int idx = query.appendClassList(WTPart.class, true);
+		int idx_d = query.appendClassList(DerivedImage.class, true);
+		int idx_h = query.appendClassList(HolderToContent.class, false);
+		int idx_a = query.appendClassList(ApplicationData.class, true);
+
+		SearchCondition sc = new SearchCondition(WTPart.class, "thePersistInfo.theObjectIdentifier.id",
+				DerivedImage.class, "derivedFromReference.key.id");
+		query.appendWhere(sc, new int[] { idx, idx_d });
+		query.appendAnd();
+
+		sc = new SearchCondition(DerivedImage.class, "thePersistInfo.theObjectIdentifier.id", HolderToContent.class,
+				"roleAObjectRef.key.id");
+		query.appendWhere(sc, new int[] { idx_d, idx_h });
+		query.appendAnd();
+
+		sc = new SearchCondition(ApplicationData.class, "thePersistInfo.theObjectIdentifier.id", HolderToContent.class,
+				"roleBObjectRef.key.id");
+		query.appendWhere(sc, new int[] { idx_a, idx_h });
+		query.appendAnd();
+
+		sc = new SearchCondition(WTPart.class, "thePersistInfo.theObjectIdentifier.id", "=",
+				part.getPersistInfo().getObjectIdentifier().getId());
+		query.appendWhere(sc, new int[] { idx });
+		query.appendAnd();
+
+		sc = new SearchCondition(ApplicationData.class, ApplicationData.FILE_NAME, "LIKE", "%.pvs");
+		query.appendWhere(sc, new int[] { idx_a });
+
+		QueryResult qr = PersistenceHelper.manager.find(query);
+		String doid = "";
+		String aoid = "";
+		String fileName = "";
+		if (qr.hasMoreElements()) {
+			Object[] obj = (Object[]) qr.nextElement();
+			DerivedImage image = (DerivedImage) obj[1];
+			ApplicationData dd = (ApplicationData) obj[2];
+			doid = image.getPersistInfo().getObjectIdentifier().getStringValue();
+			aoid = dd.getPersistInfo().getObjectIdentifier().getStringValue();
+			fileName = dd.getFileName();
+		}
+
+		PDMLinkProduct product = WCUtil.getPDMLinkProduct();
+
+		String url = request.getRequestURL().toString();
+		url = url.substring(0, url.indexOf(request.getContextPath()));
+
+		StringBuilder sb = new StringBuilder(url);
+		sb.append(request.getContextPath());
+		sb.append("/servlet/WindchillAuthGW/com.ptc.wvs.server.util.WVSContentHelper/redirectDownload/");
+		sb.append(fileName);
+		sb.append("?ContentHolder=").append(doid);
+		sb.append("&HttpOperationItem=").append(aoid);
+		sb.append("&u8=1&objref=").append(doid);
+		sb.append("&ContainerOid=").append(product.toString());
+		return sb.toString();
+	}
 
 	public Map<String, Object> list(@RequestBody Map<String, Object> params) throws Exception {
 		Map<String, Object> map = new HashMap<>();
@@ -357,6 +426,7 @@ public class PartHelper {
 					+ p.getIterationIdentifier().getSeries().getValue());
 			map.put("creator", p.getCreatorFullName());
 			map.put("createdDate", p.getCreateTimestamp().toString().substring(0, 10));
+			map.put("modifier", p.getModifierName());
 			map.put("modifiedDate", p.getModifyTimestamp().toString().substring(0, 10));
 			map.put("note", p.getIterationNote());
 			list.add(map);

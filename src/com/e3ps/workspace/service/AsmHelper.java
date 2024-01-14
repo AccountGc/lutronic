@@ -65,6 +65,7 @@ public class AsmHelper {
 			data.put("type", AsmHelper.manager.getAsmType(asm));
 			data.put("state", asm.getLifeCycleState().getDisplay());
 			data.put("creator", asm.getCreatorFullName());
+			data.put("description", asm.getDescription());
 			data.put("createdDate_txt", asm.getCreateTimestamp().toString().substring(0, 16));
 			list.add(data);
 		}

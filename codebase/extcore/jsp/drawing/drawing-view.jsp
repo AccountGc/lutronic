@@ -30,7 +30,7 @@ Map<String, String> dxf = dto.getDxf();
 			if (dto.isUpdate) {
 			%>
 			<input type="button" value="수정" title="수정" class="blue" onclick="updateBtn();">
-			<input type="button" value="삭제" title="삭제" class="red" onclick="deleteBtn();">
+			<input type="button" value="삭제" title="삭제" class="red" onclick="_delete();">
 			<%
 			}
 			%>
@@ -110,14 +110,28 @@ Map<String, String> dxf = dto.getDxf();
 			<tr>
 				<th class="lb">도면구분</th>
 				<td class="indent5"><%=dto.getCadType()%></td>
-				<th>도면파일</th>
-				<td class="indent5"><%=dto.getCadName()%></td>
+				<!-- 				<th>도면파일</th> -->
+				<%-- 				<td class="indent5"><%=dto.getCadName()%></td> --%>
+				<th>APPLICATIONTYPE</th>
+				<td class="indent5"><%=dto.getApplicationType()%></td>
 			</tr>
 			<tr>
 				<th class="lb">주 부품</th>
-				<td class="indent5"><%=dto.getPNum()%></td>
-				<th>APPLICATIONTYPE</th>
-				<td class="indent5"><%=dto.getApplicationType()%></td>
+				<td class="indent5" colspan="3">
+					<%
+					if (dto.getPart_oid() != null) {
+					%>
+					<a href="javascript:viewPart('<%=dto.getPart_oid()%>');"><%=dto.getPart_value()%></a>
+					<%
+					} else {
+					%>
+					<font color="red">
+						<b>주 부품이 없습니다.</b>
+					</font>
+					<%
+					}
+					%>
+				</td>
 			</tr>
 			<tr>
 				<th class="lb">주 첨부파일</th>
@@ -198,7 +212,7 @@ Map<String, String> dxf = dto.getDxf();
 	}
 
 	//삭제
-	function deleteBtn() {
+	function _delete() {
 
 		if (!confirm("삭제 하시겠습니까?")) {
 			return false;
@@ -206,18 +220,20 @@ Map<String, String> dxf = dto.getDxf();
 
 		const oid = document.getElementById("oid").value;
 		const url = getCallUrl("/drawing/delete?oid=" + oid);
+		openLayer();
 		call(url, null, function(data) {
 			alert(data.msg);
 			if (data.result) {
-				if (parent.opener.$("#sessionId").val() == "undefined" || parent.opener.$("#sessionId").val() == null) {
-					parent.opener.location.reload();
-				} else {
-					parent.opener.$("#sessionId").val("");
-					parent.opener.lfn_Search();
-				}
+				opener.loadGridData();
 				self.close();
 			}
+			closeLayer();
 		}, "DELETE");
+	}
+
+	function viewPart(oid) {
+		const url = getCallUrl("/part/view?oid=" + oid);
+		_popup(url, 1300, 650, "n");
 	}
 
 	//최신버전
