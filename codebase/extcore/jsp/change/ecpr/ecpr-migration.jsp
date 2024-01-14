@@ -1,3 +1,11 @@
+<%@page import="wt.lifecycle.State"%>
+<%@page import="com.e3ps.common.util.WCUtil"%>
+<%@page import="wt.lifecycle.LifeCycleHelper"%>
+<%@page import="wt.folder.FolderEntry"%>
+<%@page import="wt.folder.FolderHelper"%>
+<%@page import="wt.folder.Folder"%>
+<%@page import="wt.lifecycle.LifeCycleTemplate"%>
+<%@page import="com.e3ps.change.ECPRRequest"%>
 <%@page import="com.e3ps.change.EChangeOrder"%>
 <%@page import="wt.fc.PersistenceHelper"%>
 <%@page import="wt.fc.QueryResult"%>
@@ -15,5 +23,40 @@ while (qr.hasMoreElements()) {
 	Object[] obj = (Object[]) qr.nextElement();
 	EChangeRequest e = (EChangeRequest) obj[0];
 	out.println(e.getEoNumber() + "<br>");
+
+	ECPRRequest ecpr = ECPRRequest.newECPRRequest();
+	ecpr.setEoNumber(e.getEoNumber());
+	ecpr.setEoName(e.getEoName());
+	ecpr.setCreateDepart(e.getCreateDepart());
+	ecpr.setCreateDate(e.getCreateDate());
+	ecpr.setWriter(e.getWriter());
+	ecpr.setChangeSection(e.getChangeSection());
+	ecpr.setModel(e.getModel());
+	ecpr.setContents(e.getContents());
+	ecpr.setEoCommentA(e.getEoCommentA());
+	ecpr.setEoCommentB(e.getEoCommentB());
+	ecpr.setEoCommentC(e.getEoCommentC());
+	ecpr.setEoCommentD(e.getEoCommentD());
+	ecpr.setEoCommentE(e.getEoCommentE());
+	ecpr.setEoApproveDate(e.getApproveDate());
+	ecpr.setEoType(e.getEoType());
+	ecpr.setOwnership(e.getOwnership());
+	ecpr.setPeriod("PR004");
+	ecpr.setIsNew(false);
+	String location = "/Default/설계변경/ECPR";
+	String lifecycle = "LC_Default";
+
+	Folder folder = FolderHelper.service.getFolder(location, WCUtil.getWTContainerRef());
+	FolderHelper.assignLocation((FolderEntry) ecpr, folder);
+	// 문서 lifeCycle 설정
+	LifeCycleHelper.setLifeCycle(ecpr,
+	LifeCycleHelper.service.getLifeCycleTemplate(lifecycle, WCUtil.getWTContainerRef())); // Lifecycle
+	ecpr = (ECPRRequest) PersistenceHelper.manager.save(ecpr);
+
+	PersistenceHelper.manager.save(ecpr);
+	ecpr = (ECPRRequest) PersistenceHelper.manager.refresh(ecpr);
+
+	LifeCycleHelper.service.setLifeCycleState(ecpr, State.toState(e.getLifeCycleState().toString()));
+
 }
 %>

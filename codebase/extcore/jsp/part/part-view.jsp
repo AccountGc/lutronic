@@ -148,7 +148,7 @@ WTUser sessionUser = (WTUser) SessionHelper.manager.getPrincipal();
 				<td class="indent5"><%=dto.getModifyDate()%></td>
 			</tr>
 			<tr>
-				<th class="lb">주 도면</th>
+				<th class="lb">주 도면ㅇ</th>
 				<td class="indent5" colspan="3">
 					<%
 					if (dto.getEpm_oid() != null) {
