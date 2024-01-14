@@ -121,6 +121,9 @@ iframe {
 					%>
 				</td>
 			</tr>
+			<%
+			if (dto.is_isNew()) {
+			%>
 			<tr>
 				<th class="lb">내용</th>
 				<td colspan="5" class="indent7 pb8">
@@ -134,6 +137,36 @@ iframe {
 					</script>
 				</td>
 			</tr>
+			<%
+			} else {
+			%>
+			<tr>
+				<th class="lb">변경사유</th>
+				<td colspan="5" class="indent5">
+					<div class="textarea-auto">
+						<textarea name="eoCommentA" id="eoCommentA" readonly="readonly"><%=dto.getEoCommentA()%></textarea>
+					</div>
+				</td>
+			</tr>
+			<tr>
+				<th class="lb">변경사항</th>
+				<td colspan="5" class="indent5">
+					<div class="textarea-auto">
+						<textarea name="eoCommentB" id="eoCommentB" readonly="readonly"><%=dto.getEoCommentB()%></textarea>
+					</div>
+				</td>
+			</tr>
+			<tr>
+				<th class="lb">참고사항</th>
+				<td colspan="5" class="indent5">
+					<div class="textarea-auto">
+						<textarea name="eoCommentC" id="eoCommentC" readonly="readonly"><%=dto.getEoCommentC()%></textarea>
+					</div>
+				</td>
+			</tr>
+			<%
+			}
+			%>			
 			<tr>
 				<th class="lb">주 첨부파일</th>
 				<td colspan="5" class="indent5">
@@ -240,6 +273,7 @@ iframe {
 		AUIGrid.resize(myGridID90);
 		AUIGrid.resize(myGridID101);
 		AUIGrid.resize(myGridID105);
+		autoTextarea();
 	});
 
 	window.addEventListener("resize", function() {

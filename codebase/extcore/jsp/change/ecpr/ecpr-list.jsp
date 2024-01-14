@@ -256,7 +256,7 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 					dataType : "string",
 					width : 100
 				}, {
-					dataField : "approvedDate",
+					dataField : "approveDate",
 					headerText : "승인일",
 					dataType : "string",
 					width : 100

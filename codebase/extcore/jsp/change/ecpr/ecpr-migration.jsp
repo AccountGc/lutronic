@@ -1,3 +1,6 @@
+<%@page import="wt.content.ApplicationData"%>
+<%@page import="wt.content.ContentRoleType"%>
+<%@page import="wt.content.ContentHelper"%>
 <%@page import="wt.lifecycle.State"%>
 <%@page import="com.e3ps.common.util.WCUtil"%>
 <%@page import="wt.lifecycle.LifeCycleHelper"%>
@@ -14,6 +17,8 @@
 <%@page import="wt.query.QuerySpec"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%
+delete();
+
 QuerySpec query = new QuerySpec();
 int idx = query.appendClassList(EChangeRequest.class, true);
 SearchCondition sc = new SearchCondition(EChangeRequest.class, EChangeRequest.EO_NUMBER, "LIKE", "ECPR%");
@@ -58,5 +63,19 @@ while (qr.hasMoreElements()) {
 
 	LifeCycleHelper.service.setLifeCycleState(ecpr, State.toState(e.getLifeCycleState().toString()));
 
+	// 첨부 파일 
+	ContentHelper.service.copyContent(e, ecpr);
 }
 %>
+
+<%!private void delete() throws Exception {
+		QuerySpec query = new QuerySpec();
+		int idx = query.appendClassList(ECPRRequest.class, true);
+		QueryResult qr = PersistenceHelper.manager.find(query);
+		while (qr.hasMoreElements()) {
+			Object[] obj = (Object[]) qr.nextElement();
+			ECPRRequest req = (ECPRRequest) obj[0];
+			PersistenceHelper.manager.delete(req);
+			System.out.println("삭제 = " + req.getEoNumber());
+		}
+	}%>

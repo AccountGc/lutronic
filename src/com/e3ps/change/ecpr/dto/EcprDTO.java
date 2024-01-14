@@ -57,7 +57,7 @@ public class EcprDTO {
 	private ArrayList<Map<String, String>> rows105 = new ArrayList<>(); // 관련 CR
 	private ArrayList<Map<String, String>> rows300 = new ArrayList<>(); // 모델
 
-	private boolean temprary;
+	private boolean _isNew = false;
 
 	public EcprDTO() {
 
@@ -92,6 +92,7 @@ public class EcprDTO {
 			setPeriod_code(period.getCode());
 			setPeriod_name(period.getName());
 		}
+		set_isNew(ecpr.getIsNew());
 		setAuth(ecpr);
 	}
 
@@ -108,10 +109,10 @@ public class EcprDTO {
 	 */
 	private void setAuth(ECPRRequest ecpr) throws Exception {
 		boolean isAdmin = CommonUtil.isAdmin();
-		if(check(ecpr, "APPROVED")) {
+		if (check(ecpr, "APPROVED")) {
 			set_print(true);
 		}
-		
+
 		if ((check(ecpr, "LINE_REGISTER") || check(ecpr, "RETURN"))) {
 			set_modify(true);
 		}
