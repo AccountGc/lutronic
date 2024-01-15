@@ -65,8 +65,8 @@ public class EcrmHelper {
 			query.appendAnd();
 		}
 		if (!CommonUtil.isAdmin()) {
-			query.appendWhere(new SearchCondition(ECRMRequest.class, ECRMRequest.LIFE_CYCLE_STATE,
-					SearchCondition.NOT_EQUAL, "LINE_REGISTER"), new int[] { idx });
+//			query.appendWhere(new SearchCondition(ECRMRequest.class, ECRMRequest.LIFE_CYCLE_STATE,
+//					SearchCondition.NOT_EQUAL, "LINE_REGISTER"), new int[] { idx });
 		}
 		// 제목
 		QuerySpecUtils.toLikeAnd(query, idx, ECRMRequest.class, ECRMRequest.EO_NAME, name);

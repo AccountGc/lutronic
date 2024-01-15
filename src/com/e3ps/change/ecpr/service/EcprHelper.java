@@ -68,8 +68,8 @@ public class EcprHelper {
 				query.appendAnd();
 			}
 			if (!CommonUtil.isAdmin()) {
-				query.appendWhere(new SearchCondition(ECPRRequest.class, ECPRRequest.LIFE_CYCLE_STATE,
-						SearchCondition.NOT_EQUAL, "LINE_REGISTER"), new int[] { idx });
+//				query.appendWhere(new SearchCondition(ECPRRequest.class, ECPRRequest.LIFE_CYCLE_STATE,
+//						SearchCondition.NOT_EQUAL, "LINE_REGISTER"), new int[] { idx });
 			}
 
 			// 제목

@@ -14,6 +14,7 @@ import lombok.Setter;
 @Setter
 public class EoColumn {
 
+	private int rowNum;
 	private String oid;
 	private String number;
 	private String name;

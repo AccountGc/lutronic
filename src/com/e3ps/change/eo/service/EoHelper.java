@@ -154,9 +154,11 @@ public class EoHelper {
 
 		PageQueryUtils pager = new PageQueryUtils(params, query);
 		PagingQueryResult result = pager.find();
+		int rowNum = pager.getTotal();
 		while (result.hasMoreElements()) {
 			Object[] obj = (Object[]) result.nextElement();
 			EoColumn data = new EoColumn(obj);
+			data.setRowNum(rowNum--);
 			list.add(data);
 		}
 		map.put("list", list);

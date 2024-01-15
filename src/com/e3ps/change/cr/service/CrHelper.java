@@ -70,8 +70,8 @@ public class CrHelper {
 
 		// 관리자가 아닐경우 결재선 지정은 제외한다
 		if (!CommonUtil.isAdmin()) {
-			query.appendWhere(new SearchCondition(EChangeRequest.class, EChangeRequest.LIFE_CYCLE_STATE,
-					SearchCondition.NOT_EQUAL, "LINE_REGISTER"), new int[] { idx });
+//			query.appendWhere(new SearchCondition(EChangeRequest.class, EChangeRequest.LIFE_CYCLE_STATE,
+//					SearchCondition.NOT_EQUAL, "LINE_REGISTER"), new int[] { idx });
 		}
 
 		// 제목
