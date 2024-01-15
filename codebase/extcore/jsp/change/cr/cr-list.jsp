@@ -98,8 +98,6 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 				<th>작성자</th>
 				<td class="indent5">
 					<input type="text" name="writer" id="writer" data-multi="false" class="width-200">
-					<input type="hidden" name="writerOid" id="writerOid">
-					<img src="/Windchill/extcore/images/delete.png" class="delete" title="삭제" onclick="clearUser('writer')">
 				</td>
 				<th>작성부서</th>
 				<td class="indent5">
@@ -139,7 +137,8 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 				<th class="req lb">프로젝트 코드</th>
 				<td class="indent5" colspan="3">
 					<input type="text" name="model" id="model" class="width-200">
-					<img src="/Windchill/extcore/images/delete.png" class="delete" title="삭제" onclick="clearUser('model')">
+					<input type="hidden" name="modelcode" id="modelcode">
+					<img src="/Windchill/extcore/images/delete.png" class="delete" title="삭제" onclick="clearValue('model', 'code')">
 				</td>
 			</tr>
 		</table>
@@ -437,7 +436,7 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 				}
 				let params = new Object();
 				const url = getCallUrl("/cr/list");
-				const field = [ "name", "number", "state", "creatorOid", "createdFrom", "createdTo", "approveFrom", "approveTo", "writerOid", "createDepart", "writedFrom", "writedTo", "changeSection", "model" ];
+				const field = [ "name", "number", "state", "creatorOid", "createdFrom", "createdTo", "approveFrom", "approveTo", "writer", "createDepart", "writedFrom", "writedTo", "changeSection", "modelcode" ];
 				params = toField(params, field);
 				AUIGrid.showAjaxLoader(myGridID);
 				parent.openLayer();
@@ -471,7 +470,7 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 				AUIGrid.resize(myGridID);
 				selectbox("state");
 				finderUser("creator");
-				finderUser("writer");
+// 				finderUser("writer");
 				twindate("created");
 				twindate("approve");
 				twindate("writed");

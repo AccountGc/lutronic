@@ -467,7 +467,7 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 				AUIGrid.resize(myGridID);
 				selectbox("state");
 				finderUser("creator");
-				finderUser("writer");
+// 				finderUser("writer");
 				// 				finderUser("proposer");
 				twindate("created");
 				twindate("approve");

@@ -7,6 +7,7 @@
 <%@page import="com.e3ps.common.code.NumberCode"%>
 <%
 ArrayList<NumberCode> modelList = (ArrayList<NumberCode>) request.getAttribute("modelList");
+List<Map<String, String>> lifecycleList = (List<Map<String, String>>) request.getAttribute("lifecycleList");
 WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 %>
 <!DOCTYPE html>
@@ -54,12 +55,20 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 				<td class="indent5">
 					<input type="text" name="name" id="name" class="width-300">
 				</td>
-				<th>승인일</th>
+				<th>상태</th>
 				<td class="indent5">
-					<input type="text" name="approveFrom" id="approveFrom" class="width-100">
-					~
-					<input type="text" name="approveTo" id="approveTo" class="width-100">
-					<img src="/Windchill/extcore/images/delete.png" class="delete" title="삭제" onclick="clearFromTo('approveFrom', 'approveTo')">
+					<select name="state" id="state" class="width-200">
+						<option value="">선택</option>
+						<%
+						for (Map<String, String> lifecycle : lifecycleList) {
+							if (!lifecycle.get("code").equals("TEMPRARY")) {
+						%>
+						<option value="<%=lifecycle.get("code")%>"><%=lifecycle.get("name")%></option>
+						<%
+						}
+						}
+						%>
+					</select>
 				</td>
 			</tr>
 			<tr>
@@ -113,6 +122,13 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 					<input type="text" name="model" id="model" class="width-200">
 					<img src="/Windchill/extcore/images/delete.png" class="delete" title="삭제" onclick="clearUser('model')">
 				</td>
+				<th>승인일</th>
+				<td class="indent5">
+					<input type="text" name="approveFrom" id="approveFrom" class="width-100">
+					~
+					<input type="text" name="approveTo" id="approveTo" class="width-100">
+					<img src="/Windchill/extcore/images/delete.png" class="delete" title="삭제" onclick="clearFromTo('approveFrom', 'approveTo')">
+				</td>
 			</tr>
 			<tr>
 				<th class="lb">완제품 품목</th>
@@ -135,11 +151,11 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 				</td>
 				<td class="right">
 					<select name="_psize" id="_psize">
+						<option value="10">10</option>
+						<option value="20" selected="selected">20</option>
 						<option value="30">30</option>
 						<option value="50">50</option>
 						<option value="100">100</option>
-						<option value="200">200</option>
-						<option value="300">300</option>
 					</select>
 					<input type="button" value="검색" title="검색" onclick="loadGridData();">
 				</td>
@@ -279,11 +295,13 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 				createAUIGrid104(columns104);
 				AUIGrid.resize(myGridID);
 				AUIGrid.resize(myGridID104);
+				selectbox("state");
 				finderUser("creator");
 				twindate("created");
 				twindate("approve");
 				selectbox("_psize");
 				finderCode("model", "MODEL");
+				$("#_psize").bindSelectSetValue("20");
 			});
 
 			document.addEventListener("keydown", function(event) {
@@ -302,36 +320,6 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 				AUIGrid.resize(myGridID104);
 			});
 
-			function spread(target) {
-				const e = document.querySelectorAll('.hidden');
-				// 버근가..
-				for (let i = 0; i < e.length; i++) {
-					const el = e[i];
-					const style = window.getComputedStyle(el);
-					const display = style.getPropertyValue("display");
-					if (display === "none") {
-						el.style.display = "table-row";
-						target.value = "▲접기";
-						selectbox("state");
-						finderUser("creator");
-						twindate("created");
-						twindate("approve");
-						selectbox("_psize");
-						selectbox("model");
-						AUIGrid.resize(myGridID104);
-					} else {
-						el.style.display = "none";
-						target.value = "▼펼치기";
-						selectbox("state");
-						finderUser("creator");
-						twindate("created");
-						twindate("approve");
-						selectbox("_psize");
-						selectbox("model");
-						AUIGrid.resize(myGridID104);
-					}
-				}
-			}
 			
 			function exportExcel() {
 			    const sessionName = document.getElementById("sessionName").value;
