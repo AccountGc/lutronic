@@ -773,6 +773,7 @@ public class DocumentHelper {
 			cell = worksheet.getCells().get(rowIndex, 4);
 			setCellStyle(cell);
 			String signPath = OrgHelper.manager.getSignPath(user.getName());
+			System.out.println("signPath=" + signPath);
 			if (signPath != null) {
 				int picIndex = worksheet.getPictures().add(rowIndex, 4, signPath);
 				Picture picture = worksheet.getPictures().get(picIndex);

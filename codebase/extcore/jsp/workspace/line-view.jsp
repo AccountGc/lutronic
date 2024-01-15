@@ -281,7 +281,7 @@ String tapOid = dto.getPersist().getPersistInfo().getObjectIdentifier().getStrin
 		toFocus("description");
 		createAUIGrid10000(columns10000);
 		AUIGrid.resize(myGridID10000);
-		createAUIGrid9(columns10001);
+		createAUIGrid10001(columns10001);
 		AUIGrid.resize(myGridID10001);
 		finderUser("reassignUser");
 		read();

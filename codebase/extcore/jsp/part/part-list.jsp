@@ -559,7 +559,7 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 						label : "BOM 보기",
 						callback : auiContextHandler
 					}, {
-						label : "BOM 에디터",
+						label : "BOM 편집",
 						callback : auiContextHandler
 					}, {
 						label : "BOM 비교",

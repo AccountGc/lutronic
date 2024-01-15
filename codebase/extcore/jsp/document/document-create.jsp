@@ -271,8 +271,8 @@ iframe {
 				// 클래스타입
 				const clazz2 = document.getElementById("clazz");
 				let classType2_oid;
-				if(clazz2 !== null) {
-					classType2_oid  = clazz2.getAttribute("data-oid");
+				if (clazz2 !== null) {
+					classType2_oid = clazz2.getAttribute("data-oid");
 				}
 				const classType1_code = document.getElementById("classType1").value;
 				const classType2 = document.getElementById(classType2Id);
@@ -336,8 +336,8 @@ iframe {
 						return false;
 					}
 				}
-				
-				if("SOURCE" !== classType1_code) {
+
+				if ("SOURCE" !== classType1_code) {
 					if (interalnumber.value === "") {
 						interalnumber.focus();
 						alert("문서번호를 입력해주세요.");
@@ -359,6 +359,12 @@ iframe {
 				if ("DEV" === classType1_code || "INSTRUCTION" === classType1_code) {
 					if (primary == null) {
 						alert("주 첨부파일을 첨부해주세요.");
+						return false;
+					}
+
+					const ext = primary.value.split('.').pop().toLowerCase();
+					if (ext !== "doc" && ext !== "docx") {
+						alert("개발문서와 지침서는 주 첨부파일에 워드형식의 파일만 첨부 가능합니다.");
 						return false;
 					}
 				}

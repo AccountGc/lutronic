@@ -82,7 +82,9 @@ boolean validate = dto.isValidate();
 			<tr>
 				<th class="lb">결재의견</th>
 				<td class="indent5">
-					<textarea name="description" id="description" rows="6"></textarea>
+					<div class="textarea-auto">
+						<textarea name="description" id="description" rows="6"></textarea>
+					</div>
 				</td>
 			</tr>
 			<tr>
@@ -174,14 +176,14 @@ boolean validate = dto.isValidate();
 		function read() {
 			const oid = document.getElementById("oid").value;
 			const url = getCallUrl("/workData/read?oid=" + oid);
-			openLayer();
+			parent.openLayer();
 			call(url, null, function(data) {
 				if (data.result) {
-					opener.loadGridData();
+// 					opener.loadGridData();
 				} else {
 					alert(data.msg);
 				}
-				closeLayer();
+				parent.closeLayer();
 			}, "GET");
 		}
 
@@ -192,6 +194,7 @@ boolean validate = dto.isValidate();
 			AUIGrid.resize(myGridID8)
 			AUIGrid.resize(myGridID9);
 			read();
+			autoTextarea();
 		})
 
 		window.addEventListener("resize", function() {

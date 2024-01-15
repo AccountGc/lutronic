@@ -86,7 +86,6 @@ public class StandardEcnService extends StandardManager implements EcnService {
 				WTUser worker = (WTUser) CommonUtil.getObject(worker_oid);
 				ecn.setWorker(worker);
 				PersistenceHelper.manager.modify(ecn);
-
 			}
 
 			trs.commit();

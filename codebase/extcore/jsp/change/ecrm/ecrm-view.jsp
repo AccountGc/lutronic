@@ -204,6 +204,7 @@ iframe {
 		if (!confirm("삭제 하시겠습니까?")) {
 			return false;
 		}
+		const oid = document.getElementById("oid").value;
 		const url = getCallUrl("/ecrm/delete?oid=" + oid);
 		openLayer();
 		call(url, null, function(data) {
