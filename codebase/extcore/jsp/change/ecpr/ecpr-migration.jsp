@@ -44,7 +44,7 @@ delete();
 
 QuerySpec query = new QuerySpec();
 int idx = query.appendClassList(EChangeRequest.class, true);
-SearchCondition sc = new SearchCondition(EChangeRequest.class, EChangeRequest.EO_NUMBER, "LIKE", "ECPR%");
+SearchCondition sc = new SearchCondition(EChangeRequest.class, EChangeRequest.EO_NUMBER, "LIKE", "%ECPR%");
 query.appendWhere(sc, new int[] { idx });
 QueryResult qr = PersistenceHelper.manager.find(query);
 int i = 0;
