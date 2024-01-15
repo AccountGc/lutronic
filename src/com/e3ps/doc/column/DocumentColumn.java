@@ -23,6 +23,7 @@ import wt.vc.VersionControlHelper;
 public class DocumentColumn {
 
 	private String oid;
+	private int rowNum;
 	private boolean latest;
 	private String number;
 	private String interalnumber;

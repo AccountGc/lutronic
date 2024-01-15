@@ -130,10 +130,10 @@ public class DocumentHelper {
 		String modifiedTo = (String) params.get("modifiedTo");
 		String documentType = (String) params.get("documentType");
 		String preseration = (String) params.get("preseration");
-		String model = (String) params.get("model");
+		String model = (String) params.get("modelcode");
 		String deptcode = (String) params.get("deptcode");
 		String interalnumber = (String) params.get("interalnumber");
-		String writer = (String) params.get("writerOid");
+		String writer = (String) params.get("writer");
 		String description = (String) params.get("description");
 
 		// 분류
@@ -183,15 +183,16 @@ public class DocumentHelper {
 		QuerySpecUtils.toEqualsAnd(query, idx, WTDocument.class, WTDocument.DOC_TYPE, documentType);
 
 		QuerySpecUtils.toIBAEqualsAnd(query, WTDocument.class, idx, "PRESERATION", preseration);
-		QuerySpecUtils.toIBALikeAnd(query, WTDocument.class, idx, "MODEL", model);
-		QuerySpecUtils.toIBALikeAnd(query, WTDocument.class, idx, "INTERALNUMBER", interalnumber);
+		QuerySpecUtils.toIBAEqualsAnd(query, WTDocument.class, idx, "MODEL", model);
+//		QuerySpecUtils.toIBALikeAnd(query, WTDocument.class, idx, "INTERALNUMBER", interalnumber);
 		QuerySpecUtils.toIBAEqualsAnd(query, WTDocument.class, idx, "DEPTCODE", deptcode);
-		QuerySpecUtils.toIBALikeAnd(query, WTDocument.class, idx, "DSGN", writer);
+		QuerySpecUtils.toIBAEqualsAnd(query, WTDocument.class, idx, "DSGN", writer);
 
 		Folder folder = FolderTaskLogic.getFolder(location, WCUtil.getWTContainerRef());
 		if (query.getConditionCount() > 0) {
 			query.appendAnd();
 		}
+
 		int f_idx = query.appendClassList(IteratedFolderMemberLink.class, false);
 		ClassAttribute fca = new ClassAttribute(IteratedFolderMemberLink.class, "roleBObjectRef.key.branchId");
 		SearchCondition fsc = new SearchCondition(fca, "=",
@@ -225,10 +226,12 @@ public class DocumentHelper {
 
 		PageQueryUtils pager = new PageQueryUtils(params, query);
 		PagingQueryResult result = pager.find();
+		int rowNum = pager.getTotal();
 		while (result.hasMoreElements()) {
 			Object[] obj = (Object[]) result.nextElement();
-			DocumentColumn data = new DocumentColumn(obj);
-			list.add(data);
+			DocumentColumn column = new DocumentColumn(obj);
+			column.setRowNum(rowNum--);
+			list.add(column);
 		}
 
 		map.put("list", list);
@@ -645,7 +648,8 @@ public class DocumentHelper {
 	 * 워드 파일 PDF 생성
 	 */
 	public void wordToPdfMethod(String oid) throws Exception {
-		WTPrincipal principal = SessionHelper.manager.getPrincipal();
+
+		WTPrincipal principal = SessionHelper.manager.setAdministrator();
 		ProcessingQueue queue = (ProcessingQueue) QueueHelper.manager.getQueue(processQueueName, ProcessingQueue.class);
 
 		Hashtable<String, String> hash = new Hashtable<>();

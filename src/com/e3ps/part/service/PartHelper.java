@@ -316,10 +316,12 @@ public class PartHelper {
 
 		PageQueryUtils pager = new PageQueryUtils(params, query);
 		PagingQueryResult result = pager.find();
+		int rowNum = pager.getTotal();
 		while (result.hasMoreElements()) {
 			Object[] obj = (Object[]) result.nextElement();
-			PartColumn data = new PartColumn(obj);
-			list.add(data);
+			PartColumn column = new PartColumn(obj);
+			column.setRowNum(rowNum--);
+			list.add(column);
 		}
 
 		map.put("list", list);

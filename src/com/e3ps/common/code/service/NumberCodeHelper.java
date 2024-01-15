@@ -396,7 +396,7 @@ public class NumberCodeHelper {
 			} else if (valueType.equals("oid")) {
 				map.put("oid", n.getPersistInfo().getObjectIdentifier().getStringValue());
 			}
-			map.put("name", "[" + n.getCode() + "]&nbsp;" + n.getName());
+			map.put("name", "[" + n.getCode() + "] " + n.getName());
 			list.add(map);
 		}
 		return list;

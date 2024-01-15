@@ -526,11 +526,12 @@ public class DrawingHelper {
 
 		PageQueryUtils pager = new PageQueryUtils(params, query);
 		PagingQueryResult result = pager.find();
-
+		int rowNum = pager.getTotal();
 		while (result.hasMoreElements()) {
 			Object[] obj = (Object[]) result.nextElement();
-			EpmColumn data = new EpmColumn(obj);
-			list.add(data);
+			EpmColumn column = new EpmColumn(obj);
+			column.setRowNum(rowNum--);
+			list.add(column);
 		}
 
 		map.put("list", list);

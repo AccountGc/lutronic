@@ -132,8 +132,6 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 				<th>작성자</th>
 				<td class="indent5">
 					<input type="text" name="writer" id="writer" data-multi="false" class="width-200">
-					<input type="hidden" name="writerOid" id="writerOid">
-					<img src="/Windchill/extcore/images/delete.png" class="delete" title="삭제" onclick="clearUser('writer')">
 				</td>
 				<th>수정일</th>
 				<td class="indent5">
@@ -251,6 +249,14 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 			let myGridID;
 			function _layout() {
 				return [ {
+					dataField : "rowNum",
+					headerText : "번호",
+					width : 40,
+					dataType : "numeric",
+					filter : {
+						inline : false
+					},
+				}, {
 					dataField : "name",
 					headerText : "문서명",
 					dataType : "string",
@@ -382,7 +388,7 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 			function createAUIGrid(columnLayout) {
 				const props = {
 					headerHeight : 30,
-					showRowNumColumn : true,
+					showRowNumColumn : false,
 					// 					showRowCheckColumn : true,
 					rowNumHeaderText : "번호",
 					showAutoNoDataMessage : false,
@@ -564,7 +570,7 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 
 				let params = new Object();
 				const url = getCallUrl("/doc/list");
-				const field = [ "location", "classType1", "classType2", "classType3", "name", "number", "state", "creatorOid", "createdFrom", "createdTo", "modifiedFrom", "modifiedTo", "preseration", "model", "deptcode", "writerOid", "description" ];
+				const field = [ "location", "classType1", "classType2", "classType3", "name", "number", "state", "creatorOid", "createdFrom", "createdTo", "modifiedFrom", "modifiedTo", "preseration", "modelcode", "deptcode", "writer", "description" ];
 				params = toField(params, field);
 				const latest = document.querySelector("input[name=latest]:checked").value;
 				params.latest = JSON.parse(latest);
@@ -572,6 +578,7 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 				AUIGrid.showAjaxLoader(myGridID);
 				parent.openLayer();
 				call(url, params, function(data) {
+					logger(data);
 					AUIGrid.removeAjaxLoader(myGridID);
 					if (data.result) {
 						totalPage = Math.ceil(data.total / data.pageSize);
@@ -655,7 +662,7 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 				selectbox("_psize");
 				selectbox("preseration");
 				selectbox("deptcode");
-				finderUser("writer");
+				// 				finderUser("writer");
 				selectbox("classType1");
 				selectbox("classType2");
 				selectbox("classType3");
