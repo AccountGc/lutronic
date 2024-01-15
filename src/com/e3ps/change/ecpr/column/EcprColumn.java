@@ -32,6 +32,7 @@ public class EcprColumn {
 	private String creator;
 	private String writeDate;
 	private String period;
+	private boolean isNew;
 
 	public EcprColumn() {
 
@@ -60,5 +61,6 @@ public class EcprColumn {
 		if (period != null) {
 			setPeriod(period.getName());
 		}
+		setNew(ecpr.getIsNew());
 	}
 }

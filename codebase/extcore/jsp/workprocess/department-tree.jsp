@@ -125,8 +125,12 @@ String height = request.getParameter("height");
 		AUIGrid.showItemsOnDepth(_myGridID, 2);
 	}
 
-	let timerId;
+	let timerId = null;
 	function auiCellClick(event) {
+		const item = event.item;
+		if(item.isNew) {
+			return;
+		}
 		if (timerId) {
 			clearTimeout(timerId);
 		}

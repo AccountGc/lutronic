@@ -109,7 +109,7 @@ public class EcprDTO {
 	 */
 	private void setAuth(ECPRRequest ecpr) throws Exception {
 		boolean isAdmin = CommonUtil.isAdmin();
-		if (check(ecpr, "APPROVED")) {
+		if (check(ecpr, "APPROVED") && is_isNew()) {
 			set_print(true);
 		}
 

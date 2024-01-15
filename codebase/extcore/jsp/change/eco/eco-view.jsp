@@ -266,6 +266,13 @@ boolean isAdmin = (boolean) request.getAttribute("isAdmin");
 
 	function excel() {
 		const oid = document.getElementById("oid").value;
+		const url = getCallUrl("/eco/excel?oid=" + oid);
+		call(url, null, function(data) {
+			logger(data);
+			if (data.result) {
+
+			}
+		}, "GET");
 	}
 
 	function _delete() {

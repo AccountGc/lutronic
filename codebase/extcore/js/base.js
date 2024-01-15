@@ -210,14 +210,8 @@ function finderCode(tag, key, valueType) {
 			})
 		},
 		onchange: function() {
-			const el = document.getElementById(tag);
-			const clazzEl = document.createElement("input");
-//			clazzEl.setAttribute("data-" + valueType, this.selectedOption.oid);
-			clazzEl.type = "hidden";
-			clazzEl.name = tag + valueType;
-			clazzEl.id = tag + valueType;
-			clazzEl.value = this.selectedOption.oid;
-			el.parentNode.insertBefore(clazzEl, el.nextSibling);
+			const el = document.getElementById(tag + valueType);
+			el.value = this.selectedOption.oid;
 		},
 	})
 }
@@ -456,4 +450,9 @@ function lcm(obj) {
 			closeLayer();
 		}
 	}, "GET");
+}
+
+function clearValue(tag, valueType) {
+	document.getElementById(tag).value = "";
+	document.getElementById(tag + valueType).value = "";
 }

@@ -1,11 +1,26 @@
 package com.e3ps.change.eco.service;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Hashtable;
+import java.util.List;
 import java.util.Map;
+
+import org.apache.poi.ss.usermodel.BorderStyle;
+import org.apache.poi.ss.usermodel.HorizontalAlignment;
+import org.apache.poi.ss.usermodel.IndexedColors;
+import org.apache.poi.ss.usermodel.VerticalAlignment;
+import org.apache.poi.xssf.usermodel.XSSFCell;
+import org.apache.poi.xssf.usermodel.XSSFCellStyle;
+import org.apache.poi.xssf.usermodel.XSSFFont;
+import org.apache.poi.xssf.usermodel.XSSFRow;
+import org.apache.poi.xssf.usermodel.XSSFSheet;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 import com.e3ps.change.ECPRRequest;
 import com.e3ps.change.ECRMRequest;
@@ -24,6 +39,7 @@ import com.e3ps.change.activity.service.ActivityHelper;
 import com.e3ps.change.cr.column.CrColumn;
 import com.e3ps.change.ecn.column.EcnColumn;
 import com.e3ps.change.eco.column.EcoColumn;
+import com.e3ps.change.eco.dto.EcoDTO;
 import com.e3ps.change.ecpr.column.EcprColumn;
 import com.e3ps.change.ecrm.column.EcrmColumn;
 import com.e3ps.change.util.EChangeUtils;
@@ -31,13 +47,21 @@ import com.e3ps.common.code.service.NumberCodeHelper;
 import com.e3ps.common.iba.IBAUtils;
 import com.e3ps.common.util.AUIGridUtil;
 import com.e3ps.common.util.CommonUtil;
+import com.e3ps.common.util.DateUtil;
+import com.e3ps.common.util.POIUtil;
 import com.e3ps.common.util.PageQueryUtils;
 import com.e3ps.common.util.QuerySpecUtils;
 import com.e3ps.common.util.StringUtil;
+import com.e3ps.groupware.service.GroupwareHelper;
+import com.e3ps.org.dto.PeopleDTO;
 import com.e3ps.part.service.PartHelper;
 import com.ibm.icu.text.DecimalFormat;
 
 import net.sf.json.JSONArray;
+import wt.content.ApplicationData;
+import wt.content.ContentHelper;
+import wt.content.ContentItem;
+import wt.content.ContentRoleType;
 import wt.epm.EPMDocument;
 import wt.fc.PagingQueryResult;
 import wt.fc.PersistenceHelper;
@@ -45,6 +69,7 @@ import wt.fc.QueryResult;
 import wt.lifecycle.LifeCycleHelper;
 import wt.lifecycle.State;
 import wt.org.WTPrincipal;
+import wt.org.WTUser;
 import wt.part.WTPart;
 import wt.part.WTPartMaster;
 import wt.query.QuerySpec;
@@ -53,6 +78,7 @@ import wt.queue.ProcessingQueue;
 import wt.queue.QueueHelper;
 import wt.services.ServiceFactory;
 import wt.session.SessionHelper;
+import wt.util.WTProperties;
 
 public class EcoHelper {
 
@@ -650,5 +676,491 @@ public class EcoHelper {
 	public void summaryData(Map<String, Object> params) throws Exception {
 		String type = (String) params.get("type");
 
+	}
+
+	/*
+	 * 설계변경 통보서
+	 */
+	public Map<String, Object> excel(String oid) throws Exception {
+		Map<String, Object> result = new HashMap<>();
+		EChangeOrder eco = (EChangeOrder) CommonUtil.getObject(oid);
+		EcoDTO dto = new EcoDTO(eco);
+//		Map<String, String> map = ChangeUtil.getApproveInfo(eco);
+		Map<String, String> map = new HashMap<>();
+
+		String wtHome = WTProperties.getServerProperties().getProperty("wt.home");
+		String path = WTProperties.getServerProperties().getProperty("wt.temp");
+
+		File orgFile = new File(wtHome + "/codebase/com/e3ps/change/eco/dto/eco.xlsx");
+
+		File newFile = CommonUtil.copyFile(orgFile, new File(path + "/" + dto.getNumber() + ".xlsx"));
+
+		FileInputStream file = new FileInputStream(newFile);
+
+		XSSFWorkbook workbook = new XSSFWorkbook(file);
+
+		XSSFSheet sheet = workbook.getSheetAt(0);
+
+		workbook.setSheetName(0, dto.getNumber());
+
+		System.out.println("쓰기 시작....." + POIUtil.getSheetRow(sheet));
+
+		// 문서번호 (9-D ,8-3)
+		XSSFCell documentNumber = sheet.getRow(8).getCell(5);
+		documentNumber.setCellValue(dto.getNumber());
+
+		// 작성자 (17-I, 16-8)
+		XSSFCell creator = sheet.getRow(16).getCell(8);
+		creator.setCellValue(dto.getCreator());
+
+		// 검토자 (17-K, 16-10)
+		XSSFCell chk = sheet.getRow(16).getCell(10);
+		chk.setCellValue(map.get("checkerName"));
+
+		// 승인자 (17-M 16-12)
+		XSSFCell approver = sheet.getRow(16).getCell(12);
+		approver.setCellValue(map.get("approveName"));
+
+		// 작성일 (18-I, 17-8)
+		XSSFCell creatDate = sheet.getRow(17).getCell(8);
+		creatDate.setCellValue(dto.getCreatedDate_txt());
+
+		// 검토일 (18-K, 17-10)
+		XSSFCell chkDate = sheet.getRow(17).getCell(10);
+		chkDate.setCellValue(map.get("checkDate"));
+
+		// 승인일 (18-M, 17-12)
+		XSSFCell approveDate = sheet.getRow(17).getCell(12);
+		approveDate.setCellValue(map.get("approveDate"));
+
+		// 문서 번호 (29-D, 28-3)
+		XSSFCell documentNumber2 = sheet.getRow(28).getCell(3);
+		documentNumber2.setCellValue(dto.getNumber());
+
+		// 제목 (30-D, 29-3)
+		XSSFCell documentName = sheet.getRow(29).getCell(3);
+		documentName.setCellValue(dto.getName());
+
+		// 작성일 (32-D, 31-3)
+		XSSFCell creatDate2 = sheet.getRow(31).getCell(3);
+		creatDate2.setCellValue(dto.getCreatedDate_txt());
+
+		WTUser user = (WTUser) eco.getCreator().getObject();
+		PeopleDTO pdto = new PeopleDTO(user);
+
+		// 작성부서 (32-I, 31-8)
+		XSSFCell createDept = sheet.getRow(31).getCell(8);
+		createDept.setCellValue(pdto.getDepartment_name());
+
+		// 승인일 (33-D, 32-3)
+		XSSFCell approveDate2 = sheet.getRow(32).getCell(3);
+		approveDate2.setCellValue(map.get("approveDate"));
+
+		// 작성자 (33-I, 32-8)
+		XSSFCell creator2 = sheet.getRow(32).getCell(8);
+		creator2.setCellValue(dto.getCreator());
+
+		// 제품명 (35-D, 34-3)
+		XSSFCell modelName = sheet.getRow(34).getCell(3);
+		modelName.setCellValue(dto.getModel_name());
+
+		ArrayList<EOCompletePartLink> completeParts = completeParts(eco);
+
+		// 완제품 품번 (36-D, 35-3)
+		String completePart = "";
+		for (int i = 0; i < completeParts.size(); i++) {
+			EOCompletePartLink link = (EOCompletePartLink) completeParts.get(i);
+			String n = link.getCompletePart().getNumber();
+			completePart = completePart + n;
+			if (i != (completeParts.size() - 1)) {
+				completePart += ",";
+			}
+		}
+		XSSFCell completePartName = sheet.getRow(35).getCell(3);
+		completePartName.setCellValue(completePart);
+
+		// 변경사유(37-D, 36-3)
+		XSSFCell eoCommentA = sheet.getRow(36).getCell(3);
+		// PJT EDIT 20161122
+		XSSFCellStyle cellStyle_UP = workbook.createCellStyle();
+		cellStyle_UP.setAlignment(HorizontalAlignment.LEFT);
+		cellStyle_UP.setShrinkToFit(true);
+		XSSFFont sfont = workbook.createFont();
+		sfont.setFontHeightInPoints((short) 10);
+		cellStyle_UP.setFont(sfont);
+		cellStyle_UP.setVerticalAlignment(VerticalAlignment.TOP);
+		cellStyle_UP.setBorderBottom(BorderStyle.THIN);
+		cellStyle_UP.setBorderTop(BorderStyle.THIN);
+		cellStyle_UP.setTopBorderColor(IndexedColors.BLACK.getIndex());
+		cellStyle_UP.setBottomBorderColor(IndexedColors.BLACK.getIndex());
+
+		cellStyle_UP.setWrapText(true);
+		eoCommentA.setCellStyle(cellStyle_UP);
+		eoCommentA.setCellValue(dto.getEoCommentA());
+		XSSFRow comARow = (XSSFRow) sheet.getRow(36);
+		int height = comARow.getHeight();
+		String com = dto.getEoCommentA();
+		if (null != com) {
+			for (int i = 0; i < com.length(); i++) {
+				char ca = com.charAt(i);
+				Character careCa = Character.valueOf('\n');
+				if (ca == careCa) {
+					height += 150;
+				}
+			}
+		}
+		System.out.println("heigh2t=" + height);
+		comARow.setHeight((short) height);
+		// 변경근거(38-D, 37-3)
+		XSSFCell ecrNo = sheet.getRow(37).getCell(3);
+		// to enable newlines you need set a cell styles with wrap=true
+		XSSFCellStyle cellStyleEcrNo_UP = workbook.createCellStyle();
+		cellStyleEcrNo_UP.setAlignment(HorizontalAlignment.LEFT);
+		cellStyleEcrNo_UP.setShrinkToFit(true);
+		cellStyleEcrNo_UP.setFont(sfont);
+		cellStyleEcrNo_UP.setVerticalAlignment(VerticalAlignment.TOP);
+		cellStyleEcrNo_UP.setBorderBottom(BorderStyle.MEDIUM);
+		cellStyleEcrNo_UP.setBorderTop(BorderStyle.THIN);
+		cellStyleEcrNo_UP.setTopBorderColor(IndexedColors.BLACK.getIndex());
+		cellStyleEcrNo_UP.setBottomBorderColor(IndexedColors.BLACK.getIndex());
+
+		cellStyleEcrNo_UP.setWrapText(true);
+		ecrNo.setCellStyle(cellStyleEcrNo_UP);
+
+		QueryResult qr = PersistenceHelper.manager.navigate(eco, "ecr", RequestOrderLink.class);
+		String ecrNumbersNames = "";
+		while (qr.hasMoreElements()) {
+			EChangeRequest ecr = (EChangeRequest) qr.nextElement();
+			String nn = ecr.getEoNumber() + " [" + ecr.getName() + "]";
+			ecrNumbersNames += (nn + "\r\n");
+		}
+		XSSFRow ecrNumbersNamesRow = (XSSFRow) sheet.getRow(37);
+		if (null != ecrNumbersNames) {
+			for (int i = 0; i < ecrNumbersNames.length(); i++) {
+				char ca = ecrNumbersNames.charAt(i);
+				Character careCa = Character.valueOf('\n');
+				if (ca == careCa) {
+					height += 150;
+				}
+			}
+		}
+		ecrNumbersNamesRow.setHeight((short) height);
+		ecrNo.setCellValue(ecrNumbersNames);
+
+		/**
+		 * 설계변경 부품 내역 46 Line(45 Index) 부터 ~
+		 */
+
+		int row = 45;
+
+//		List<Map<String, String>> excelList = getECO_RoleTypeExcelData(eco);
+//
+//		for (Map<String, String> excelMap : excelList) {
+//
+//			if (row > 45) {
+//				POIUtil.copyRow(workbook, sheet, (row - 1), 1);
+//			}
+//
+//			// NO (B, 1)
+//			XSSFCell excelNo = sheet.getRow(row).getCell(1);
+//			excelNo.setCellValue((String) excelMap.get("no"));
+//
+//			// 변경 전 품번 (C, 2)
+//			XSSFCell oldPartNumber = sheet.getRow(row).getCell(2);
+//			oldPartNumber.setCellValue((String) excelMap.get("oldPartNumber"));
+//
+//			// 변경 후 품번 (F, 5)
+//			XSSFCell newPartNumber = sheet.getRow(row).getCell(5);
+//			newPartNumber.setCellValue((String) excelMap.get("newPartNumber"));
+//
+//			// 품명 (G, 6)
+//			XSSFCell partName = sheet.getRow(row).getCell(6);
+//			partName.setCellValue((String) excelMap.get("partName"));
+//
+//			// 부품 상태 코드 (I, 8)
+//			XSSFCell stateCode = sheet.getRow(row).getCell(8);
+//			stateCode.setCellValue((String) excelMap.get("stateCode"));
+//
+//			// 납품 장비 (J, 9)
+//			XSSFCell deliveryProduct = sheet.getRow(row).getCell(9);
+//			deliveryProduct.setCellValue((String) excelMap.get("deliveryProduct"));
+//
+//			// 완성 장비 (K, 10)
+//			XSSFCell completeProduct = sheet.getRow(row).getCell(10);
+//			completeProduct.setCellValue((String) excelMap.get("completeProduct"));
+//
+//			// 사내 재고 (L, 11)
+//			XSSFCell companyStock = sheet.getRow(row).getCell(11);
+//			companyStock.setCellValue((String) excelMap.get("companyStock"));
+//
+//			// 발주 부품 (M, 12)
+//			XSSFCell orderProduct = sheet.getRow(row).getCell(12);
+//			orderProduct.setCellValue((String) excelMap.get("orderProduct"));
+//
+//			// 중량 (N, 13)
+//			XSSFCell wegiht = sheet.getRow(row).getCell(13);
+//			wegiht.setCellValue((String) excelMap.get("wegiht"));
+//
+//			row++;
+//		}
+
+		/**
+		 * 설계변경 부품 내역 끝
+		 */
+
+		if (row == 45)
+			row++;
+
+		row++;
+		row++;
+		row++;
+
+		// 설계변경 세부내용 (blank)
+		sheet.getRow(row).setHeight((short) 90);
+		row++;
+
+		// 설계변경 세부내용 (B, 1)
+		sheet.getRow(row).setHeight((short) 1050);
+
+		XSSFCell eoCommentB = sheet.getRow(row).getCell(1);
+		eoCommentB.setCellValue(dto.getEoCommentB());
+		XSSFRow comBRow = (XSSFRow) sheet.getRow(row);
+		int bheight = comBRow.getHeight();
+		String comB = dto.getEoCommentB();
+		if (null != comB) {
+			for (int i = 0; i < comB.length(); i++) {
+				char ca = comB.charAt(i);
+				Character careCa = Character.valueOf('\n');
+				if (ca == careCa) {
+					bheight += 300;
+				}
+			}
+		}
+
+		System.out.println("bheight=" + bheight);
+		comBRow.setHeight((short) bheight);
+		row++;
+
+		row++;
+		row++;
+		row++;
+
+		/**
+		 * 변경 문건 시작
+		 */
+		int startRow = row;
+		int documentIndex = 1;
+//
+//		List<Map<String, Object>> docList = ECAHelper.service.viewECA(eco);
+//
+//		for (Map<String, Object> dmap : docList) {
+//
+//			ECAData ecaData = (ECAData) dmap.get("ecaData");
+//
+//			List<DocumentData> documentList = ecaData.getDocList();
+//
+//			for (DocumentData docData : documentList) {
+//				if (row > startRow) {
+//					POIUtil.copyRow(workbook, sheet, (row - 1), 1);
+//				}
+//
+//				// NO (B, 1)
+//				XSSFCell docNo = sheet.getRow(row).getCell(1);
+//				docNo.setCellValue(documentIndex);
+//
+//				// 문서명 (E, 4)
+//				XSSFCell docName = sheet.getRow(row).getCell(4);
+//				// docName.setCellStyle(cellStyle_LEFT);
+//				docName.setCellValue(docData.name);
+//
+//				// 문서번호 (I, 8)
+//				XSSFCell docNumber = sheet.getRow(row).getCell(8);
+//				docNumber.setCellValue(docData.getIBAValue(AttributeKey.IBAKey.IBA_INTERALNUMBER));
+//
+//				// 버전 (M, 12)
+//				XSSFCell docRev = sheet.getRow(row).getCell(12);
+//				docRev.setCellValue(docData.version + "." + docData.iteration);
+//
+//				documentIndex++;
+//
+//				row++;
+//			}
+//		}
+
+		if (startRow == row)
+			row++;
+		row++;
+		// 위험관리
+		XSSFCell licensing = sheet.getRow(row).getCell(4);
+		System.out.println("licensing =" + licensing);
+		licensing.setCellValue(dto.getLicensing_name());
+		// 위험 통제
+		XSSFCell riskType = sheet.getRow(row).getCell(9);
+		riskType.setCellValue(dto.getRiskType_name());
+		row++;
+		row++;
+
+		// 특기사항 (blank)
+		sheet.getRow(row).setHeight((short) 90);
+		row++;
+
+		// 특기사항 (E, 4)
+		sheet.getRow(row).setHeight((short) 1050);
+
+		XSSFCell eoCommentC = sheet.getRow(row).getCell(4);
+		eoCommentC.setCellValue(dto.getEoCommentC());
+		XSSFRow comCRow = (XSSFRow) sheet.getRow(row);
+		int cheight = comCRow.getHeight();
+		String comC = dto.getEoCommentC();
+		if (null != comC) {
+			for (int i = 0; i < comC.length(); i++) {
+				char ca = comC.charAt(i);
+				Character careCa = Character.valueOf('\n');
+				if (ca == careCa) {
+					cheight += 350;
+				}
+			}
+		}
+		System.out.println("bheight=" + cheight);
+		comCRow.setHeight((short) cheight);
+		row++;
+
+		// 기타사항 Blank
+		sheet.getRow(row).setHeight((short) 90);
+		row++;
+
+		// 기타사항 (E, 4)
+		sheet.getRow(row).setHeight((short) 1050);
+		XSSFCell eoCommentD = sheet.getRow(row).getCell(4);
+		eoCommentD.setCellValue(dto.getEoCommentD());
+		XSSFRow comDRow = (XSSFRow) sheet.getRow(row);
+		int dheight = comDRow.getHeight();
+		String comd = dto.getEoCommentD();
+		if (null != comd) {
+			for (int i = 0; i < comd.length(); i++) {
+				char ca = comd.charAt(i);
+				Character careCa = Character.valueOf('\n');
+				if (ca == careCa) {
+					dheight += 350;
+				}
+			}
+		}
+		System.out.println("dheight=" + dheight);
+		comDRow.setHeight((short) dheight);
+		row++;
+
+		row++;
+		row++;
+		row++;
+
+		/**
+		 * 첨부파일 시작 (기타사항 +4)
+		 */
+
+		startRow = row;
+		int attachCount = 1;
+
+		QueryResult attachQr = ContentHelper.service.getContentsByRole(eco, ContentRoleType.SECONDARY);
+
+		while (attachQr.hasMoreElements()) {
+
+			ContentItem item = (ContentItem) attachQr.nextElement();
+
+			if (item != null) {
+
+				if (row > startRow) {
+					POIUtil.copyRow(workbook, sheet, (row - 1), 1);
+				}
+
+				ApplicationData appData = (ApplicationData) item;
+
+				// NO (B, 1)
+				XSSFCell attchNo = sheet.getRow(row).getCell(1);
+				attchNo.setCellValue(attachCount);
+
+				// 파일명 (C, 2)
+				XSSFCell attchName = sheet.getRow(row).getCell(2);
+				attchName.setCellValue(appData.getFileName());
+
+				attachCount++;
+				row++;
+			}
+		}
+
+		/**
+		 * 첨부파일 끝
+		 */
+
+		if (startRow == row)
+			row++;
+		row++;
+		row++;
+		row++;
+
+		/**
+		 * 결재자 의견 시작(첨부파일 +2)
+		 */
+
+		startRow = row;
+
+		List<Map<String, Object>> appList = GroupwareHelper.service.getApprovalList(oid);
+
+		for (Map<String, Object> amap : appList) {
+
+			if (row > startRow) {
+				POIUtil.copyRow(workbook, sheet, (row - 1), 1);
+			}
+
+			// 이름 (B, 1)
+			XSSFCell name = sheet.getRow(row).getCell(1);
+			name.setCellValue((String) amap.get("userName"));
+
+			// 날짜 (D, 3)
+			String processDate = "";
+			if (amap.get("processDate") != null) {
+				System.out.println((amap.get("processDate")).getClass());
+				processDate = DateUtil.subString(((Object) amap.get("processDate")).toString(), 0, 10);
+			}
+
+			XSSFCell date = sheet.getRow(row).getCell(3);
+			date.setCellValue(processDate);
+
+			// 내용 (F, 5)
+			XSSFCell description = sheet.getRow(row).getCell(5);
+			description.setCellValue((String) amap.get("comment"));
+			XSSFRow comDescRow = (XSSFRow) sheet.getRow(row);
+			int descheight = comDescRow.getHeight();
+			String comdescd = (String) amap.get("comment");
+			if (null != comdescd) {
+				for (int i = 0; i < comdescd.length(); i++) {
+					char ca = comdescd.charAt(i);
+					Character careCa = Character.valueOf('\n');
+					if (ca == careCa) {
+						descheight += 350;
+					}
+				}
+			}
+			System.out.println("descheight=" + descheight);
+			comDescRow.setHeight((short) descheight);
+
+			row++;
+		}
+
+		/**
+		 * 결재자 의견 끝
+		 */
+
+		System.out.println("쓰기 종료....." + POIUtil.getSheetRow(sheet));
+
+		file.close();
+
+		FileOutputStream outFile = new FileOutputStream(newFile);
+		workbook.write(outFile);
+		outFile.close();
+
+		workbook.close();
+
+		result.put("name", newFile.getName());
+		return result;
 	}
 }

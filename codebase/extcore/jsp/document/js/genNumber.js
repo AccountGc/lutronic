@@ -19,6 +19,8 @@ function toUI() {
 	$("#" + classType3Id).bindSelectDisabled(true);
 	$("#" + modelId).bindSelectDisabled(true);
 	productDisable();
+	const clearSecond = document.getElementById("clearSecond");
+	clearSecond.style.display = "none";
 }
 
 function requiredAdd() {
@@ -38,6 +40,8 @@ function first(obj) {
 		let checker = autoNumberChecker(classType1);
 		// 채번 대상이다
 		if (!checker) {
+			const clearSecond = document.getElementById("clearSecond");
+			clearSecond.style.display = "";
 			if ("DEV" === classType1) {
 				classType2(classType1);
 				requiredAdd();
@@ -67,6 +71,13 @@ function first(obj) {
 			if ("SOURCE" === classType1) {
 				const reqNum = document.getElementById("reqNum");
 				reqNum.classList.remove("req");
+			}
+
+			const selector = document.getElementById("inputBasic_AX_classType2");
+			if (selector !== undefined) {
+				const clearSecond = document.getElementById("clearSecond");
+				clearSecond.style.display = "none";
+				selector.parentNode.removeChild(selector);
 			}
 		}
 	}

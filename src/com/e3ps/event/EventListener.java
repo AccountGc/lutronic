@@ -1,11 +1,5 @@
 package com.e3ps.event;
 
-import com.e3ps.change.EChangeActivity;
-import com.e3ps.change.EChangeOrder;
-import com.e3ps.change.activity.service.ActivityHelper;
-import com.e3ps.change.eco.service.EcoHelper;
-import com.e3ps.change.eo.service.EoHelper;
-
 import wt.events.KeyedEvent;
 import wt.fc.PersistenceManagerEvent;
 import wt.lifecycle.LifeCycleServiceEvent;

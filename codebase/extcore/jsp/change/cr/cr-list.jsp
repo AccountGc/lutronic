@@ -314,11 +314,12 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 					hideContextMenu();
 					const state = item.state;
 					let withdraw = true;
+					const isNew = item.new;
 					if ("승인중" === state) {
 						withdraw = false;
 					}
 					let print = true;
-					if ("승인됨" === state) {
+					if ("승인됨" === state && isNew) {
 						print = false;
 					}
 					const menu = [ {
@@ -352,13 +353,14 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 				const item = event.item;
 				const oid = item.oid;
 				const state = item.state;
+				const isNew = item.new;
 				let url;
-				let withdraw = false
+				let withdraw = false;
 				if ("승인중" === state) {
 					withdraw = true;
 				}
 				let print = false;
-				if ("승인됨" === state) {
+				if ("승인됨" === state && isNew) {
 					print = true;
 				}
 				switch (event.contextIndex) {

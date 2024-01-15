@@ -173,7 +173,7 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 			function _layout() {
 				return [ {
 					dataField : "number",
-					headerText : "ECPR 번호",
+					headerText : "ECRM 번호",
 					dataType : "string",
 					width : 130,
 					renderer : {
@@ -187,7 +187,7 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 					},
 				}, {
 					dataField : "name",
-					headerText : "ECPR 제목",
+					headerText : "ECRM 제목",
 					dataType : "string",
 					style : "aui-left",
 					renderer : {

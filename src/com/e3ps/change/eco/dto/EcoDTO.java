@@ -42,6 +42,7 @@ public class EcoDTO {
 	private String eoType;
 	private String approveDate = "";
 	private String model_name;
+	private String createDepart;
 
 	// auth
 	private boolean _modify = false;

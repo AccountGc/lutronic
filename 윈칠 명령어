@@ -63,4 +63,69 @@
 	- 사이트 > 유틸리티 > 대기열관리 > WordToPdfProcessQueue 프로세스 큐 생성
 	
 14. 설병용 PDF 큐 생성
-	- 사이트 > 유틸리티 > 대기열관리 > AttachPdfProcessQueue 프로세스 큐 생성	
+	- 사이트 > 유틸리티 > 대기열관리 > AttachPdfProcessQueue 프로세스 큐 생성
+	
+	
+15. 워커 설정, 캐시, DB설정
+   <!-- Publish Filter -->
+   <Property name="publish.service.filterepmdocumentpublishmethod" overridable="true"
+             targetFile="codebase/WEB-INF/conf/wvs.properties"
+             value="com.ptc.wvs.util.EPMDocumentPublishFilters/filterEPMDocumentPublish"/>
+   <Property name="publish.service.filterepmdocumentpublishmethod.defaultrule" overridable="true"
+             targetFile="codebase/WEB-INF/conf/wvs.properties"
+             value="include"/>
+             
+   <!-- Worker Queue Set -->
+   <Property name="publish.publishqueue.priorities.filtermethod" overridable="true"
+             targetFile="codebase/WEB-INF/conf/wvs.properties"
+             value="com.ptc.wvs.util.queues.PublishJobUtil/filterQueueSet"/>
+   <Property name="publish.publishqueue.setnames" overridable="true"
+             targetFile="codebase/WEB-INF/conf/wvs.properties"
+             value="PRINT CLASH PROEAQ PROEDQ"/>
+   <Property name="publish.publishqueue.priorities.filtermethod.queueSetName.PROECADCOMPONENT.0.0" overridable="true"
+             targetFile="codebase/WEB-INF/conf/wvs.properties"
+             value="PROEAQ"/>
+   <Property name="publish.publishqueue.priorities.filtermethod.queueSetName.PROECADDRAWING.0.0" overridable="true"
+             targetFile="codebase/WEB-INF/conf/wvs.properties"
+             value="PROEDQ"/>
+   <Property name="publish.publishqueue.priorities.filtermethod.queueSetName.PROECADASSEMBLY.0.0" overridable="true"
+             targetFile="codebase/WEB-INF/conf/wvs.properties"
+             value="PROEAQ"/>
+   <Property name="publish.publishqueue.usesetworkers.forqueueset.PROEDQ" overridable="true"
+             targetFile="codebase/WEB-INF/conf/wvs.properties"
+             value="ALL"/>
+   <Property name="publish.publishqueue.usesetworkers.forqueueset.PROEAQ" overridable="true"
+             targetFile="codebase/WEB-INF/conf/wvs.properties"
+             value="ALL"/>
+   <Property name="publish.copyforwardallrepresentationsonrevise" overridable="true"
+             targetFile="codebase/WEB-INF/conf/wvs.properties"
+             value="false"/>
+   <Property name="publish.copyrepresentationsforward" overridable="true"
+             targetFile="codebase/WEB-INF/conf/wvs.properties"
+             value="false"/>
+
+   <!-- Cache Setting -->
+   <Property name="wt.cache.size.PreferenceCache" overridable="true"
+             targetFile="codebase/wt.properties"
+             value="5000"/>
+             
+   <!-- Worker Timeout Setting -->
+   <Property name="publish.cadtimeout.assembly" overridable="true"
+             targetFile="codebase/WEB-INF/conf/wvs.properties"
+             value="7200"/>
+   <Property name="publish.cadtimeout.component" overridable="true"
+             targetFile="codebase/WEB-INF/conf/wvs.properties"
+             value="3600"/>
+   <Property name="publish.cadtimeout.drawing" overridable="true"
+             targetFile="codebase/WEB-INF/conf/wvs.properties"
+             value="7200"/>    
+                                                   
+   <!-- Worker Connection Timeout Setting -->
+   <Property name="thumbnail.cadagenttimeout" overridable="true"
+             targetFile="codebase/WEB-INF/conf/wvs.properties"
+             value="3600"/>        
+ 
+    <!-- Db Connection Setting -->
+   <Property name="wt.pom.maxDbConnections" overridable="true"
+             targetFile="db/db.properties"
+             value="200"/>             

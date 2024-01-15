@@ -26,14 +26,15 @@ import com.e3ps.controller.BaseController;
 @Controller
 @RequestMapping(value = "/eco/**")
 public class EcoController extends BaseController {
-
+	
+	
 	@Description(value = "ECO 설계변경 통보서")
 	@ResponseBody
-	@PostMapping(value = "/excel")
-	public Map<String, Object> excel(@RequestBody Map<String, Object> params) throws Exception {
-		Map<String, Object> result = null;
+	@GetMapping(value="/excel")
+	public Map<String, Object> excel(@RequestParam String oid) throws Exception {
+		Map<String, Object> result = new HashMap<>();
 		try {
-			result = EcoHelper.manager.list(params);
+			result = EcoHelper.manager.excel(oid);
 			result.put("result", SUCCESS);
 		} catch (Exception e) {
 			e.printStackTrace();

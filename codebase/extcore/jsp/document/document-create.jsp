@@ -28,7 +28,7 @@ iframe {
 <%@include file="/extcore/jsp/common/auigrid.jsp"%>
 
 <!-- 채번스크립트 -->
-<script type="text/javascript" src="/Windchill/extcore/jsp/document/js/genNumber.js?v=066011011091"></script>
+<script type="text/javascript" src="/Windchill/extcore/jsp/document/js/genNumber.js?v=100110911"></script>
 </head>
 <body>
 	<form>
@@ -100,7 +100,7 @@ iframe {
 				<th>중분류</th>
 				<td class="indent5">
 					<input type="text" name="classType2" id="classType2" class="width-400" readonly="readonly">
-					<img src="/Windchill/extcore/images/delete.png" class="delete" title="삭제" onclick="clearSecond();">
+					<img src="/Windchill/extcore/images/delete.png" id="clearSecond" class="delete" title="삭제" onclick="clearSecond();">
 				</td>
 				<th>소분류</th>
 				<td class="indent5">

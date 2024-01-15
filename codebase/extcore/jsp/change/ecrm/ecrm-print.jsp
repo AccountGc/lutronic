@@ -304,8 +304,12 @@ if (agreeLines.size() > 0) {
 	</table>
 </div>
 
+<div style="display: none;" id="desc"><%=dto.getContents()%></div>
+
 <script type="text/javascript">
-	const content = document.getElementById("content");
-	content.innerHTML = '<%%=dto.getContents()%>';
-	print();
+	document.addEventListener("DOMContentLoaded", function() {
+		const content = document.getElementById("content");
+		content.innerHTML = document.getElementById("desc").innerHTML;
+		print();
+	})
 </script>
