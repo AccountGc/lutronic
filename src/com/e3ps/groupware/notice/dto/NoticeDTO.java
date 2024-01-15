@@ -28,6 +28,7 @@ import lombok.Setter;
 @Setter
 public class NoticeDTO {
 
+	private int rowNum;
 	private String oid;
 	private String title;
 	private String creator;

@@ -222,7 +222,7 @@ public class StandardActivityService extends StandardManager implements Activity
 	}
 
 	@Override
-	public void saveActivity(EChangeOrder eo, ArrayList<Map<String, String>> list) throws Exception {
+	public void saveActivity(EChangeOrder e, ArrayList<Map<String, String>> list) throws Exception {
 
 		int sort = 0;
 		for (Map<String, String> map : list) {
@@ -234,6 +234,7 @@ public class StandardActivityService extends StandardManager implements Activity
 				String oid = (String) map.get("oid");
 				WTUser user = (WTUser) CommonUtil.getObject(activeUser_oid);
 				EChangeActivity eca = (EChangeActivity) CommonUtil.getObject(oid);
+				eca.setName(e.getName());
 				eca.setActiveType(activity_type);
 				eca.setActiveUser(user);
 				eca.setFinishDate(DateUtil.convertDate(finishDate));
@@ -248,12 +249,12 @@ public class StandardActivityService extends StandardManager implements Activity
 
 				EChangeActivity eca = EChangeActivity.newEChangeActivity();
 				eca.setStep("ES001"); // 강제 스텝1
-//			eca.setName(name);
+				eca.setName(e.getName());
 				eca.setActiveType(activity_type);
 				eca.setActiveUser(user);
 				eca.setFinishDate(DateUtil.convertDate(finishDate));
 				eca.setSortNumber(sort);
-				eca.setEo(eo);
+				eca.setEo(e);
 
 				String location = "/Default/설계변경/ECA";
 				String lifecycle = "LC_ECA_PROCESS";
@@ -600,7 +601,8 @@ public class StandardActivityService extends StandardManager implements Activity
 
 	@Override
 	public void revise(Map<String, Object> params) throws Exception {
-		ArrayList<Map<String, Object>> list = (ArrayList<Map<String, Object>>) params.get("data");
+		ArrayList<String> arrs = (ArrayList<String>) params.get("arr");
+		ArrayList<String> links = (ArrayList<String>) params.get("link");
 		String oid = (String) params.get("oid");
 		Transaction trs = new Transaction();
 		try {
@@ -610,9 +612,9 @@ public class StandardActivityService extends StandardManager implements Activity
 			EChangeOrder eco = (EChangeOrder) eca.getEo();
 			String message = "[" + eco.getEoNumber() + "]를 통해서 수정되었습니다.";
 
-			for (Map<String, Object> map : list) {
-				String part_oid = (String) map.get("part_oid");
-				String link_oid = (String) map.get("link_oid");
+			for (int i = 0; i < arrs.size(); i++) {
+				String part_oid = (String) arrs.get(i);
+				String link_oid = (String) links.get(i);
 
 				EcoPartLink link = (EcoPartLink) CommonUtil.getObject(link_oid);
 
@@ -656,14 +658,13 @@ public class StandardActivityService extends StandardManager implements Activity
 							PersistenceServerHelper.manager.insert(newLink);
 						}
 					}
-				}
 
-				// 2D 도면 개정인데 체크해봐야함
-				if (newEpm != null) {
-
-				} else {
-					if (epm != null) {
-
+					// 2d
+					EPMDocument epm2d = PartHelper.manager.getEPMDocument2D(epm);
+					if (epm2d != null) {
+						EPMDocument newEpm2d = (EPMDocument) VersionControlHelper.service.newVersion(epm2d);
+						VersionControlHelper.setNote(newEpm2d, message);
+						PersistenceHelper.manager.save(newEpm2d);
 					}
 				}
 
@@ -787,7 +788,8 @@ public class StandardActivityService extends StandardManager implements Activity
 				link.setPreOrder(false);
 
 				boolean isApproved = part.getLifeCycleState().toString().equals("APPROVED");
-//				boolean isFour = part.getNumber().startsWith("4"); // 4로 시작하는것은 무조건 모두 새품번
+				// ???
+				boolean isFour = part.getNumber().startsWith("4"); // 4로 시작하는것은 무조건 모두 새품번
 
 				// 승인된 데이터는 왼쪽으로
 				if (isApproved) {
@@ -903,31 +905,101 @@ public class StandardActivityService extends StandardManager implements Activity
 	}
 
 	@Override
-	public void saveData(Map<String, Object> params) throws Exception {
+	public Map<String, Object> saveData(Map<String, Object> params) throws Exception {
+		Map<String, Object> result = new HashMap<>();
 		ArrayList<Map<String, Object>> editRows = (ArrayList<Map<String, Object>>) params.get("editRows");
 		ArrayList<Map<String, Object>> removeRows = (ArrayList<Map<String, Object>>) params.get("removeRows");
+		ArrayList<Map<String, Object>> addRows = (ArrayList<Map<String, Object>>) params.get("addRows");
 		Transaction trs = new Transaction();
 		try {
 			trs.start();
-
 			String oid = (String) params.get("oid");
 			EChangeActivity eca = (EChangeActivity) CommonUtil.getObject(oid);
 			EChangeOrder eco = (EChangeOrder) eca.getEo();
+
+			for (Map<String, Object> addRow : addRows) {
+				String next_oid = (String) addRow.get("next_oid");
+				String part_oid = (String) addRow.get("part_oid");
+
+				boolean isExist = false;
+				String msg = "";
+				if (StringUtil.checkString(next_oid)) {
+					WTPart part = (WTPart) CommonUtil.getObject(next_oid);
+					QueryResult qr = PersistenceHelper.manager.navigate(part, "eco", EcoPartLink.class);
+					while (qr.hasMoreElements()) {
+						EChangeOrder ee = (EChangeOrder) qr.nextElement();
+						// 작업중 혹은 승인중?
+						if (ee.getLifeCycleState().toString().equals("INWORK")
+								|| ee.getLifeCycleState().toString().equals("APPROVING")) {
+							isExist = true;
+							msg = part.getNumber() + " 품목은 EO/ECO(" + ee.getEoNumber() + ")에서 설계변경이 진행중인 품목입니다.";
+							break;
+						}
+					}
+				}
+
+				if (isExist) {
+					result.put("isExist", isExist);
+					result.put("msg", msg);
+					return result;
+				}
+
+				if (StringUtil.checkString(part_oid)) {
+					WTPart part = (WTPart) CommonUtil.getObject(part_oid);
+					QueryResult qr = PersistenceHelper.manager.navigate(part, "eco", EcoPartLink.class);
+					while (qr.hasMoreElements()) {
+						EChangeOrder ee = (EChangeOrder) qr.nextElement();
+						// 작업중 혹은 승인중?
+						if (ee.getLifeCycleState().toString().equals("INWORK")
+								|| ee.getLifeCycleState().toString().equals("APPROVING")) {
+							isExist = true;
+							msg = part.getNumber() + " 품목은 EO/ECO(" + ee.getEoNumber() + ")에서 설계변경이 진행중인 품목입니다.";
+							break;
+						}
+					}
+				}
+
+				if (isExist) {
+					result.put("isExist", isExist);
+					result.put("msg", msg);
+					return result;
+				}
+
+				if (StringUtil.checkString(part_oid)) {
+					WTPart part = (WTPart) CommonUtil.getObject(part_oid);
+					saveLink(eco, part);
+					saveEndItem(eco, part);
+				}
+
+				if (StringUtil.checkString(next_oid)) {
+					WTPart nextPart = (WTPart) CommonUtil.getObject(next_oid);
+					saveLink(eco, nextPart);
+					savePartToPartLink(eco, nextPart);
+					saveEndItem(eco, nextPart);
+				}
+			}
 
 			for (Map<String, Object> map : editRows) {
 				boolean preOrder = (boolean) map.get("preOrder");
 				String next_oid = (String) map.get("next_oid");
 
-				WTPart nextPart = (WTPart) CommonUtil.getObject(next_oid);
+				if (StringUtil.checkString(next_oid)) {
+					WTPart nextPart = (WTPart) CommonUtil.getObject(next_oid);
 
-				String group = (String) map.get("group");
-				if (StringUtil.checkString(group)) {
-					String[] groups = group.split(",");
-					for (String s : groups) {
-						EChangeRequest ecr = (EChangeRequest) CommonUtil.getObject(s.trim());
-						PartGroupLink link = PartGroupLink.newPartGroupLink((WTPartMaster) nextPart.getMaster(), ecr);
-						link.setEco(eco);
-						PersistenceHelper.manager.save(link);
+					if (preOrder) {
+						IBAUtil.createIba(nextPart, "boolean", "PREORDER", "true");
+					}
+
+					String group = (String) map.get("group");
+					if (StringUtil.checkString(group)) {
+						String[] groups = group.split(",");
+						for (String s : groups) {
+							EChangeRequest ecr = (EChangeRequest) CommonUtil.getObject(s.trim());
+							PartGroupLink link = PartGroupLink.newPartGroupLink((WTPartMaster) nextPart.getMaster(),
+									ecr);
+							link.setEco(eco);
+							PersistenceHelper.manager.save(link);
+						}
 					}
 				}
 
@@ -958,10 +1030,6 @@ public class StandardActivityService extends StandardManager implements Activity
 				eLink.setOrders(order);
 				eLink.setWeight(value);
 
-				if (preOrder) {
-					IBAUtil.createIba(nextPart, "boolean", "PREORDER", "true");
-				}
-
 				PersistenceHelper.manager.modify(eLink);
 
 			}
@@ -974,9 +1042,9 @@ public class StandardActivityService extends StandardManager implements Activity
 				int idx = query.appendClassList(PartToPartLink.class, true);
 				QuerySpecUtils.toEqualsAnd(query, idx, PartToPartLink.class, "ecoReference.key.id", eco);
 				QuerySpecUtils.toEqualsAnd(query, idx, PartToPartLink.class, "roleAObjectRef.key.id", master);
-				QueryResult result = PersistenceHelper.manager.find(query);
-				if (result.hasMoreElements()) {
-					Object[] obj = (Object[]) result.nextElement();
+				QueryResult rs = PersistenceHelper.manager.find(query);
+				if (rs.hasMoreElements()) {
+					Object[] obj = (Object[]) rs.nextElement();
 					PartToPartLink link = (PartToPartLink) obj[0];
 					PersistenceHelper.manager.delete(link);
 				}
@@ -992,6 +1060,7 @@ public class StandardActivityService extends StandardManager implements Activity
 			if (trs != null)
 				trs.rollback();
 		}
+		return result;
 	}
 
 	@Override
@@ -1021,5 +1090,131 @@ public class StandardActivityService extends StandardManager implements Activity
 				trs.rollback();
 		}
 
+	}
+
+	@Override
+	public void saveLink(EChangeOrder eco, WTPart part) throws Exception {
+		Transaction trs = new Transaction();
+		try {
+			trs.start();
+			// 새로 추가된 품번인데.. 히스토리 만들기 위해 검색한다..
+			EcoPartLink link = EcoPartLink.newEcoPartLink(part.getMaster(), eco);
+			link.setVersion(part.getVersionIdentifier().getSeries().getValue());
+			link.setBaseline(true);
+			link.setPreOrder(false);
+
+			boolean isApproved = part.getLifeCycleState().toString().equals("APPROVED");
+			// ???
+			boolean isFour = part.getNumber().startsWith("4"); // 4로 시작하는것은 무조건 모두 새품번
+
+			// 승인된 데이터는 왼쪽으로
+			if (isApproved) {
+				link.setRightPart(false);
+				link.setLeftPart(true);
+			} else {
+				link.setLeftPart(false);
+				link.setRightPart(true);
+			}
+			link.setPast(false); // 과거 데이터가 아님
+			PersistenceHelper.manager.save(link);
+
+			trs.commit();
+			trs = null;
+		} catch (Exception e) {
+			e.printStackTrace();
+			trs.rollback();
+			throw e;
+		} finally {
+			if (trs != null)
+				trs.rollback();
+		}
+	}
+
+	@Override
+	public void savePartToPartLink(EChangeOrder eco, WTPart nextPart) throws Exception {
+		Transaction trs = new Transaction();
+		try {
+			trs.start();
+
+			WTPart prevPart = ActivityHelper.manager.prevPart(nextPart.getNumber());
+			if (prevPart != null) {
+				PartToPartLink pLink = PartToPartLink.newPartToPartLink(prevPart.getMaster(), nextPart.getMaster());
+				pLink.setPreVersion(prevPart.getVersionIdentifier().getSeries().getValue());
+				pLink.setAfterVersion(nextPart.getVersionIdentifier().getSeries().getValue());
+				pLink.setEco(eco);
+				PersistenceHelper.manager.save(pLink);
+			}
+
+			trs.commit();
+			trs = null;
+		} catch (Exception e) {
+			e.printStackTrace();
+			trs.rollback();
+			throw e;
+		} finally {
+			if (trs != null)
+				trs.rollback();
+		}
+	}
+
+	@Override
+	public void saveEndItem(EChangeOrder eco, WTPart part) throws Exception {
+		Transaction trs = new Transaction();
+		try {
+			trs.start();
+
+			String model = "";
+			String part_oid = part.getPersistInfo().getObjectIdentifier().getStringValue();
+			JSONArray end = PartHelper.manager.end(part_oid, null);
+			for (int i = 0; i < end.size(); i++) {
+				Map<String, String> m = (Map<String, String>) end.get(i);
+				String s = m.get("oid");
+				WTPart endPart = (WTPart) CommonUtil.getObject(s);
+				WTPartMaster mm = (WTPartMaster) endPart.getMaster();
+
+				QuerySpec query = new QuerySpec();
+				int idx = query.appendClassList(EOCompletePartLink.class, true);
+				QuerySpecUtils.toEqualsAnd(query, idx, EOCompletePartLink.class, "roleAObjectRef.key.id", mm);
+				QuerySpecUtils.toEqualsAnd(query, idx, EOCompletePartLink.class, "roleBObjectRef.key.id", eco);
+				QueryResult qr = PersistenceHelper.manager.find(query);
+				// 링크된게 없을 경우에만..
+				if (qr.size() == 0) {
+					EOCompletePartLink cLink = EOCompletePartLink.newEOCompletePartLink(mm, eco);
+					cLink.setVersion(endPart.getVersionIdentifier().getSeries().getValue());
+					PersistenceHelper.manager.save(cLink);
+				}
+
+				// endPart 쭉 돌아서 프로젝트 모델 값 입력
+				ArrayList<WTPart> ll = PartHelper.manager.descendants(endPart);
+				for (int k = 0; k < ll.size(); k++) {
+					WTPart pp = (WTPart) ll.get(k);
+					String value = IBAUtil.getStringValue(pp, "MODEL");
+					if (ll.size() - 1 == k) {
+						if (!model.contains(value)) {
+							model += value;
+						}
+					} else {
+						if (!model.contains(value)) {
+							model += value + ",";
+						}
+					}
+				}
+			}
+			// EO
+			eco.setModel(model);
+			PersistenceHelper.manager.modify(eco);
+
+			trs.commit();
+			trs = null;
+		} catch (
+
+		Exception e) {
+			e.printStackTrace();
+			trs.rollback();
+			throw e;
+		} finally {
+			if (trs != null)
+				trs.rollback();
+		}
 	}
 }

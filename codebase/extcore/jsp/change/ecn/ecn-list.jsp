@@ -274,8 +274,6 @@ boolean isEdit = (boolean) request.getAttribute("isEdit");
 					enableCellMerge : true,
 					headerHeight : 30,
 					showRowNumColumn : false,
-					showRowCheckColumn : true,
-					rowNumHeaderText : "번호",
 					showAutoNoDataMessage : false,
 					selectionMode : "multipleCells",
 					hoverMode : "singleRow",

@@ -170,7 +170,7 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 		<script type="text/javascript">
 			let myGridID;
 			function _layout() {
-				return [{
+				return [ {
 					dataField : "rowNum",
 					headerText : "번호",
 					width : 40,
@@ -265,7 +265,6 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 				const props = {
 					headerHeight : 30,
 					showRowNumColumn : false,
-					rowNumHeaderText : "번호",
 					showAutoNoDataMessage : false,
 					selectionMode : "multipleCells",
 					hoverMode : "singleRow",
@@ -466,7 +465,7 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 				AUIGrid.resize(myGridID);
 				selectbox("state");
 				finderUser("creator");
-// 				finderUser("writer");
+				// 				finderUser("writer");
 				// 				finderUser("proposer");
 				twindate("created");
 				twindate("approve");

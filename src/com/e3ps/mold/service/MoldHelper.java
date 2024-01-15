@@ -272,12 +272,11 @@ public class MoldHelper {
 
 		PageQueryUtils pager = new PageQueryUtils(params, query);
 		PagingQueryResult result = pager.find();
-		int rowNum = pager.getTotal();
-		while (result.hasMoreElements()) {
+		int rowNum = (pager.getCpage() - 1) * pager.getPsize() + 1;		while (result.hasMoreElements()) {
 			Object[] obj = (Object[]) result.nextElement();
 			WTDocument document = (WTDocument) obj[0];
 			MoldDTO data = new MoldDTO(document);
-			data.setRowNum(rowNum--);
+			data.setRowNum(rowNum++);
 			list.add(data);
 		}
 

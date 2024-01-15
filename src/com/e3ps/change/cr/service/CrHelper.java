@@ -137,11 +137,11 @@ public class CrHelper {
 
 		PageQueryUtils pager = new PageQueryUtils(params, query);
 		PagingQueryResult result = pager.find();
-		int rowNum = pager.getTotal();
+		int rowNum = (pager.getCpage() - 1) * pager.getPsize() + 1;
 		while (result.hasMoreElements()) {
 			Object[] obj = (Object[]) result.nextElement();
 			CrColumn data = new CrColumn(obj);
-			data.setRowNum(rowNum--);
+			data.setRowNum(rowNum++);
 			list.add(data);
 		}
 		map.put("list", list);

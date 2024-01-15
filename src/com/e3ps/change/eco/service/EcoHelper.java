@@ -178,11 +178,10 @@ public class EcoHelper {
 
 		PageQueryUtils pager = new PageQueryUtils(params, query);
 		PagingQueryResult result = pager.find();
-		int rowNum = pager.getTotal();
-		while (result.hasMoreElements()) {
+		int rowNum = (pager.getCpage() - 1) * pager.getPsize() + 1;		while (result.hasMoreElements()) {
 			Object[] obj = (Object[]) result.nextElement();
 			EcoColumn data = new EcoColumn(obj);
-			data.setRowNum(rowNum--);
+			data.setRowNum(rowNum++);
 			list.add(data);
 		}
 		map.put("list", list);
@@ -395,11 +394,11 @@ public class EcoHelper {
 					// 개정된 데이터가 없을 경우
 					if (!isRevise && !isFour) {
 						map.put("next_oid", "");
-						map.put("next_number", "변경후 데이터가 없습니다.");
-						map.put("next_name", "변경후 데이터가 없습니다.");
-						map.put("next_state", "변경후 데이터가 없습니다.");
-						map.put("next_version", "변경후 데이터가 없습니다.");
-						map.put("next_creator", "변경후 데이터가 없습니다.");
+						map.put("next_number", "개정 후 데이터가 없습니다.");
+						map.put("next_name", "개정 후 데이터가 없습니다.");
+						map.put("next_state", "개정 후 데이터가 없습니다.");
+						map.put("next_version", "개정 후 데이터가 없습니다.");
+						map.put("next_creator", "개정 후 데이터가 없습니다.");
 						map.put("afterMerge", true);
 					} else {
 						WTPart next_part = (WTPart) EChangeUtils.manager.getNext(part);
@@ -415,11 +414,11 @@ public class EcoHelper {
 							map.put("afterMerge", false);
 						} else {
 							map.put("next_oid", "");
-							map.put("next_number", "변경후 데이터가 없습니다.");
-							map.put("next_name", "변경후 데이터가 없습니다.");
-							map.put("next_state", "변경후 데이터가 없습니다.");
-							map.put("next_version", "변경후 데이터가 없습니다.");
-							map.put("next_creator", "변경후 데이터가 없습니다.");
+							map.put("next_number", "개정 후 데이터가 없습니다.");
+							map.put("next_name", "개정 후 데이터가 없습니다.");
+							map.put("next_state", "개정 후 데이터가 없습니다.");
+							map.put("next_version", "개정 후 데이터가 없습니다.");
+							map.put("next_creator", "개정 후 데이터가 없습니다.");
 							map.put("afterMerge", true);
 						}
 					}
@@ -436,11 +435,11 @@ public class EcoHelper {
 
 					if (pre_part == null) {
 						map.put("part_oid", "");
-						map.put("part_number", "변경전 데이터가 없습니다.");
-						map.put("part_name", "변경전 데이터가 없습니다.");
-						map.put("part_state", "변경전 데이터가 없습니다.");
-						map.put("part_version", "변경전 데이터가 없습니다.");
-						map.put("part_creator", "변경전 데이터가 없습니다.");
+						map.put("part_number", "개정 전 데이터가 없습니다.");
+						map.put("part_name", "개정 전 데이터가 없습니다.");
+						map.put("part_state", "개정 전 데이터가 없습니다.");
+						map.put("part_version", "개정 전 데이터가 없습니다.");
+						map.put("part_creator", "개정 전 데이터가 없습니다.");
 						map.put("preMerge", true);
 					} else {
 						map.put("part_oid", pre_part.getPersistInfo().getObjectIdentifier().getStringValue());
@@ -478,11 +477,11 @@ public class EcoHelper {
 						map.put("afterMerge", false);
 					} else {
 						map.put("next_oid", "");
-						map.put("next_number", "변경후 데이터가 없습니다.");
-						map.put("next_name", "변경후 데이터가 없습니다.");
-						map.put("next_state", "변경후 데이터가 없습니다.");
-						map.put("next_version", "변경후 데이터가 없습니다.");
-						map.put("next_creator", "변경후 데이터가 없습니다.");
+						map.put("next_number", "개정 후 데이터가 없습니다.");
+						map.put("next_name", "개정 후 데이터가 없습니다.");
+						map.put("next_state", "개정 후 데이터가 없습니다.");
+						map.put("next_version", "개정 후 데이터가 없습니다.");
+						map.put("next_creator", "개정 후 데이터가 없습니다.");
 						map.put("afterMerge", true);
 					}
 				}
@@ -525,7 +524,7 @@ public class EcoHelper {
 	 * ECO 결재 완료후 호출 되는 함수 큐 이용
 	 */
 	public void postAfterAction(EChangeOrder e) throws Exception {
-		WTPrincipal principal = SessionHelper.manager.getPrincipal();
+		WTPrincipal principal = SessionHelper.manager.setAdministrator();
 		ProcessingQueue queue = (ProcessingQueue) QueueHelper.manager.getQueue(processQueueName, ProcessingQueue.class);
 
 		Hashtable<String, String> hash = new Hashtable<>();

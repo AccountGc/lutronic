@@ -393,7 +393,7 @@ public class EChangeUtils {
 	 * 설변 PDF 변환용
 	 */
 	public void attachPdfMethod(String oid) throws Exception {
-		WTPrincipal principal = SessionHelper.manager.getPrincipal();
+		WTPrincipal principal = SessionHelper.manager.setAdministrator();
 		ProcessingQueue queue = (ProcessingQueue) QueueHelper.manager.getQueue(processQueueName, ProcessingQueue.class);
 
 		Hashtable<String, String> hash = new Hashtable<>();

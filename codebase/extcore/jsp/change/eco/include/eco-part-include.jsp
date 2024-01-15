@@ -150,16 +150,6 @@ String oid = request.getParameter("oid");
 				<img src="/Windchill/extcore/images/header.png">
 				설계변경 품목
 				<img src="/Windchill/extcore/images/fileicon/file_excel.gif" title="엑셀 다운로드" onclick="exportExcel();">
-				<%
-					if(CommonUtil.isAdmin()) {
-				%>
-				&nbsp;
-				<input type="button" value="도면(DXF)" title="도면(DXF)" class="red" onclick="summaryData('dxf');">
-				&nbsp;
-				<input type="button" value="도면(PDF)" title="도면(PDF)" class="blue" onclick="summaryData('pdf');">
-				<%
-					}
-				%>
 			</div>
 		</td>
 	</tr>
@@ -199,7 +189,7 @@ String oid = request.getParameter("oid");
 		value : "전용(C)"
 	}, ];
 	const columns510 = [ {
-		headerText : "변경 전",
+		headerText : "개정 전",
 		children : [ {
 			dataField : "part_number",
 			dataType : "string",
@@ -273,7 +263,7 @@ String oid = request.getParameter("oid");
 			width : 100,
 		} ]
 	}, {
-		headerText : "변경 후",
+		headerText : "게장 후",
 		children : [ {
 			dataField : "next_number",
 			dataType : "string",
@@ -367,7 +357,7 @@ String oid = request.getParameter("oid");
 				onClick : function(event) {
 					const oid = event.item.next_oid;
 					if (oid === "") {
-						alert("변경후 품목이 없습니다.");
+						alert("게장 후 품목이 없습니다.");
 						return false;
 					}
 					const url = getCallUrl("/bom/view?oid=" + oid);

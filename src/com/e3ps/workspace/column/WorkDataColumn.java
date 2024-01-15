@@ -21,6 +21,7 @@ import wt.part.WTPart;
 @Setter
 public class WorkDataColumn {
 
+	private int rowNum;
 	private String oid;
 	private boolean read;
 	private String poid;

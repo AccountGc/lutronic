@@ -261,9 +261,11 @@ public class EtcHelper {
 
 		PageQueryUtils pager = new PageQueryUtils(params, query);
 		PagingQueryResult result = pager.find();
+		int rowNum = (pager.getCpage() - 1) * pager.getPsize() + 1;
 		while (result.hasMoreElements()) {
 			Object[] obj = (Object[]) result.nextElement();
 			DocumentColumn data = new DocumentColumn(obj);
+			data.setRowNum(rowNum++);
 			list.add(data);
 		}
 

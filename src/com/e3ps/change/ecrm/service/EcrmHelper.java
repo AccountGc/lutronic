@@ -131,11 +131,10 @@ public class EcrmHelper {
 
 		PageQueryUtils pager = new PageQueryUtils(params, query);
 		PagingQueryResult result = pager.find();
-		int rowNum = pager.getTotal();
-		while (result.hasMoreElements()) {
+		int rowNum = (pager.getCpage() - 1) * pager.getPsize() + 1;		while (result.hasMoreElements()) {
 			Object[] obj = (Object[]) result.nextElement();
 			EcrmColumn data = new EcrmColumn(obj);
-			data.setRowNum(rowNum--);
+			data.setRowNum(rowNum++);
 			list.add(data);
 		}
 		map.put("list", list);

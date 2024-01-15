@@ -59,9 +59,11 @@ public class WorkDataHelper {
 		QuerySpecUtils.toOrderBy(query, idx, WorkData.class, WorkData.MODIFY_TIMESTAMP, true);
 		PageQueryUtils pager = new PageQueryUtils(params, query);
 		PagingQueryResult result = pager.find();
+		int rowNum = (pager.getCpage() - 1) * pager.getPsize() + 1;
 		while (result.hasMoreElements()) {
 			Object[] obj = (Object[]) result.nextElement();
 			WorkDataColumn column = new WorkDataColumn(obj);
+			column.setRowNum(rowNum++);
 			list.add(column);
 		}
 		map.put("list", list);

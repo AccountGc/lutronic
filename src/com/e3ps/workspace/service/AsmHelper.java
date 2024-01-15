@@ -55,12 +55,12 @@ public class AsmHelper {
 
 		PageQueryUtils pager = new PageQueryUtils(params, query);
 		PagingQueryResult result = pager.find();
-		int rowNum = pager.getTotal();
+		int rowNum = (pager.getCpage() - 1) * pager.getPsize() + 1;
 		while (result.hasMoreElements()) {
 			Object[] obj = (Object[]) result.nextElement();
 			AsmApproval asm = (AsmApproval) obj[0];
 			Map<String, String> data = new HashMap<>();
-			data.put("rowNum", rowNum--);
+			data.put("rowNum", rowNum++);
 			data.put("oid", asm.getPersistInfo().getObjectIdentifier().getStringValue());
 			data.put("number", asm.getNumber());
 			data.put("name", asm.getName());

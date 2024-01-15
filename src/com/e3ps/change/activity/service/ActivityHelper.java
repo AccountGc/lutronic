@@ -259,11 +259,13 @@ public class ActivityHelper {
 		QuerySpecUtils.toOrderBy(query, idx_eca, EChangeActivity.class, EChangeActivity.CREATE_TIMESTAMP, true);
 		PageQueryUtils pager = new PageQueryUtils(params, query);
 		PagingQueryResult result = pager.find();
+		int rowNum = (pager.getCpage() - 1) * pager.getPsize() + 1;
 		while (result.hasMoreElements()) {
 			Object[] obj = (Object[]) result.nextElement();
 			EChangeActivity eca = (EChangeActivity) obj[0];
 			EChangeOrder eo = (EChangeOrder) eca.getEo();
 			Map<String, Object> data = new HashMap<>();
+			data.put("rowNum", rowNum++);
 			data.put("oid", eca.getPersistInfo().getObjectIdentifier().getStringValue());
 			data.put("eoid", eo.getPersistInfo().getObjectIdentifier().getStringValue());
 			data.put("type", "CHANGE".equals(eo.getEoType()) ? "ECO" : "EO");

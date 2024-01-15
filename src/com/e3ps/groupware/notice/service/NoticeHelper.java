@@ -43,10 +43,12 @@ public class NoticeHelper {
 
 		PageQueryUtils pager = new PageQueryUtils(params, query);
 		PagingQueryResult result = pager.find();
+		int rowNum = (pager.getCpage() - 1) * pager.getPsize() + 1;
 		while (result.hasMoreElements()) {
 			Object[] obj = (Object[]) result.nextElement();
 			Notice n = (Notice) obj[0];
 			NoticeDTO dto = new NoticeDTO(n);
+			dto.setRowNum(rowNum++);
 			list.add(dto);
 		}
 

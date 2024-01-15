@@ -33,6 +33,7 @@ import wt.session.SessionHelper;
 @Setter
 public class PeopleDTO {
 
+	private int rowNum;
 	private String poid;
 	private String woid;
 	private String name;

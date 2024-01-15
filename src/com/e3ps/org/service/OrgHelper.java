@@ -33,6 +33,7 @@ import wt.org.WTUser;
 import wt.query.QuerySpec;
 import wt.query.SearchCondition;
 import wt.services.ServiceFactory;
+import wt.session.SessionHelper;
 import wt.util.WTAttributeNameIfc;
 import wt.util.WTProperties;
 
@@ -280,11 +281,12 @@ public class OrgHelper {
 
 		PageQueryUtils pager = new PageQueryUtils(params, query);
 		PagingQueryResult result = pager.find();
-
+		int rowNum = (pager.getCpage() - 1) * pager.getPsize() + 1;
 		while (result.hasMoreElements()) {
 			Object[] obj = (Object[]) result.nextElement();
 			People people = (People) obj[0];
 			PeopleDTO data = new PeopleDTO(people);
+			data.setRowNum(rowNum++);
 			list.add(data);
 		}
 
@@ -307,6 +309,8 @@ public class OrgHelper {
 		if (!f.exists()) {
 			f.mkdirs();
 		}
+
+		SessionHelper.manager.setAdministrator();
 
 		QuerySpec query = new QuerySpec();
 		int idx = query.appendClassList(Signature.class, true);

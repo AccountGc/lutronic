@@ -773,7 +773,6 @@ public class DocumentHelper {
 			cell = worksheet.getCells().get(rowIndex, 4);
 			setCellStyle(cell);
 			String signPath = OrgHelper.manager.getSignPath(user.getName());
-			System.out.println("signPath=" + signPath);
 			if (signPath != null) {
 				int picIndex = worksheet.getPictures().add(rowIndex, 4, signPath);
 				Picture picture = worksheet.getPictures().get(picIndex);
@@ -955,7 +954,7 @@ public class DocumentHelper {
 	 * 일반 문서 워드 생성 및 PDF변환
 	 */
 	public void genWordAndPdfMethod(String oid) throws Exception {
-		WTPrincipal principal = SessionHelper.manager.getPrincipal();
+		WTPrincipal principal = SessionHelper.manager.setAdministrator();
 		ProcessingQueue queue = (ProcessingQueue) QueueHelper.manager.getQueue(processQueueName, ProcessingQueue.class);
 
 		Hashtable<String, String> hash = new Hashtable<>();

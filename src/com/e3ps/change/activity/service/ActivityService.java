@@ -77,10 +77,25 @@ public interface ActivityService {
 	/**
 	 * ECO 활동 중 품목 데이터 저장
 	 */
-	public abstract void saveData(Map<String, Object> params) throws Exception;
+	public abstract Map<String, Object> saveData(Map<String, Object> params) throws Exception;
 
 	/**
 	 * 설변 삭제 품목 저장
 	 */
 	public abstract void saveRemoveData(WTPart part, EChangeOrder eco) throws Exception;
+
+	/**
+	 * 설변 링크 저장
+	 */
+	public abstract void saveLink(EChangeOrder eco, WTPart part) throws Exception;
+
+	/**
+	 * 품목 역 저장
+	 */
+	public abstract void savePartToPartLink(EChangeOrder eco, WTPart nextPart) throws Exception;
+
+	/**
+	 * 완제품 연결
+	 */
+	public abstract void saveEndItem(EChangeOrder eco, WTPart part) throws Exception;
 }
