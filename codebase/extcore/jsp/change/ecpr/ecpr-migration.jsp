@@ -48,6 +48,7 @@ SearchCondition sc = new SearchCondition(EChangeRequest.class, EChangeRequest.EO
 query.appendWhere(sc, new int[] { idx });
 QueryResult qr = PersistenceHelper.manager.find(query);
 int i = 0;
+System.out.println("전체 개수 = " + qr.size());
 while (qr.hasMoreElements()) {
 	Object[] obj = (Object[]) qr.nextElement();
 	EChangeRequest e = (EChangeRequest) obj[0];

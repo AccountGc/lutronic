@@ -25,6 +25,7 @@ public class EcnColumn {
 	private Timestamp createdDate;
 	private String createdDate_txt;
 	private String worker_oid;
+	private String worker_name;
 
 	public EcnColumn() {
 
@@ -46,7 +47,9 @@ public class EcnColumn {
 		setCreator(ecn.getCreatorFullName());
 		setCreatedDate(ecn.getCreateTimestamp());
 		setCreatedDate_txt(ecn.getCreateTimestamp().toString().substring(0, 10));
-		setWorker_oid(
-				ecn.getWorker() != null ? ecn.getWorker().getPersistInfo().getObjectIdentifier().getStringValue() : "");
+		if (ecn.getWorker() != null) {
+			setWorker_oid(ecn.getWorker().getPersistInfo().getObjectIdentifier().getStringValue());
+			setWorker_name(ecn.getWorker().getFullName());
+		}
 	}
 }

@@ -124,6 +124,7 @@ JSONArray data = (JSONArray) request.getAttribute("data");
 	document.addEventListener("DOMContentLoaded", function() {
 		createAUIGrid(columns);
 		AUIGrid.resize(myGridID);
+		selectbox("state");
 	})
 
 	window.addEventListener("resize", function() {

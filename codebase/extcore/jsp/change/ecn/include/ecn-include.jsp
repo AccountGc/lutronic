@@ -58,6 +58,7 @@ if (header) {
 		dataField : "number",
 		headerText : "ECN 번호",
 		dataType : "string",
+		width : 140,
 		renderer : {
 			type : "LinkRenderer",
 			baseUrl : "javascript",
@@ -82,34 +83,25 @@ if (header) {
 			}
 		},
 	}, {
-		dataField : "changeSection",
-		headerText : "변경구분",
+		dataField : "worker_name",
+		headerText : "담당자",
 		dataType : "string",
+		width : 100,
 	}, {
-		dataField : "createDepart",
-		headerText : "작성부서",
-		dataType : "string",
-	}, {
-		dataField : "writer",
-		headerText : "작성자",
-		dataType : "string",
-	}, {
-		dataField : "writeDate",
-		headerText : "작성일",
-		dataType : "string",
-	}, {
-		dataField : "state",
+		dataField : "progress",
 		headerText : "상태",
 		dataType : "string",
+		width : 100,
 	}, {
 		dataField : "creator",
 		headerText : "등록자",
 		dataType : "string",
-		width : 180,
+		width : 100,
 	}, {
 		dataField : "createdDate_txt",
 		headerText : "등록일",
 		dataType : "string",
+		width : 100,
 	} ]
 	
 	function createAUIGrid111(columnLayout) {

@@ -8,6 +8,7 @@ boolean isAdmin = (boolean) request.getAttribute("isAdmin");
 EpmData dto = (EpmData) request.getAttribute("dto");
 Map<String, String> pdf = dto.getPdf();
 Map<String, String> dxf = dto.getDxf();
+Map<String, String> step = dto.getStep();
 %>
 <input type="hidden" name="oid" id="oid" value="<%=dto.getOid()%>">
 <table class="button-table">
@@ -139,6 +140,24 @@ Map<String, String> dxf = dto.getDxf();
 					<jsp:include page="/extcore/jsp/common/primary-view.jsp">
 						<jsp:param value="<%=dto.getOid()%>" name="oid" />
 					</jsp:include>
+				</td>
+			</tr>
+			<tr>
+				<th class="lb">STEP</th>
+				<td class="indent5" colspan="5">
+					<%
+					if (step.size() > 0) {
+					%>
+					<a href="<%=step.get("url")%>"><%=step.get("name")%></a>
+					<%
+					} else {
+					%>
+					<font color="red">
+						<b>STEP 파일이 없습니다.</b>
+					</font>
+					<%
+					}
+					%>
 				</td>
 			</tr>
 			<tr>

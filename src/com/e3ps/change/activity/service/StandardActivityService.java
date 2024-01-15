@@ -467,8 +467,16 @@ public class StandardActivityService extends StandardManager implements Activity
 			}
 
 			for (WTPart pp : clist) {
+				// 중복 처리
+				QueryResult rs = PersistenceHelper.manager.navigate(pp, "eco", EOCompletePartLink.class);
+				if (rs.size() > 0) {
+					System.out.println("이미 등록된 완제품 = " + pp.getNumber());
+					continue;
+				}
 				System.out.println("제품 = " + pp.getNumber());
+
 				EOCompletePartLink link = EOCompletePartLink.newEOCompletePartLink((WTPartMaster) pp.getMaster(), eco);
+
 				link.setVersion(pp.getVersionIdentifier().getSeries().getValue());
 				PersistenceServerHelper.manager.insert(link);
 			}

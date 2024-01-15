@@ -300,7 +300,6 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 						}
 						return null;
 					}
-
 				} ]
 			}, {
 				headerText : "개정 후",
@@ -363,7 +362,13 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 					dataType : "string",
 					editable : false,
 					headerText : "상태",
-					width : 100
+					width : 100,
+					styleFunction : function(rowIndex, columnIndex, value, headerText, item, dataField) {
+						if (value == "승인됨") {
+							return "aui-red";
+						}
+						return null;
+					}					
 				} ]
 			}, {
 				headerText : "",

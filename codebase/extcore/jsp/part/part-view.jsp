@@ -34,6 +34,17 @@ WTUser sessionUser = (WTUser) SessionHelper.manager.getPrincipal();
 			</div>
 		</td>
 		<td class="right">
+			<%
+			if (isAdmin) {
+			%>
+			<select name="state" id="state" class="width-100" onchange="lcm(this);">
+				<option value="">선택</option>
+				<option value="INWORK">작업 중</option>
+				<option value="APPROVED">승인됨</option>
+			</select>
+			<%
+			}
+			%>		
 			<input type="button" value="BOM" title="BOM" onclick="view();">
 			<input type="button" value="BOM 에디터" title="BOM 에디터" onclick="editor();">
 			<input type="button" value="COMPARE" title="COMPARE" onclick="compare();">
@@ -412,6 +423,7 @@ WTUser sessionUser = (WTUser) SessionHelper.manager.getPrincipal();
 				}
 			},
 		});
+		selectbox("state");
 	});
 
 	function _clean() {

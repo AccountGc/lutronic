@@ -102,7 +102,7 @@ public class CrHelper {
 		}
 		// 작성자
 		if (writer != "") {
-			QuerySpecUtils.toEqualsAnd(query, idx, EChangeRequest.class, EChangeRequest.WRITER, writer);
+			QuerySpecUtils.toLikeAnd(query, idx, EChangeRequest.class, EChangeRequest.WRITER, writer);
 //			Long.toString(CommonUtil.getOIDLongValue(writer)));
 		}
 

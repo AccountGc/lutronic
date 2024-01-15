@@ -171,6 +171,7 @@ public class StandardEcnService extends StandardManager implements EcnService {
 								}
 							}
 
+							
 							if (group.length() > 0) {
 
 								String[] groups = group.split(",");

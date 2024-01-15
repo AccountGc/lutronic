@@ -54,10 +54,11 @@ if (header) {
 %>
 <script type="text/javascript">
 	let myGridID110;
-	const columns110 = [ {
+	const columns110 = [ { 
 		dataField : "number",
 		headerText : "ECRM 번호",
 		dataType : "string",
+		width : 130,
 		renderer : {
 			type : "LinkRenderer",
 			baseUrl : "javascript",
@@ -85,31 +86,54 @@ if (header) {
 		dataField : "changeSection",
 		headerText : "변경구분",
 		dataType : "string",
+		style : "aui-left",
+		width : 250
+	}, {
+		dataField : "period",
+		headerText : "보존년한",
+		dataType : "string",
+		width : 100
 	}, {
 		dataField : "createDepart",
 		headerText : "작성부서",
 		dataType : "string",
+		width : 100
 	}, {
 		dataField : "writer",
 		headerText : "작성자",
 		dataType : "string",
+		width : 100
 	}, {
 		dataField : "writeDate",
 		headerText : "작성일",
 		dataType : "string",
+		width : 100
 	}, {
 		dataField : "state",
 		headerText : "상태",
 		dataType : "string",
+		width : 100,
+		styleFunction : function(rowIndex, columnIndex, value, headerText, item, dataField) {
+			if (value === "승인됨") {
+				return "approved";
+			}
+			return null;
+		}
 	}, {
 		dataField : "creator",
 		headerText : "등록자",
 		dataType : "string",
-		width : 180,
+		width : 100
 	}, {
 		dataField : "createdDate_txt",
 		headerText : "등록일",
 		dataType : "string",
+		width : 100
+	}, {
+		dataField : "approvedDate",
+		headerText : "승인일",
+		dataType : "string",
+		width : 100
 	} ]
 	
 	function createAUIGrid110(columnLayout) {

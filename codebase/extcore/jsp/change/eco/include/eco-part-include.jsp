@@ -319,6 +319,12 @@ String oid = request.getParameter("oid");
 			dataType : "string",
 			headerText : "상태",
 			width : 80,
+			styleFunction : function(rowIndex, columnIndex, value, headerText, item, dataField) {
+				if (value === "승인됨") {
+					return "approved";
+				}
+				return null;
+			}
 		}, {
 			dataField : "next_version",
 			dataType : "string",
