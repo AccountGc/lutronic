@@ -131,7 +131,8 @@ public class EcprHelper {
 
 			PageQueryUtils pager = new PageQueryUtils(params, query);
 			PagingQueryResult result = pager.find();
-			int rowNum = (pager.getCpage() - 1) * pager.getPsize() + 1;			while (result.hasMoreElements()) {
+			int rowNum = (pager.getCpage() - 1) * pager.getPsize() + 1;
+			while (result.hasMoreElements()) {
 				Object[] obj = (Object[]) result.nextElement();
 				EcprColumn column = new EcprColumn(obj);
 				column.setRowNum(rowNum++);
