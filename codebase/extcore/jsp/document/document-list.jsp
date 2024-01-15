@@ -661,7 +661,7 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 				selectbox("_psize");
 				selectbox("preseration");
 				selectbox("deptcode");
-				// 				finderUser("writer");
+// 				finderUser("writer");
 				selectbox("classType1");
 				selectbox("classType2");
 				selectbox("classType3");

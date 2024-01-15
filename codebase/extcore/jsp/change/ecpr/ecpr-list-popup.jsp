@@ -305,7 +305,7 @@ document.addEventListener("DOMContentLoaded", function() {
 	AUIGrid.resize(myGridID);
 	selectbox("state");
 	finderUser("creator");
-	finderUser("writer");
+// 	finderUser("writer");
 //		finderUser("proposer");
 	twindate("created");
 	twindate("approve");

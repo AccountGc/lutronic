@@ -257,8 +257,7 @@ boolean isAdmin = (boolean) request.getAttribute("isAdmin");
 						print = false;
 					}
 					const menu = [ {
-						label : "<%=title%>
-			일괄결재 정보보기",
+						label : "<%=title%> 일괄결재 정보보기",
 						callback : auiContextHandler
 					}, {
 						label : "_$line" // label 에 _$line 을 설정하면 라인을 긋는 아이템으로 인식합니다.

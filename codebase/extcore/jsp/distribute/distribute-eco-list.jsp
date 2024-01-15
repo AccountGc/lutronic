@@ -5,6 +5,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@page import="com.e3ps.common.code.NumberCode"%>
 <%
+// List<Map<String, String>> lifecycleList = (List<Map<String, String>>) request.getAttribute("lifecycleList");
 WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 %>
 <!DOCTYPE html>
@@ -49,8 +50,23 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 					<input type="text" name="number" id="number" class="width-300">
 				</td>
 				<th>ECO 제목</th>
-				<td class="indent5" colspan="3">
+				<td class="indent5">
 					<input type="text" name="name" id="name" class="width-300">
+				</td>
+				<th>상태</th>
+				<td class="indent5">
+					<select name="state" id="state" class="width-200">
+						<option value="">선택</option>
+<%-- 						<% --%>
+<!--  						for (Map<String, String> lifecycle : lifecycleList) { -->
+<!--  							if (!lifecycle.get("code").equals("TEMPRARY")) { -->
+<%-- 						%> --%>
+<%-- 						<option value="<%=lifecycle.get("code")%>"><%=lifecycle.get("name")%></option> --%>
+<%-- 						<% --%>
+<!-- // 						} -->
+<!-- // 						} -->
+<%-- 						%> --%>
+					</select>
 				</td>
 			</tr>
 			<tr>
@@ -116,7 +132,7 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 					</div>
 				</td>
 				<th>위험통제</th>
-				<td colspan="3">
+				<td>
 					&nbsp;
 					<div class="pretty p-switch">
 						<input type="radio" name="riskType" value="" checked="checked">
@@ -154,6 +170,11 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 						</div>
 					</div>
 				</td>
+				<th>프로젝트코드</th>
+				<td class="indent5">
+					<input type="text" name="model" id="model" class="width-200">
+					<img src="/Windchill/extcore/images/delete.png" class="delete" title="삭제" onclick="clearUser('model')">
+				</td>
 			</tr>
 			<tr>
 				<th class="lb pt5">완제품 품목</th>
@@ -176,11 +197,11 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 				</td>
 				<td class="right">
 					<select name="_psize" id="_psize">
+						<option value="10">10</option>
+						<option value="20" selected="selected">20</option>
 						<option value="30">30</option>
 						<option value="50">50</option>
 						<option value="100">100</option>
-						<option value="200">200</option>
-						<option value="300">300</option>
 					</select>
 
 					<input type="button" value="검색" title="검색" onclick="loadGridData();">
@@ -222,6 +243,12 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 							_popup(url, 1600, 800, "n");
 						}
 					},
+				}, {
+					dataField : "model",
+					headerText : "제품",
+					dataType : "string",
+					width : 250,
+					style : "aui-left"
 				}, {
 					dataField : "sendType",
 					headerText : "ECO 타입",
@@ -327,11 +354,13 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 				createAUIGrid104(columns104);
 				AUIGrid.resize(myGridID);
 				AUIGrid.resize(myGridID104);
+// 				selectbox("state");
 				finderUser("creator");
 				twindate("created");
 				twindate("approve");
 				selectbox("_psize");
-				selectbox("model");
+				finderCode("model", "MODEL", "code");
+				$("#_psize").bindSelectSetValue("20");
 			});
 
 			document.addEventListener("keydown", function(event) {

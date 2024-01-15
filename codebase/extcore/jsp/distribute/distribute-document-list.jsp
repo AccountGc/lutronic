@@ -1,4 +1,5 @@
 <%@page import="java.util.Map"%>
+<%@page import="java.util.List"%>
 <%@page import="wt.session.SessionHelper"%>
 <%@page import="net.sf.json.JSONArray"%>
 <%@page import="net.sf.json.JSONObject"%>
@@ -11,7 +12,7 @@
 <%
 ArrayList<NumberCode> preserationList = (ArrayList<NumberCode>) request.getAttribute("preserationList");
 ArrayList<NumberCode> deptcodeList = (ArrayList<NumberCode>) request.getAttribute("deptcodeList");
-ArrayList<NumberCode> modelList = (ArrayList<NumberCode>) request.getAttribute("modelList");
+List<Map<String, String>> lifecycleList = (List<Map<String, String>>) request.getAttribute("lifecycleList");
 ArrayList<Map<String, String>> classTypes1 = (ArrayList<Map<String, String>>) request.getAttribute("classTypes1");
 WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 %>
@@ -57,9 +58,9 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 					<input type="hidden" name="location" id="location" value="<%=DocumentHelper.DOCUMENT_ROOT%>">
 					<span id="locationText"><%=DocumentHelper.DOCUMENT_ROOT%></span>
 				</td>
-				<th>내부 문서번호</th>
+				<th>문서번호</th>
 				<td class="indent5">
-					<input type="text" name="interalnumber" id="interalnumber" class="width-300">
+					<input type="text" name="number" id="number" class="width-300">
 				</td>
 				<th>문서명</th>
 				<td class="indent5">
@@ -110,17 +111,19 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 					<input type="text" name="createdTo" id="createdTo" class="width-100">
 					<img src="/Windchill/extcore/images/delete.png" class="delete" title="삭제" onclick="clearFromTo('createdFrom', 'createdTo')">
 				</td>
-				<th>부서</th>
-				<td class="indent5" colspan="3">
-					<select name="deptcode" id="deptcode" class="width-200">
+				<th>상태</th>
+				<td class="indent5">
+					<select name="state" id="state" class="width-200">
 						<option value="">선택</option>
-						<%
-						for (NumberCode deptcode : deptcodeList) {
-						%>
-						<option value="<%=deptcode.getCode()%>"><%=deptcode.getName()%></option>
-						<%
-						}
-						%>
+<%-- 						<% --%>
+<!--  						for (Map<String, String> lifecycle : lifecycleList) { -->
+<!--  							if (!lifecycle.get("code").equals("TEMPRARY")) { -->
+<%-- 						%> --%>
+<%-- 						<option value="<%=lifecycle.get("code")%>"><%=lifecycle.get("name")%></option> --%>
+<%-- 						<% --%>
+<!--  						} -->
+<!--  						} -->
+<%-- 						%> --%>
 					</select>
 				</td>
 			</tr>
@@ -128,8 +131,6 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 				<th>작성자</th>
 				<td class="indent5">
 					<input type="text" name="writer" id="writer" data-multi="false" class="width-200">
-					<input type="hidden" name="writerOid" id="writerOid">
-					<img src="/Windchill/extcore/images/delete.png" class="delete" title="삭제" onclick="clearUser('writer')">
 				</td>
 				<th>수정일</th>
 				<td class="indent5">
@@ -141,18 +142,53 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 				<th>프로젝트코드</th>
 				<td class="indent5">
 					<input type="text" name="model" id="model" class="width-200">
-					<img src="/Windchill/extcore/images/delete.png" class="delete" title="삭제" onclick="clearUser('model')">
+					<input type="hidden" name="modelcode" id="modelcode">
+					<img src="/Windchill/extcore/images/delete.png" class="delete" title="삭제" onclick="clearValue('model', 'code')">
 				</td>
 			</tr>
 			<tr>
 				<th>보존기간</th>
-				<td class="indent5" colspan="5">
+				<td class="indent5">
 					<select name="preseration" id="preseration" class="width-200">
 						<option value="">선택</option>
 						<%
 						for (NumberCode preseration : preserationList) {
 						%>
 						<option value="<%=preseration.getCode()%>"><%=preseration.getName()%></option>
+						<%
+						}
+						%>
+					</select>
+				</td>
+				<th>REV</th>
+				<td>
+					&nbsp;
+					<div class="pretty p-switch">
+						<input type="radio" name="latest" value="true" checked="checked">
+						<div class="state p-success">
+							<label>
+								<b>최신REV</b>
+							</label>
+						</div>
+					</div>
+					&nbsp;
+					<div class="pretty p-switch">
+						<input type="radio" name="latest" value="false">
+						<div class="state p-success">
+							<label>
+								<b>모든REV</b>
+							</label>
+						</div>
+					</div>
+				</td>
+				<th>부서</th>
+				<td class="indent5" colspan="3">
+					<select name="deptcode" id="deptcode" class="width-200">
+						<option value="">선택</option>
+						<%
+						for (NumberCode deptcode : deptcodeList) {
+						%>
+						<option value="<%=deptcode.getCode()%>"><%=deptcode.getName()%></option>
 						<%
 						}
 						%>
@@ -169,11 +205,11 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 				</td>
 				<td class="right">
 					<select name="_psize" id="_psize">
+						<option value="10">10</option>
+						<option value="20" selected="selected">20</option>
 						<option value="30">30</option>
 						<option value="50">50</option>
 						<option value="100">100</option>
-						<option value="200">200</option>
-						<option value="300">300</option>
 					</select>
 					<input type="button" value="검색" title="검색" onclick="loadGridData();">
 <!-- 					<input type="button" value="일괄 다운로드" title="일괄 다운로드" onclick="download();"> -->
@@ -182,7 +218,7 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 		</table>
 		<table>
 			<colgroup>
-				<col width="230">
+				<col width="270">
 				<col width="10">
 				<col width="*">
 			</colgroup>
@@ -192,7 +228,7 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 						<jsp:param value="<%=DocumentHelper.DOCUMENT_ROOT%>" name="location" />
 						<jsp:param value="product" name="container" />
 						<jsp:param value="list" name="mode" />
-						<jsp:param value="535" name="height" />
+						<jsp:param value="565" name="height" />
 						<jsp:param value="doc" name="type" />
 					</jsp:include>
 				</td>
@@ -223,8 +259,8 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 						}
 					},
 				}, {
-					dataField : "interalnumber",
-					headerText : "내부 문서번호",
+					dataField : "number",
+					headerText : "문서번호",
 					dataType : "string",
 					width : 180,
 					renderer : {
@@ -303,6 +339,9 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 					renderer : {
 						type : "TemplateRenderer"
 					},
+					filter : {
+						inline : false
+					},
 				}, {
 					dataField : "secondary",
 					headerText : "첨부파일",
@@ -310,6 +349,9 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 					width : 100,
 					renderer : {
 						type : "TemplateRenderer"
+					},
+					filter : {
+						inline : false
 					},
 				} ]
 			}
@@ -455,7 +497,7 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 				
 				let params = new Object();
 				const url = getCallUrl("/doc/list");
-				const field = [ "location", "classType1", "classType2", "classType3", "name", "number", "state", "creatorOid", "createdFrom", "createdTo", "modifiedFrom", "modifiedTo", "preseration", "model", "deptcode", "interalnumber", "writerOid", "description" ];
+				const field = [ "location", "classType1", "classType2", "classType3", "name", "number", "state", "creatorOid", "createdFrom", "createdTo", "modifiedFrom", "modifiedTo", "preseration", "modelcode", "deptcode", "writer", "description" ];
 				document.getElementById("sessionid").value = 0;
 				params = toField(params, field);
 				params.latest = false;
@@ -528,7 +570,7 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 			}
 
 			document.addEventListener("DOMContentLoaded", function() {
-				toFocus("interalnumber");
+				toFocus("number");
 				const columns = loadColumnLayout("distribute-document-list");
 				const contenxtHeader = genColumnHtml(columns);
 				$("#h_item_ul").append(contenxtHeader);
@@ -539,17 +581,19 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 				AUIGrid.resize(myGridID);
 				_createAUIGrid(_columns);
 				AUIGrid.resize(_myGridID);
+// 				selectbox("state");
 				finderUser("creator");
 				twindate("created");
 				twindate("modified");
 				selectbox("_psize");
 				selectbox("preseration");
 				selectbox("deptcode");
-				finderUser("writer");
+// 				finderUser("writer");
 				selectbox("classType1");
 				selectbox("classType2");
 				selectbox("classType3");
 				finderCode("model", "MODEL");
+				$("#_psize").bindSelectSetValue("20");
 			});
 
 			function exportExcel() {

@@ -333,7 +333,7 @@ boolean multi = (boolean) request.getAttribute("multi");
 		AUIGrid.resize(myGridID);
 		selectbox("state");
 		finderUser("creator");
-		finderUser("writer");
+// 		finderUser("writer");
 //			finderUser("proposer");
 		twindate("created");
 		twindate("approve");

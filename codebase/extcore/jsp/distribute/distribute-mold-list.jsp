@@ -8,6 +8,7 @@
 ArrayList<NumberCode> deptcodeList = (ArrayList<NumberCode>) request.getAttribute("deptcodeList");
 ArrayList<NumberCode> manufactureList = (ArrayList<NumberCode>) request.getAttribute("manufactureList");
 ArrayList<NumberCode> moldTypeList = (ArrayList<NumberCode>) request.getAttribute("moldTypeList");
+List<Map<String, String>> lifecycleList = (List<Map<String, String>>) request.getAttribute("lifecycleList");
 boolean isAdmin = (boolean) request.getAttribute("isAdmin");
 WTUser user = (WTUser) request.getAttribute("sessionUser");
 %>
@@ -74,6 +75,21 @@ WTUser user = (WTUser) request.getAttribute("sessionUser");
 				</td>
 			</tr>
 			<tr>
+				<th>상태</th>
+				<td class="indent5">
+					<select name="state" id="state" class="width-200">
+						<option value="">선택</option>
+<%-- 						<% --%>
+<!--  						for (Map<String, String> lifecycle : lifecycleList) { -->
+<!--  							if (!lifecycle.get("code").equals("TEMPRARY")) { -->
+<%-- 						%> --%>
+<%-- 						<option value="<%=lifecycle.get("code")%>"><%=lifecycle.get("name")%></option> --%>
+<%-- 						<% --%>
+<!--  						} -->
+<!--  						} -->
+<%-- 						%> --%>
+					</select>
+				</td>
 				<th>등록자</th>
 				<td class="indent5">
 					<input type="text" name="creator" id="creator" data-multi="false" class="width-200">
@@ -87,6 +103,8 @@ WTUser user = (WTUser) request.getAttribute("sessionUser");
 					<input type="text" name="createdTo" id="createdTo" class="width-100">
 					<img src="/Windchill/extcore/images/delete.png" class="delete" title="삭제" onclick="clearFromTo('createdFrom', 'createdTo')">
 				</td>
+			</tr>
+			<tr>
 				<th>부서</th>
 				<td class="indent5">
 					<select name="deptcode" id="deptcode" class="width-200">
@@ -100,16 +118,10 @@ WTUser user = (WTUser) request.getAttribute("sessionUser");
 						%>
 					</select>
 				</td>
-			</tr>
-			<tr>
-				<th>Manufacturer</th>
+				<th>MANUFACTURER</th>
 				<td class="indent5">
 					<input type="text" name="manufacture" id="manufacture" class="width-200">
 					<img src="/Windchill/extcore/images/delete.png" class="delete" title="삭제" onclick="clearUser('manufacture')">
-				</td>
-				<th>내부 문서번호</th>
-				<td class="indent5">
-					<input type="text" name="interalnumber" id="interalnumber" class="width-300">
 				</td>
 				<th>수정일</th>
 				<td class="indent5">
@@ -120,10 +132,37 @@ WTUser user = (WTUser) request.getAttribute("sessionUser");
 				</td>
 			</tr>
 			<tr>
+				<th>내부 문서번호</th>
+				<td class="indent5">
+					<input type="text" name="interalnumber" id="interalnumber" class="width-300">
+				</td>
 				<th>업체자체금형번호</th>
 				<td class="indent5">
 					<input type="text" name="moldnumber" id="moldnumber" class="width-300">
 				</td>
+				<th>REV</th>
+				<td>
+					&nbsp;
+					<div class="pretty p-switch">
+						<input type="radio" name="islastversion" value="true" checked="checked">
+						<div class="state p-success">
+							<label>
+								<b>최신REV</b>
+							</label>
+						</div>
+					</div>
+					&nbsp;
+					<div class="pretty p-switch">
+						<input type="radio" name="islastversion" value="">
+						<div class="state p-success">
+							<label>
+								<b>모든REV</b>
+							</label>
+						</div>
+					</div>
+				</td>
+			</tr>
+			<tr>
 				<th>금형개발비</th>
 				<td class="indent5" colspan="3">
 					<input type="text" name="moldcost" id="moldcost" class="width-300">
@@ -140,11 +179,11 @@ WTUser user = (WTUser) request.getAttribute("sessionUser");
 				</td>
 				<td class="right">
 					<select name="_psize" id="_psize">
+						<option value="10">10</option>
+						<option value="20" selected="selected">20</option>
 						<option value="30">30</option>
 						<option value="50">50</option>
 						<option value="100">100</option>
-						<option value="200">200</option>
-						<option value="300">300</option>
 					</select>
 					<input type="button" value="검색" title="검색" onclick="loadGridData();">
 				</td>
@@ -275,6 +314,7 @@ WTUser user = (WTUser) request.getAttribute("sessionUser");
 				});
 				createAUIGrid(columns);
 				AUIGrid.resize(myGridID);
+// 				selectbox("state");
 				finderCode("manufacture", "MANUFACTURE");
 				selectbox("moldtype");
 				selectbox("deptcode");
@@ -282,6 +322,7 @@ WTUser user = (WTUser) request.getAttribute("sessionUser");
 				twindate("created");
 				twindate("modified");
 				selectbox("_psize");
+				$("#_psize").bindSelectSetValue("20");
 			});
 
 			document.addEventListener("keydown", function(event) {
