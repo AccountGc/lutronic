@@ -67,6 +67,14 @@
 			let myGridID;
 			function _layout() {
 				return [ {
+					dataField : "rowNum",
+					headerText : "번호",
+					width : 40,
+					dataType : "numeric",
+					filter : {
+						inline : false
+					},
+				},{
 					dataField : "number",
 					headerText : "이름(국문)",
 					dataType : "string",
@@ -99,7 +107,7 @@
 			function createAUIGrid(columnLayout) {
 				const props = {
 					headerHeight : 30,
-					showRowNumColumn : true,
+					showRowNumColumn : false,
 					showRowCheckColumn : true,
 					rowNumHeaderText : "번호",
 					showAutoNoDataMessage : false,

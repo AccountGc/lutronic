@@ -58,11 +58,11 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 				</td>
 				<td class="right">
 					<select name="_psize" id="_psize">
+						<option value="10">10</option>
+						<option value="20" selected="selected">20</option>
 						<option value="30">30</option>
 						<option value="50">50</option>
 						<option value="100">100</option>
-						<option value="200">200</option>
-						<option value="300">300</option>
 					</select>
 					<input type="button" value="등록" title="등록" class="blue" onclick="create();">
 					<input type="button" value="검색" title="검색" onclick="loadGridData();">
@@ -84,6 +84,14 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 		let myGridID;
 		function _layout() {
 			return [ {
+				dataField : "rowNum",
+				headerText : "번호",
+				width : 40,
+				dataType : "numeric",
+				filter : {
+					inline : false
+				},
+			},{
 				dataField : "name",
 				headerText : "문서 템플릿 제목",
 				dataType : "string",
@@ -113,7 +121,7 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 		function createAUIGrid(columnLayout) {
 			const props = {
 				headerHeight : 30,
-				showRowNumColumn : true,
+				showRowNumColumn : false,
 				rowNumHeaderText : "번호",
 				showAutoNoDataMessage : false,
 				selectionMode : "multipleCells",
@@ -152,7 +160,7 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 				AUIGrid.removeAjaxLoader(myGridID);
 				if (data.result) {
 					totalPage = Math.ceil(data.total / data.pageSize);
-					createPagingNavigator(data.curPage, data.sessionid);
+					createPagingNavigator(data.total, data.curPage, data.sessionid);
 					AUIGrid.setGridData(myGridID, data.list);
 				} else {
 					alert(data.msg);
@@ -173,6 +181,7 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 			AUIGrid.resize(myGridID);
 			selectbox("_psize");
 			selectbox("formType");
+			$("#_psize").bindSelectSetValue("20");
 		});
 
 		document.addEventListener("keydown", function(event) {

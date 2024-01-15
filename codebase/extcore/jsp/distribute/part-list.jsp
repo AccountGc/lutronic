@@ -94,16 +94,9 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 			<tr>
 				<th>프로젝트코드</th>
 				<td class="indent5" colspan="5">
-					<select name="model" id="model" class="width-200">
-						<option value="">선택</option>
-						<%
-						for (NumberCode model : modelList) {
-						%>
-						<option value="<%=model.getCode()%>"><%=model.getName()%></option>
-						<%
-						}
-						%>
-					</select>
+					<input type="text" name="model" id="model" class="width-200">
+					<input type="hidden" name="modelcode" id="modelcode">
+					<img src="/Windchill/extcore/images/delete.png" class="delete" title="삭제" onclick="clearValue('model', 'code')">
 				</td>
 			</tr>
 			<tr class="hidden">
@@ -247,6 +240,7 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 				<td class="right">
 					<select name="_psize" id="_psize">
 						<option value="10">10</option>
+						<option value="10" selected="selected">20</option>
 						<option value="30">30</option>
 						<option value="50">50</option>
 						<option value="100">100</option>
@@ -284,6 +278,14 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 			let myGridID;
 			function _layout() {
 				return [ {
+					dataField : "rowNum",
+					headerText : "번호",
+					width : 40,
+					dataType : "numeric",
+					filter : {
+						inline : false
+					},
+				},{
 					dataField : "_3d",
 					headerText : "3D",
 					dataType : "string",
@@ -379,7 +381,7 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 			function createAUIGrid(columnLayout) {
 				const props = {
 					headerHeight : 30,
-					showRowNumColumn : true,
+					showRowNumColumn : false,
 					showRowCheckColumn : true,
 					rowNumHeaderText : "번호",
 					showAutoNoDataMessage : false,
@@ -497,7 +499,7 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 					document.getElementById("curPage").value = 1;
 				}
 				let params = new Object();
-				const field = [ "location", "partNumber", "partName", "createdFrom", "createdTo", "modifiedFrom", "modifiedTo", "state", "model", "productmethod", "deptcode", "unit", "weight", "mat", "finish", "remarks", "ecoNo", "eoNo", "creatorOid", "specification" ];
+				const field = [ "location", "partNumber", "partName", "createdFrom", "createdTo", "modifiedFrom", "modifiedTo", "state", "modelcode", "productmethod", "deptcode", "unit", "weight", "mat", "finish", "remarks", "ecoNo", "eoNo", "creatorOid", "specification" ];
 				const url = getCallUrl("/distribute/listProduction");
 				const preOrder = document.querySelector("input[name=preOrder]:checked").value;
 				params = toField(params, field);
@@ -509,7 +511,7 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 					AUIGrid.removeAjaxLoader(myGridID);
 					if (data.result) {
 						totalPage = Math.ceil(data.total / data.pageSize);
-						createPagingNavigator(data.curPage, data.sessionid);
+						createPagingNavigator(data.total, data.curPage, data.sessionid);
 						AUIGrid.setGridData(myGridID, data.list);
 					} else {
 						alert(data.msg);
@@ -530,7 +532,7 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 				AUIGrid.resize(myGridID);
 				_createAUIGrid(_columns);
 				AUIGrid.resize(_myGridID);
-				selectbox("model");
+				finderCode("model", "MODEL");
 				selectbox("productmethod");
 				selectbox("deptcode");
 				selectbox("unit");
@@ -541,6 +543,7 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 				finderUser("creator");
 				twindate("created");
 				twindate("modified");
+				$("#_psize").bindSelectSetValue("20");
 			});
 
 			document.addEventListener("keydown", function(event) {
@@ -650,7 +653,7 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 					if (display === "none") {
 						el.style.display = "table-row";
 						target.value = "▲접기";
-						selectbox("model");
+						finderCode("model", "MODEL");
 						selectbox("productmethod");
 						selectbox("deptcode");
 						selectbox("unit");
@@ -661,10 +664,11 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 						finderUser("creator");
 						twindate("created");
 						twindate("modified");
+						$("#_psize").bindSelectSetValue("20");
 					} else {
 						el.style.display = "none";
 						target.value = "▼펼치기";
-						selectbox("model");
+						finderCode("model", "MODEL");
 						selectbox("productmethod");
 						selectbox("deptcode");
 						selectbox("unit");
@@ -675,6 +679,7 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 						finderUser("creator");
 						twindate("created");
 						twindate("modified");
+						$("#_psize").bindSelectSetValue("20");
 					}
 				}
 			}

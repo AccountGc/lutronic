@@ -39,11 +39,11 @@
 			<tr>
 				<td class="right">
 					<select name="_psize" id="_psize">
+						<<option value="10">10</option>
+						<option value="20" selected="selected">20</option>
 						<option value="30">30</option>
 						<option value="50">50</option>
 						<option value="100">100</option>
-						<option value="200">200</option>
-						<option value="300">300</option>
 					</select>
 					<input type="button" value="검색" title="검색" onclick="searchItem();">
 					<input type="button" value="일괄수신" title="일괄수신" onclick="batchReceive();">
@@ -66,6 +66,14 @@
 			let myGridID;
 			function _layout() {
 				return [ {
+					dataField : "rowNum",
+					headerText : "번호",
+					width : 40,
+					dataType : "numeric",
+					filter : {
+						inline : false
+					},
+				},{
 					dataField : "objName0",
 					headerText : "구분",
 					dataType : "string",
@@ -173,7 +181,7 @@
 					if (data.result) {
 						totalPage = Math.ceil(data.total / data.pageSize);
 						document.getElementById("sessionid").value = data.sessionid;
-						createPagingNavigator(data.curPage);
+						createPagingNavigator(data.total, data.curPage);
 						AUIGrid.setGridData(myGridID, data.list);
 					} else {
 						alert(data.msg);
@@ -192,6 +200,7 @@
 				createAUIGrid(columns);
 				selectbox("_psize");
 				selectbox("rootOid");
+				$("#_psize").bindSelectSetValue("20");
 			});
 	
 			document.addEventListener("keydown", function(event) {

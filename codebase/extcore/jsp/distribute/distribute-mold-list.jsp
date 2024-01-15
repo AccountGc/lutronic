@@ -79,15 +79,15 @@ WTUser user = (WTUser) request.getAttribute("sessionUser");
 				<td class="indent5">
 					<select name="state" id="state" class="width-200">
 						<option value="">선택</option>
-<%-- 						<% --%>
-<!--  						for (Map<String, String> lifecycle : lifecycleList) { -->
-<!--  							if (!lifecycle.get("code").equals("TEMPRARY")) { -->
-<%-- 						%> --%>
-<%-- 						<option value="<%=lifecycle.get("code")%>"><%=lifecycle.get("name")%></option> --%>
-<%-- 						<% --%>
-<!--  						} -->
-<!--  						} -->
-<%-- 						%> --%>
+						<%-- 						<% --%>
+						<!--  						for (Map<String, String> lifecycle : lifecycleList) { -->
+						<!--  							if (!lifecycle.get("code").equals("TEMPRARY")) { -->
+						<%-- 						%> --%>
+						<%-- 						<option value="<%=lifecycle.get("code")%>"><%=lifecycle.get("name")%></option> --%>
+						<%-- 						<% --%>
+						<!--  						} -->
+						<!--  						} -->
+						<%-- 						%> --%>
 					</select>
 				</td>
 				<th>등록자</th>
@@ -197,6 +197,14 @@ WTUser user = (WTUser) request.getAttribute("sessionUser");
 			let myGridID;
 			function _layout() {
 				return [ {
+					dataField : "rowNum",
+					headerText : "번호",
+					width : 40,
+					dataType : "numeric",
+					filter : {
+						inline : false
+					},
+				}, {
 					dataField : "number",
 					headerText : "금형번호",
 					dataType : "string",
@@ -254,7 +262,7 @@ WTUser user = (WTUser) request.getAttribute("sessionUser");
 			function createAUIGrid(columnLayout) {
 				const props = {
 					headerHeight : 30,
-					showRowNumColumn : true,
+					showRowNumColumn : false,
 					showRowCheckColumn : true,
 					rowNumHeaderText : "번호",
 					showAutoNoDataMessage : false,
@@ -296,7 +304,7 @@ WTUser user = (WTUser) request.getAttribute("sessionUser");
 					AUIGrid.removeAjaxLoader(myGridID);
 					if (data.result) {
 						totalPage = Math.ceil(data.total / data.pageSize);
-						createPagingNavigator(data.curPage, data.sessionid);
+						createPagingNavigator(data.total, data.curPage, data.sessionid);
 						AUIGrid.setGridData(myGridID, data.list);
 					} else {
 						alert(data.msg);
@@ -314,7 +322,7 @@ WTUser user = (WTUser) request.getAttribute("sessionUser");
 				});
 				createAUIGrid(columns);
 				AUIGrid.resize(myGridID);
-// 				selectbox("state");
+				// 				selectbox("state");
 				finderCode("manufacture", "MANUFACTURE");
 				selectbox("moldtype");
 				selectbox("deptcode");

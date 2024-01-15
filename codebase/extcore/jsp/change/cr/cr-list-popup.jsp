@@ -86,8 +86,6 @@ boolean multi = (boolean) request.getAttribute("multi");
 		<th>작성자</th>
 		<td class="indent5">
 			<input type="text" name="writer" id="writer" data-multi="false" class="width-200">
-			<input type="hidden" name="writerOid" id="writerOid">
-			<img src="/Windchill/extcore/images/delete.png" class="delete" title="삭제" onclick="clearUser('writer')">
 		</td>
 		<th>작성부서</th>
 		<td class="indent5">
@@ -134,7 +132,8 @@ boolean multi = (boolean) request.getAttribute("multi");
 		<th class="req lb">프로젝트 코드</th>
 		<td class="indent5" colspan="3">
 			<input type="text" name="model" id="model" class="width-200">
-			<img src="/Windchill/extcore/images/delete.png" class="delete" title="삭제" onclick="clearUser('model')">
+			<input type="hidden" name="modelcode" id="modelcode">
+			<img src="/Windchill/extcore/images/delete.png" class="delete" title="삭제" onclick="clearValue('model', 'code')">
 		</td>
 	</tr>
 </table>
@@ -161,6 +160,14 @@ boolean multi = (boolean) request.getAttribute("multi");
 <script type="text/javascript">
 	let myGridID;
 	const columns = [ {
+		dataField : "rowNum",
+		headerText : "번호",
+		width : 40,
+		dataType : "numeric",
+		filter : {
+			inline : false
+		},
+	},{
 		dataField : "number",
 		headerText : "CR 번호",
 		dataType : "string",
@@ -233,7 +240,7 @@ boolean multi = (boolean) request.getAttribute("multi");
 	function createAUIGrid(columnLayout) {
 		const props = {
 			headerHeight : 30,
-			showRowNumColumn : true,
+			showRowNumColumn : false,
 			showRowCheckColumn : true,
 			<%if (!multi) {%>
 			rowCheckToRadio : true,
@@ -292,7 +299,7 @@ boolean multi = (boolean) request.getAttribute("multi");
 		}
 		let params = new Object();
 		const url = getCallUrl("/cr/list");
-		const field = [ "name", "number", "state", "creatorOid", "createdFrom", "createdTo", "approveFrom", "approveTo", "writerOid", "createDepart", "writedFrom", "writedTo", "changeSection", "model" ];
+		const field = [ "name", "number", "state", "creatorOid", "createdFrom", "createdTo", "approveFrom", "approveTo", "writer", "createDepart", "writedFrom", "writedTo", "changeSection", "modelcode" ];
 		params = toField(params, field);
 		AUIGrid.showAjaxLoader(myGridID);
 		openLayer();
@@ -301,7 +308,7 @@ boolean multi = (boolean) request.getAttribute("multi");
 			AUIGrid.removeAjaxLoader(myGridID);
 			if (data.result) {
 				totalPage = Math.ceil(data.total / data.pageSize);
-				createPagingNavigator(data.curPage, data.sessionid);
+				createPagingNavigator(data.total, data.curPage, data.sessionid);
 				AUIGrid.setGridData(myGridID, data.list);
 			} else {
 				alert(data.msg);

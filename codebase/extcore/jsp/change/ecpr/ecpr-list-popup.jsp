@@ -76,8 +76,6 @@ boolean multi = (boolean) request.getAttribute("multi");
 		<th>작성자</th>
 		<td class="indent5">
 			<input type="text" name="writer" id="writer" data-multi="false" class="width-200">
-			<input type="hidden" name="writerOid" id="writerOid">
-			<img src="/Windchill/extcore/images/delete.png" class="delete" title="삭제" onclick="clearUser('writer')">
 		</td>
 		<th>작성부서</th>
 		<td class="indent5">
@@ -124,7 +122,8 @@ boolean multi = (boolean) request.getAttribute("multi");
 		<th>프로젝트 코드</th>
 		<td class="indent5" colspan="3">
 			<input type="text" name="model" id="model" class="width-200">
-			<img src="/Windchill/extcore/images/delete.png" class="delete" title="삭제" onclick="clearUser('model')">
+			<input type="hidden" name="modelcode" id="modelcode">
+			<img src="/Windchill/extcore/images/delete.png" class="delete" title="삭제" onclick="clearValue('model', 'code')">
 		</td>
 	</tr>
 </table>
@@ -152,6 +151,14 @@ boolean multi = (boolean) request.getAttribute("multi");
 <script type="text/javascript">
 let myGridID;
 const columns = [ {
+	dataField : "rowNum",
+	headerText : "번호",
+	width : 40,
+	dataType : "numeric",
+	filter : {
+		inline : false
+	},
+},{
 	dataField : "number",
 	headerText : "ECPR 번호",
 	dataType : "string",
@@ -219,7 +226,7 @@ const columns = [ {
 function createAUIGrid(columnLayout) {
 	const props = {
 		headerHeight : 30,
-		showRowNumColumn : true,
+		showRowNumColumn : false,
 		showRowCheckColumn : true,
 		<%if (!multi) {%>
 		rowCheckToRadio : true,
@@ -278,7 +285,7 @@ function loadGridData(movePage) {
 	}
 	let params = new Object();
 	const url = getCallUrl("/ecpr/list");
-	const field = ["name","number", "createdFrom", "createdTo", "creatorOid", "state", "writedFrom", "writedTo", "approveFrom", "approveTo", "createDepart", "writerOid", "model", "changeSection"];
+	const field = ["name","number", "createdFrom", "createdTo", "creatorOid", "state", "writedFrom", "writedTo", "approveFrom", "approveTo", "createDepart", "writer", "modelcode", "changeSection"];
 	params = toField(params, field);
 	AUIGrid.showAjaxLoader(myGridID);
 	openLayer();
@@ -286,7 +293,7 @@ function loadGridData(movePage) {
 		AUIGrid.removeAjaxLoader(myGridID);
 		if (data.result) {
 			totalPage = Math.ceil(data.total / data.pageSize);
-			createPagingNavigator(data.curPage, data.sessionid);
+			createPagingNavigator(data.total, data.curPage, data.sessionid);
 			AUIGrid.setGridData(myGridID, data.list);
 		} else {
 			alert(data.msg);
