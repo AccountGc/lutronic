@@ -95,10 +95,7 @@ public class EcrmHelper {
 					SearchCondition.LESS_THAN_OR_EQUAL, approveTo), new int[] { idx });
 		}
 		// 작성자
-		if (writer != "") {
-			QuerySpecUtils.toEqualsAnd(query, idx, ECRMRequest.class, ECRMRequest.WRITER, writer);
-//					Long.toString(CommonUtil.getOIDLongValue(writer)));
-		}
+		QuerySpecUtils.toLikeAnd(query, idx, ECRMRequest.class, ECRMRequest.WRITER, writer);
 
 		// 작성부서
 		QuerySpecUtils.toLikeAnd(query, idx, ECRMRequest.class, ECRMRequest.CREATE_DEPART, createDepart);
@@ -131,7 +128,8 @@ public class EcrmHelper {
 
 		PageQueryUtils pager = new PageQueryUtils(params, query);
 		PagingQueryResult result = pager.find();
-		int rowNum = (pager.getCpage() - 1) * pager.getPsize() + 1;		while (result.hasMoreElements()) {
+		int rowNum = (pager.getCpage() - 1) * pager.getPsize() + 1;
+		while (result.hasMoreElements()) {
 			Object[] obj = (Object[]) result.nextElement();
 			EcrmColumn data = new EcrmColumn(obj);
 			data.setRowNum(rowNum++);

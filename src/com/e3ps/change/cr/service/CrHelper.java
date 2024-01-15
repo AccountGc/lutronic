@@ -101,11 +101,7 @@ public class CrHelper {
 					SearchCondition.LESS_THAN_OR_EQUAL, approveTo), new int[] { idx });
 		}
 		// 작성자
-		if (writer != "") {
-			QuerySpecUtils.toLikeAnd(query, idx, EChangeRequest.class, EChangeRequest.WRITER, writer);
-//			Long.toString(CommonUtil.getOIDLongValue(writer)));
-		}
-
+		QuerySpecUtils.toLikeAnd(query, idx, EChangeRequest.class, EChangeRequest.WRITER, writer);
 		// 작성부서
 		QuerySpecUtils.toLikeAnd(query, idx, EChangeRequest.class, EChangeRequest.CREATE_DEPART, createDepart);
 
