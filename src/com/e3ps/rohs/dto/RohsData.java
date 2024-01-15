@@ -23,6 +23,7 @@ public class RohsData {
 
 //	public ROHSMaterial rohs;
 	private String oid;
+	private int rowNum;
 	private String number;
 	private String name;
 	private String state;

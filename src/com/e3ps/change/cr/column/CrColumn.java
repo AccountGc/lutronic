@@ -13,7 +13,7 @@ import lombok.Setter;
 @Getter
 @Setter
 public class CrColumn {
-
+	private int rowNum;
 	private String oid;
 	private String name;
 	private String number;

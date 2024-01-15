@@ -130,6 +130,14 @@ boolean isEdit = (boolean) request.getAttribute("isEdit");
 			;
 			function _layout() {
 				return [ {
+					dataField : "rowNum",
+					headerText : "번호",
+					width : 40,
+					dataType : "numeric",
+					filter : {
+						inline : false
+					},
+				},{
 					dataField : "ecoNumber",
 					headerText : "ECO 번호",
 					dataType : "string",
@@ -264,7 +272,7 @@ boolean isEdit = (boolean) request.getAttribute("isEdit");
 					editable : true,
 					enableCellMerge : true,
 					headerHeight : 30,
-					showRowNumColumn : true,
+					showRowNumColumn : false,
 					showRowCheckColumn : true,
 					rowNumHeaderText : "번호",
 					showAutoNoDataMessage : false,

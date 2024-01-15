@@ -178,9 +178,11 @@ public class EcoHelper {
 
 		PageQueryUtils pager = new PageQueryUtils(params, query);
 		PagingQueryResult result = pager.find();
+		int rowNum = pager.getTotal();
 		while (result.hasMoreElements()) {
 			Object[] obj = (Object[]) result.nextElement();
 			EcoColumn data = new EcoColumn(obj);
+			data.setRowNum(rowNum--);
 			list.add(data);
 		}
 		map.put("list", list);

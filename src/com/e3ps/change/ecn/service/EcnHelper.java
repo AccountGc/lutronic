@@ -81,9 +81,11 @@ public class EcnHelper {
 		System.out.println(query);
 		PageQueryUtils pager = new PageQueryUtils(params, query);
 		PagingQueryResult result = pager.find();
+		int rowNum = pager.getTotal();
 		while (result.hasMoreElements()) {
 			Object[] obj = (Object[]) result.nextElement();
 			EcnColumn data = new EcnColumn(obj);
+			data.setRowNum(rowNum--);
 			list.add(data);
 		}
 		map.put("list", list);

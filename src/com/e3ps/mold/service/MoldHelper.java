@@ -1,6 +1,6 @@
 package com.e3ps.mold.service;
 
-import java.util.ArrayList; 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -36,10 +36,10 @@ import wt.util.WTAttributeNameIfc;
 import wt.vc.VersionControlHelper;
 
 public class MoldHelper {
-	
+
 	public static final MoldService service = ServiceFactory.getService(MoldService.class);
 	public static final MoldHelper manager = new MoldHelper();
-	
+
 	/**
 	 * 금형 검색
 	 */
@@ -48,7 +48,7 @@ public class MoldHelper {
 		ArrayList<MoldDTO> list = new ArrayList<>();
 
 		String location = StringUtil.checkNull((String) params.get("location"));
-		String islastversion 	= StringUtil.checkNull((String)params.get("islastversion"));
+		String islastversion = StringUtil.checkNull((String) params.get("islastversion"));
 		String docNumber = StringUtil.checkNull((String) params.get("number"));
 		String docName = StringUtil.checkNull((String) params.get("name"));
 		String createdFrom = StringUtil.checkNull((String) params.get("createdFrom"));
@@ -69,30 +69,35 @@ public class MoldHelper {
 		QuerySpec query = new QuerySpec();
 		int idx = query.appendClassList(WTDocument.class, true);
 		int idx_m = query.appendClassList(WTDocumentMaster.class, false);
-		
+
 		query.setAdvancedQueryEnabled(true);
 		query.setDescendantQuery(false);
 
 		QuerySpecUtils.toInnerJoin(query, WTDocument.class, WTDocumentMaster.class, "masterReference.key.id",
 				WTAttributeNameIfc.ID_NAME, idx, idx_m);
-		
+
 		// 최신 이터레이션
-		if("true".equals(islastversion)) {
+		if ("true".equals(islastversion)) {
 			QuerySpecUtils.toLatest(query, idx, WTDocument.class);
 		}
-		
+
 		// 일괄 결재시 타입에 따른 LC 상태 검색
 		if (searchType.length() > 0) {
-			if(query.getConditionCount() > 0) { query.appendAnd(); }
+			if (query.getConditionCount() > 0) {
+				query.appendAnd();
+			}
 			if ("MOLD".equals(searchType)) {
 				QuerySpecUtils.toEquals(query, idx, WTDocument.class, WTDocument.DOC_TYPE, "$$MMDocument");
 			}
 		}
-		
+
 		// 상태 임시저장 제외
-    	if(query.getConditionCount() > 0) { query.appendAnd(); }
-    	query.appendWhere(new SearchCondition(WTDocument.class, WTDocument.LIFE_CYCLE_STATE, SearchCondition.NOT_EQUAL, "TEMPRARY"), new int[]{idx});
-    	
+		if (query.getConditionCount() > 0) {
+			query.appendAnd();
+		}
+		query.appendWhere(new SearchCondition(WTDocument.class, WTDocument.LIFE_CYCLE_STATE, SearchCondition.NOT_EQUAL,
+				"TEMPRARY"), new int[] { idx });
+
 		QuerySpecUtils.toLikeAnd(query, idx, WTDocument.class, WTDocument.NUMBER, docNumber);
 		QuerySpecUtils.toLikeAnd(query, idx, WTDocument.class, WTDocument.NAME, docName);
 		QuerySpecUtils.creatorQuery(query, idx, WTDocument.class, creator);
@@ -102,7 +107,7 @@ public class MoldHelper {
 				modifiedTo);
 		QuerySpecUtils.toState(query, idx, WTDocument.class, state);
 		QuerySpecUtils.toLikeAnd(query, idx, WTDocument.class, WTDocument.DESCRIPTION, description);
-		
+
 		// 내부 문서번호
 		if (interalnumber.length() > 0) {
 			AttributeDefDefaultView aview = IBADefinitionHelper.service
@@ -262,15 +267,17 @@ public class MoldHelper {
 					new int[] { f_idx });
 		}
 		query.appendCloseParen();
-		
+
 		QuerySpecUtils.toOrderBy(query, idx, WTDocument.class, WTDocument.MODIFY_TIMESTAMP, true);
 
 		PageQueryUtils pager = new PageQueryUtils(params, query);
 		PagingQueryResult result = pager.find();
+		int rowNum = pager.getTotal();
 		while (result.hasMoreElements()) {
 			Object[] obj = (Object[]) result.nextElement();
 			WTDocument document = (WTDocument) obj[0];
 			MoldDTO data = new MoldDTO(document);
+			data.setRowNum(rowNum--);
 			list.add(data);
 		}
 
@@ -280,44 +287,45 @@ public class MoldHelper {
 		map.put("total", pager.getTotalSize());
 		map.put("sessionid", pager.getSessionId());
 		map.put("curPage", pager.getCpage());
-		
+
 		return map;
 	}
-	
+
 	public List<MoldDTO> getDocumentListToLinkRoleName(WTDocument document, String roleName) throws Exception {
 		List<MoldDTO> list = new ArrayList<MoldDTO>();
-		
+
 		List<DocumentToDocumentLink> linkList = getDocumentToDocumentLinks(document, roleName);
-		for(DocumentToDocumentLink link : linkList) {
+		for (DocumentToDocumentLink link : linkList) {
 			WTDocument doc = null;
-			if("used".equals(roleName)){
+			if ("used".equals(roleName)) {
 				doc = link.getUsed();
-			}else if("useBy".equals(roleName)){
+			} else if ("useBy".equals(roleName)) {
 				doc = link.getUseBy();
 			}
-			
+
 			MoldDTO data = new MoldDTO(doc);
 			list.add(data);
 		}
 		return list;
 	}
-	
+
 	/**
 	 * 관련 문서 링크 가져오기
 	 */
-	public List<DocumentToDocumentLink> getDocumentToDocumentLinks(WTDocument document, String roleName) throws Exception {
+	public List<DocumentToDocumentLink> getDocumentToDocumentLinks(WTDocument document, String roleName)
+			throws Exception {
 		List<DocumentToDocumentLink> list = new ArrayList<DocumentToDocumentLink>();
-		
+
 		String vrOid = CommonUtil.getVROID(document);
-		document = (WTDocument)CommonUtil.getObject(vrOid);
+		document = (WTDocument) CommonUtil.getObject(vrOid);
 		QueryResult qr = PersistenceHelper.manager.navigate(document, roleName, DocumentToDocumentLink.class, false);
-		while(qr.hasMoreElements()){ 
-			DocumentToDocumentLink link = (DocumentToDocumentLink)qr.nextElement();
+		while (qr.hasMoreElements()) {
+			DocumentToDocumentLink link = (DocumentToDocumentLink) qr.nextElement();
 			list.add(link);
-    	}
+		}
 		return list;
 	}
-	
+
 	/**
 	 * 관련 문서 링크 관계 확인 ( true : 연결, false : 미연결 )
 	 */
@@ -325,13 +333,13 @@ public class MoldHelper {
 		boolean isConnect = false;
 		WTDocument doc = (WTDocument) CommonUtil.getObject(oid);
 		List<DocumentToDocumentLink> used = getDocumentToDocumentLinks(doc, "used");
-        List<DocumentToDocumentLink> useBy = getDocumentToDocumentLinks(doc, "useBy");
-        if(used.size() > 0 || useBy.size() > 0){
-        	isConnect = true;
-        }
-        return isConnect;
+		List<DocumentToDocumentLink> useBy = getDocumentToDocumentLinks(doc, "useBy");
+		if (used.size() > 0 || useBy.size() > 0) {
+			isConnect = true;
+		}
+		return isConnect;
 	}
-	
+
 	/**
 	 * 금형 이력
 	 */

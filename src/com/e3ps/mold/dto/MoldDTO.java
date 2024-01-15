@@ -30,6 +30,7 @@ import wt.session.SessionHelper;
 @Setter
 public class MoldDTO {
 
+	private int rowNum;
 	private String oid;
 	private String name;
 	private String number;

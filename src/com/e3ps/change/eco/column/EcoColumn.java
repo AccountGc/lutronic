@@ -11,7 +11,7 @@ import lombok.Setter;
 @Getter
 @Setter
 public class EcoColumn {
-
+	private int rowNum;
 	private String oid;
 	private String number;
 	private String name;

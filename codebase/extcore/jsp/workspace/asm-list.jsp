@@ -131,6 +131,14 @@ boolean isAdmin = (boolean) request.getAttribute("isAdmin");
 			let myGridID;
 			function _layout() {
 				return [ {
+					dataField : "rowNum",
+					headerText : "번호",
+					width : 40,
+					dataType : "numeric",
+					filter : {
+						inline : false
+					},
+				}, {
 					dataField : "number",
 					headerText : "<%=title%> 일괄결재번호",
 					dataType : "string",
@@ -185,7 +193,7 @@ boolean isAdmin = (boolean) request.getAttribute("isAdmin");
 			function createAUIGrid(columnLayout) {
 				const props = {
 					headerHeight : 30,
-					showRowNumColumn : true,
+					showRowNumColumn : false,
 					rowNumHeaderText : "번호",
 					showAutoNoDataMessage : false,
 					selectionMode : "multipleCells",

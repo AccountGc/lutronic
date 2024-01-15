@@ -171,7 +171,15 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 		<script type="text/javascript">
 			let myGridID;
 			function _layout() {
-				return [ {
+				return [{
+					dataField : "rowNum",
+					headerText : "번호",
+					width : 40,
+					dataType : "numeric",
+					filter : {
+						inline : false
+					},
+				}, {
 					dataField : "number",
 					headerText : "ECRM 번호",
 					dataType : "string",
@@ -257,7 +265,7 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 			function createAUIGrid(columnLayout) {
 				const props = {
 					headerHeight : 30,
-					showRowNumColumn : true,
+					showRowNumColumn : false,
 					rowNumHeaderText : "번호",
 					showAutoNoDataMessage : false,
 					selectionMode : "multipleCells",

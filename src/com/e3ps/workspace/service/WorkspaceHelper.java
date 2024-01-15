@@ -262,6 +262,7 @@ public class WorkspaceHelper {
 
 		PageQueryUtils pager = new PageQueryUtils(params, query);
 		PagingQueryResult result = pager.find();
+		int rowNum = pager.getTotal();
 		while (result.hasMoreElements()) {
 			Object[] obj = (Object[]) result.nextElement();
 			ApprovalLine line = (ApprovalLine) obj[0];
@@ -272,6 +273,7 @@ public class WorkspaceHelper {
 				WorkspaceHelper.service.deleteAllLines(m);
 			}
 			ApprovalLineColumn column = new ApprovalLineColumn(line, "RECEIVE_COLUMN");
+			column.setRowNum(rowNum--);
 			list.add(column);
 		}
 		map.put("list", list);
@@ -369,6 +371,7 @@ public class WorkspaceHelper {
 
 		PageQueryUtils pager = new PageQueryUtils(params, query);
 		PagingQueryResult result = pager.find();
+		int rowNum = pager.getTotal();
 		while (result.hasMoreElements()) {
 			Object[] obj = (Object[]) result.nextElement();
 			ApprovalMaster master = (ApprovalMaster) obj[0];
@@ -378,6 +381,7 @@ public class WorkspaceHelper {
 				WorkspaceHelper.service.deleteAllLines(master);
 			}
 			ApprovalLineColumn column = new ApprovalLineColumn(master, "REJECT_COLUMN");
+			column.setRowNum(rowNum--);
 			list.add(column);
 		}
 		map.put("list", list);

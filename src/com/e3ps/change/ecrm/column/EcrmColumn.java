@@ -17,7 +17,7 @@ import lombok.Setter;
 @Getter
 @Setter
 public class EcrmColumn {
-
+	private int rowNum;
 	private String oid;
 	private String name;
 	private String number;

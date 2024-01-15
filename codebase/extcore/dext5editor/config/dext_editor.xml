@@ -188,8 +188,8 @@
     <width>99%</width>
     <height>550px</height>
     <skinname></skinname>
-    <font_family>굴림</font_family>
-    <font_size>12pt</font_size>
+    <font_family>맑은 고딕</font_family>
+    <font_size>10pt</font_size>
     <line_height mode="2">1.2</line_height>
     <show_font_real desc="0: 기본값 사용, 1: 실제 폰트명, 크기 사용">1</show_font_real>
     <accessibility>0</accessibility>

@@ -202,9 +202,11 @@ public class RohsHelper {
 
 			PageQueryUtils pager = new PageQueryUtils(params, query);
 			PagingQueryResult result = pager.find();
+			int rowNum = pager.getTotal();
 			while (result.hasMoreElements()) {
 				Object[] obj = (Object[]) result.nextElement();
 				RohsData data = new RohsData((ROHSMaterial) obj[0]);
+				data.setRowNum(rowNum--);
 				list.add(data);
 			}
 
