@@ -153,7 +153,7 @@ WTUser sessionUser = (WTUser) SessionHelper.manager.getPrincipal();
 					<%
 					if (dto.getEpm_oid() != null) {
 					%>
-					<a href="javascript:viewPart('<%=dto.getEpm_oid()%>');"><%=dto.getEpm_value()%></a>
+					<a href="javascript:viewEpm('<%=dto.getEpm_oid()%>');"><%=dto.getEpm_value()%></a>
 					<%
 					} else {
 					%>

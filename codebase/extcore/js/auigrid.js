@@ -255,12 +255,16 @@ function expand() {
 let pageButtonCount = 10;
 let currentPage = 1;
 let totalPage;
-function createPagingNavigator(goPage, sessionid) {
+function createPagingNavigator(total, goPage, sessionid) {
 	let retStr = "";
 	let prevPage = parseInt((goPage - 1) / pageButtonCount) * pageButtonCount;
 	let nextPage = ((parseInt((goPage - 1) / pageButtonCount)) * pageButtonCount) + pageButtonCount + 1;
 	prevPage = Math.max(0, prevPage);
 	nextPage = Math.min(nextPage, totalPage);
+	
+	
+	retStr += "<div style='padding-top: 7px; float: left;'><b>&nbsp;&nbsp;전체개수 : " + total + "개</b></div>";
+	
 	// 처음
 	retStr += "<a href='javascript:moveToPage(1, " + sessionid + ")'><span class='aui-grid-paging-number aui-grid-paging-first'>first</span></a>";
 	// 이전

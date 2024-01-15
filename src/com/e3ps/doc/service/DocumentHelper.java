@@ -226,11 +226,11 @@ public class DocumentHelper {
 
 		PageQueryUtils pager = new PageQueryUtils(params, query);
 		PagingQueryResult result = pager.find();
-		int rowNum = pager.getTotal();
+		int rowNum = (pager.getCpage() - 1) * pager.getPsize() + 1;
 		while (result.hasMoreElements()) {
 			Object[] obj = (Object[]) result.nextElement();
 			DocumentColumn column = new DocumentColumn(obj);
-			column.setRowNum(rowNum--);
+			column.setRowNum(rowNum++);
 			list.add(column);
 		}
 

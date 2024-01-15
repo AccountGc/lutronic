@@ -5,12 +5,10 @@ import java.sql.Timestamp;
 
 import com.e3ps.common.util.ThumbnailUtil;
 import com.e3ps.drawing.service.DrawingHelper;
-import com.e3ps.part.service.PartHelper;
 import com.fasterxml.jackson.annotation.JsonFormat;
 
 import lombok.Getter;
 import lombok.Setter;
-import wt.enterprise.BasicTemplateProcessor;
 import wt.epm.EPMDocument;
 import wt.fc.IconDelegate;
 import wt.fc.IconDelegateFactory;
@@ -75,7 +73,7 @@ public class EpmColumn {
 	 * 최신버건과 함께 표시
 	 */
 	private String setVersionInfo(EPMDocument epm) throws Exception {
-		WTPart latest = PartHelper.manager.latest(getEpm_oid());
+		EPMDocument latest = DrawingHelper.manager.latest(getEpm_oid());
 		String version = VersionControlHelper.getVersionDisplayIdentifier(epm) + "."
 				+ epm.getIterationIdentifier().getSeries().getValue();
 		String latest_version = latest.getVersionIdentifier().getSeries().getValue() + "."
