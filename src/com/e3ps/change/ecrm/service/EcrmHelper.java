@@ -49,13 +49,13 @@ public class EcrmHelper {
 		String createdTo = (String) params.get("createdTo");
 		String approveFrom = (String) params.get("approveFrom");
 		String approveTo = (String) params.get("approveTo");
-		String writer = (String) params.get("writerOid");
+		String writer = (String) params.get("writer");
 		String createDepart = (String) params.get("createDepart");
 		String writedFrom = (String) params.get("writedFrom");
 		String writedTo = (String) params.get("writedTo");
 //		String proposer = (String) params.get("proposer");
 		String changeSection = (String) params.get("changeSection");
-		String model = (String) params.get("model");
+		String model = (String) params.get("modelcode");
 
 		QuerySpec query = new QuerySpec();
 		int idx = query.appendClassList(ECRMRequest.class, true);
@@ -96,8 +96,8 @@ public class EcrmHelper {
 		}
 		// 작성자
 		if (writer != "") {
-			QuerySpecUtils.toEqualsAnd(query, idx, ECRMRequest.class, ECRMRequest.WRITER,
-					Long.toString(CommonUtil.getOIDLongValue(writer)));
+			QuerySpecUtils.toEqualsAnd(query, idx, ECRMRequest.class, ECRMRequest.WRITER, writer);
+//					Long.toString(CommonUtil.getOIDLongValue(writer)));
 		}
 
 		// 작성부서

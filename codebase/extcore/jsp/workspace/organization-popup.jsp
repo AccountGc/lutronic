@@ -77,6 +77,14 @@ boolean isMulti = Boolean.parseBoolean(multi);
 	let myGridID;
 	function _layout() {
 		return [ {
+			dataField : "rowNum",
+			headerText : "번호",
+			width : 40,
+			dataType : "numeric",
+			filter : {
+				inline : false
+			},
+		},{
 			dataField : "id",
 			headerText : "아이디",
 			dataType : "string",
@@ -137,7 +145,7 @@ boolean isMulti = Boolean.parseBoolean(multi);
 	function createAUIGrid(columnLayout) {
 		const props = {
 			headerHeight : 30,
-			showRowNumColumn : true,
+			showRowNumColumn : false,
 			rowNumHeaderText : "번호",
 			showAutoNoDataMessage : true,
 			selectionMode : "multipleCells",
@@ -204,7 +212,7 @@ boolean isMulti = Boolean.parseBoolean(multi);
 			if (data.result) {
 				totalPage = Math.ceil(data.total / data.pageSize);
 				document.getElementById("sessionid").value = data.sessionid;
-				createPagingNavigator(data.curPage);
+				createPagingNavigator(data.total, data.curPage);
 				AUIGrid.setGridData(myGridID, data.list);
 			} else {
 				alert(data.msg);

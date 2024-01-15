@@ -52,13 +52,13 @@ public class EcprHelper {
 			String createdTo = StringUtil.checkNull((String) params.get("createdTo"));
 			String approveFrom = StringUtil.checkNull((String) params.get("approveFrom"));
 			String approveTo = StringUtil.checkNull((String) params.get("approveTo"));
-			String writer = StringUtil.checkNull((String) params.get("writerOid"));
+			String writer = StringUtil.checkNull((String) params.get("writer"));
 			String createDepart = StringUtil.checkNull((String) params.get("createDepart"));
 			String writedFrom = StringUtil.checkNull((String) params.get("writedFrom"));
 			String writedTo = StringUtil.checkNull((String) params.get("writedTo"));
 //			String proposer = StringUtil.checkNull((String)params.get("proposer"));
 			String changeSection = StringUtil.checkNull((String) params.get("changeSection"));
-			String model = StringUtil.checkNull((String) params.get("model"));
+			String model = StringUtil.checkNull((String) params.get("modelcode"));
 
 			QuerySpec query = new QuerySpec();
 			int idx = query.appendClassList(ECPRRequest.class, true);
@@ -100,8 +100,8 @@ public class EcprHelper {
 			}
 			// 작성자
 			if (writer != "") {
-				QuerySpecUtils.toEqualsAnd(query, idx, ECPRRequest.class, ECPRRequest.WRITER,
-						Long.toString(CommonUtil.getOIDLongValue(writer)));
+				QuerySpecUtils.toEqualsAnd(query, idx, ECPRRequest.class, ECPRRequest.WRITER, writer);
+//						Long.toString(CommonUtil.getOIDLongValue(writer)));
 			}
 			// 작성부서
 			QuerySpecUtils.toEqualsAnd(query, idx, ECPRRequest.class, ECPRRequest.CREATE_DEPART, createDepart);

@@ -82,6 +82,14 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 			let myGridID;
 			function _layout() {
 				return [ {
+					dataField : "rowNum",
+					headerText : "번호",
+					width : 40,
+					dataType : "numeric",
+					filter : {
+						inline : false
+					},
+				},{
 					dataField : "work",
 					headerText : "업무",
 					dataType : "string",
@@ -146,7 +154,7 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 			function createAUIGrid(columnLayout) {
 				const props = {
 					headerHeight : 30,
-					showRowNumColumn : true,
+					showRowNumColumn : false,
 					rowNumHeaderText : "번호",
 					showAutoNoDataMessage : false,
 					selectionMode : "multipleCells",
@@ -187,7 +195,7 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 					logger(data);
 					if (data.result) {
 						totalPage = Math.ceil(data.total / data.pageSize);
-						createPagingNavigator(data.curPage, data.sessionid);
+						createPagingNavigator(data.total, data.curPage, data.sessionid);
 						AUIGrid.setGridData(myGridID, data.list);
 					} else {
 						alert(data.msg);

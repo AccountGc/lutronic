@@ -143,6 +143,14 @@ List<Map<String, String>> lifecycleList = (List<Map<String, String>>) request.ge
 			let myGridID;
 			function _layout() {
 				return [ {
+					dataField : "rowNum",
+					headerText : "번호",
+					width : 40,
+					dataType : "numeric",
+					filter : {
+						inline : false
+					},
+				},{
 					dataField : "number",
 					headerText : "물질번호",
 					dataType : "string",
@@ -212,7 +220,7 @@ List<Map<String, String>> lifecycleList = (List<Map<String, String>>) request.ge
 			function createAUIGrid(columnLayout) {
 				const props = {
 					headerHeight : 30,
-					showRowNumColumn : true,
+					showRowNumColumn : false,
 					rowNumHeaderText : "번호",
 					showAutoNoDataMessage : false,
 					selectionMode : "multipleCells",
@@ -375,7 +383,7 @@ List<Map<String, String>> lifecycleList = (List<Map<String, String>>) request.ge
 					AUIGrid.removeAjaxLoader(myGridID);
 					if (data.result) {
 						totalPage = Math.ceil(data.total / data.pageSize);
-						createPagingNavigator(data.curPage, data.sessionid);
+						createPagingNavigator(data.total, data.curPage, data.sessionid);
 						AUIGrid.setGridData(myGridID, data.list);
 					} else {
 						alert(data.msg);

@@ -30,6 +30,14 @@ String distribute = (String) request.getAttribute("distribute");
 let myGridID;
 function _layout() {
 	return [ {
+		dataField : "rowNum",
+		headerText : "번호",
+		width : 40,
+		dataType : "numeric",
+		filter : {
+			inline : false
+		},
+	},{
 		dataField : "version",
 		headerText : "REV",
 		dataType : "string",
@@ -70,7 +78,7 @@ function _layout() {
 function createAUIGrid(columnLayout) {
 	const props = {
 		headerHeight : 30,
-		showRowNumColumn : true,
+		showRowNumColumn : false,
 		rowNumHeaderText : "번호",
 		fillColumnSizeMode: false,
 		showAutoNoDataMessage : false,

@@ -119,7 +119,8 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 				<th>프로젝트 코드</th>
 				<td class="indent5">
 					<input type="text" name="model" id="model" class="width-200">
-					<img src="/Windchill/extcore/images/delete.png" class="delete" title="삭제" onclick="clearUser('model')">
+					<input type="hidden" name="modelcode" id="modelcode">
+					<img src="/Windchill/extcore/images/delete.png" class="delete" title="삭제" onclick="clearValue('model', 'code')">
 				</td>
 				<th>승인일</th>
 				<td class="indent5" colspan="3">
@@ -402,7 +403,7 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 					AUIGrid.removeAjaxLoader(myGridID);
 					if (data.result) {
 						totalPage = Math.ceil(data.total / data.pageSize);
-						createPagingNavigator(data.curPage, data.sessionid);
+						createPagingNavigator(data.total, data.curPage, data.sessionid);
 						AUIGrid.setGridData(myGridID, data.list);
 					} else {
 						alert(data.msg);

@@ -82,11 +82,11 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 				</td>
 				<td class="right">
 					<select name="_psize" id="_psize">
+						<option value="10">10</option>
+						<option value="20" selected="selected">20</option>
 						<option value="30">30</option>
 						<option value="50">50</option>
 						<option value="100">100</option>
-						<option value="200">200</option>
-						<option value="300">300</option>
 					</select>
 				</td>
 			</tr>
@@ -104,6 +104,14 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 		<%=ulist%>
 			function _layout() {
 				return [ {
+					dataField : "rowNum",
+					headerText : "번호",
+					width : 40,
+					dataType : "numeric",
+					filter : {
+						inline : false
+					},
+				},{
 					dataField : "step",
 					headerText : "단계",
 					dataType : "string",
@@ -370,7 +378,7 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 					if (data.result) {
 						totalPage = Math.ceil(data.total / data.pageSize);
 						document.getElementById("sessionid").value = data.sessionid;
-						createPagingNavigator(data.curPage);
+						createPagingNavigator(data.total, data.curPage);
 						AUIGrid.setGridData(myGridID, data.list);
 						buttonControl();
 					} else {
@@ -391,6 +399,7 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 				selectbox("_psize");
 				selectbox("root");
 				buttonControl();
+				$("#_psize").bindSelectSetValue("20");
 			});
 
 			document.addEventListener("keydown", function(event) {

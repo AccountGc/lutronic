@@ -35,11 +35,11 @@ String state = (String) request.getAttribute("state");
 			<tr>
 				<td class="right">
 					<select name="_psize" id="_psize">
+						<option value="10">10</option>
+						<option value="20" selected="selected">20</option>
 						<option value="30">30</option>
 						<option value="50">50</option>
 						<option value="100">100</option>
-						<option value="200">200</option>
-						<option value="300">300</option>
 					</select>
 				</td>
 			</tr>
@@ -59,6 +59,14 @@ String state = (String) request.getAttribute("state");
 			let myGridID;
 			function _layout() {
 				return [ {
+					dataField : "rowNum",
+					headerText : "번호",
+					width : 40,
+					dataType : "numeric",
+					filter : {
+						inline : false
+					},
+				},{
 					dataField : "name",
 					headerText : "구분",
 					dataType : "string",
@@ -127,7 +135,7 @@ String state = (String) request.getAttribute("state");
 			function createAUIGrid(columnLayout) {
 				const props = {
 						headerHeight : 30,
-						showRowNumColumn : true,
+						showRowNumColumn : false,
 						rowNumHeaderText : "번호",
 						showAutoNoDataMessage : true,
 						selectionMode : "multipleCells",
@@ -163,7 +171,7 @@ String state = (String) request.getAttribute("state");
 					if (data.result) {
 						totalPage = Math.ceil(data.total / data.pageSize);
 						document.getElementById("sessionid").value = data.sessionid;
-						createPagingNavigator(data.curPage);
+						createPagingNavigator(data.total, data.curPage);
 						AUIGrid.setGridData(myGridID, data.list);
 					} else {
 						alert(data.msg);
@@ -181,6 +189,7 @@ String state = (String) request.getAttribute("state");
 				createAUIGrid(columns);
 				AUIGrid.resize(myGridID);
 				selectbox("_psize");
+				$("#_psize").bindSelectSetValue("20");
 			});
 
 			function exportExcel() {
