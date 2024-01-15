@@ -25,6 +25,7 @@ import wt.part.WTPart;
 public class ApprovalLineColumn {
 
 	private String oid;
+	private int rowNum;
 	private boolean reads;
 	private String name;
 	private String role;

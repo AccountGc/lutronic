@@ -129,6 +129,7 @@ public class WorkspaceHelper {
 
 		PageQueryUtils pager = new PageQueryUtils(params, query);
 		PagingQueryResult result = pager.find();
+		int rowNum = pager.getTotal();
 		while (result.hasMoreElements()) {
 			Object[] obj = (Object[]) result.nextElement();
 			ApprovalMaster master = (ApprovalMaster) obj[0];
@@ -138,6 +139,7 @@ public class WorkspaceHelper {
 				WorkspaceHelper.service.deleteAllLines(master);
 			}
 			ApprovalLineColumn column = new ApprovalLineColumn(master, "COMPLETE_COLUMN");
+			column.setRowNum(rowNum--);
 			list.add(column);
 		}
 		map.put("list", list);
@@ -187,6 +189,7 @@ public class WorkspaceHelper {
 
 		PageQueryUtils pager = new PageQueryUtils(params, query);
 		PagingQueryResult result = pager.find();
+		int rowNum = pager.getTotal();
 		while (result.hasMoreElements()) {
 			Object[] obj = (Object[]) result.nextElement();
 			ApprovalLine approvalLine = (ApprovalLine) obj[0];
@@ -197,6 +200,7 @@ public class WorkspaceHelper {
 				WorkspaceHelper.service.deleteAllLines(m);
 			}
 			ApprovalLineColumn column = new ApprovalLineColumn(approvalLine, "APPROVAL_COLUMN");
+			column.setRowNum(rowNum--);
 			list.add(column);
 		}
 
@@ -310,6 +314,7 @@ public class WorkspaceHelper {
 
 		PageQueryUtils pager = new PageQueryUtils(params, query);
 		PagingQueryResult result = pager.find();
+		int rowNum = pager.getTotal();
 		while (result.hasMoreElements()) {
 			Object[] obj = (Object[]) result.nextElement();
 			ApprovalMaster master = (ApprovalMaster) obj[0];
@@ -319,6 +324,7 @@ public class WorkspaceHelper {
 				WorkspaceHelper.service.deleteAllLines(master);
 			}
 			ApprovalLineColumn column = new ApprovalLineColumn(master, "PROGRESS_COLUMN");
+			column.setRowNum(rowNum--);
 			list.add(column);
 		}
 
@@ -873,6 +879,7 @@ public class WorkspaceHelper {
 
 		PageQueryUtils pager = new PageQueryUtils(params, query);
 		PagingQueryResult result = pager.find();
+		int rowNum = pager.getTotal();
 		while (result.hasMoreElements()) {
 			Object[] obj = (Object[]) result.nextElement();
 			ApprovalLine approvalLine = (ApprovalLine) obj[0];
@@ -883,6 +890,7 @@ public class WorkspaceHelper {
 				WorkspaceHelper.service.deleteAllLines(m);
 			}
 			ApprovalLineColumn column = new ApprovalLineColumn(approvalLine, "AGREE_COLUMN");
+			column.setRowNum(rowNum--);
 			list.add(column);
 		}
 		map.put("list", list);

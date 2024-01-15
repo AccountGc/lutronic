@@ -316,6 +316,14 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 			let myGridID;
 			function _layout() {
 				return [ {
+					dataField : "rowNum",
+					headerText : "번호",
+					width : 40,
+					dataType : "numeric",
+					filter : {
+						inline : false
+					},
+				}, {
 					dataField : "thumb",
 					headerText : "뷰",
 					dataType : "string",
@@ -421,7 +429,7 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 			function createAUIGrid(columnLayout) {
 				const props = {
 					headerHeight : 30,
-					showRowNumColumn : true,
+					showRowNumColumn : false,
 					// 					showRowCheckColumn : true,
 					rowNumHeaderText : "번호",
 					showAutoNoDataMessage : false,
@@ -456,7 +464,7 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 					openCreoView(oid);
 				}
 			}
-			
+
 			function openCreoView(oid) {
 				const callUrl = getCallUrl("/part/getCreoViewUrl?oid=" + oid);
 				call(callUrl, null, function(res) {
@@ -500,7 +508,7 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 					return false;
 				}
 			}
-			
+
 			// 재변환
 			function publish(oid) {
 				const url = getCallUrl("/part/publish?oid=" + oid);
@@ -510,7 +518,7 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 					parent.closeLayer();
 				}, "GET");
 			}
-			
+
 			function _auiContextMenuHandler(event) {
 				if (event.target == "header") { // 헤더 컨텍스트
 					if (nowHeaderMenuVisible) {
