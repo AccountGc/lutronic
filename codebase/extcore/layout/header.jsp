@@ -453,7 +453,7 @@ int eca = (int) request.getAttribute("eca");
 			}
 			%>
 			<%
-			if (isDist) {
+// 			if (isDist) {
 			%>
 			<li>
 				<a href="#">
@@ -490,7 +490,8 @@ int eca = (int) request.getAttribute("eca");
 						<a onclick="moveToPage(this, '/org/organization', '> 나의업무 > 조직도');">조직도</a>
 					</li>
 					<li>
-						<a onclick="moveToPage(this, '/groupware/password', '> 나의업무 > 비밀번호변경');">비밀번호 변경</a>
+<!-- 						<a onclick="moveToPage(this, '/groupware/password', '> 나의업무 > 비밀번호변경');">비밀번호 변경</a> -->
+						<a onclick="_popup('/Windchill/plm/groupware/password', 800, 300, 'n');">비밀번호 변경</a>
 					</li>
 				</ul>
 			</li>
@@ -547,7 +548,7 @@ int eca = (int) request.getAttribute("eca");
 				<!-- 						</a> -->
 			</li>
 			<%
-			}
+// 			}
 			%>
 		</ul>
 	</div>

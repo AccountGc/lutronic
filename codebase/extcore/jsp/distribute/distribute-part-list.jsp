@@ -1,4 +1,6 @@
 <%@page import="com.e3ps.part.service.PartHelper"%>
+<%@page import="java.util.Map"%>
+<%@page import="java.util.List"%>
 <%@page import="wt.session.SessionHelper"%>
 <%@page import="wt.part.QuantityUnit"%>
 <%@page import="wt.org.WTUser"%>
@@ -8,12 +10,13 @@
 <%@page import="com.e3ps.common.util.StringUtil"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%
-ArrayList<NumberCode> modelList = (ArrayList<NumberCode>) request.getAttribute("modelList");
+// ArrayList<NumberCode> modelList = (ArrayList<NumberCode>) request.getAttribute("modelList");
 ArrayList<NumberCode> deptcodeList = (ArrayList<NumberCode>) request.getAttribute("deptcodeList");
 ArrayList<NumberCode> matList = (ArrayList<NumberCode>) request.getAttribute("matList");
 ArrayList<NumberCode> productmethodList = (ArrayList<NumberCode>) request.getAttribute("productmethodList");
 ArrayList<NumberCode> manufactureList = (ArrayList<NumberCode>) request.getAttribute("manufactureList");
 ArrayList<NumberCode> finishList = (ArrayList<NumberCode>) request.getAttribute("finishList");
+List<Map<String, String>> lifecycleList = (List<Map<String, String>>) request.getAttribute("lifecycleList");
 QuantityUnit[] unitList = (QuantityUnit[]) request.getAttribute("unitList");
 WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 %>
@@ -26,7 +29,7 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 <%@include file="/extcore/jsp/common/script.jsp"%>
 <%@include file="/extcore/jsp/common/auigrid.jsp"%>
 </head>
-<body>
+<body style="overflow-x: hidden;">
 	<form>
 		<input type="hidden" name="sessionid" id="sessionid">
 		<input type="hidden" name="curPage" id="curPage">
@@ -97,6 +100,42 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 					<input type="text" name="model" id="model" class="width-200">
 					<img src="/Windchill/extcore/images/delete.png" class="delete" title="삭제" onclick="clearUser('model')">
 				</td>
+				<th>상태</th>
+				<td class="indent5">
+					<select name="state" id="state" class="width-200">
+						<option value="">선택</option>
+						<%
+						for (Map<String, String> lifecycle : lifecycleList) {
+							if (!lifecycle.get("code").equals("TEMPRARY")) {
+						%>
+						<option value="<%=lifecycle.get("code")%>"><%=lifecycle.get("name")%></option>
+						<%
+						}
+						}
+						%>
+					</select>
+				</td>
+				<th>REV</th>
+				<td>
+					&nbsp;
+					<div class="pretty p-switch">
+						<input type="radio" name="latest" value="true" checked="checked">
+						<div class="state p-success">
+							<label>
+								<b>최신REV</b>
+							</label>
+						</div>
+					</div>
+					&nbsp;
+					<div class="pretty p-switch">
+						<input type="radio" name="latest" value="false">
+						<div class="state p-success">
+							<label>
+								<b>모든REV</b>
+							</label>
+						</div>
+					</div>
+				</td>
 			</tr>
 			<tr class="hidden">
 				<th>제작방법</th>
@@ -148,7 +187,7 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 				<td class="indent5">
 					<input type="text" name="weight" id="weight" class="width-300">
 				</td>
-				<th>Manufacturer</th>
+				<th>MANUFACTURER</th>
 				<td class="indent5">
 					<input type="text" name="manufacture" id="manufacture" class="width-200">
 					<img src="/Windchill/extcore/images/delete.png" class="delete" title="삭제" onclick="clearUser('manufacture')">
@@ -234,16 +273,16 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 					<img src="/Windchill/extcore/images/fileicon/file_excel.gif" title="엑셀 다운로드" onclick="exportExcel();">
 					<img src="/Windchill/extcore/images/save.gif" title="테이블 저장" onclick="saveColumnLayout('distribute-part-list');">
 					<img src="/Windchill/extcore/images/redo.gif" title="테이블 초기화" onclick="resetColumnLayout('distribute-part-list');">
-					<input type="button" value="▼펼치기" title="▼펼치기" class="red" onclick="spread(this);">
 				</td>
 				<td class="right">
 					<select name="_psize" id="_psize">
+						<option value="10">10</option>
+						<option value="20" selected="selected">20</option>
 						<option value="30">30</option>
 						<option value="50">50</option>
-						<option value="100" selected="selected">100</option>
-						<option value="200">200</option>
-						<option value="300">300</option>
+						<option value="100">100</option>
 					</select>
+					<input type="button" value="▼펼치기" title="▼펼치기" class="red" onclick="spread(this);">
 					<input type="button" value="검색" title="검색" onclick="loadGridData();">
 				</td>
 			</tr>
@@ -277,26 +316,30 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 			let myGridID;
 			function _layout() {
 				return [ {
-					dataField : "_3d",
-					headerText : "3D",
+					dataField : "thumb",
+					headerText : "뷰",
 					dataType : "string",
-					width : 60,
+					width : 50,
 					renderer : {
 						type : "ImageRenderer",
 						altField : null,
-						onClick : function(event) {
-						}
+						imgHeight : 16,
+					},
+					filter : {
+						inline : false
 					},
 				}, {
-					dataField : "_2d",
-					headerText : "2D",
+					dataField : "icon",
+					headerText : "",
 					dataType : "string",
-					width : 60,
+					width : 50,
 					renderer : {
 						type : "ImageRenderer",
 						altField : null,
-						onClick : function(event) {
-						}
+						imgHeight : 16,
+					},
+					filter : {
+						inline : false
 					},
 				}, {
 					dataField : "number",
@@ -531,6 +574,7 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 				AUIGrid.resize(myGridID);
 				_createAUIGrid(_columns);
 				AUIGrid.resize(_myGridID);
+				selectbox("state");
 				finderCode("model", "MODEL");
 				selectbox("productmethod");
 				selectbox("deptcode");
@@ -542,7 +586,7 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 				finderUser("creator");
 				twindate("created");
 				twindate("modified");
-				$("#_psize").bindSelectSetValue(100);
+				$("#_psize").bindSelectSetValue("20");
 			});
 
 			document.addEventListener("keydown", function(event) {
@@ -652,7 +696,8 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 					if (display === "none") {
 						el.style.display = "table-row";
 						target.value = "▲접기";
-						selectbox("model");
+						selectbox("state");
+						finderCode("model", "MODEL");
 						selectbox("productmethod");
 						selectbox("deptcode");
 						selectbox("unit");
@@ -666,7 +711,8 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 					} else {
 						el.style.display = "none";
 						target.value = "▼펼치기";
-						selectbox("model");
+						selectbox("state");
+						finderCode("model", "MODEL");
 						selectbox("productmethod");
 						selectbox("deptcode");
 						selectbox("unit");
