@@ -178,7 +178,8 @@ public class EcoHelper {
 
 		PageQueryUtils pager = new PageQueryUtils(params, query);
 		PagingQueryResult result = pager.find();
-		int rowNum = (pager.getCpage() - 1) * pager.getPsize() + 1;		while (result.hasMoreElements()) {
+		int rowNum = (pager.getCpage() - 1) * pager.getPsize() + 1;
+		while (result.hasMoreElements()) {
 			Object[] obj = (Object[]) result.nextElement();
 			EcoColumn data = new EcoColumn(obj);
 			data.setRowNum(rowNum++);
@@ -246,13 +247,17 @@ public class EcoHelper {
 	 */
 	public String displayToModel(String model) throws Exception {
 		String display = "";
-		String[] ss = model.split(",");
-		for (int i = 0; i < ss.length; i++) {
-			String s = ss[i];
-			if (ss.length - 1 == i) {
-				display += NumberCodeHelper.manager.getNumberCodeName(s, "MODEL");
-			} else {
-				display += NumberCodeHelper.manager.getNumberCodeName(s, "MODEL") + ",";
+		if (StringUtil.checkString(model)) {
+			String[] ss = model.split(",");
+			for (int i = 0; i < ss.length; i++) {
+				String s = ss[i];
+				if (s.length() > 0) {
+					if (ss.length - 1 == i) {
+						display += NumberCodeHelper.manager.getNumberCodeName(s, "MODEL");
+					} else {
+						display += NumberCodeHelper.manager.getNumberCodeName(s, "MODEL") + ",";
+					}
+				}
 			}
 		}
 		return display;

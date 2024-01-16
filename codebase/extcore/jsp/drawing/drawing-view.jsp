@@ -136,10 +136,13 @@ Map<String, String> step = dto.getStep();
 			</tr>
 			<tr>
 				<th class="lb">주 첨부파일</th>
-				<td class="indent5" colspan="5">
+				<td class="indent5" colspan="3">
 					<jsp:include page="/extcore/jsp/common/primary-view.jsp">
 						<jsp:param value="<%=dto.getOid()%>" name="oid" />
 					</jsp:include>
+				</td>
+				<td class="center" colspan="2">
+					<input type="button" value="CREO VIEW" title="CREO VIEW" class="gray" onclick="openCreoView();">
 				</td>
 			</tr>
 			<tr>
@@ -262,6 +265,62 @@ Map<String, String> step = dto.getStep();
 		_popup(url, 1600, 550, "n");
 	}
 
+	function openCreoView() {
+		const oid = document.getElementById("oid").value;
+		const callUrl = getCallUrl("/drawing/getCreoViewUrl?oid=" + oid);
+		call(callUrl, null, function(res) {
+			if (res.result) {
+				const params = {
+					browser : "chrome",
+					linkurl : "/Windchill/wtcore/jsp/wvs/edrview.jsp?url=" + res.url
+				};
+				if (!checkUrl(res.url)) {
+					alert("썸네일이 없습니다.\n자동 재변환을 진행합니다.");
+// 					publish(oid);
+					return false;
+				}
+				$.ajax({
+					type : "POST",
+					url : "/Windchill/netmarkets/jsp/wvs/wvsGW.jsp?class=com.ptc.wvs.server.ui.UIHelper&method=getOpenInCreoViewServiceCustomURI",
+					data : jQuery.param(params, true),
+					processData : false,
+					async : true,
+					dataType : "json",
+					cache : false,
+					timeout : 600000,
+					success : function(res) {
+						document.location.href = res.uri;
+					}
+				})
+			}
+		}, "GET");
+	}
+
+	function checkUrl(url) {
+		alert(url);
+		const index = url.indexOf("ContentHolder=");
+// 		if (index !== -1) {
+// 			const str = url.substring(index + "ContentHolder=".length, index + "ContentHolder=".length + 1);
+// 			if (str !== "&") {
+// 				return true;
+// 			} else {
+// 				return false;
+// 			}
+// 		} else {
+// 			return false;
+// 		}
+	}
+
+	// 재변환
+	function publish(oid) {
+		const url = getCallUrl("/drawing/publish?oid=" + oid);
+		parent.openLayer();
+		call(url, null, function(data) {
+			alert(data.msg);
+			parent.closeLayer();
+		}, "GET");
+	}
+	
 	document.addEventListener("DOMContentLoaded", function() {
 		$("#tabs").tabs({
 			active : 0,

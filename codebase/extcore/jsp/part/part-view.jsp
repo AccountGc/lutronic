@@ -44,7 +44,7 @@ WTUser sessionUser = (WTUser) SessionHelper.manager.getPrincipal();
 			</select>
 			<%
 			}
-			%>		
+			%>
 			<input type="button" value="BOM" title="BOM" onclick="view();">
 			<input type="button" value="BOM 에디터" title="BOM 에디터" onclick="editor();">
 			<input type="button" value="COMPARE" title="COMPARE" onclick="compare();">
@@ -159,7 +159,7 @@ WTUser sessionUser = (WTUser) SessionHelper.manager.getPrincipal();
 				<td class="indent5"><%=dto.getModifyDate()%></td>
 			</tr>
 			<tr>
-				<th class="lb">주 도면ㅇ</th>
+				<th class="lb">주 도면</th>
 				<td class="indent5" colspan="3">
 					<%
 					if (dto.getEpm_oid() != null) {
@@ -178,10 +178,13 @@ WTUser sessionUser = (WTUser) SessionHelper.manager.getPrincipal();
 			</tr>
 			<tr>
 				<th class="lb">첨부파일</th>
-				<td class="indent5" colspan="5">
+				<td class="indent5" colspan="3">
 					<jsp:include page="/extcore/jsp/common/secondary-view.jsp">
 						<jsp:param value="<%=dto.getOid()%>" name="oid" />
 					</jsp:include>
+				</td>
+				<td class="center" colspan="2">
+					<input type="button" value="CREO VIEW" title="CREO VIEW" class="gray" onclick="openCreoView();">
 				</td>
 			</tr>
 		</table>
@@ -509,47 +512,59 @@ WTUser sessionUser = (WTUser) SessionHelper.manager.getPrincipal();
 		_popup(url, 1500, 600, "n");
 	}
 
-	function restore() {
-		if (confirm("복원하시겠습니까?")) {
-			partStateChange('INWORK');
-		}
-	}
-	function changeDev() {
-		if (confirm("변경하시겠습니까?")) {
-			partStateChange('INWORK');
-		}
+	function openCreoView() {
+		const oid = document.getElementById("oid").value;
+		const callUrl = getCallUrl("/part/getCreoViewUrl?oid=" + oid);
+		call(callUrl, null, function(res) {
+			if (res.result) {
+				const params = {
+					browser : "chrome",
+					linkurl : "/Windchill/wtcore/jsp/wvs/edrview.jsp?url=" + res.url
+				};
+				if (!checkUrl(res.url)) {
+					alert("썸네일이 없습니다.\n자동 재변환을 진행합니다.");
+// 					publish(oid);
+					return false;
+				}
+				$.ajax({
+					type : "POST",
+					url : "/Windchill/netmarkets/jsp/wvs/wvsGW.jsp?class=com.ptc.wvs.server.ui.UIHelper&method=getOpenInCreoViewServiceCustomURI",
+					data : jQuery.param(params, true),
+					processData : false,
+					async : true,
+					dataType : "json",
+					cache : false,
+					timeout : 600000,
+					success : function(res) {
+						document.location.href = res.uri;
+					}
+				})
+			}
+		}, "GET");
 	}
 
-	window.partStateChange = function(state) {
-		var url = getURLString("part", "partStateChange", "do");
-		$.ajax({
-			type : "POST",
-			url : url,
-			data : {
-				oid : $("#oid").val(),
-				state : state
-			},
-			dataType : "json",
-			async : true,
-			cache : false,
-			error : function(data) {
-				var msg = "등록 오류";
-				alert(msg);
-			},
-			beforeSend : function() {
-				gfn_StartShowProcessing();
-			},
-			complete : function() {
-				gfn_EndShowProcessing();
-			},
-			success : function(data) {
-				if (data.result) {
-					alert("상태가 변경되었습니다.");
-					location.reload();
-				} else {
-					alert(data.message);
-				}
-			}
-		});
+	function checkUrl(url) {
+		alert(url);
+		const index = url.indexOf("ContentHolder=");
+// 		if (index !== -1) {
+// 			const str = url.substring(index + "ContentHolder=".length, index + "ContentHolder=".length + 1);
+// 			if (str !== "&") {
+// 				return true;
+// 			} else {
+// 				return false;
+// 			}
+// 		} else {
+// 			return false;
+// 		}
+	}
+
+	// 재변환
+	function publish(oid) {
+		const url = getCallUrl("/part/publish?oid=" + oid);
+		parent.openLayer();
+		call(url, null, function(data) {
+			alert(data.msg);
+			parent.closeLayer();
+		}, "GET");
 	}
 </script>

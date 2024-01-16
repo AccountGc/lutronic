@@ -105,6 +105,10 @@ boolean isAdmin = (boolean) request.getAttribute("isAdmin");
 				<td class="indent5"><%=dto.getApproveDate()%></td>
 			</tr>
 			<tr>
+				<th class="lb">제품명</th>
+				<td class="indent5"><%=dto.getModel_name()%></td>
+			</tr>			
+			<tr>
 				<th class="lb">변경사항</th>
 				<td colspan="3" class="indent5">
 					<div class="textarea-auto">

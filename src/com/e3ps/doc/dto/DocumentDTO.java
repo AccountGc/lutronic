@@ -282,7 +282,7 @@ public class DocumentDTO {
 		}
 
 		// 최신버전이고 결재선 지정상태일 경우 승인가능
-		if (isLatest() && (check(doc, "LINE_REGISTER") || check(doc, "RETURN"))) {
+		if (isLatest() && (check(doc, "INWORK") || check(doc, "LINE_REGISTER") || check(doc, "RETURN"))) {
 			set_modify(true);
 		}
 

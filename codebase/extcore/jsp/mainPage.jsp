@@ -21,21 +21,32 @@
 </head>
 <body>
 	<form>
-
-		<table>
+		<!-- 결재 및 공지사항 -->
+		<table style="height: 400px; border: 1px solid black;">
 			<colgroup>
 				<col width="49%">
 				<col width="30px;">
 				<col width="49%">
 			</colgroup>
 			<tr>
-				<td>결재알림</td>
-				<td>공백</td>
-				<td class="left">
+				<td valign="top">
+					<table>
+						<tr>
+							<td class="left">
+								<img style="position: relative; top: 5px; right: 14px;" src="/Windchill/extcore/images/approval.jpg">
+							</td>
+						</tr>
+					</table>
+				</td>
+				<td valign="top">&nbsp;</td>
+				<td class="left" valign="top">
 					<table>
 						<tr>
 							<td class="left">
 								<img style="position: relative; top: 5px; right: 14px;" src="/Windchill/extcore/images/notice.jpg">
+								<!-- 								<div style="float: right; position: relative; top: 23px; right: 20px;"> -->
+								<!-- 									<b>+ 더보기</b> -->
+								<!-- 								</div> -->
 							</td>
 						</tr>
 						<tr>

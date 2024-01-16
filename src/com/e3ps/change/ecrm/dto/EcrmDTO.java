@@ -122,7 +122,7 @@ public class EcrmDTO {
 			set_print(true);
 		}
 		
-		if ((check(ecrm, "LINE_REGISTER") || check(ecrm, "RETURN"))) {
+		if ((check(ecrm, "INWORK") ||check(ecrm, "LINE_REGISTER") || check(ecrm, "RETURN"))) {
 			set_modify(true);
 		}
 		

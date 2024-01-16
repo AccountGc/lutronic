@@ -113,7 +113,7 @@ public class EcprDTO {
 			set_print(true);
 		}
 
-		if ((check(ecpr, "LINE_REGISTER") || check(ecpr, "RETURN"))) {
+		if ((check(ecpr, "INWORK") ||check(ecpr, "LINE_REGISTER") || check(ecpr, "RETURN"))) {
 			set_modify(true);
 		}
 

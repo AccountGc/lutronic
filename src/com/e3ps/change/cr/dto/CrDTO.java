@@ -133,7 +133,7 @@ public class CrDTO {
 		}
 
 		// 최신버전이고 결재선 지정상태일 경우 승인가능
-		if ((check(cr, "LINE_REGISTER") || check(cr, "RETURN"))) {
+		if ((check(cr, "INWORK") || check(cr, "LINE_REGISTER") || check(cr, "RETURN"))) {
 			set_modify(true);
 		}
 

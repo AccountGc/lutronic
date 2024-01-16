@@ -129,14 +129,15 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 						<img src="/Windchill/extcore/images/header.png">
 						설변품목
 						<img src="/Windchill/extcore/images/fileicon/file_excel.gif" title="엑셀 다운로드" onclick="exportExcel();">
-						<input type="button" value="저장" title="저장" onclick="save();">
 						<input type="button" value="이전품목삭제" title="이전품목삭제" class="red" onclick="deleteRow();">
+						<input type="button" value="변경품목삭제" title="변경품목삭제" class="gray" onclick="prePart();">
 					</div>
 				</td>
 				<td class="right">
-					<input type="button" value="이전품목" title="이전품목" class="red" onclick="prePart();">
-					<input type="button" value="품목개정" title="품목개정" onclick="revise();" class="gray">
-					<input type="button" value="품목변경" title="품목변경" class="blue" onclick="popup100();">
+<!-- 					<input type="button" value="이전품목" title="이전품목" class="red" onclick="prePart();"> -->
+<!-- 					<input type="button" value="품목개정" title="품목개정" onclick="revise();" class="gray"> -->
+<!-- 					<input type="button" value="품목변경" title="품목변경" class="blue" onclick="popup100();"> -->
+					<input type="button" value="저장" title="저장" onclick="save();">
 					<input type="button" value="새로고침" title="새로고침" class="orange" onclick="document.location.reload();">
 				</td>
 			</tr>
@@ -312,16 +313,28 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 					cellColMerge : true, // 셀 가로 병합 실행
 					cellColSpan : 5, // 셀 가로 병합 대상은 6개로 설정
 					renderer : {
-						type : "LinkRenderer",
-						baseUrl : "javascript",
-						jsCallback : function(rowIndex, columnIndex, value, item) {
-							const oid = item.next_oid;
-							if (oid !== "" && oid !== undefined) {
-								const url = getCallUrl("/part/view?oid=" + oid);
-								_popup(url, 1600, 800, "n");
+						type : "ButtonRenderer",
+						labelText : "품목 개정",
+						onClick : function(event) {
+						},
+						visibleFunction: function (rowIndex, columnIndex, value, item, dataField) {
+							if (item.next_name === undefined) {
+								return true;
 							}
-						}
-					},
+							return item.
+						},	
+					},					
+// 					renderer : {
+// 						type : "LinkRenderer",
+// 						baseUrl : "javascript",
+// 						jsCallback : function(rowIndex, columnIndex, value, item) {
+// 							const oid = item.next_oid;
+// 							if (oid !== "" && oid !== undefined) {
+// 								const url = getCallUrl("/part/view?oid=" + oid);
+// 								_popup(url, 1600, 800, "n");
+// 							}
+// 						}
+// 					},
 					styleFunction : function(rowIndex, columnIndex, value, headerText, item, dataField) {
 						if (item.afterMerge === true) {
 							return "afterMerge";
@@ -1055,11 +1068,11 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 							newItem.part_oid = item.part_oid;
 							newItem.part_state = item.state;
 							newItem.part_creator = item.creator;
-							newItem.next_number = "개정 후 데이터가 없습니다.";
-							newItem.next_name = "개정 후 데이터가 없습니다.";
-							newItem.next_version = "개정 후 데이터가 없습니다.";
-							newItem.next_state = "개정 후 데이터가 없습니다.";
-							newItem.next_creator = "개정 후 데이터가 없습니다.";
+// 							newItem.next_number = "개정 후 데이터가 없습니다.";
+// 							newItem.next_name = "개정 후 데이터가 없습니다.";
+// 							newItem.next_version = "개정 후 데이터가 없습니다.";
+// 							newItem.next_state = "개정 후 데이터가 없습니다.";
+// 							newItem.next_creator = "개정 후 데이터가 없습니다.";
 							newItem.afterMerge = true;
 						} else {
 							newItem.preMerge = true;

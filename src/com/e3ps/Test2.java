@@ -20,9 +20,11 @@ public class Test2 {
 
 	public static void main(String[] args) throws Exception {
 
-		byte[] s = Base64.decodeBase64(
-				"creoview://?wcparams=eyJhdHRyaWJ1dGVzIjp7InVybGJhc2UiOiJodHRwOi8vcGxtZGV2Lmx1dHJvbmljLmNvbS9XaW5kY2hpbGwiLCJzZXNzaW9uaWQiOiJ1OFlTalhkNnFmVG1qbGExUnVZZzhuSDdrUjQuMjNwIiwidXNlcmlkIjoid2NhZG1pbiJ9LCJpZCI6ImN2In0=");
-		System.out.println(s);
+		String s = ",CP,NE11,RC09";
+		String[] ss = s.split(",");
+		for (String a : ss) {
+			System.out.println(a);
+		}
 
 		System.exit(0);
 	}

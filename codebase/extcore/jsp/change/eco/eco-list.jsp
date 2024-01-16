@@ -252,7 +252,7 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 					},
 				}, {
 					dataField : "model",
-					headerText : "제품",
+					headerText : "제품명",
 					dataType : "string",
 					width : 250,
 					style : "aui-left"

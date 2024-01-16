@@ -3,6 +3,10 @@ package com.e3ps.change.eco.column;
 import java.sql.Timestamp;
 
 import com.e3ps.change.EChangeOrder;
+import com.e3ps.change.eco.service.EcoHelper;
+import com.e3ps.common.code.NumberCode;
+import com.e3ps.common.code.service.NumberCodeHelper;
+import com.e3ps.common.util.StringUtil;
 import com.fasterxml.jackson.annotation.JsonFormat;
 
 import lombok.Getter;
@@ -50,7 +54,7 @@ public class EcoColumn {
 		setCreatedDate_txt(eco.getCreateTimestamp().toString().substring(0, 10));
 		setApproveDate(eco.getEoApproveDate());
 		setSendTypeInfo(eco);
-		setModel(eco.getModel());
+		setModel(EcoHelper.manager.displayToModel(eco.getModel()));
 	}
 
 	private void setSendTypeInfo(EChangeOrder eco) throws Exception {
