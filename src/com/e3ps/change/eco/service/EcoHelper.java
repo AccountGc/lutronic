@@ -1175,7 +1175,7 @@ public class EcoHelper {
 	 * 년도별 ECO 현황
 	 */
 	public Map<String, Integer> getChart(String start) throws Exception {
-		if(!StringUtil.checkString(start)) {
+		if (!StringUtil.checkString(start)) {
 			start = "2008";
 		}
 		Map<String, Integer> map = new HashMap<>();
@@ -1199,14 +1199,15 @@ public class EcoHelper {
 			while (result.hasMoreElements()) {
 				Object[] obj = (Object[]) result.nextElement();
 				EChangeOrder eco = (EChangeOrder) obj[0];
-				if(eco.getLifeCycleState().toString().equals("APPROVED")) {
+				if (eco.getLifeCycleState().toString().equals("APPROVED")) {
 					complete++;
 				} else {
-					progerss++;
+					progress++;
 				}
+			}
+			map.put("complete", complete);
+			map.put("progress", progress);
+			return map;
 		}
-		map.put("complete", list);
-		map.put("progress", list);
-		return map;
 	}
 }

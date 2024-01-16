@@ -609,8 +609,9 @@ public class StandardActivityService extends StandardManager implements Activity
 
 	@Override
 	public void revise(Map<String, Object> params) throws Exception {
-		ArrayList<String> arrs = (ArrayList<String>) params.get("arr");
-		ArrayList<String> links = (ArrayList<String>) params.get("link");
+//		ArrayList<String> arrs = (ArrayList<String>) params.get("arr");
+//		ArrayList<String> links = (ArrayList<String>) params.get("link");
+		ArrayList<Map<String, Object>> data = (ArrayList<Map<String, Object>>) params.get("data");
 		String oid = (String) params.get("oid");
 		Transaction trs = new Transaction();
 		try {
@@ -619,11 +620,12 @@ public class StandardActivityService extends StandardManager implements Activity
 			EChangeActivity eca = (EChangeActivity) CommonUtil.getObject(oid);
 			EChangeOrder eco = (EChangeOrder) eca.getEo();
 			String message = "[" + eco.getEoNumber() + "]를 통해서 수정되었습니다.";
-
-			for (int i = 0; i < arrs.size(); i++) {
-				String part_oid = (String) arrs.get(i);
-				String link_oid = (String) links.get(i);
-
+			for (Map<String, Object> map : data) {
+//			for (int i = 0; i < arrs.size(); i++) {
+//				String part_oid = (String) arrs.get(i);
+//				String link_oid = (String) links.get(i);
+				String part_oid = (String) map.get("part_oid");
+				String link_oid = (String) map.get("link_oid");
 				EcoPartLink link = (EcoPartLink) CommonUtil.getObject(link_oid);
 
 				WTPart part = (WTPart) CommonUtil.getObject(part_oid);
