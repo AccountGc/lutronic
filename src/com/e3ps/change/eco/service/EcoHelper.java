@@ -1182,8 +1182,10 @@ public class EcoHelper {
 		// 5개..
 		int complete = 0;
 		int progress = 0;
-		ArrayList<Map<String, Integer>> list = new ArrayList<Map<String,Integer>>();
+		ArrayList<Map<String, Integer>> list = new ArrayList<Map<String, Integer>>();
 		for (int i = 0; i < 5; i++) {
+			Map<String, Integer> m = new HashMap<>();
+
 			QuerySpec query = new QuerySpec();
 			int idx = query.appendClassList(EChangeOrder.class, true);
 //			QuerySpecUtils.toState(query, idx, EChangeOrder.class, "APPROVED");
@@ -1206,9 +1208,11 @@ public class EcoHelper {
 					progress++;
 				}
 			}
-			map.put("complete", complete);
-			map.put("progress", progress);
+			m.put(start + "_complete", complete);
+			m.put(start + "_progress", progress);
+			list.add(m);
 		}
+		map.put("list", list);
 		return map;
 	}
 }

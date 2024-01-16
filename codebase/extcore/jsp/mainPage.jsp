@@ -7,7 +7,9 @@
 <%@page import="wt.org.WTUser"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%
-	Map<String, Integer> dataMap = (Map<String, Integer>) request.getAttribute("dataMap");
+Map<String, Integer> dataMap = (Map<String, Integer>) request.getAttribute("dataMap");
+String start = (String) request.getAttribute("start");
+ArrayList<Map<String, Integer>> list = (ArrayList<Map<String, Integer>>) dataMap.get("list"); 
 %>
 <!DOCTYPE html>
 <html>
@@ -42,7 +44,6 @@
 				</td>
 				<td valign="top">&nbsp;</td>
 				<td class="left" valign="top">
-				<%=dataMap %>
 					<table>
 						<tr>
 							<td class="left">
@@ -130,7 +131,16 @@
 								align : 'left'
 							},
 							xAxis : {
-								categories : [ '2006년', '2007년', '2008년', '2009년', '2010년', '2011년' ]
+								categories : [ 
+									<%
+										for(int i=0; i<5; i++) {
+											String s = (start + i);
+									%>
+									'<%=s%>년',
+									<%
+										}
+									%>
+								]
 							},
 							yAxis : {
 								min : 0,
@@ -143,7 +153,10 @@
 							},
 							series : [ {
 								name : '진행중',
-								data : [ 1, 2, 3, 4, 5, 6 ]
+								data : [ 
+									
+									
+								]
 							}, {
 								name : '완료됨',
 								data : [ 10, 20, 30, 40, 50, 60 ]
