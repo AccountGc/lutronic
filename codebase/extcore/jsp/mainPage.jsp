@@ -42,6 +42,7 @@
 				</td>
 				<td valign="top">&nbsp;</td>
 				<td class="left" valign="top">
+				<%=dataMap %>
 					<table>
 						<tr>
 							<td class="left">

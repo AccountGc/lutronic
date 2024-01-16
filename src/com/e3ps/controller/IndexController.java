@@ -73,7 +73,7 @@ public class IndexController extends BaseController {
 	@GetMapping(value = "/mainPage")
 	public ModelAndView mainPage(@RequestParam(required = false) String start) throws Exception {
 		ModelAndView model = new ModelAndView();
-		Map<String, Integer> dataMap = EcoHelper.manager.getChart(start);
+		Map<String, ArrayList<Map<String, Integer>>> dataMap = EcoHelper.manager.getChart(start);
 		model.addObject("dataMap", dataMap);
 		model.setViewName("/extcore/jsp/mainPage.jsp");
 		return model;

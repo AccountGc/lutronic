@@ -146,6 +146,7 @@ public class StandardEcnService extends StandardManager implements EcnService {
 
 				for (EcoPartLink l : ecoParts) {
 					WTPartMaster master = l.getPart();
+					System.out.println("ECN 생성 품목 = " + master.getNumber());
 					String version = l.getVersion();
 					WTPart part = PartHelper.manager.getPart(master.getNumber(), version);
 					JSONArray end = PartHelper.manager.end(part.getPersistInfo().getObjectIdentifier().getStringValue(),
@@ -156,6 +157,10 @@ public class StandardEcnService extends StandardManager implements EcnService {
 						WTPart endPart = (WTPart) CommonUtil.getObject(part_oid);
 						WTPartMaster endMaster = (WTPartMaster) endPart.getMaster();
 //						// 최종품목이 포함되어있을 경우??
+
+						System.out.println("최종 품목 = " + endMaster.getNumber());
+						System.out.println("ECO 완제품 = " + m.getNumber());
+
 						if (endMaster.getPersistInfo().getObjectIdentifier().getId() == m.getPersistInfo()
 								.getObjectIdentifier().getId()) {
 							boolean isApproved = part.getLifeCycleState().toString().equals("APPROVED");
@@ -171,7 +176,6 @@ public class StandardEcnService extends StandardManager implements EcnService {
 								}
 							}
 
-							
 							if (group.length() > 0) {
 
 								String[] groups = group.split(",");

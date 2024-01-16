@@ -164,6 +164,7 @@ QuantityUnit[] unitList = (QuantityUnit[]) request.getAttribute("unitList");
 				<th class="req lb">프로젝트코드</th>
 				<td class="indent5">
 					<input type="text" name="model" id="model" class="width-300">
+					<input type="hidden" name="modelcode" id="modelcode">
 				</td>
 				<th class="req">제작방법</th>
 				<td class="indent5">
@@ -217,6 +218,7 @@ QuantityUnit[] unitList = (QuantityUnit[]) request.getAttribute("unitList");
 				<th>MANUFACTURER</th>
 				<td class="indent5">
 					<input type="text" name="manufacture" id="manufacture" class="width-200">
+					<input type="hidden" name="manufacturecode" id="manufacturecode">
 				</td>
 			</tr>
 			<tr>
@@ -349,16 +351,8 @@ QuantityUnit[] unitList = (QuantityUnit[]) request.getAttribute("unitList");
 				const partName3 = document.getElementById("partName3").value;
 				const partType3 = document.getElementById("partType3").value;
 				const partName4 = document.getElementById("partName4").value;
-				const modelTag = document.getElementById("modelcode");
-				let model;
-				if(modelTag != null) {
-					model = modelTag.value;
-				}
-				const manufactureTag = document.getElementById("manufacturecode");
-				let manufacture;
-				if(manufactureTag != null) {
-					manufacture = manufactureTag.value;
-				}		
+				const model = document.getElementById("modelcode").value;
+				const manufacture = document.getElementById("manufacturecode").value;
 				const productmethod = document.getElementById("productmethod").value;
 				const deptcode = document.getElementById("deptcode").value;
 				const unit =  document.getElementById("unit").value;

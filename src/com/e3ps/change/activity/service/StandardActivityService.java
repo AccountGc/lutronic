@@ -468,7 +468,8 @@ public class StandardActivityService extends StandardManager implements Activity
 
 			for (WTPart pp : clist) {
 				// 중복 처리
-				QueryResult rs = PersistenceHelper.manager.navigate(pp, "eco", EOCompletePartLink.class);
+				QueryResult rs = PersistenceHelper.manager.navigate((WTPartMaster) pp.getMaster(), "eco",
+						EOCompletePartLink.class);
 				if (rs.size() > 0) {
 					System.out.println("이미 등록된 완제품 = " + pp.getNumber());
 					continue;

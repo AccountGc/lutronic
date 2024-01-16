@@ -1174,14 +1174,15 @@ public class EcoHelper {
 	/**
 	 * 년도별 ECO 현황
 	 */
-	public Map<String, Integer> getChart(String start) throws Exception {
+	public Map<String, ArrayList<Map<String, Integer>>> getChart(String start) throws Exception {
 		if (!StringUtil.checkString(start)) {
 			start = "2016";
 		}
-		Map<String, Integer> map = new HashMap<>();
+		Map<String, ArrayList<Map<String, Integer>>> map = new HashMap<>();
 		// 5개..
 		int complete = 0;
 		int progress = 0;
+		ArrayList<Map<String, Integer>> list = new ArrayList<Map<String,Integer>>();
 		for (int i = 0; i < 5; i++) {
 			QuerySpec query = new QuerySpec();
 			int idx = query.appendClassList(EChangeOrder.class, true);
