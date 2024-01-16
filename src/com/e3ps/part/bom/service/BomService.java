@@ -56,4 +56,14 @@ public interface BomService {
 	 * BOM 품목 멀티 제거
 	 */
 	public abstract Map<String, Object> removeMultiLink(Map<String, Object> params) throws Exception;
+
+	/**
+	 * 수량 업데이트
+	 */
+	public abstract Map<String, Object> update(Map<String, Object> params) throws Exception;
+
+	/**
+	 * BOM 새품번 저장
+	 */
+	public abstract Map<String, Object> saveAs(Map<String, Object> params) throws Exception;
 }

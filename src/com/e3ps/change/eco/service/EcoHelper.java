@@ -1180,39 +1180,44 @@ public class EcoHelper {
 		}
 		Map<String, ArrayList<Map<String, Integer>>> map = new HashMap<>();
 		// 5개..
-		int complete = 0;
-		int progress = 0;
-		ArrayList<Map<String, Integer>> list = new ArrayList<Map<String, Integer>>();
+
+		ArrayList<Map<String, Integer>> complete = new ArrayList<Map<String, Integer>>();
+		ArrayList<Map<String, Integer>> progress = new ArrayList<Map<String, Integer>>();
 		for (int i = 0; i < 5; i++) {
-			Map<String, Integer> m = new HashMap<>();
+			Map<String, Integer> cMap = new HashMap<>();
+			Map<String, Integer> pMap = new HashMap<>();
 
 			QuerySpec query = new QuerySpec();
 			int idx = query.appendClassList(EChangeOrder.class, true);
 //			QuerySpecUtils.toState(query, idx, EChangeOrder.class, "APPROVED");
 
 			String from = Integer.parseInt(start) + i + "-01-01";
-			String to = Integer.parseInt(start) + (i + 1) + "-12-31";
+			String to = Integer.parseInt(start) + i + "-12-31";
 
 			QuerySpecUtils.toTimeGreaterAndLess(query, idx, EChangeOrder.class, EChangeOrder.CREATE_TIMESTAMP, from,
 					to);
 			QueryResult result = PersistenceHelper.manager.find(query);
-			System.out.println("==query==" + query);
-			System.out.println("result=" + result.size());
+
+			int cValue = 0;
+			int pValue = 0;
 
 			while (result.hasMoreElements()) {
 				Object[] obj = (Object[]) result.nextElement();
 				EChangeOrder eco = (EChangeOrder) obj[0];
 				if (eco.getLifeCycleState().toString().equals("APPROVED")) {
-					complete++;
+					cValue++;
 				} else {
-					progress++;
+					pValue++;
 				}
 			}
-			m.put(start + "_complete", complete);
-			m.put(start + "_progress", progress);
-			list.add(m);
+			cMap.put((start + i), cValue);
+			pMap.put((start + i), pValue);
+
+			complete.add(cMap);
+			progress.add(pMap);
 		}
-		map.put("list", list);
+		map.put("progress", progress);
+		map.put("complete", complete);
 		return map;
 	}
 }

@@ -115,11 +115,12 @@ public class EoDTO {
 	 */
 	private void setAuth(EChangeOrder eo) throws Exception {
 		boolean isAdmin = CommonUtil.isAdmin();
+		boolean isCreator = CommonUtil.isCreator(eo);
 		if (check(eo, "INWORK") || check(eo, "LINE_REGISTER") || check(eo, "ACTIVITY") || check(eo, "RETURN")) {
 			set_modify(true);
 		}
 
-		if (isAdmin) {
+		if (isAdmin || isCreator) {
 			set_delete(true);
 		}
 		WTUser sessionUser = CommonUtil.sessionUser();

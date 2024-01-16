@@ -118,15 +118,16 @@ public class EcrmDTO {
 	 */
 	private void setAuth(ECRMRequest ecrm) throws Exception {
 		boolean isAdmin = CommonUtil.isAdmin();
+		boolean isCreator = CommonUtil.isCreator(ecrm);
 		if (check(ecrm, "APPROVED")) {
 			set_print(true);
 		}
-		
-		if ((check(ecrm, "INWORK") ||check(ecrm, "LINE_REGISTER") || check(ecrm, "RETURN"))) {
+
+		if ((check(ecrm, "INWORK") || check(ecrm, "LINE_REGISTER") || check(ecrm, "RETURN"))) {
 			set_modify(true);
 		}
-		
-		if (isAdmin) {
+
+		if (isAdmin || isCreator) {
 			set_delete(true);
 		}
 	}

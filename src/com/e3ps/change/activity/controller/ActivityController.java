@@ -30,6 +30,7 @@ import com.e3ps.workspace.dto.EcaDTO;
 import com.e3ps.workspace.service.WorkspaceHelper;
 
 import net.sf.json.JSONArray;
+import wt.org.WTUser;
 import wt.part.WTPart;
 
 @Controller
@@ -440,6 +441,25 @@ public class ActivityController extends BaseController {
 		try {
 			int count = ActivityHelper.manager.count();
 			result.put("count", count);
+			result.put("result", SUCCESS);
+		} catch (Exception e) {
+			e.printStackTrace();
+			result.put("result", FAIL);
+			result.put("msg", e.toString());
+		}
+		return result;
+	}
+
+	@Description(value = "설계변경 활동 위임")
+	@ResponseBody
+	@GetMapping(value = "/reassign")
+	public Map<String, Object> reassign(@RequestParam String oid, @RequestParam String aoid) throws Exception {
+		Map<String, Object> result = new HashMap<String, Object>();
+		try {
+			WTUser user = (WTUser) CommonUtil.getObject(oid);
+			EChangeActivity eca = (EChangeActivity)CommonUtil.getObject(aoid);
+			ActivityHelper.service.reassign(eca, user);
+			result.put("msg", user.getFullName() + "사용자 에게 ECA활동이 위임 되었습니다.");
 			result.put("result", SUCCESS);
 		} catch (Exception e) {
 			e.printStackTrace();

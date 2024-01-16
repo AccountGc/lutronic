@@ -5,9 +5,11 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
+import com.e3ps.change.EChangeActivity;
 import com.e3ps.change.EChangeOrder;
 
 import wt.method.RemoteInterface;
+import wt.org.WTUser;
 import wt.part.WTPart;
 
 @RemoteInterface
@@ -98,4 +100,9 @@ public interface ActivityService {
 	 * 완제품 연결
 	 */
 	public abstract void saveEndItem(EChangeOrder eco, WTPart part) throws Exception;
+
+	/**
+	 * ECA 활동 위임
+	 */
+	public abstract void reassign(EChangeActivity eca, WTUser user) throws Exception;
 }

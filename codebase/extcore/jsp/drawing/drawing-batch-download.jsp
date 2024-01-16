@@ -8,10 +8,11 @@ boolean isAdmin = (boolean) request.getAttribute("isAdmin");
 		<td class="left">
 			<div class="header">
 				<img src="/Windchill/extcore/images/header.png">
-				도면 일괄다운로드
+				일괄다운로드
 			</div>
 		</td>
 		<td class="right">
+			<input type="button" title="STEP" value="STEP" class="" onclick="progress('STEP');">
 			<input type="button" title="DXF" value="DXF" class="blue" onclick="progress('DXF');">
 			<input type="button" title="PDF" value="PDF" class="red" onclick="progress('PDF');">
 			<input type="button" title="닫기" value="닫기" class="gray" onclick="self.close();">
@@ -22,26 +23,14 @@ boolean isAdmin = (boolean) request.getAttribute("isAdmin");
 <script type="text/javascript">
 	let myGridID;
 	const columns = [ {
-		dataField : "_3d",
-		headerText : "3D",
+		dataField : "icon",
+		headerText : "",
 		dataType : "string",
-		width : 60,
+		width : 50,
 		renderer : {
 			type : "ImageRenderer",
 			altField : null,
-			onClick : function(event) {
-			}
-		},
-	}, {
-		dataField : "_2d",
-		headerText : "2D",
-		dataType : "string",
-		width : 60,
-		renderer : {
-			type : "ImageRenderer",
-			altField : null,
-			onClick : function(event) {
-			}
+			imgHeight : 16,
 		},
 	}, {
 		dataField : "cadType",
@@ -57,17 +46,12 @@ boolean isAdmin = (boolean) request.getAttribute("isAdmin");
 		dataField : "name",
 		headerText : "도면명",
 		dataType : "string",
-		width : 250,
-	}, {
-		dataField : "location",
-		headerText : "도면분류",
-		dataType : "string",
-		width : 120,
+		style : "aui-left",
 	}, {
 		dataField : "version",
 		headerText : "REV",
 		dataType : "string",
-		width : 100,
+		width : 80,
 		renderer : {
 			type : "TemplateRenderer"
 		},
@@ -75,7 +59,7 @@ boolean isAdmin = (boolean) request.getAttribute("isAdmin");
 		dataField : "state",
 		headerText : "상태",
 		dataType : "string",
-		width : 100,
+		width : 80,
 		styleFunction : function(rowIndex, columnIndex, value, headerText, item, dataField) {
 			if (value === "승인됨") {
 				return "approved";
@@ -90,11 +74,6 @@ boolean isAdmin = (boolean) request.getAttribute("isAdmin");
 	}, {
 		dataField : "createdDate",
 		headerText : "등록일",
-		dataType : "date",
-		width : 100,
-	}, {
-		dataField : "modifiedDate",
-		headerText : "수정일",
 		dataType : "date",
 		width : 100,
 	}, {
@@ -142,7 +121,7 @@ boolean isAdmin = (boolean) request.getAttribute("isAdmin");
 	});
 
 	function progress(type) {
-		if (!confirm("추가된 도면의 " + type + "를 일괄 다운로드 하시겠습니까?")) {
+		if (!confirm("추가된 도면의 " + type + "을(를) 일괄 다운로드 하시겠습니까?")) {
 			return false;
 		}
 		const data = AUIGrid.getGridData(myGridID);

@@ -106,8 +106,8 @@ public class PartHelper {
 	 */
 	public String getCreoViewUrl(HttpServletRequest request, String oid) throws Exception {
 		return DrawingHelper.manager.getCreoViewUrl(request, oid);
-				
-				//		WTPart part = (WTPart) CommonUtil.getObject(oid);
+
+		// WTPart part = (WTPart) CommonUtil.getObject(oid);
 //		QuerySpec query = new QuerySpec();
 //		int idx = query.appendClassList(WTPart.class, true);
 //		int idx_d = query.appendClassList(DerivedImage.class, true);
@@ -1428,6 +1428,18 @@ public class PartHelper {
 		result.put("ecoDate", ecoDate != null ? ecoDate : "");
 		result.put("preOrder", preOrder);
 		return result;
+	}
+
+	/**
+	 * 도면과 연결된 품목 가져오기
+	 */
+	public WTPart getPart(EPMDocument epm) throws Exception {
+		QueryResult qr = PersistenceHelper.manager.navigate(epm, EPMBuildRule.BUILD_TARGET_ROLE, EPMBuildRule.class);
+		if (qr.hasMoreElements()) {
+			WTPart part = (WTPart) qr.nextElement();
+			return part;
+		}
+		return null;
 	}
 
 	/**

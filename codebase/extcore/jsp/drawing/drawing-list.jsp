@@ -364,7 +364,7 @@ QuantityUnit[] unitList = (QuantityUnit[]) request.getAttribute("unitList");
 					dataField : "name",
 					headerText : "도면명",
 					dataType : "string",
-					width : 250,
+					style : "aui-left",
 					renderer : {
 						type : "LinkRenderer",
 						baseUrl : "javascript",
@@ -540,7 +540,7 @@ QuantityUnit[] unitList = (QuantityUnit[]) request.getAttribute("unitList");
 			let p;
 			function batch() {
 				const url = getCallUrl("/drawing/download");
-				p = _popup(url, 1000, 500, "n");
+				p = _popup(url, 1100, 500, "n");
 			}
 
 			function _select() {

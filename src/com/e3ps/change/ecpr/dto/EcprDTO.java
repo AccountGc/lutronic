@@ -108,7 +108,8 @@ public class EcprDTO {
 	 * 권한 설정
 	 */
 	private void setAuth(ECPRRequest ecpr) throws Exception {
-		boolean isAdmin = CommonUtil.isAdmin();
+		boolean isAdmin = CommonUtil.isAdmin(); 
+		boolean isCreator = CommonUtil.isCreator(ecpr);
 		if (check(ecpr, "APPROVED") && is_isNew()) {
 			set_print(true);
 		}
@@ -117,7 +118,7 @@ public class EcprDTO {
 			set_modify(true);
 		}
 
-		if (isAdmin) {
+		if (isAdmin || isCreator) {
 			set_delete(true);
 		}
 	}

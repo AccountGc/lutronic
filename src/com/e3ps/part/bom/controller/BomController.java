@@ -1,19 +1,11 @@
 package com.e3ps.part.bom.controller;
 
-import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.InputStream;
-import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
 import org.springframework.context.annotation.Description;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -26,12 +18,9 @@ import org.springframework.web.servlet.ModelAndView;
 import com.e3ps.change.util.EChangeUtils;
 import com.e3ps.common.util.CommonUtil;
 import com.e3ps.controller.BaseController;
-import com.e3ps.download.service.DownloadHistoryHelper;
 import com.e3ps.part.bom.service.BomHelper;
 
 import net.sf.json.JSONArray;
-import wt.content.ApplicationData;
-import wt.content.ContentServerHelper;
 import wt.part.WTPart;
 
 @Controller
@@ -325,6 +314,44 @@ public class BomController extends BaseController {
 		try {
 			result = BomHelper.service.checkout(oid);
 			result.put("result", SUCCESS);
+		} catch (Exception e) {
+			e.printStackTrace();
+			result.put("result", FAIL);
+			result.put("msg", e.toString());
+		}
+		return result;
+	}
+
+	@Description(value = "BOM 수량 변경")
+	@PostMapping(value = "/update")
+	@ResponseBody
+	public Map<String, Object> update(@RequestBody Map<String, Object> params) throws Exception {
+		Map<String, Object> result = new HashMap<>();
+		try {
+			result = BomHelper.service.update(params);
+			result.put("result", SUCCESS);
+		} catch (Exception e) {
+			e.printStackTrace();
+			result.put("result", FAIL);
+			result.put("msg", e.toString());
+		}
+		return result;
+	}
+
+	@Description(value = "BOM 새품번 저장")
+	@PostMapping(value = "/saveAs")
+	@ResponseBody
+	public Map<String, Object> saveAs(@RequestBody Map<String, Object> params) throws Exception {
+		Map<String, Object> result = new HashMap<>();
+		try {
+			result = BomHelper.service.saveAs(params);
+			if ((boolean) result.get("exist")) {
+				result.put("msg", "이미 품번이 존재합니다.");
+				result.put("result", FAIL);
+			} else {
+				result.put("msg", SAVE_MSG);
+				result.put("result", SUCCESS);
+			}
 		} catch (Exception e) {
 			e.printStackTrace();
 			result.put("result", FAIL);

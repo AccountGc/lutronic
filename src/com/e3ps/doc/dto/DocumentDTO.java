@@ -21,6 +21,7 @@ import lombok.Getter;
 import lombok.Setter;
 import wt.doc.WTDocument;
 import wt.doc.WTDocumentTypeInfo;
+import wt.enterprise.RevisionControlled;
 import wt.fc.PersistenceHelper;
 import wt.fc.QueryResult;
 import wt.iba.definition.StringDefinition;
@@ -264,6 +265,8 @@ public class DocumentDTO {
 	 */
 	private void setAuth(WTDocument doc) throws Exception {
 		boolean isAdmin = CommonUtil.isAdmin();
+		RevisionControlled
+		boolean isCreator = CommonUtil.isCreator(doc);
 		// 승인된경우 프린트
 		if (check(doc, "APPROVED")) {
 			String s = getClassType1_code();
@@ -272,7 +275,7 @@ public class DocumentDTO {
 			}
 		}
 
-		if (isAdmin && isLatest()) {
+		if ((isAdmin || isCreator) && isLatest()) {
 			set_delete(true);
 		}
 

@@ -1228,4 +1228,25 @@ public class StandardActivityService extends StandardManager implements Activity
 				trs.rollback();
 		}
 	}
+
+	@Override
+	public void reassign(EChangeActivity eca, WTUser user) throws Exception {
+		Transaction trs = new Transaction();
+		try {
+			trs.start();
+
+			eca.setActiveUser(user);
+			PersistenceHelper.manager.modify(eca);
+
+			trs.commit();
+			trs = null;
+		} catch (Exception e) {
+			e.printStackTrace();
+			trs.rollback();
+			throw e;
+		} finally {
+			if (trs != null)
+				trs.rollback();
+		}
+	}
 }

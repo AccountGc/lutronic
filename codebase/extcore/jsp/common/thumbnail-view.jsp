@@ -15,7 +15,16 @@
 <%
 String oid = (String) request.getParameter("oid");
 Representable representable = (Representable) CommonUtil.getObject(oid);
-Representation representation = PublishUtils.getRepresentation(representable, true, null, false);
+WTPart part = null;
+Representation representation = null;
+if (representable instanceof EPMDocument) {
+	EPMDocument epm = (EPMDocument) representable;
+	part = PartHelper.manager.getPart(epm);
+	representation = PublishUtils.getRepresentation(part, true, null, false);
+} else if (representable instanceof WTPart) {
+	WTPart part = (WTPart) representable;
+	representation = PublishUtils.getRepresentation(part, true, null, false);
+}
 
 String temp = WTProperties.getLocalProperties().getProperty("wt.codebase.location");
 String path = temp + File.separator + "extcore" + File.separator + "jsp" + File.separator + "part" + File.separator
@@ -24,8 +33,8 @@ File dir = new File(path);
 if (!dir.exists()) {
 	dir.mkdirs();
 }
-System.out.println("==="+representable);
-System.out.println("!!!!!!!!!!!!"+representation);
+System.out.println("===" + representable);
+System.out.println("!!!!!!!!!!!!" + representation);
 if (representation != null) {
 	Representer pre = new Representer();
 	RepHelper.saveAsZIPFile(representation.getPersistInfo().getObjectIdentifier().getStringValue(), true, true,

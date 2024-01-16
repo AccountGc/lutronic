@@ -38,6 +38,8 @@ import wt.content.ContentHolder;
 import wt.content.ContentItem;
 import wt.content.URLData;
 import wt.doc.WTDocument;
+import wt.enterprise.Managed;
+import wt.enterprise.RevisionControlled;
 import wt.fc.IconDelegate;
 import wt.fc.IconDelegateFactory;
 import wt.fc.ObjectIdentifier;
@@ -54,6 +56,7 @@ import wt.iba.value.IBAHolder;
 import wt.inf.container.WTContainerRef;
 import wt.inf.library.WTLibrary;
 import wt.lifecycle.LifeCycleHelper;
+import wt.lifecycle.LifeCycleManaged;
 import wt.lifecycle.LifeCycleTemplate;
 import wt.lifecycle.PhaseTemplate;
 import wt.lifecycle.State;
@@ -79,6 +82,28 @@ public class CommonUtil implements wt.method.RemoteAccess, java.io.Serializable 
 
 	private static ReferenceFactory rf = null;
 	static final boolean SERVER = wt.method.RemoteMethodServer.ServerFlag;
+
+	/**
+	 * 작성자 여부확인
+	 */
+	public static boolean isCreator(Managed managed) throws Exception {
+		WTUser user = sessionUser();
+		if (user.getName().equals(managed.getCreatorName())) {
+			return true;
+		}
+		return false;
+	}
+
+	/**
+	 * 작성자 여부확인
+	 */
+	public static boolean isCreator(RevisionControlled rc) throws Exception {
+		WTUser user = sessionUser();
+		if (user.getName().equals(rc.getCreatorName())) {
+			return true;
+		}
+		return false;
+	}
 
 	/**
 	 * 세션 사용자 가져오기

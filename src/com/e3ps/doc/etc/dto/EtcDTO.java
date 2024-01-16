@@ -159,7 +159,8 @@ public class EtcDTO {
 	 */
 	private void setAuth(WTDocument doc) throws Exception {
 		boolean isAdmin = CommonUtil.isAdmin();
-		if (isAdmin && isLatest()) {
+		boolean isCreator = CommonUtil.isCreator(doc);
+		if ((isAdmin || isCreator) && isLatest()) {
 			set_delete(true);
 		}
 

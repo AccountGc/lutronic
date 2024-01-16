@@ -4,11 +4,18 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
+import javax.xml.transform.Result;
+
 import com.e3ps.common.util.CommonUtil;
+import com.e3ps.common.util.QuerySpecUtils;
 
 import net.sf.json.JSONObject;
 import wt.clients.vc.CheckInOutTaskLogic;
+import wt.enterprise.CopyObjectInfo;
+import wt.enterprise.EnterpriseHelper;
+import wt.enterprise.RevisionControlled;
 import wt.fc.PersistenceHelper;
+import wt.fc.QueryResult;
 import wt.folder.Folder;
 import wt.part.Quantity;
 import wt.part.QuantityUnit;
@@ -16,6 +23,7 @@ import wt.part.WTPart;
 import wt.part.WTPartMaster;
 import wt.part.WTPartUsageLink;
 import wt.pom.Transaction;
+import wt.query.QuerySpec;
 import wt.services.StandardManager;
 import wt.util.WTException;
 import wt.vc.wip.CheckoutLink;
@@ -428,6 +436,99 @@ public class StandardBomService extends StandardManager implements BomService {
 			if (trs != null)
 				trs.rollback();
 		}
+		return map;
+	}
+
+	@Override
+	public Map<String, Object> update(Map<String, Object> params) throws Exception {
+		Map<String, Object> map = new HashMap<>();
+		String poid = (String) params.get("poid"); // 부모
+		String link = (String) params.get("link");
+		String oid = (String) params.get("oid"); // 본인
+		int value = (int) params.get("value");
+		Transaction trs = new Transaction();
+		try {
+			trs.start();
+
+			WTPart child = (WTPart) CommonUtil.getObject(oid);
+			WTPart parent = (WTPart) CommonUtil.getObject(poid);
+			WTPart workingCopy = null;
+			if (!WorkInProgressHelper.isCheckedOut(parent)) {
+				Folder cFolder = CheckInOutTaskLogic.getCheckoutFolder();
+				CheckoutLink clink = WorkInProgressHelper.service.checkout(parent, cFolder, "");
+				workingCopy = (WTPart) clink.getWorkingCopy();
+			} else {
+				workingCopy = parent;
+			}
+
+			WTPartUsageLink usageLink = BomHelper.manager.getUsageLink(workingCopy, child.getMaster());
+			System.out.print("usageLink=" + usageLink);
+			usageLink.setQuantity(Quantity.newQuantity(value, usageLink.getQuantity().getUnit()));
+			PersistenceHelper.manager.modify(usageLink);
+
+			JSONObject node = BomHelper.manager.getNode(workingCopy);
+			map.put("resNode", node);
+
+			trs.commit();
+			trs = null;
+		} catch (Exception e) {
+			e.printStackTrace();
+			trs.rollback();
+			throw e;
+		} finally {
+			if (trs != null)
+				trs.rollback();
+		}
+		return map;
+	}
+
+	@Override
+	public Map<String, Object> saveAs(Map<String, Object> params) throws Exception {
+		Map<String, Object> map = new HashMap<>();
+		String oid = (String) params.get("oid"); // 본인
+		String saveAsNum = (String) params.get("saveAsNum");
+		Transaction trs = new Transaction();
+		try {
+			trs.start();
+
+			WTPart part = (WTPart) CommonUtil.getObject(oid);
+			RevisionControlled[] originals = new RevisionControlled[1];
+			CopyObjectInfo[] copyInfoArray = null;
+
+			originals[0] = part;
+			
+			// 체크
+			QuerySpec query = new QuerySpec();
+			int idx = query.appendClassList(WTPartMaster.class, true);
+			QuerySpecUtils.toEquals(query, idx, WTPartMaster.class, WTPartMaster.NUMBER, part.getNumber());
+			QueryResult qr = PersistenceHelper.manager.find(query);
+			if(qr.size() > 0) {
+				map.put("exist", true);
+				return map;
+			}
+			
+			
+			copyInfoArray = EnterpriseHelper.service.newMultiObjectCopy(originals);
+			WTPart copy = (WTPart) copyInfoArray[0].getCopy();
+			copy.setName(part.getName());
+			copy.setNumber(saveAsNum);
+			copy.setContainer(part.getContainer());
+
+			copyInfoArray = EnterpriseHelper.service.saveMultiObjectCopy(copyInfoArray);
+
+			map.put("copy", copy.getPersistInfo().getObjectIdentifier().getStringValue());
+
+			trs.commit();
+			trs = null;
+		} catch (Exception e) {
+			e.printStackTrace();
+			trs.rollback();
+			throw e;
+		} finally {
+			if (trs != null)
+				trs.rollback();
+		}
+		map.put("exist", false);
 		return map;
 	}
 }

@@ -1,3 +1,4 @@
+<%@page import="java.util.ArrayList"%>
 <%@page import="java.util.Map"%>
 <%@page import="wt.fc.PagingSessionHelper"%>
 <%@page import="wt.fc.QueryResult"%>
@@ -7,9 +8,10 @@
 <%@page import="wt.org.WTUser"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%
-Map<String, Integer> dataMap = (Map<String, Integer>) request.getAttribute("dataMap");
+Map<String, ArrayList<Map<String, Integer>>> dataMap = (Map<String, ArrayList<Map<String, Integer>>>) request.getAttribute("dataMap");
 String start = (String) request.getAttribute("start");
-ArrayList<Map<String, Integer>> list = (ArrayList<Map<String, Integer>>) dataMap.get("list"); 
+ArrayList<Map<String, Integer>> complete = (ArrayList<Map<String, Integer>>) dataMap.get("complete");
+ArrayList<Map<String, Integer>> progress = (ArrayList<Map<String, Integer>>) dataMap.get("progress");
 %>
 <!DOCTYPE html>
 <html>
@@ -134,7 +136,7 @@ ArrayList<Map<String, Integer>> list = (ArrayList<Map<String, Integer>>) dataMap
 								categories : [ 
 									<%
 										for(int i=0; i<5; i++) {
-											String s = (start + i);
+											String s = String.valueOf(Integer.parseInt(start) + i);
 									%>
 									'<%=s%>년',
 									<%
@@ -154,12 +156,30 @@ ArrayList<Map<String, Integer>> list = (ArrayList<Map<String, Integer>>) dataMap
 							series : [ {
 								name : '진행중',
 								data : [ 
-									
-									
+									<%
+									for(int i=0; i<progress.size(); i++) {
+										Map<String, Integer> map = (Map<String, Integer>) progress.get(i);
+										System.out.println(map);
+									%>
+									<%=map.get(start+i)%>,
+									<%
+									}
+									%>
 								]
 							}, {
 								name : '완료됨',
-								data : [ 10, 20, 30, 40, 50, 60 ]
+								data : [
+									<%
+									for(int i=0; i<complete.size(); i++) {
+										Map<String, Integer> map = (Map<String, Integer>) complete.get(i);
+										System.out.println(map);
+									%>
+									<%=map.get(start+i)%>,
+									<%
+									}
+									%>
+									
+								]	
 							} ]
 						});
 					</script>

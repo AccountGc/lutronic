@@ -361,7 +361,7 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 						withdraw = false;
 					}
 					const menu = [ {
-						label : "EO 정보보기",
+						label : "ECO 정보보기",
 						callback : auiContextHandler
 					}, {
 						label : "_$line" // label 에 _$line 을 설정하면 라인을 긋는 아이템으로 인식합니다.

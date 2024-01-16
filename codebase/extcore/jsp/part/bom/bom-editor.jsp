@@ -71,15 +71,15 @@ WTPart root = (WTPart) request.getAttribute("root");
 			</div>
 		</td>
 		<td class="right">
-			<select name="depth" id="depth" onchange="loadDepth();" class="AXSelect width-120">
-				<option value="0">전체확장</option>
-				<option value="1">1레벨</option>
-				<option value="2" selected="selected">2레벨</option>
-				<option value="3">3레벨</option>
-				<option value="4">4레벨</option>
-				<option value="5">5레벨</option>
-				<option value="6">전체펼치기</option>
-			</select>
+			<!-- 			<select name="depth" id="depth" onchange="loadDepth();" class="AXSelect width-120"> -->
+			<!-- 				<option value="0">전체확장</option> -->
+			<!-- 				<option value="1">1레벨</option> -->
+			<!-- 				<option value="2" selected="selected">2레벨</option> -->
+			<!-- 				<option value="3">3레벨</option> -->
+			<!-- 				<option value="4">4레벨</option> -->
+			<!-- 				<option value="5">5레벨</option> -->
+			<!-- 				<option value="6">전체펼치기</option> -->
+			<!-- 			</select> -->
 			&nbsp;
 			<input type="button" value="닫기" title="닫기" class="gray" onclick="self.close();">
 		</td>
@@ -129,7 +129,7 @@ WTPart root = (WTPart) request.getAttribute("root");
 					<col width="*">
 				</colgroup>
 				<tr>
-					<th>품목 분류</th>
+					<th>품목 번호/명</th>
 					<td class="indent5">
 						<input type="text" name="number" id="number" class="width-400" readonly="readonly" onclick="load();">
 						<input type="hidden" name="poid" id="poid">
@@ -178,7 +178,7 @@ WTPart root = (WTPart) request.getAttribute("root");
 			checkbox : true,
 			quicksearch : true,
 			debugLevel : 0,
-			selectMode : 3,
+			selectMode : 2,
 			dnd5 : {
 				autoExpandMS : 500,
 				preventRecursion : true, // Prevent dropping nodes on own descendants
@@ -187,7 +187,7 @@ WTPart root = (WTPart) request.getAttribute("root");
 					return true;
 				},
 				dragEnter : function(node, data) {
-					if(node.data.state === "승인됨") {
+					if (node.data.state === "승인됨") {
 						return false;
 					}
 					const sameTree = (data.otherNode.tree === data.tree);
@@ -212,8 +212,8 @@ WTPart root = (WTPart) request.getAttribute("root");
 					if (hitMode === "after" || hitMode === "before") {
 						return false;
 					}
-					
-					for(let i=0; i<sourceNodes.length; i++) {
+
+					for (let i = 0; i < sourceNodes.length; i++) {
 						const nn = sourceNodes[i];
 						nn.copy = true;
 						nn.renderTitle();
@@ -226,6 +226,14 @@ WTPart root = (WTPart) request.getAttribute("root");
 			filter : {
 				autoExpand : true,
 			},
+			loadChildren : function(event, data) {
+				data.node.visit(function(subNode) {
+					if (subNode.isLazy() && !subNode.isLoaded()) {
+						subNode.resetLazy();
+						subNode.load();
+					}
+				});
+			},
 			table : {
 				indentation : 20,
 				nodeColumnIdx : 4,
@@ -234,6 +242,7 @@ WTPart root = (WTPart) request.getAttribute("root");
 			source : $.ajax({
 				url : "/Windchill/plm/bom/loadEditor?oid=" + oid + "&skip=" + skip,
 				type : "POST",
+				cache : false
 			}),
 			preInit : function() {
 				openLayer();
@@ -260,26 +269,33 @@ WTPart root = (WTPart) request.getAttribute("root");
 				const node = data.node;
 				const isCheckOut = node.data.isCheckOut;
 				if (isCheckOut) {
-// 					node.tr.style.backgroundColor = "#FFCBCB";
+					// 					node.tr.style.backgroundColor = "#FFCBCB";
 				} else {
 					node.tr.style.backgroundColor = "white";
 				}
-				
+
+				const key = node.key;
 				const thum = node.data.thum;
 				const list = node.tr.querySelectorAll("td");
 				list[0].style.textAlign = "center";
 				list[1].style.textAlign = "center";
-				if(thum != undefined) {
-					list[1].innerHTML  = "<img src=" + node.data.thum + ">";
+				if (thum != undefined) {
+					list[1].innerHTML = "<img src=" + node.data.thum + ">";
 				} else {
-					list[1].innerHTML  = "";
+					list[1].innerHTML = "";
 				}
+				const isRoot = node.data.isRoot;
 				list[2].style.textAlign = "center";
 				list[2].textContent = node.data.level;
 				list[3].style.textAlign = "center";
 				list[3].textContent = node.data.number;
 				list[5].style.textAlign = "center";
-				list[5].textContent = node.data.qty + "개";
+				if (isRoot) {
+					list[5].textContent = node.data.qty;
+				} else {
+					list[5].innerHTML = "<input type='text' onkeydown='validate(this, event);' data-key='" + key + "' onblur='update(this, event);' style='width: 40px;' id='" + key + "' value='" + node.data.qty + "'>";
+				}
+
 				list[6].style.textAlign = "center";
 				list[6].textContent = node.data.version;
 				list[7].style.textAlign = "center";
@@ -292,40 +308,14 @@ WTPart root = (WTPart) request.getAttribute("root");
 				list[8].style.textAlign = "center";
 				list[8].textContent = node.data.creator;
 			},
-			beforeSelect: function(event, data) {
-				const tree = $("#treetable").fancytree("getTree");
-                if (event.originalEvent.shiftKey) {
-                    // Shift 키가 눌렸을 때
-                    const lastSelectedNode = tree.getSelectedNodes()[0];
-                    if (lastSelectedNode) {
-                        const startIndex = lastSelectedNode.getIndex();
-                        const endIndex = data.node.getIndex();
-                        const startNode = startIndex < endIndex ? lastSelectedNode : data.node;
-                        const endNode = startIndex < endIndex ? data.node : lastSelectedNode;
-                        const selectedNodes = [];
-
-                        // 선택된 범위의 노드를 수동으로 선택
-          for (let i = startNode.getIndex(); i <= endNode.getIndex(); i++) {
-    const node = data.tree.getNodeByKey(i.toString());
-    node.setSelected(true);
-    selectedNodes.push(node);
-}
-
-                        // 선택된 노드들에 대한 체크박스 상태를 관리
-                        selectedNodes.forEach(node => {
-                            node.setSelected(true);
-                            node.render();
-                        });
-
-                        return false; // 기본 동작 방지
-                    }
-                }
-            }
+			beforeSelect : function(event, data) {
+			}
 		}).on("nodeCommand", function(event, data) {
 			const tree = $.ui.fancytree.getTree(this);
 			const refNode = null;
 			const moveMode = null;
 			let node = tree.getActiveNode();
+			const selectedNodes = tree.getSelectedNodes();
 			const parent = node.parent;
 			const parentIsApproved = parent.data.state === "승인됨";
 			const isApproved = node.data.state === "승인됨";
@@ -343,13 +333,13 @@ WTPart root = (WTPart) request.getAttribute("root");
 				break;
 			case "paste":
 				if (CLIPBOARD.mode === "copy") {
-					if(!parentIsApproved && !isApproved) {
+					if (!parentIsApproved && !isApproved) {
 						nodePaste(node, CLIPBOARD.data);
 					}
 				}
 				break;
 			case "removeLink":
-				process(node, "removeLink");
+				process(tree, node, selectedNodes, "removeLink");
 				break;
 			default:
 				return;
@@ -505,25 +495,21 @@ WTPart root = (WTPart) request.getAttribute("root");
 
 			// 추가 자체도.. 승인됨이 일단 아닐 경우
 			$("#treetable").contextmenu("enableEntry", "insert", !isApproved);
-			$("#treetable").contextmenu("enableEntry", "replace", !isApproved);
+			$("#treetable").contextmenu("enableEntry", "replace", !parentIsApproved);
 
 			// 체크인 체크아웃 체크아웃취소
 			$("#treetable").contextmenu("enableEntry", "checkin", isCheckOut);
-			
+
 			// 부모도 승인됨이 아니고, 자신도 승인됨이 아니여야함, 자신이 체크아웃 상태가 아니여야함
 			$("#treetable").contextmenu("enableEntry", "checkout", !isCheckOut && (!isApproved && !parentIsApproved));
 			$("#treetable").contextmenu("enableEntry", "undocheckout", isCheckOut);
 
-
 			// 복사 체크아웃상태는 못하게
 			$("#treetable").contextmenu("enableEntry", "copy", !isCheckOut);
 
-			
 			// 붙여넣기
 			$("#treetable").contextmenu("enableEntry", "paste", !!CLIPBOARD && (!isApproved && !parentIsApproved));
-			
-			
-			
+
 			$("#treetable").contextmenu("enableEntry", "empty", !!CLIPBOARD);
 
 			node.setActive();
@@ -533,40 +519,40 @@ WTPart root = (WTPart) request.getAttribute("root");
 			const tree = $("#treetable").fancytree("getTree");
 			const node = tree.getActiveNode();
 			const selectedNodes = tree.getSelectedNodes();
-			process(node, selectedNodes, ui.cmd);
+			process(tree, node, selectedNodes, ui.cmd);
 		},
 	});
 
 	// 마우스 우클릭 액션
-	function process(node, selectedNodes, action) {
+	function process(tree, node, selectedNodes, action) {
 		let url;
 		const oid = node.data.oid;
 		const poid = node.data.poid;
 		const link = node.data.link;
 		const params = new Object();
-		const tree = $("#treetable").fancytree("getTree");
+		// 		const tree = $("#treetable").fancytree("getTree");
 		const parent = node.parent;
 		const parentIsApproved = parent.data.state === "승인됨";
 		const isApproved = node.data.state === "승인됨";
-		
+
 		// 정보보기
 		if (action === "info") {
 			url = getCallUrl("/part/view?oid=" + oid);
-			_popup(url, 1600, 800, "n");
+			_popup(url, 1400, 700, "n");
 		} else if (action === "replace_new") {
 			url = getCallUrl("/part/append?method=replace_new");
-			_popup(url, 1600, 800, "n");
+			_popup(url, 1400, 700, "n");
 		} else if (action === "replace_exist") {
 			url = getCallUrl("/part/popup?method=replace_exist&multi=false");
-			_popup(url, 1600, 800, "n");
+			_popup(url, 1400, 700, "n");
 			// 신규 생성 후 붙이기
 		} else if (action === "new") {
 			url = getCallUrl("/part/append?method=append");
-			_popup(url, 1600, 800, "n");
+			_popup(url, 1400, 700, "n");
 			// 잘라내기
 		} else if (action === "exist") {
 			url = getCallUrl("/part/popup?method=exist&multi=true");
-			_popup(url, 1600, 800, "n");
+			_popup(url, 1400, 700, "n");
 			// 복사
 		} else if (action === "copy") {
 			CLIPBOARD = {
@@ -577,7 +563,7 @@ WTPart root = (WTPart) request.getAttribute("root");
 			};
 			// 붙여넣기
 		} else if (action === "paste") {
-			if(!parentIsApproved && !isApproved) {
+			if (!parentIsApproved && !isApproved) {
 				nodePaste(node, CLIPBOARD.data);
 			}
 		} else if (action === "checkout") {
@@ -662,12 +648,16 @@ WTPart root = (WTPart) request.getAttribute("root");
 		const rootNode = tree.getRootNode();
 		// 확장 관련
 		if (action === "expand_1") {
+			// 			openTreeToLevel(1);
 			levelExpand(rootNode, 1);
 		} else if (action === "expand_2") {
+			// 			openTreeToLevel(2);
 			levelExpand(rootNode, 2);
 		} else if (action === "expand_3") {
+			// 			openTreeToLevel(3);
 			levelExpand(rootNode, 3);
 		} else if (action === "expand_4") {
+			// 			openTreeToLevel(4);
 			levelExpand(rootNode, 4);
 		} else if (action === "expand_5") {
 			levelExpand(rootNode, 5);
@@ -680,10 +670,6 @@ WTPart root = (WTPart) request.getAttribute("root");
 
 	// 확장
 	function levelExpand(rootNode, level) {
-		//rootNode.visit(function(subNode) {
-		//subNode.setExpanded(false);
-		//});
-
 		rootNode.visit(function(subNode) {
 			if (subNode.getLevel() <= level) {
 				subNode.setExpanded(true);
@@ -694,7 +680,7 @@ WTPart root = (WTPart) request.getAttribute("root");
 	// 드랍
 	function drop(node, sourceNodes) {
 		const arr = new Array();
-		for(let i=0; i<sourceNodes.length; i++) {
+		for (let i = 0; i < sourceNodes.length; i++) {
 			arr.push(sourceNodes[i].data.oid);
 		}
 		const poid = node.data.oid; // 모
@@ -708,8 +694,8 @@ WTPart root = (WTPart) request.getAttribute("root");
 		call(url, params, function(data) {
 			if (data.result) {
 				const resNode = data.resNode;
-// 				resNode.icon = "/Windchill/extcore/images/icon/partcheckout.gif";
-// 				resNode.renderTitle();
+				// 				resNode.icon = "/Windchill/extcore/images/icon/partcheckout.gif";
+				// 				resNode.renderTitle();
 				updateNode(node, resNode);
 			}
 			closeLayer();
@@ -854,14 +840,78 @@ WTPart root = (WTPart) request.getAttribute("root");
 		});
 		if (node.isLazy()) {
 			node.load(true);
-// 			node.setExpanded(true);
+			// 			node.setExpanded(true);
+		}
+	}
+
+	// 숫자 체크
+	let v;
+	function validate(obj, event) {
+		v = Number(obj.value);
+	}
+
+	// 수량 업데이트
+	function update(obj, event) {
+		const value = Number(obj.value);
+		const key = obj.getAttribute("data-key");
+		// 		const keyCode = event.which || event.keyCode;
+		// 	    if ((keyCode >= 48 && keyCode <= 57) || (keyCode >= 96 && keyCode <= 105)) {
+		// 	    } else {
+		// 	    	alert("숫자만 입력가능합니다.");
+		// 	        event.preventDefault();
+		// 	        document.getElementById(key).value = v;
+		// 	    }
+
+		const tree = $("#treetable").fancytree("getTree");
+		const node = tree.getNodeByKey(key);
+		const parent = node.parent;
+
+		if (parent.data.state === "승인됨") {
+			alert("부모품목이 승인됨 상태여서 수량 수정이 불가능합니다.");
+			document.getElementById(key).value = node.data.qty;
+			return false;
+		}
+
+		const link = node.data.link;
+		const poid = node.data.poid;
+		const oid = node.data.oid;
+		const url = getCallUrl("/bom/update");
+		openLayer();
+		const params = {
+			link : link,
+			oid : oid,
+			poid : poid,
+			value : value
+		};
+		call(url, params, function(data) {
+			if (data.result) {
+				const resNode = data.resNode;
+				updateNode(parent, resNode);
+			}
+			closeLayer();
+		})
+	}
+
+	function openTreeToLevel(level) {
+		const tree = $("#treetable").fancytree("getTree");
+		const rootNode = tree.getRootNode();
+		for (let i = 0; i < level; i++) {
+			rootNode.visit(function(node) {
+				if (node.lazy) {
+					logger(node);
+					if (node.getLevel() <= level) {
+						node.load();
+						// 						node.setExpanded(true);
+					}
+				}
+			});
 		}
 	}
 
 	// 품목 추가
 	function load() {
 		url = getCallUrl("/part/popup?method=loadTree&multi=false");
-		_popup(url, 1600, 800, "n");
+		_popup(url, 1400, 700, "n");
 	}
 
 	// 오른쪽 트리 파괴
@@ -887,7 +937,7 @@ WTPart root = (WTPart) request.getAttribute("root");
 			extensions : [ "dnd5", "table" ],
 			debugLevel : 0,
 			checkbox : true,
-			selectMode : 3,
+			selectMode : 2,
 			dnd5 : {
 				autoExpandMS : 100,
 				multiSource : true,
@@ -902,6 +952,14 @@ WTPart root = (WTPart) request.getAttribute("root");
 					return true;
 				},
 			},
+			loadChildren : function(event, data) {
+				data.node.visit(function(subNode) {
+					if (subNode.isLazy() && !subNode.isLoaded()) {
+						subNode.resetLazy();
+						subNode.load();
+					}
+				});
+			},
 			filter : {
 				autoExpand : true,
 			},
@@ -913,6 +971,7 @@ WTPart root = (WTPart) request.getAttribute("root");
 			source : $.ajax({
 				url : "/Windchill/plm/bom/loadEditor?oid=" + poid + "&skip=true",
 				type : "POST",
+				cache : false
 			}),
 			preInit : function() {
 				openLayer();
@@ -941,10 +1000,10 @@ WTPart root = (WTPart) request.getAttribute("root");
 				const thum = node.data.thum;
 				list[0].style.textAlign = "center";
 				list[1].style.textAlign = "center";
-				if(thum != undefined) {
-					list[1].innerHTML  = "<img src=" + node.data.thum + ">";
+				if (thum != undefined) {
+					list[1].innerHTML = "<img src=" + node.data.thum + ">";
 				} else {
-					list[1].innerHTML  = "";
+					list[1].innerHTML = "";
 				}
 				list[2].style.textAlign = "center";
 				list[2].textContent = node.data.level;
@@ -1000,7 +1059,6 @@ WTPart root = (WTPart) request.getAttribute("root");
 				return false;
 			}
 		});
-		callBack(true, true, "");
 
 		$("#righttable").contextmenu({
 			delegate : "span.fancytree-node",
@@ -1008,6 +1066,38 @@ WTPart root = (WTPart) request.getAttribute("root");
 				title : "정보보기",
 				cmd : "info",
 				uiIcon : "ui-icon-info",
+			}, {
+				title : "확장",
+				uiIcon : "ui-icon-expand",
+				children : [ {
+					title : "1 레벨",
+					cmd : "expand_1",
+					uiIcon : "ui-icon-expand",
+				}, {
+					title : "2 레벨",
+					cmd : "expand_2",
+					uiIcon : "ui-icon-expand",
+				}, {
+					title : "3 레벨",
+					cmd : "expand_3",
+					uiIcon : "ui-icon-expand",
+				}, {
+					title : "4 레벨",
+					cmd : "expand_4",
+					uiIcon : "ui-icon-expand",
+				}, {
+					title : "5 레벨",
+					cmd : "expand_5",
+					uiIcon : "ui-icon-expand",
+				}, {
+					title : "전체확장",
+					cmd : "expand",
+					uiIcon : "ui-icon-expand",
+				}, {
+					title : "전체축소",
+					cmd : "collapse",
+					uiIcon : "ui-icon-collapse",
+				} ]
 			}, {
 				title : "----"
 			}, {
@@ -1029,8 +1119,10 @@ WTPart root = (WTPart) request.getAttribute("root");
 				const that = this;
 				const tree = $("#righttable").fancytree("getTree");
 				const node = tree.getActiveNode();
-				process(node, ui.cmd);
+				const selectedNodes = tree.getSelectedNodes();
+				process(tree, node, selectedNodes, ui.cmd);
 			},
 		});
+		callBack(true, true, "");
 	}
 </script>
