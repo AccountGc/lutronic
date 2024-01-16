@@ -1176,7 +1176,7 @@ public class EcoHelper {
 	 */
 	public Map<String, Integer> getChart(String start) throws Exception {
 		if (!StringUtil.checkString(start)) {
-			start = "2008";
+			start = "2016";
 		}
 		Map<String, Integer> map = new HashMap<>();
 		// 5개..
@@ -1207,7 +1207,7 @@ public class EcoHelper {
 			}
 			map.put("complete", complete);
 			map.put("progress", progress);
-			return map;
 		}
+		return map;
 	}
 }
