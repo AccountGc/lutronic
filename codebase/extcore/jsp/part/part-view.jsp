@@ -24,7 +24,6 @@ WTUser sessionUser = (WTUser) SessionHelper.manager.getPrincipal();
 %>
 <input type="hidden" name="isAdmin" id="isAdmin" value="<%=isAdmin%>">
 <input type="hidden" name="oid" id="oid" value="<%=dto.getOid()%>">
-<input type="hidden" name="bomSelect" id="bomSelect" value="" />
 <table class="button-table">
 	<tr>
 		<td class="left">

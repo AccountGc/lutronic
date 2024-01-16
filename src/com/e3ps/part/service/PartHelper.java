@@ -29,6 +29,7 @@ import com.e3ps.common.util.QuerySpecUtils;
 import com.e3ps.common.util.StringUtil;
 import com.e3ps.common.util.WCUtil;
 import com.e3ps.doc.column.DocumentColumn;
+import com.e3ps.drawing.service.DrawingHelper;
 import com.e3ps.part.PartToPartLink;
 import com.e3ps.part.column.PartColumn;
 import com.e3ps.part.dto.ObjectComarator;
@@ -104,63 +105,65 @@ public class PartHelper {
 	 * CREO VIEW 접속 URL 만들기
 	 */
 	public String getCreoViewUrl(HttpServletRequest request, String oid) throws Exception {
-		WTPart part = (WTPart) CommonUtil.getObject(oid);
-		QuerySpec query = new QuerySpec();
-		int idx = query.appendClassList(WTPart.class, true);
-		int idx_d = query.appendClassList(DerivedImage.class, true);
-		int idx_h = query.appendClassList(HolderToContent.class, false);
-		int idx_a = query.appendClassList(ApplicationData.class, true);
-
-		SearchCondition sc = new SearchCondition(WTPart.class, "thePersistInfo.theObjectIdentifier.id",
-				DerivedImage.class, "derivedFromReference.key.id");
-		query.appendWhere(sc, new int[] { idx, idx_d });
-		query.appendAnd();
-
-		sc = new SearchCondition(DerivedImage.class, "thePersistInfo.theObjectIdentifier.id", HolderToContent.class,
-				"roleAObjectRef.key.id");
-		query.appendWhere(sc, new int[] { idx_d, idx_h });
-		query.appendAnd();
-
-		sc = new SearchCondition(ApplicationData.class, "thePersistInfo.theObjectIdentifier.id", HolderToContent.class,
-				"roleBObjectRef.key.id");
-		query.appendWhere(sc, new int[] { idx_a, idx_h });
-		query.appendAnd();
-
-		sc = new SearchCondition(WTPart.class, "thePersistInfo.theObjectIdentifier.id", "=",
-				part.getPersistInfo().getObjectIdentifier().getId());
-		query.appendWhere(sc, new int[] { idx });
-		query.appendAnd();
-
-		sc = new SearchCondition(ApplicationData.class, ApplicationData.FILE_NAME, "LIKE", "%.pvs");
-		query.appendWhere(sc, new int[] { idx_a });
-
-		QueryResult qr = PersistenceHelper.manager.find(query);
-		String doid = "";
-		String aoid = "";
-		String fileName = "";
-		if (qr.hasMoreElements()) {
-			Object[] obj = (Object[]) qr.nextElement();
-			DerivedImage image = (DerivedImage) obj[1];
-			ApplicationData dd = (ApplicationData) obj[2];
-			doid = image.getPersistInfo().getObjectIdentifier().getStringValue();
-			aoid = dd.getPersistInfo().getObjectIdentifier().getStringValue();
-			fileName = dd.getFileName();
-		}
-
-		PDMLinkProduct product = WCUtil.getPDMLinkProduct();
-
-		String url = request.getRequestURL().toString();
-		url = url.substring(0, url.indexOf(request.getContextPath()));
-
-		StringBuilder sb = new StringBuilder(url);
-		sb.append(request.getContextPath());
-		sb.append("/servlet/WindchillAuthGW/com.ptc.wvs.server.util.WVSContentHelper/redirectDownload/");
-		sb.append(fileName);
-		sb.append("?ContentHolder=").append(doid);
-		sb.append("&HttpOperationItem=").append(aoid);
-		sb.append("&u8=1&objref=").append(doid);
-		sb.append("&ContainerOid=").append(product.toString());
-		return sb.toString();
+		return DrawingHelper.manager.getCreoViewUrl(request, oid);
+				
+				//		WTPart part = (WTPart) CommonUtil.getObject(oid);
+//		QuerySpec query = new QuerySpec();
+//		int idx = query.appendClassList(WTPart.class, true);
+//		int idx_d = query.appendClassList(DerivedImage.class, true);
+//		int idx_h = query.appendClassList(HolderToContent.class, false);
+//		int idx_a = query.appendClassList(ApplicationData.class, true);
+//
+//		SearchCondition sc = new SearchCondition(WTPart.class, "thePersistInfo.theObjectIdentifier.id",
+//				DerivedImage.class, "derivedFromReference.key.id");
+//		query.appendWhere(sc, new int[] { idx, idx_d });
+//		query.appendAnd();
+//
+//		sc = new SearchCondition(DerivedImage.class, "thePersistInfo.theObjectIdentifier.id", HolderToContent.class,
+//				"roleAObjectRef.key.id");
+//		query.appendWhere(sc, new int[] { idx_d, idx_h });
+//		query.appendAnd();
+//
+//		sc = new SearchCondition(ApplicationData.class, "thePersistInfo.theObjectIdentifier.id", HolderToContent.class,
+//				"roleBObjectRef.key.id");
+//		query.appendWhere(sc, new int[] { idx_a, idx_h });
+//		query.appendAnd();
+//
+//		sc = new SearchCondition(WTPart.class, "thePersistInfo.theObjectIdentifier.id", "=",
+//				part.getPersistInfo().getObjectIdentifier().getId());
+//		query.appendWhere(sc, new int[] { idx });
+//		query.appendAnd();
+//
+//		sc = new SearchCondition(ApplicationData.class, ApplicationData.FILE_NAME, "LIKE", "%.pvs");
+//		query.appendWhere(sc, new int[] { idx_a });
+//
+//		QueryResult qr = PersistenceHelper.manager.find(query);
+//		String doid = "";
+//		String aoid = "";
+//		String fileName = "";
+//		if (qr.hasMoreElements()) {
+//			Object[] obj = (Object[]) qr.nextElement();
+//			DerivedImage image = (DerivedImage) obj[1];
+//			ApplicationData dd = (ApplicationData) obj[2];
+//			doid = image.getPersistInfo().getObjectIdentifier().getStringValue();
+//			aoid = dd.getPersistInfo().getObjectIdentifier().getStringValue();
+//			fileName = dd.getFileName();
+//		}
+//
+//		PDMLinkProduct product = WCUtil.getPDMLinkProduct();
+//
+//		String url = request.getRequestURL().toString();
+//		url = url.substring(0, url.indexOf(request.getContextPath()));
+//
+//		StringBuilder sb = new StringBuilder(url);
+//		sb.append(request.getContextPath());
+//		sb.append("/servlet/WindchillAuthGW/com.ptc.wvs.server.util.WVSContentHelper/redirectDownload/");
+//		sb.append(fileName);
+//		sb.append("?ContentHolder=").append(doid);
+//		sb.append("&HttpOperationItem=").append(aoid);
+//		sb.append("&u8=1&objref=").append(doid);
+//		sb.append("&ContainerOid=").append(product.toString());
+//		return sb.toString();
 	}
 
 	public Map<String, Object> list(@RequestBody Map<String, Object> params) throws Exception {
@@ -316,7 +319,8 @@ public class PartHelper {
 
 		PageQueryUtils pager = new PageQueryUtils(params, query);
 		PagingQueryResult result = pager.find();
-		int rowNum = (pager.getCpage() - 1) * pager.getPsize() + 1;		while (result.hasMoreElements()) {
+		int rowNum = (pager.getCpage() - 1) * pager.getPsize() + 1;
+		while (result.hasMoreElements()) {
 			Object[] obj = (Object[]) result.nextElement();
 			PartColumn column = new PartColumn(obj);
 			column.setRowNum(rowNum++);

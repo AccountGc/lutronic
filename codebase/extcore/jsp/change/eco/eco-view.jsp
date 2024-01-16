@@ -106,7 +106,7 @@ boolean isAdmin = (boolean) request.getAttribute("isAdmin");
 			</tr>
 			<tr>
 				<th class="lb">제품명</th>
-				<td class="indent5"><%=dto.getModel_name()%></td>
+				<td class="indent5" colspan="3"><%=dto.getModel_name()%></td>
 			</tr>			
 			<tr>
 				<th class="lb">변경사항</th>

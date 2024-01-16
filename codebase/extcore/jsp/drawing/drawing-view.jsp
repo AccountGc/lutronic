@@ -21,16 +21,9 @@ Map<String, String> step = dto.getStep();
 		</td>
 		<td class="right">
 			<%
-			if (dto.isNameSyschronization) {
-			%>
-			<input type="button" value="Name 동기화" title="Name 동기화">
-			<%
-			}
-			%>
-			<%
 			if (dto.isUpdate) {
 			%>
-			<input type="button" value="수정" title="수정" class="blue" onclick="updateBtn();">
+			<input type="button" value="수정" title="수정" class="blue" onclick="update();">
 			<input type="button" value="삭제" title="삭제" class="red" onclick="_delete();">
 			<%
 			}
@@ -227,7 +220,7 @@ Map<String, String> step = dto.getStep();
 
 <script type="text/javascript">
 	//수정
-	function updateBtn() {
+	function update() {
 		const oid = document.getElementById("oid").value;
 		const url = getCallUrl("/drawing/update?oid=" + oid);
 		document.location.href = url;
@@ -297,18 +290,17 @@ Map<String, String> step = dto.getStep();
 	}
 
 	function checkUrl(url) {
-		alert(url);
 		const index = url.indexOf("ContentHolder=");
-// 		if (index !== -1) {
-// 			const str = url.substring(index + "ContentHolder=".length, index + "ContentHolder=".length + 1);
-// 			if (str !== "&") {
-// 				return true;
-// 			} else {
-// 				return false;
-// 			}
-// 		} else {
-// 			return false;
-// 		}
+		if (index !== -1) {
+			const str = url.substring(index + "ContentHolder=".length, index + "ContentHolder=".length + 1);
+			if (str !== "&") {
+				return true;
+			} else {
+				return false;
+			}
+		} else {
+			return false;
+		}
 	}
 
 	// 재변환

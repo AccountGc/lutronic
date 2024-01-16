@@ -57,7 +57,7 @@ public class EpmData {
 	private Map<String, String> step = new HashMap<>();
 
 	public EpmData(EPMDocument epm) throws Exception {
-		setOid(CommonUtil.getOIDString(epm));
+		setOid(epm.getPersistInfo().getObjectIdentifier().getStringValue());
 		setName(epm.getName());
 		setNumber(epm.getNumber());
 		setCadType(epm.getDocType().getDisplay());

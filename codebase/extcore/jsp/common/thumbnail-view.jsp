@@ -21,6 +21,8 @@ File dir = new File(path);
 if (!dir.exists()) {
 	dir.mkdirs();
 }
+System.out.println("==="+representable);
+System.out.println("!!!!!!!!!!!!"+representation);
 if (representation != null) {
 	Representer pre = new Representer();
 	RepHelper.saveAsZIPFile(representation.getPersistInfo().getObjectIdentifier().getStringValue(), true, true,
@@ -29,7 +31,6 @@ if (representation != null) {
 %>
 <script src="/Windchill/extcore/jsp/common/js/ptc/thingview/thingview.js"></script>
 <script type="text/javascript">
-	
 <%if (representation != null) {%>
 	var app;
 	var session;

@@ -42,6 +42,7 @@ import wt.epm.build.EPMBuildRule;
 import wt.epm.structure.EPMDescribeLink;
 import wt.epm.structure.EPMReferenceLink;
 import wt.fc.PagingQueryResult;
+import wt.fc.Persistable;
 import wt.fc.PersistenceHelper;
 import wt.fc.QueryResult;
 import wt.fc.ReferenceFactory;
@@ -862,7 +863,15 @@ public class DrawingHelper {
 	 * CREO VIEW 접속 URL 만들기
 	 */
 	public String getCreoViewUrl(HttpServletRequest request, String oid) throws Exception {
-		EPMDocument epm = (EPMDocument) CommonUtil.getObject(oid);
+
+		Persistable per = (Persistable) CommonUtil.getObject(oid);
+		EPMDocument epm = null;
+		if (per instanceof WTPart) {
+			WTPart part = (WTPart) per;
+			epm = PartHelper.manager.getEPMDocument(part);
+		} else {
+			epm = (EPMDocument) per;
+		}
 
 		QuerySpec query = new QuerySpec();
 		int idx = query.appendClassList(EPMDocument.class, true);
