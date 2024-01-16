@@ -917,7 +917,7 @@ public class StandardActivityService extends StandardManager implements Activity
 		Map<String, Object> result = new HashMap<>();
 		ArrayList<Map<String, Object>> editRows = (ArrayList<Map<String, Object>>) params.get("editRows");
 		ArrayList<Map<String, Object>> removeRows = (ArrayList<Map<String, Object>>) params.get("removeRows");
-		ArrayList<Map<String, Object>> addRows = (ArrayList<Map<String, Object>>) params.get("addRows");
+//		ArrayList<Map<String, Object>> addRows = (ArrayList<Map<String, Object>>) params.get("addRows");
 		Transaction trs = new Transaction();
 		try {
 			trs.start();
@@ -925,67 +925,67 @@ public class StandardActivityService extends StandardManager implements Activity
 			EChangeActivity eca = (EChangeActivity) CommonUtil.getObject(oid);
 			EChangeOrder eco = (EChangeOrder) eca.getEo();
 
-			for (Map<String, Object> addRow : addRows) {
-				String next_oid = (String) addRow.get("next_oid");
-				String part_oid = (String) addRow.get("part_oid");
-
-				boolean isExist = false;
-				String msg = "";
-				if (StringUtil.checkString(next_oid)) {
-					WTPart part = (WTPart) CommonUtil.getObject(next_oid);
-					QueryResult qr = PersistenceHelper.manager.navigate(part, "eco", EcoPartLink.class);
-					while (qr.hasMoreElements()) {
-						EChangeOrder ee = (EChangeOrder) qr.nextElement();
-						// 작업중 혹은 승인중?
-						if (ee.getLifeCycleState().toString().equals("INWORK")
-								|| ee.getLifeCycleState().toString().equals("APPROVING")) {
-							isExist = true;
-							msg = part.getNumber() + " 품목은 EO/ECO(" + ee.getEoNumber() + ")에서 설계변경이 진행중인 품목입니다.";
-							break;
-						}
-					}
-				}
-
-				if (isExist) {
-					result.put("isExist", isExist);
-					result.put("msg", msg);
-					return result;
-				}
-
-				if (StringUtil.checkString(part_oid)) {
-					WTPart part = (WTPart) CommonUtil.getObject(part_oid);
-					QueryResult qr = PersistenceHelper.manager.navigate(part, "eco", EcoPartLink.class);
-					while (qr.hasMoreElements()) {
-						EChangeOrder ee = (EChangeOrder) qr.nextElement();
-						// 작업중 혹은 승인중?
-						if (ee.getLifeCycleState().toString().equals("INWORK")
-								|| ee.getLifeCycleState().toString().equals("APPROVING")) {
-							isExist = true;
-							msg = part.getNumber() + " 품목은 EO/ECO(" + ee.getEoNumber() + ")에서 설계변경이 진행중인 품목입니다.";
-							break;
-						}
-					}
-				}
-
-				if (isExist) {
-					result.put("isExist", isExist);
-					result.put("msg", msg);
-					return result;
-				}
-
-				if (StringUtil.checkString(part_oid)) {
-					WTPart part = (WTPart) CommonUtil.getObject(part_oid);
-					saveLink(eco, part);
-					saveEndItem(eco, part);
-				}
-
-				if (StringUtil.checkString(next_oid)) {
-					WTPart nextPart = (WTPart) CommonUtil.getObject(next_oid);
-					saveLink(eco, nextPart);
-					savePartToPartLink(eco, nextPart);
-					saveEndItem(eco, nextPart);
-				}
-			}
+//			for (Map<String, Object> addRow : addRows) {
+//				String next_oid = (String) addRow.get("next_oid");
+//				String part_oid = (String) addRow.get("part_oid");
+//
+//				boolean isExist = false;
+//				String msg = "";
+//				if (StringUtil.checkString(next_oid)) {
+//					WTPart part = (WTPart) CommonUtil.getObject(next_oid);
+//					QueryResult qr = PersistenceHelper.manager.navigate(part, "eco", EcoPartLink.class);
+//					while (qr.hasMoreElements()) {
+//						EChangeOrder ee = (EChangeOrder) qr.nextElement();
+//						// 작업중 혹은 승인중?
+//						if (ee.getLifeCycleState().toString().equals("INWORK")
+//								|| ee.getLifeCycleState().toString().equals("APPROVING")) {
+//							isExist = true;
+//							msg = part.getNumber() + " 품목은 EO/ECO(" + ee.getEoNumber() + ")에서 설계변경이 진행중인 품목입니다.";
+//							break;
+//						}
+//					}
+//				}
+//
+//				if (isExist) {
+//					result.put("isExist", isExist);
+//					result.put("msg", msg);
+//					return result;
+//				}
+//
+//				if (StringUtil.checkString(part_oid)) {
+//					WTPart part = (WTPart) CommonUtil.getObject(part_oid);
+//					QueryResult qr = PersistenceHelper.manager.navigate(part, "eco", EcoPartLink.class);
+//					while (qr.hasMoreElements()) {
+//						EChangeOrder ee = (EChangeOrder) qr.nextElement();
+//						// 작업중 혹은 승인중?
+//						if (ee.getLifeCycleState().toString().equals("INWORK")
+//								|| ee.getLifeCycleState().toString().equals("APPROVING")) {
+//							isExist = true;
+//							msg = part.getNumber() + " 품목은 EO/ECO(" + ee.getEoNumber() + ")에서 설계변경이 진행중인 품목입니다.";
+//							break;
+//						}
+//					}
+//				}
+//
+//				if (isExist) {
+//					result.put("isExist", isExist);
+//					result.put("msg", msg);
+//					return result;
+//				}
+//
+//				if (StringUtil.checkString(part_oid)) {
+//					WTPart part = (WTPart) CommonUtil.getObject(part_oid);
+//					saveLink(eco, part);
+//					saveEndItem(eco, part);
+//				}
+//
+//				if (StringUtil.checkString(next_oid)) {
+//					WTPart nextPart = (WTPart) CommonUtil.getObject(next_oid);
+//					saveLink(eco, nextPart);
+//					savePartToPartLink(eco, nextPart);
+//					saveEndItem(eco, nextPart);
+//				}
+//			}
 
 			for (Map<String, Object> map : editRows) {
 				boolean preOrder = (boolean) map.get("preOrder");

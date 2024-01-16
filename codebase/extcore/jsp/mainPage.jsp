@@ -1,3 +1,4 @@
+<%@page import="java.util.Map"%>
 <%@page import="wt.fc.PagingSessionHelper"%>
 <%@page import="wt.fc.QueryResult"%>
 <%@page import="com.e3ps.groupware.notice.Notice"%>
@@ -6,7 +7,7 @@
 <%@page import="wt.org.WTUser"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%
-
+	Map<String, Integer> dataMap = (Map<String, Integer>) request.getAttribute("dataMap");
 %>
 <!DOCTYPE html>
 <html>
@@ -18,6 +19,7 @@
 <%@include file="/extcore/jsp/common/css.jsp"%>
 <%@include file="/extcore/jsp/common/script.jsp"%>
 <%@include file="/extcore/jsp/common/auigrid.jsp"%>
+<%@include file="/extcore/jsp/common/highchart.jsp"%>
 </head>
 <body>
 	<form>
@@ -105,6 +107,52 @@
 				</td>
 			</tr>
 		</table>
+
+
+		<!-- 차트 -->
+		<table>
+			<colgroup>
+				<col width="50%">
+				<col width="50%">
+			</colgroup>
+			<tr>
+				<td>&nbsp;</td>
+				<td>
+					<div id="container"></div>
+					<script type="text/javascript">
+						Highcharts.chart('container', {
+							chart : {
+								type : 'column'
+							},
+							title : {
+								text : 'ECO 년도별 현황',
+								align : 'left'
+							},
+							xAxis : {
+								categories : [ '2006년', '2007년', '2008년', '2009년', '2010년', '2011년' ]
+							},
+							yAxis : {
+								min : 0,
+							},
+							plotOptions : {
+								column : {
+									pointPadding : 0.2,
+									borderWidth : 0
+								}
+							},
+							series : [ {
+								name : '진행중',
+								data : [ 1, 2, 3, 4, 5, 6 ]
+							}, {
+								name : '완료됨',
+								data : [ 10, 20, 30, 40, 50, 60 ]
+							} ]
+						});
+					</script>
+				</td>
+			</tr>
+		</table>
+
 
 		<script type="text/javascript">
 			function view(oid) {

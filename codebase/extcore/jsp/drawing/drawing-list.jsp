@@ -421,6 +421,7 @@ QuantityUnit[] unitList = (QuantityUnit[]) request.getAttribute("unitList");
 					headerHeight : 30,
 					showRowNumColumn : false,
 					showAutoNoDataMessage : false,
+					showRowCheckColumn : true,
 					selectionMode : "multipleCells",
 					hoverMode : "singleRow",
 					enableMovingColumn : true,
@@ -548,24 +549,24 @@ QuantityUnit[] unitList = (QuantityUnit[]) request.getAttribute("unitList");
 					return false;
 				}
 
-				let checker = true;
-				for (let i = 0; i < gridData.length; i++) {
-					const cadTypeKey = gridData[i].item.cadTypeKey;
-					if (cadTypeKey !== "CADDRAWING") {
-						checker = false;
-						break;
-					}
-				}
+// 				let checker = true;
+// 				for (let i = 0; i < gridData.length; i++) {
+// 					const cadTypeKey = gridData[i].item.cadTypeKey;
+// 					if (cadTypeKey !== "CADDRAWING") {
+// 						checker = false;
+// 						break;
+// 					}
+// 				}
 
-				if (checker) {
+// 				if (checker) {
 					if (p) {
 						p.setData(gridData);
 					} else {
 						alert('팝업 창이 열려 있지 않습니다.');
 					}
-				} else {
-					alert("2D도면만 추가가 가능합니다.");
-				}
+// 				} else {
+// 					alert("2D도면만 추가가 가능합니다.");
+// 				}
 			}
 
 			document.addEventListener("DOMContentLoaded", function() {

@@ -9,10 +9,6 @@
 <%
 EcaDTO dto = (EcaDTO) request.getAttribute("dto");
 EChangeOrder eco = (EChangeOrder) request.getAttribute("eco");
-boolean isECO = false;
-if("CHANGE".equals(eco.getEoType())) {
-	isECO = true;
-}
 String sendType = eco.getSendType();
 boolean isOrder = false;
 if ("ORDER".equals(sendType)) {
@@ -33,20 +29,16 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 	color: red !important;
 }
 
-.isNew {
-	background-color: rgb(255, 240, 245) !important;
-}
-
 .preMerge {
 	font-weight: bold !important;
 	color: red !important;
-	/*  	background-color: rgb(206, 222, 255);  */
+	background-color: rgb(206, 222, 255) !important;
 }
 
 .afterMerge {
 	font-weight: bold !important;
 	color: red !important;
-	/*  	background-color: rgb(200, 255, 203);  */
+	background-color: rgb(200, 255, 203) !important;
 }
 </style>
 <%@include file="/extcore/jsp/common/css.jsp"%>
@@ -56,7 +48,6 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 <body>
 	<form>
 		<input type="hidden" name="oid" id="oid" value="<%=dto.getOid()%>">
-		<input type="hidden" name="eoid" id="eoid" value="<%=dto.getEoid()%>">
 		<input type="hidden" name="sessionName" id="sessionName" value="<%=user.getFullName()%>">
 		<table class="button-table">
 			<tr>
@@ -81,9 +72,7 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 			</colgroup>
 			<tr>
 				<th class="lb">EO/ECO 번호</th>
-				<td class="indent5">
-					<a href="javascript:view();"><%=dto.getNumber()%></a>
-				</td>
+				<td class="indent5"><%=dto.getNumber()%></td>
 				<th>작업자</th>
 				<td class="indent5"><%=dto.getActivityUser_txt()%></td>
 			</tr>
@@ -106,11 +95,6 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 					<input type="hidden" name="reassignUserOid" id="reassignUserOid">
 					<input type="button" title="위임" value="위임" onclick="reassign();">
 				</td>
-				<!-- 				<th>ECN 담당자</th> -->
-				<!-- 				<td class="indent5"> -->
-				<!-- 					<input type="text" name="ecnUser" id="ecnUser"> -->
-				<!-- 					<input type="hidden" name="ecnUserOid" id="ecnUserOid"> -->
-				<!-- 				</td> -->
 			</tr>
 			<tr>
 				<th class="lb">의견</th>
@@ -129,22 +113,21 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 						<img src="/Windchill/extcore/images/header.png">
 						설변품목
 						<img src="/Windchill/extcore/images/fileicon/file_excel.gif" title="엑셀 다운로드" onclick="exportExcel();">
+						<input type="button" value="저장" title="저장" onclick="save();">
 						<input type="button" value="이전품목삭제" title="이전품목삭제" class="red" onclick="deleteRow();">
-						<input type="button" value="변경품목삭제" title="변경품목삭제" class="gray" onclick="prePart();">
 					</div>
 				</td>
 				<td class="right">
-<!-- 					<input type="button" value="이전품목" title="이전품목" class="red" onclick="prePart();"> -->
-<!-- 					<input type="button" value="품목개정" title="품목개정" onclick="revise();" class="gray"> -->
-<!-- 					<input type="button" value="품목변경" title="품목변경" class="blue" onclick="popup100();"> -->
-					<input type="button" value="저장" title="저장" onclick="save();">
+					<input type="button" value="이전품목" title="이전품목" class="red" onclick="prePart();">
+					<input type="button" value="품목개정" title="품목개정" onclick="revise();">
+					<input type="button" value="품목변경" title="품목변경" class="blue" onclick="replace();">
 					<input type="button" value="새로고침" title="새로고침" class="orange" onclick="document.location.reload();">
 				</td>
 			</tr>
 		</table>
 
 		<div id="grid_wrap" style="height: 470px; border-top: 1px solid #3180c3;"></div>
-		<script type="text/javascript">
+		<script>
 			let myGridiD;
 			const part_result_code = [ {
 				key : "O",
@@ -249,7 +232,7 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 						baseUrl : "javascript",
 						jsCallback : function(rowIndex, columnIndex, value, item) {
 							const oid = item.part_oid;
-							if (oid !== "" && oid !== undefined) {
+							if (oid !== "") {
 								const url = getCallUrl("/part/view?oid=" + oid);
 								_popup(url, 1600, 800, "n");
 							}
@@ -272,7 +255,7 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 						baseUrl : "javascript",
 						jsCallback : function(rowIndex, columnIndex, value, item) {
 							const oid = item.part_oid;
-							if (oid !== "" && oid !== undefined) {
+							if (oid !== "") {
 								const url = getCallUrl("/part/view?oid=" + oid);
 								_popup(url, 1600, 800, "n");
 							}
@@ -301,6 +284,7 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 						}
 						return null;
 					}
+
 				} ]
 			}, {
 				headerText : "개정 후",
@@ -313,31 +297,19 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 					cellColMerge : true, // 셀 가로 병합 실행
 					cellColSpan : 5, // 셀 가로 병합 대상은 6개로 설정
 					renderer : {
-						type : "ButtonRenderer",
-						labelText : "품목 개정",
-						onClick : function(event) {
-						},
-						visibleFunction: function (rowIndex, columnIndex, value, item, dataField) {
-							if (item.next_name === undefined) {
-								return true;
+						type : "LinkRenderer",
+						baseUrl : "javascript",
+						jsCallback : function(rowIndex, columnIndex, value, item) {
+							const oid = item.next_oid;
+							if (oid !== "") {
+								const url = getCallUrl("/part/view?oid=" + oid);
+								_popup(url, 1600, 800, "n");
 							}
-							return item.
-						},	
-					},					
-// 					renderer : {
-// 						type : "LinkRenderer",
-// 						baseUrl : "javascript",
-// 						jsCallback : function(rowIndex, columnIndex, value, item) {
-// 							const oid = item.next_oid;
-// 							if (oid !== "" && oid !== undefined) {
-// 								const url = getCallUrl("/part/view?oid=" + oid);
-// 								_popup(url, 1600, 800, "n");
-// 							}
-// 						}
-// 					},
+						}
+					},
 					styleFunction : function(rowIndex, columnIndex, value, headerText, item, dataField) {
 						if (item.afterMerge === true) {
-							return "afterMerge";
+							// 							return "afterMerge";
 						}
 						return null;
 					}
@@ -352,7 +324,7 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 						baseUrl : "javascript",
 						jsCallback : function(rowIndex, columnIndex, value, item) {
 							const oid = item.next_oid;
-							if (oid !== "" && oid !== undefined) {
+							if (oid !== "") {
 								const url = getCallUrl("/part/view?oid=" + oid);
 								_popup(url, 1600, 800, "n");
 							}
@@ -375,13 +347,7 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 					dataType : "string",
 					editable : false,
 					headerText : "상태",
-					width : 100,
-					styleFunction : function(rowIndex, columnIndex, value, headerText, item, dataField) {
-						if (value == "승인됨") {
-							return "aui-red";
-						}
-						return null;
-					}					
+					width : 100
 				} ]
 			}, {
 				headerText : "",
@@ -700,18 +666,6 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 				dataType : "numeric",
 				width : 100,
 				formatString : "#.#"
-			}, {
-				dataType : "string",
-				dataField : "next_oid",
-				visible : false
-			}, {
-				dataType : "string",
-				dataField : "part_oid",
-				visible : false
-			}, {
-				dataType : "boolean",
-				dataField : "isNew",
-				visible : false
 			} ];
 
 			function createAUIGrid(columnLayout) {
@@ -740,12 +694,6 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 							return true;
 						}
 						return false;
-					},
-					rowStyleFunction: function (rowIndex, item) {
-						if (item.isNew) {
-							return "isNew";
-						}
-						return "";
 					},
 					useContextMenu : true,
 					enableRightDownFocus : true,
@@ -915,6 +863,7 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 			}
 			// 개정부품
 			function revise() {
+				const oid = document.getElementById("oid").value;
 				const checkedItems = AUIGrid.getCheckedRowItems(myGridID);
 				if (checkedItems.length === 0) {
 					alert("개정할 품목을 선택하세요.");
@@ -926,12 +875,6 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 				for (let i = 0; i < checkedItems.length; i++) {
 					const item = checkedItems[i].item;
 					const after = item.after;
-					const isNew = item.isNew;
-					if(isNew) {
-						alert("개정전 저장을 먼저 해주세요.");
-						return false;
-					}
-					
 					if (after === false) {
 						const number = item.next_number;
 						alert(number + " 품목은 개정 대상 품목이 아닙니다.");
@@ -940,37 +883,29 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 					arr.push(item.part_oid);
 					link.push(item.link_oid);
 				}
-				
-				if(!confirm("선택한 품목들을 개정하시겠습니까?")) {
-					return false;
-				}
-				
-				const oid = document.getElementById("oid").value;
-				const params = {
-					oid : oid,
-					arr : arr,
-					link : link
-				};
-				const url = getCallUrl("/activity/revise");
-				parent.openLayer();
-				call(url, params, function(data) {
-					alert(data.msg);
-					if (data.result) {
-						document.location.reload();
-					}
-					parent.closeLayer();
-				})
+
+				const url = getCallUrl("/activity/revise?oid=" + oid);
+				const panel = _popup(url, 1500, 700, "n");
+				panel.list = arr;
+				panel.link = link;
 			}
 
 			function save() {
-				const addRows = AUIGrid.getAddedRowItems(myGridID);
 				const editRows = AUIGrid.getEditedRowItems(myGridID);
 				const removeRows = AUIGrid.getRemovedItems(myGridID);
 
-				if (editRows.length === 0 && removeRows.length === 0 && addRows.length === 0) {
+				if (editRows.length === 0 && removeRows.length === 0) {
 					alert("수정 내역이 없습니다.");
 					return false;
 				}
+
+				// 				for (let i = 0; i < editRows.length; i++) {
+				// 					const next_oid = editRows[i].next_oid;
+				// 					if (next_oid === "") {
+				// 						alert("개정 후 품목이 없습니다.");
+				// 						return false;
+				// 					}
+				// 				}
 
 				if (!confirm("저장 하시겠습니까?")) {
 					return false;
@@ -982,8 +917,7 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 				const params = {
 					editRows : editRows,
 					oid : oid,
-					removeRows : removeRows,
-					addRows : addRows
+					removeRows : removeRows
 				};
 				call(url, params, function(data) {
 					alert(data.msg);
@@ -1002,99 +936,11 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 				}
 				AUIGrid.removeCheckedRows(myGridID);
 			}
-			
-			function view() {
-				const oid = document.getElementById("eoid").value;
-				let url;
-				<%
-					if(isECO) {
-				%>
-				url = getCallUrl("/eco/view?oid="+oid);
-				<%
-					} else {
-				%>
-				url = getCallUrl("/eo/view?oid="+oid);
-				<%
-					}
-				%>
-				_popup(url, "", "", "f");
-			}
 
 			function exportExcel() {
 				const sessionName = document.getElementById("sessionName").value;
 				exportToExcel("설변품목 리스트", "설변품목", "설변품목 리스트", [], sessionName);
 			}
-			
-			function popup100() {
-				const url = getCallUrl("/part/popup?method=insert100&multi=true");
-				_popup(url, 1400, 700, "n");
-			}
-
-			function insert100(arr, callBack) {
-				let checker = true;
-				let number;
-				arr.forEach(function(dd) {
-					const rowIndex = dd.rowIndex;
-					const item = dd.item;
-					const state = item.state;
-					// 왼쪽
-					let unique;
-					if("승인됨" === state) {
-						unique = AUIGrid.isUniqueValue(myGridID, "part_oid", item.part_oid);
-						// 오른쪽
-					} else {
-						unique = AUIGrid.isUniqueValue(myGridID, "next_oid", item.part_oid);
-					}
-					
-					if (!unique) {
-						number = item.number;
-						checker = false;
-						return true;
-					}
-				})
-				
-				if(!checker) {
-					callBack(true, false, number +  " 품목은 이미 추가 되어있습니다.");
-				} else {
-					arr.forEach(function(dd) {
-						const rowIndex = dd.rowIndex;
-						const item = dd.item;
-						const newItem = new Object();
-						const state = item.state;
-						if("승인됨" === state) {
-							newItem.part_number = item.number;
-							newItem.part_name = item.name;
-							newItem.part_version = item.version;
-							newItem.part_oid = item.part_oid;
-							newItem.part_state = item.state;
-							newItem.part_creator = item.creator;
-// 							newItem.next_number = "개정 후 데이터가 없습니다.";
-// 							newItem.next_name = "개정 후 데이터가 없습니다.";
-// 							newItem.next_version = "개정 후 데이터가 없습니다.";
-// 							newItem.next_state = "개정 후 데이터가 없습니다.";
-// 							newItem.next_creator = "개정 후 데이터가 없습니다.";
-							newItem.afterMerge = true;
-						} else {
-							newItem.preMerge = true;
-							newItem.part_number = "개정 전 데이터가 업습니다.";
-							newItem.part_name = "개정 전 데이터가 업습니다.";
-							newItem.part_version = "개정 전 데이터가 업습니다.";
-							newItem.part_state = "개정 전 데이터가 업습니다.";
-							newItem.part_creator = "개정 전 데이터가 업습니다.";
-							newItem.next_number = item.number;
-							newItem.next_name = item.name;
-							newItem.next_version = item.version;
-							newItem.next_oid = item.part_oid;
-							newItem.next_state = item.state;
-							newItem.next_creator = item.creator;
-						}
-						newItem.isNew = true;
-						AUIGrid.addRow(myGridID, newItem, rowIndex);
-					})
-				}
-			}
-
-			
 
 			document.addEventListener("DOMContentLoaded", function() {
 				createAUIGrid(columns);

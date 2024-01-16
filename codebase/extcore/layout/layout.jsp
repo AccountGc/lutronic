@@ -36,7 +36,7 @@
 	<script src="/Windchill/extcore/js/plugins/gritter/jquery.gritter.min.js"></script>
 
 	<script type="text/javascript" src="/Windchill/extcore/js/auigrid.js"></script>
-	<script type="text/javascript" src="/Windchill/jsp/js/dhtmlx/dhtmlx.js"></script>
+<!-- 	<script type="text/javascript" src="/Windchill/jsp/js/dhtmlx/dhtmlx.js"></script> -->
 
 	<script type="text/javascript">
 		const cover = new ax5.ui.mask();

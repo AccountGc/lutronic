@@ -1,5 +1,6 @@
 package com.e3ps.controller;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -12,11 +13,12 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.e3ps.change.activity.service.ActivityHelper;
-import com.e3ps.charts.service.ChartsHelper;
+import com.e3ps.change.eco.service.EcoHelper;
 import com.e3ps.common.history.service.LoginHistoryHelper;
 import com.e3ps.common.util.CommonUtil;
 import com.e3ps.common.util.StringUtil;
@@ -26,8 +28,6 @@ import com.e3ps.org.dto.PeopleDTO;
 import com.e3ps.org.service.DepartmentHelper;
 import com.e3ps.workspace.service.WorkDataHelper;
 import com.e3ps.workspace.service.WorkspaceHelper;
-
-import net.sf.json.JSONArray;
 
 @Controller
 public class IndexController extends BaseController {
@@ -71,8 +71,10 @@ public class IndexController extends BaseController {
 
 	@Description(value = "메인 페이지")
 	@GetMapping(value = "/mainPage")
-	public ModelAndView mainPage() throws Exception {
+	public ModelAndView mainPage(@RequestParam(required = false) String start) throws Exception {
 		ModelAndView model = new ModelAndView();
+		Map<String, Integer> dataMap = EcoHelper.manager.getChart(start);
+		model.addObject("dataMap", dataMap);
 		model.setViewName("/extcore/jsp/mainPage.jsp");
 		return model;
 	}

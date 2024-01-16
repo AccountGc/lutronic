@@ -1,3 +1,6 @@
+<%@page import="com.e3ps.part.service.PartHelper"%>
+<%@page import="com.e3ps.drawing.service.DrawingHelper"%>
+<%@page import="wt.epm.EPMDocument"%>
 <%@page import="wt.part.WTPart"%>
 <%@page import="com.ptc.wvs.server.ui.RepHelper"%>
 <%@page import="com.ptc.wvs.common.ui.Representer"%>
@@ -31,6 +34,7 @@ if (representation != null) {
 %>
 <script src="/Windchill/extcore/jsp/common/js/ptc/thingview/thingview.js"></script>
 <script type="text/javascript">
+	
 <%if (representation != null) {%>
 	var app;
 	var session;

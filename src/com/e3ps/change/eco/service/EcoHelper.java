@@ -62,6 +62,7 @@ import wt.content.ApplicationData;
 import wt.content.ContentHelper;
 import wt.content.ContentItem;
 import wt.content.ContentRoleType;
+import wt.doc.WTDocument;
 import wt.epm.EPMDocument;
 import wt.fc.PagingQueryResult;
 import wt.fc.PersistenceHelper;
@@ -1168,5 +1169,44 @@ public class EcoHelper {
 
 		result.put("name", newFile.getName());
 		return result;
+	}
+
+	/**
+	 * 년도별 ECO 현황
+	 */
+	public Map<String, Integer> getChart(String start) throws Exception {
+		if(!StringUtil.checkString(start)) {
+			start = "2008";
+		}
+		Map<String, Integer> map = new HashMap<>();
+		// 5개..
+		int complete = 0;
+		int progress = 0;
+		for (int i = 0; i < 5; i++) {
+			QuerySpec query = new QuerySpec();
+			int idx = query.appendClassList(EChangeOrder.class, true);
+//			QuerySpecUtils.toState(query, idx, EChangeOrder.class, "APPROVED");
+
+			String from = Integer.parseInt(start) + i + "-01-01";
+			String to = Integer.parseInt(start) + (i + 1) + "-12-31";
+
+			QuerySpecUtils.toTimeGreaterAndLess(query, idx, EChangeOrder.class, EChangeOrder.CREATE_TIMESTAMP, from,
+					to);
+			QueryResult result = PersistenceHelper.manager.find(query);
+			System.out.println("==query==" + query);
+			System.out.println("result=" + result.size());
+
+			while (result.hasMoreElements()) {
+				Object[] obj = (Object[]) result.nextElement();
+				EChangeOrder eco = (EChangeOrder) obj[0];
+				if(eco.getLifeCycleState().toString().equals("APPROVED")) {
+					complete++;
+				} else {
+					progerss++;
+				}
+		}
+		map.put("complete", list);
+		map.put("progress", list);
+		return map;
 	}
 }

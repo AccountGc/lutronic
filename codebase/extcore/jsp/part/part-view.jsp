@@ -522,7 +522,7 @@ WTUser sessionUser = (WTUser) SessionHelper.manager.getPrincipal();
 				};
 				if (!checkUrl(res.url)) {
 					alert("썸네일이 없습니다.\n자동 재변환을 진행합니다.");
-// 					publish(oid);
+					publish(oid);
 					return false;
 				}
 				$.ajax({
@@ -543,18 +543,17 @@ WTUser sessionUser = (WTUser) SessionHelper.manager.getPrincipal();
 	}
 
 	function checkUrl(url) {
-		alert(url);
 		const index = url.indexOf("ContentHolder=");
-// 		if (index !== -1) {
-// 			const str = url.substring(index + "ContentHolder=".length, index + "ContentHolder=".length + 1);
-// 			if (str !== "&") {
-// 				return true;
-// 			} else {
-// 				return false;
-// 			}
-// 		} else {
-// 			return false;
-// 		}
+		if (index !== -1) {
+			const str = url.substring(index + "ContentHolder=".length, index + "ContentHolder=".length + 1);
+			if (str !== "&") {
+				return true;
+			} else {
+				return false;
+			}
+		} else {
+			return false;
+		}
 	}
 
 	// 재변환
