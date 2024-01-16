@@ -118,13 +118,13 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 			</tr>
 			<tr>
 				<th>프로젝트 코드</th>
-				<td class="indent5" colspan="5">
+				<td class="indent5">
 					<input type="text" name="model" id="model" class="width-200">
 					<input type="hidden" name="modelcode" id="modelcode">
 					<img src="/Windchill/extcore/images/delete.png" class="delete" title="삭제" onclick="clearValue('model', 'code')">
 				</td>
 				<th>승인일</th>
-				<td class="indent5">
+				<td class="indent5"  colspan="3">
 					<input type="text" name="approveFrom" id="approveFrom" class="width-100">
 					~
 					<input type="text" name="approveTo" id="approveTo" class="width-100">

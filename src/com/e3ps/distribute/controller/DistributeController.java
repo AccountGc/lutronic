@@ -209,6 +209,7 @@ public class DistributeController extends BaseController {
 		ArrayList<NumberCode> productmethodList = NumberCodeHelper.manager.getArrayCodeList("PRODUCTMETHOD");
 		ArrayList<NumberCode> manufactureList = NumberCodeHelper.manager.getArrayCodeList("MANUFACTURE");
 		ArrayList<NumberCode> finishList = NumberCodeHelper.manager.getArrayCodeList("FINISH");
+		List<Map<String, String>> lifecycleList = CommonUtil.getLifeCycleState("LC_PART");
 		QuantityUnit[] unitList = QuantityUnit.getQuantityUnitSet();
 		
 		ModelAndView model = new ModelAndView();
@@ -219,6 +220,7 @@ public class DistributeController extends BaseController {
 		model.addObject("manufactureList", manufactureList);
 		model.addObject("finishList", finishList);
 		model.addObject("unitList", unitList);
+		model.addObject("lifecycleList", lifecycleList);
 		model.setViewName("/extcore/jsp/distribute/distribute-part-list.jsp");
 		return model;
 	}
@@ -248,6 +250,7 @@ public class DistributeController extends BaseController {
 		ArrayList<NumberCode> manufactureList = NumberCodeHelper.manager.getArrayCodeList("MANUFACTURE");
 		ArrayList<NumberCode> finishList = NumberCodeHelper.manager.getArrayCodeList("FINISH");
 		QuantityUnit[] unitList = QuantityUnit.getQuantityUnitSet();
+		List<Map<String, String>> lifecycleList = CommonUtil.getLifeCycleState("LC_PART");
 		
 		ModelAndView model = new ModelAndView();
 		model.addObject("modelList", modelList);
@@ -257,6 +260,7 @@ public class DistributeController extends BaseController {
 		model.addObject("manufactureList", manufactureList);
 		model.addObject("finishList", finishList);
 		model.addObject("unitList", unitList);
+		model.addObject("lifecycleList", lifecycleList);
 		model.setViewName("/extcore/jsp/distribute/part-list.jsp");
 		return model;
 	}
@@ -296,8 +300,10 @@ public class DistributeController extends BaseController {
 	@GetMapping(value = "/listEO")
 	public ModelAndView listEO() throws Exception{
 		ArrayList<NumberCode> modelList = NumberCodeHelper.manager.getArrayCodeList("MODEL");
+		List<Map<String, String>> lifecycleList = CommonUtil.getLifeCycleState("LC_ECO");
 		ModelAndView model = new ModelAndView();
 		model.addObject("modelList", modelList);
+		model.addObject("lifecycleList", lifecycleList);
 		model.setViewName("/extcore/jsp/distribute/distribute-eo-list.jsp");
 		return model;
 	}
@@ -326,11 +332,60 @@ public class DistributeController extends BaseController {
 		model.setViewName("popup:/distribute/eo-view");
 		return model;
 	}
+	
+	@Description(value="CR 검색 페이지")
+	@GetMapping(value = "/listCR")
+	public ModelAndView listCR() throws Exception {
+		List<Map<String, String>> lifecycleList = CommonUtil.getLifeCycleState("LC_Default");
+		ArrayList<NumberCode> deptcodeList = NumberCodeHelper.manager.getArrayCodeList("DEPTCODE");
+		ArrayList<NumberCode> sectionList = NumberCodeHelper.manager.getArrayCodeList("CHANGESECTION");
+		
+		ModelAndView model = new ModelAndView();
+		model.addObject("lifecycleList", lifecycleList);
+		model.addObject("deptcodeList", deptcodeList);
+		model.addObject("sectionList", sectionList);
+		model.setViewName("/extcore/jsp/distribute/distribute-cr-list.jsp");
+		return model;
+	}
+	
+	@Description(value="ECPR 검색 페이지")
+	@GetMapping(value = "/listECPR")
+	public ModelAndView listECPR() throws Exception {
+		List<Map<String, String>> lifecycleList = CommonUtil.getLifeCycleState("LC_Default");
+		ArrayList<NumberCode> deptcodeList = NumberCodeHelper.manager.getArrayCodeList("DEPTCODE");
+		ArrayList<NumberCode> sectionList = NumberCodeHelper.manager.getArrayCodeList("CHANGESECTION");
+		ArrayList<NumberCode> modelList = NumberCodeHelper.manager.getArrayCodeList("MODEL");
+		
+		ModelAndView model = new ModelAndView();
+		model.addObject("lifecycleList", lifecycleList);
+		model.addObject("deptcodeList", deptcodeList);
+		model.addObject("sectionList", sectionList);
+		model.addObject("modelList", modelList);
+		model.setViewName("/extcore/jsp/distribute/distribute-ecpr-list.jsp");
+		return model;
+	}
+	
+	@Description(value="ECRM 검색 페이지")
+	@GetMapping(value = "/listECRM")
+	public ModelAndView listECRM() throws Exception {
+		List<Map<String, String>> lifecycleList = CommonUtil.getLifeCycleState("LC_Default");
+		ArrayList<NumberCode> deptcodeList = NumberCodeHelper.manager.getArrayCodeList("DEPTCODE");
+		ArrayList<NumberCode> sectionList = NumberCodeHelper.manager.getArrayCodeList("CHANGESECTION");
+		
+		ModelAndView model = new ModelAndView();
+		model.addObject("lifecycleList", lifecycleList);
+		model.addObject("deptcodeList", deptcodeList);
+		model.addObject("sectionList", sectionList);
+		model.setViewName("/extcore/jsp/distribute/distribute-ecrm-list.jsp");
+		return model;
+	}
 		
 	@Description(value="ECO 검색 페이지")
 	@GetMapping(value = "/listECO")
-	public ModelAndView listECO(HttpServletRequest request, HttpServletResponse response) {
+	public ModelAndView listECO() throws Exception {
+		List<Map<String, String>> lifecycleList = CommonUtil.getLifeCycleState("LC_ECO");
 		ModelAndView model = new ModelAndView();
+		model.addObject("lifecycleList", lifecycleList);
 		model.setViewName("/extcore/jsp/distribute/distribute-eco-list.jsp");
 		return model;
 	}

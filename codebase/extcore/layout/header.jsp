@@ -518,8 +518,17 @@ int eca = (int) request.getAttribute("eca");
 				</a>
 				<ul class="nav nav-second-level collapse">
 					<li>
-						<a onclick="moveToPage(this, '/distribute/listEO', '> 설계변경 >EO 검색');">EO 검색</a>
+						<a onclick="moveToPage(this, '/distribute/listEO', '> 설계변경 > EO 검색');">EO 검색</a>
 						<!-- 								<a onclick="moveToPage(this, '/changeECO/listEO', '> 설계변경 >EO 검색');">EO 검색</a> -->
+					</li>
+					<li>
+						<a onclick="moveToPage(this, '/distribute/listCR', '> 설계변경 > CR 검색');">CR 검색</a>
+					</li>
+					<li>
+						<a onclick="moveToPage(this, '/distribute/listECPR', '> 설계변경 > ECPR 검색');">ECPR 검색</a>
+					</li>
+					<li>
+						<a onclick="moveToPage(this, '/distribute/listECRM', '> 설계변경 > ECRM 검색');">ECRM 검색</a>
 					</li>
 					<li>
 						<a onclick="moveToPage(this, '/distribute/listECO', '> 설계변경 > ECO 검색');">ECO 검색</a>

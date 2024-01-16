@@ -6,6 +6,8 @@
 <%@page import="com.e3ps.common.code.NumberCode"%>
 <%@page import="com.e3ps.drawing.service.DrawingHelper"%>
 <%@page import="com.e3ps.common.util.StringUtil"%>
+<%@page import="java.util.Map"%>
+<%@page import="java.util.List"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%
 ArrayList<NumberCode> modelList = (ArrayList<NumberCode>) request.getAttribute("modelList");
@@ -15,6 +17,7 @@ ArrayList<NumberCode> productmethodList = (ArrayList<NumberCode>) request.getAtt
 ArrayList<NumberCode> manufactureList = (ArrayList<NumberCode>) request.getAttribute("manufactureList");
 ArrayList<NumberCode> finishList = (ArrayList<NumberCode>) request.getAttribute("finishList");
 QuantityUnit[] unitList = (QuantityUnit[]) request.getAttribute("unitList");
+List<Map<String, String>> lifecycleList = (List<Map<String, String>>) request.getAttribute("lifecycleList");
 WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 %>
 <!DOCTYPE html>
@@ -93,10 +96,46 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 			</tr>
 			<tr>
 				<th>프로젝트코드</th>
-				<td class="indent5" colspan="5">
+				<td class="indent5">
 					<input type="text" name="model" id="model" class="width-200">
 					<input type="hidden" name="modelcode" id="modelcode">
 					<img src="/Windchill/extcore/images/delete.png" class="delete" title="삭제" onclick="clearValue('model', 'code')">
+				</td>
+				<th>상태</th>
+				<td class="indent5">
+					<select name="state" id="state" class="width-200">
+						<option value="">선택</option>
+						<%
+						for (Map<String, String> lifecycle : lifecycleList) {
+							if (!lifecycle.get("code").equals("TEMPRARY")) {
+						%>
+						<option value="<%=lifecycle.get("code")%>"><%=lifecycle.get("name")%></option>
+						<%
+						}
+						}
+						%>
+					</select>
+				</td>
+				<th>REV</th>
+				<td>
+					&nbsp;
+					<div class="pretty p-switch">
+						<input type="radio" name="latest" value="true" checked="checked">
+						<div class="state p-success">
+							<label>
+								<b>최신REV</b>
+							</label>
+						</div>
+					</div>
+					&nbsp;
+					<div class="pretty p-switch">
+						<input type="radio" name="latest" value="false">
+						<div class="state p-success">
+							<label>
+								<b>모든REV</b>
+							</label>
+						</div>
+					</div>
 				</td>
 			</tr>
 			<tr class="hidden">
@@ -383,7 +422,6 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 					headerHeight : 30,
 					showRowNumColumn : false,
 					showRowCheckColumn : true,
-					rowNumHeaderText : "번호",
 					showAutoNoDataMessage : false,
 					selectionMode : "multipleCells",
 					hoverMode : "singleRow",

@@ -10,7 +10,7 @@
 <%@page import="com.e3ps.common.util.StringUtil"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%
-// ArrayList<NumberCode> modelList = (ArrayList<NumberCode>) request.getAttribute("modelList");
+ArrayList<NumberCode> modelList = (ArrayList<NumberCode>) request.getAttribute("modelList");
 ArrayList<NumberCode> deptcodeList = (ArrayList<NumberCode>) request.getAttribute("deptcodeList");
 ArrayList<NumberCode> matList = (ArrayList<NumberCode>) request.getAttribute("matList");
 ArrayList<NumberCode> productmethodList = (ArrayList<NumberCode>) request.getAttribute("productmethodList");
@@ -96,7 +96,7 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 			</tr>
 			<tr>
 				<th>프로젝트코드</th>
-				<td class="indent5" colspan="5">
+				<td class="indent5">
 					<input type="text" name="model" id="model" class="width-200">
 					<input type="hidden" name="modelcode" id="modelcode">
 					<img src="/Windchill/extcore/images/delete.png" class="delete" title="삭제" onclick="clearValue('model', 'code')">
@@ -426,7 +426,6 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 					headerHeight : 30,
 					showRowNumColumn : false,
 					showRowCheckColumn : true,
-					rowNumHeaderText : "번호",
 					showAutoNoDataMessage : false,
 					selectionMode : "multipleCells",
 					hoverMode : "singleRow",
