@@ -263,7 +263,7 @@ String oid = request.getParameter("oid");
 			width : 100,
 		} ]
 	}, {
-		headerText : "게장 후",
+		headerText : "개정 후",
 		children : [ {
 			dataField : "next_number",
 			dataType : "string",
@@ -363,7 +363,7 @@ String oid = request.getParameter("oid");
 				onClick : function(event) {
 					const oid = event.item.next_oid;
 					if (oid === "") {
-						alert("게장 후 품목이 없습니다.");
+						alert("개정 후 품목이 없습니다.");
 						return false;
 					}
 					const url = getCallUrl("/bom/view?oid=" + oid);

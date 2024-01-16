@@ -68,7 +68,7 @@
 									<%
 									QuerySpec query = new QuerySpec();
 									int idx = query.appendClassList(Notice.class, true);
-									QuerySpecUtils.toOrderBy(query, idx, Notice.class, Notice.CREATE_TIMESTAMP, false);
+									QuerySpecUtils.toOrderBy(query, idx, Notice.class, Notice.CREATE_TIMESTAMP, true);
 									QueryResult rs = PagingSessionHelper.openPagingSession(0, 10, query);
 									int k = 0;
 									while (rs.hasMoreElements()) {
@@ -77,12 +77,12 @@
 										String oid = n.getPersistInfo().getObjectIdentifier().getStringValue();
 									%>
 									<tr>
-										<td style="text-align: center; padding: 3px;"><%=++k%></td>
-										<td style="text-align: left; text-indent: 10px; padding: 3px;">
-											<a href="javascript:view('<%=oid%>');"><b><%=n.getTitle()%></b></a>
+										<td style="text-align: center; padding: 5px;"><%=++k%></td>
+										<td style="text-align: left; text-indent: 10px; padding: 5px;">
+											<a href="javascript:view('<%=oid%>');"><%=n.getTitle()%></a>
 										</td>
-										<td style="text-align: center; padding: 3px;"><%=n.getOwner().getFullName()%></td>
-										<td style="text-align: center; padding: 3px;"><%=n.getCreateTimestamp().toString().substring(0, 10)%></td>
+										<td style="text-align: center; padding: 5px;"><%=n.getOwner().getFullName()%></td>
+										<td style="text-align: center; padding: 5px;"><%=n.getCreateTimestamp().toString().substring(0, 10)%></td>
 									</tr>
 									<%
 									}
@@ -100,7 +100,7 @@
 				const url = getCallUrl("/notice/view?oid=" + oid);
 				_popup(url, 1000, 500, "n");
 			}
-			
+
 			document.addEventListener("DOMContentLoaded", function() {
 			});
 		</script>

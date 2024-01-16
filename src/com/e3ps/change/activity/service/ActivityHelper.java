@@ -739,7 +739,7 @@ public class ActivityHelper {
 
 		QuerySpecUtils.toInnerJoin(query, EChangeActivity.class, EChangeOrder.class, "eoReference.key.id",
 				WTAttributeNameIfc.ID_NAME, idx_eca, idx_eco);
-		QuerySpecUtils.toEquals(query, idx_eco, EChangeActivity.class, "eoReference.key.id", e);
+		QuerySpecUtils.toEquals(query, idx_eca, EChangeActivity.class, "eoReference.key.id", e);
 		QueryResult result = PersistenceHelper.manager.find(query);
 		while (result.hasMoreElements()) {
 			Object[] obj = (Object[]) result.nextElement();
