@@ -1293,114 +1293,118 @@ public class EcoHelper {
 			WTPart next_part = null;
 			WTPart pre_part = null;
 
-			if (!isPast) { // 과거 아닐경우 과거 데이터는 어떻게 할지..???
-				boolean isRight = link.getRightPart();
-				boolean isLeft = link.getLeftPart();
-				// 오른쪽이면 다음 버전 품목을 전송해야한다.. 이게 맞는듯
-				if (isLeft) {
-					// 왼쪽이면 승인됨 데이터..그니깐 개정후 데이터를 보낸다 근데 변경점이 없지만 PDM상에서 버전은 올라간 상태
-					next_part = (WTPart) EChangeUtils.manager.getNext(target);
-					pre_part = target;
-				} else if (isRight) {
-					// 오른쪽 데이터면 애시당초 바귄 대상 품번 그대로 넣어준다..
-					next_part = target;
-					pre_part = SAPHelper.manager.getPre(target, eco);
+			boolean isRight = link.getRightPart();
+			boolean isLeft = link.getLeftPart();
+			// 오른쪽이면 다음 버전 품목을 전송해야한다.. 이게 맞는듯
+			if (isLeft) {
+				// 왼쪽이면 승인됨 데이터..그니깐 개정후 데이터를 보낸다 근데 변경점이 없지만 PDM상에서 버전은 올라간 상태
+				next_part = (WTPart) EChangeUtils.manager.getNext(target);
+				pre_part = target;
+			} else if (isRight) {
+				// 오른쪽 데이터면 애시당초 바귄 대상 품번 그대로 넣어준다..
+				next_part = target;
+				pre_part = SAPHelper.manager.getPre(target, eco);
+			}
+
+			ArrayList<SAPSendBomDTO> sendList = new ArrayList<SAPSendBomDTO>();
+			// 둘다 있을 경우
+			if (pre_part != null && next_part != null) {
+				ArrayList<Object[]> rights = SAPHelper.manager.sendList(next_part);
+				ArrayList<Object[]> lefts = SAPHelper.manager.sendList(pre_part);
+
+				ArrayList<Map<String, Object>> addList = SAPHelper.manager.addList(lefts, rights);
+				ArrayList<Map<String, Object>> removeList = SAPHelper.manager.removeList(lefts, rights);
+
+				// 추가 항목 넣음
+				for (Map<String, Object> add : addList) {
+					String addOid = (String) add.get("oid");
+					WTPart addPart = (WTPart) CommonUtil.getObject(addOid);
+					SAPSendBomDTO addDto = new SAPSendBomDTO();
+					addDto.setParentPartNumber(null);
+					addDto.setChildPartNumber(null);
+					addDto.setNewParentPartNumber(next_part.getNumber());
+					addDto.setNewChildPartNumber(addPart.getNumber());
+					addDto.setQty((int) add.get("qty"));
+					addDto.setUnit((String) add.get("unit"));
+					addDto.setSendType("추가품목");
+					sendList.add(addDto);
+
+					link.setSendType("ADD");
+					PersistenceHelper.manager.modify(link);
+
 				}
 
-				ArrayList<SAPSendBomDTO> sendList = new ArrayList<SAPSendBomDTO>();
-				// 둘다 있을 경우
-				if (pre_part != null && next_part != null) {
-					ArrayList<Object[]> rights = SAPHelper.manager.sendList(next_part);
-					ArrayList<Object[]> lefts = SAPHelper.manager.sendList(pre_part);
+				// 삭제 항목 넣음
+				for (Map<String, Object> remove : removeList) {
+					String removeOid = (String) remove.get("oid");
+					WTPart removePart = (WTPart) CommonUtil.getObject(removeOid);
+					SAPSendBomDTO removeDto = new SAPSendBomDTO();
+					removeDto.setParentPartNumber(pre_part.getNumber());
+					removeDto.setChildPartNumber(removePart.getNumber());
+					removeDto.setNewParentPartNumber(null);
+					removeDto.setNewChildPartNumber(null);
+					removeDto.setQty((int) remove.get("qty"));
+					removeDto.setUnit((String) remove.get("unit"));
+					removeDto.setSendType("삭제품");
+					sendList.add(removeDto);
 
-					ArrayList<Map<String, Object>> addList = SAPHelper.manager.addList(lefts, rights);
-					ArrayList<Map<String, Object>> removeList = SAPHelper.manager.removeList(lefts, rights);
+					EcoPartLink removeLink = EcoPartLink.newEcoPartLink((WTPartMaster) removePart.getMaster(), eco);
+					removeLink.setSendType("REMOVE");
+					removeLink.setVersion(removePart.getVersionIdentifier().getSeries().getValue());
+					removeLink.setBaseline(true);
+					removeLink.setPreOrder(false);
+					removeLink.setRightPart(false);
+					removeLink.setLeftPart(true);
+					removeLink.setPast(false);
+					PersistenceHelper.manager.save(removeLink);
+					// 삭제품 저장
+				}
 
-					// 추가 항목 넣음
-					for (Map<String, Object> add : addList) {
-						String addOid = (String) add.get("oid");
+				// 변경 대상 리스트..
+				ArrayList<SAPSendBomDTO> changeList = SAPHelper.manager.getOneLevel(next_part, eco);
+				Iterator<SAPSendBomDTO> iterator = changeList.iterator();
+				while (iterator.hasNext()) {
+					SAPSendBomDTO dto = iterator.next();
+					dto.setSendType("변경품");
+					String compNum = dto.getNewChildPartNumber();
+
+					// addList에서 같은 newChildPartNumber를 찾으면 changeList에서 제거
+					Iterator<Map<String, Object>> addIterator = addList.iterator();
+					while (addIterator.hasNext()) {
+						Map<String, Object> addMap = addIterator.next();
+						String addOid = (String) addMap.get("oid");
 						WTPart addPart = (WTPart) CommonUtil.getObject(addOid);
-						SAPSendBomDTO addDto = new SAPSendBomDTO();
-						addDto.setParentPartNumber(null);
-						addDto.setChildPartNumber(null);
-						addDto.setNewParentPartNumber(next_part.getNumber());
-						addDto.setNewChildPartNumber(addPart.getNumber());
-						addDto.setQty((int) add.get("qty"));
-						addDto.setUnit((String) add.get("unit"));
-						addDto.setSendType("추가품목");
-						sendList.add(addDto);
-
-						link.setSendType("ADD");
-						PersistenceHelper.manager.modify(link);
-
-					}
-
-					// 삭제 항목 넣음
-					for (Map<String, Object> remove : removeList) {
-						String removeOid = (String) remove.get("oid");
-						WTPart removePart = (WTPart) CommonUtil.getObject(removeOid);
-						SAPSendBomDTO removeDto = new SAPSendBomDTO();
-						removeDto.setParentPartNumber(pre_part.getNumber());
-						removeDto.setChildPartNumber(removePart.getNumber());
-						removeDto.setNewParentPartNumber(null);
-						removeDto.setNewChildPartNumber(null);
-						removeDto.setQty((int) remove.get("qty"));
-						removeDto.setUnit((String) remove.get("unit"));
-						removeDto.setSendType("삭제품");
-						sendList.add(removeDto);
-
-						EcoPartLink removeLink = EcoPartLink.newEcoPartLink((WTPartMaster) removePart.getMaster(), eco);
-						removeLink.setSendType("REMOVE");
-						removeLink.setVersion(removePart.getVersionIdentifier().getSeries().getValue());
-						removeLink.setBaseline(true);
-						removeLink.setPreOrder(false);
-						removeLink.setRightPart(false);
-						removeLink.setLeftPart(true);
-						removeLink.setPast(false);
-						PersistenceHelper.manager.save(removeLink);
-						// 삭제품 저장
-					}
-
-					// 변경 대상 리스트..
-					ArrayList<SAPSendBomDTO> changeList = SAPHelper.manager.getOneLevel(next_part, eco);
-					Iterator<SAPSendBomDTO> iterator = changeList.iterator();
-					while (iterator.hasNext()) {
-						SAPSendBomDTO dto = iterator.next();
-						dto.setSendType("변경품");
-						String compNum = dto.getNewChildPartNumber();
-
-						// addList에서 같은 newChildPartNumber를 찾으면 changeList에서 제거
-						for (Map<String, Object> addMap : addList) {
-							String addOid = (String) addMap.get("oid");
-							WTPart addPart = (WTPart) CommonUtil.getObject(addOid);
-							if (addPart.getNumber().equals(compNum)) {
-								iterator.remove();
-							}
+						if (addPart.getNumber().equals(compNum)) {
+							addIterator.remove();
+							iterator.remove(); // iterator.remove()는 여기서 호출
 						}
-						link.setSendType("CHANGE");
-						PersistenceHelper.manager.modify(link);
 					}
-					sendList.addAll(changeList);
+					link.setSendType("CHANGE");
+					PersistenceHelper.manager.modify(link);
+					// link에 대한 변경이 의도된 것이라면 여기에 두세요
 				}
 
-				for (SAPSendBomDTO dto : sendList) {
+				// 위의 반복문에서 변경된 changeList를 sendList에 추가
+				sendList.addAll(changeList);
+			}
 
-					System.out.println("전송타입 = " + dto.getSendType() + " || 이전부모품번 = " + dto.getParentPartNumber()
-							+ ", " + " 이전자식품번 =  " + dto.getChildPartNumber() + ", 신규부모품번 = "
-							+ dto.getNewParentPartNumber() + ", 신규자식품번 = " + dto.getNewChildPartNumber());
+			for (SAPSendBomDTO dto : sendList) {
 
-					bomTable.insertRow(idx);
-					bomTable.setValue("AENNR8", eco.getEoNumber()); // 변경번호 12자리?
-					bomTable.setValue("SEQNO", df.format(idx)); // 항목번호 ?? 고정인지.. 애매한데
-					bomTable.setValue("MATNR_OLD", dto.getParentPartNumber()); // 이전 모품번
-					bomTable.setValue("IDNRK_OLD", dto.getChildPartNumber()); // 이전 자품번
-					bomTable.setValue("MATNR_NEW", dto.getNewParentPartNumber()); // 기존 모품번
-					bomTable.setValue("IDNRK_NEW", dto.getNewChildPartNumber()); // 기존 자품번
-					bomTable.setValue("MENGE", dto.getQty()); // 수량
-					bomTable.setValue("MEINS", dto.getUnit()); // 단위
-					bomTable.setValue("AENNR12", eco.getEoNumber() + df.format(idx)); // 변경번호 12자리
-					idx++;
-				}
+				System.out.println("전송타입 = " + dto.getSendType() + " || 이전부모품번 = " + dto.getParentPartNumber() + ", "
+						+ " 이전자식품번 =  " + dto.getChildPartNumber() + ", 신규부모품번 = " + dto.getNewParentPartNumber()
+						+ ", 신규자식품번 = " + dto.getNewChildPartNumber());
+
+				bomTable.insertRow(idx);
+				bomTable.setValue("AENNR8", eco.getEoNumber()); // 변경번호 12자리?
+				bomTable.setValue("SEQNO", df.format(idx)); // 항목번호 ?? 고정인지.. 애매한데
+				bomTable.setValue("MATNR_OLD", dto.getParentPartNumber()); // 이전 모품번
+				bomTable.setValue("IDNRK_OLD", dto.getChildPartNumber()); // 이전 자품번
+				bomTable.setValue("MATNR_NEW", dto.getNewParentPartNumber()); // 기존 모품번
+				bomTable.setValue("IDNRK_NEW", dto.getNewChildPartNumber()); // 기존 자품번
+				bomTable.setValue("MENGE", dto.getQty()); // 수량
+				bomTable.setValue("MEINS", dto.getUnit()); // 단위
+				bomTable.setValue("AENNR12", eco.getEoNumber() + df.format(idx)); // 변경번호 12자리
+				idx++;
 			}
 		}
 		function.execute(destination);

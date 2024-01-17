@@ -316,8 +316,8 @@ public class CrHelper {
 	public Map<String, Integer> getDrill() throws Exception {
 		Map<String, Integer> result = new HashMap<>();
 
-		String[] ss = new String[] { "영업/마케팅", "원가 절감", "기능/성능 변경", "공정 변경", "자재 변경", "허가/규제 변경", "품질 개선", "라벨링",
-				"기타" };
+//		String[] ss = new String[] { "영업/마케팅", "원가 절감", "기능/성능 변경", "공정 변경", "자재 변경", "허가/규제 변경", "품질 개선", "라벨링",
+//				"기타" };
 
 		int market = 0;
 		int cost = 0;
@@ -340,35 +340,34 @@ public class CrHelper {
 			if (StringUtil.checkString(a)) {
 				String[] t = a.split(",");
 				for (String tt : t) {
-					for (String s : ss) {
-						if (tt.equals("영업/마케팅")) {
-							++market;
-							result.put(s, market);
-						} else if (tt.equals("원가 절감")) {
-							++cost;
-							result.put(s, cost);
-						} else if (tt.equals("기능/성능 변경")) {
-							++perform;
-							result.put(s, permission);
-						} else if (tt.equals("공정 변경")) {
-							++line;
-							result.put(s, line);
-						} else if (tt.equals("자재 변경")) {
-							++mat;
-							result.put(s, mat);
-						} else if (tt.equals("허가/규제 변경")) {
-							++permission;
-							result.put(s, permission);
-						} else if (tt.equals("품질 개선")) {
-							++product;
-							result.put(s, product);
-						} else if (tt.equals("라벨링")) {
-							++label;
-							result.put(s, label);
-						} else if (tt.equals("기타")) {
-							++etc;
-							result.put(s, etc);
-						}
+					if (tt.equals("영업/마케팅")) {
+						++market;
+						result.put("영업/마케팅", market);
+					} else if (tt.equals("원가 절감")) {
+						++cost;
+						result.put("영업/마케팅", cost);
+					} else if (tt.equals("기능/성능 변경")) {
+						++perform;
+						result.put("기능/성능 변경", permission);
+					} else if (tt.equals("공정 변경")) {
+						++line;
+						result.put("공정 변경", line);
+					} else if (tt.equals("자재 변경")) {
+						++mat;
+						result.put("자재 변경", mat);
+					} else if (tt.equals("허가/규제 변경")) {
+						++permission;
+						result.put("허가/규제 변경", permission);
+					} else if (tt.equals("품질 개선")) {
+						++product;
+						result.put("품질 개선", product);
+					} else if (tt.equals("라벨링")) {
+						++label;
+						result.put("라벨링", label);
+					} else if (tt.equals("기타")) {
+						System.out.println("tt=" + tt);
+						++etc;
+						result.put("기타", etc);
 					}
 				}
 			}
