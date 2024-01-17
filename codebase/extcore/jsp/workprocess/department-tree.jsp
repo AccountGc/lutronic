@@ -68,7 +68,7 @@ String height = request.getParameter("height");
 		const isNew = item.isNew;
 		switch (event.contextIndex) {
 		case 0:
-			addTreeRow(poid);
+			addTreeRow(oid);
 			break;
 		case 1:
 			addRow(poid);
@@ -108,6 +108,7 @@ String height = request.getParameter("height");
 		newItem.poid = oid;
 		newItem.name = "새 부서";
 		newItem.isNew = true;
+		logger(newItem);
 		AUIGrid.addTreeRow(_myGridID, newItem, parentRowId, "selectionDown");
 	}
 	

@@ -463,6 +463,7 @@ function loadGridData(movePage) {
 	const  latest = document.querySelector("input[name=latest]:checked").value;
 	params = toField(params, field);
 	params.latest = JSON.parse(latest);
+	params.eca = false;
 	AUIGrid.showAjaxLoader(myGridID);
 	openLayer();
 	call(url, params, function(data) {

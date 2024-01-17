@@ -155,10 +155,10 @@ public class EpmData {
 					ApplicationData data = (ApplicationData) result.nextElement();
 					String ext = FileUtil.getExtension(data.getFileName());
 					if ("dxf".equalsIgnoreCase(ext)) {
-						this.dxf.put("name", data.getFileName());
+						String name = data.getFileName().replace("_drw", "");
+						this.dxf.put("name", name);
 						this.dxf.put("fileSizeKB", data.getFileSizeKB() + "KB");
-						this.dxf.put("url", ContentHelper
-								.getDownloadURL(representation, data, false, data.getFileName()).toString());
+						this.dxf.put("url", ContentHelper.getDownloadURL(representation, data, false, name).toString());
 					}
 				}
 
@@ -168,10 +168,10 @@ public class EpmData {
 					ApplicationData data = (ApplicationData) result.nextElement();
 					String ext = FileUtil.getExtension(data.getFileName());
 					if ("pdf".equalsIgnoreCase(ext)) {
-						this.pdf.put("name", data.getFileName());
+						String name = data.getFileName().replace("pdf_", "").replace("_drw", "");
+						this.pdf.put("name", name);
 						this.pdf.put("fileSizeKB", data.getFileSizeKB() + "KB");
-						this.pdf.put("url", ContentHelper
-								.getDownloadURL(representation, data, false, data.getFileName()).toString());
+						this.pdf.put("url", ContentHelper.getDownloadURL(representation, data, false, name).toString());
 					}
 				}
 			}

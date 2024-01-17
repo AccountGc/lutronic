@@ -1180,21 +1180,19 @@ public class PartHelper {
 		QuerySpecUtils.toLatest(query, idx_part, WTPart.class);
 		QuerySpecUtils.toOrderBy(query, idx_part, WTPart.class, WTPart.NUMBER, true);
 		QueryResult qr = PersistenceHelper.manager.find(query);
-		if (qr.size() == 0) {
-			if (!isCollectNumber(part.getNumber())) {
-				if (isTopNumber(part.getNumber())) {
-					if (!list.contains(part)) {
-						list.add(part);
-					}
-				}
-			}
-		}
 		while (qr.hasMoreElements()) {
 			Object obj[] = (Object[]) qr.nextElement();
 			if (!(obj[1] instanceof WTPart)) {
 				continue;
 			}
 			WTPart p = (WTPart) obj[1];
+			if (!isCollectNumber(p.getNumber())) {
+				if (isTopNumber(p.getNumber())) {
+					if (!list.contains(p)) {
+						list.add(p);
+					}
+				}
+			}
 			endRecursive(list, p);
 		}
 	}
@@ -1235,15 +1233,6 @@ public class PartHelper {
 		}
 		QuerySpecUtils.toOrderBy(query, idx_part, WTPart.class, WTPart.NUMBER, true);
 		QueryResult qr = PersistenceHelper.manager.find(query);
-		if (qr.size() == 0) {
-			if (!isCollectNumber(part.getNumber())) {
-				if (isTopNumber(part.getNumber())) {
-					if (!list.contains(part)) {
-						list.add(part);
-					}
-				}
-			}
-		}
 
 		while (qr.hasMoreElements()) {
 			Object obj[] = (Object[]) qr.nextElement();
@@ -1251,6 +1240,13 @@ public class PartHelper {
 				continue;
 			}
 			WTPart p = (WTPart) obj[1];
+			if (!isCollectNumber(p.getNumber())) {
+				if (isTopNumber(p.getNumber())) {
+					if (!list.contains(p)) {
+						list.add(p);
+					}
+				}
+			}
 			endRecursive(list, p, baseline);
 		}
 	}

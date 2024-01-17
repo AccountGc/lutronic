@@ -387,6 +387,12 @@ function createAUIGrid(columnLayout) {
 		enableRightDownFocus : true,
 		filterLayerWidth : 320,
 		filterItemMoreMessage : "필터링 검색이 너무 많습니다. 검색을 이용해주세요.",
+		rowCheckableFunction: function (rowIndex, isChecked, item) {
+			if(!item.visible) {
+				return false;
+			}
+			return true;
+		},
 		rowCheckDisabledFunction: function (rowIndex, isChecked, item) {
 			if(!item.visible) {
 				return false;
@@ -412,16 +418,9 @@ function auiCellClick(event) {
 	const rowIdField = AUIGrid.getProp(event.pid, "rowIdField"); // rowIdField 얻기
 	const rowId = item[rowIdField];
 	let complete = false;
-	<%if (complete) {%>
-	if (item.state !== "작업 중") {
-		complete = true;
+	if(!item.visible) {
+		return false;
 	}
-	
-	if(item.number.charAt(0) !== "1") {
-		complete = true;
-	}
-	<%}%>
-	
 	
 	<%if (!multi) {%>
 	// 이미 체크 선택되었는지 검사

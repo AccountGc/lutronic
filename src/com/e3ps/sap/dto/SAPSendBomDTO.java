@@ -30,6 +30,7 @@ public class SAPSendBomDTO {
 	private int qty = 0;
 	private String unit;
 	private String sendType;
+	private String key;
 	
 	public SAPSendBomDTO() {
 		

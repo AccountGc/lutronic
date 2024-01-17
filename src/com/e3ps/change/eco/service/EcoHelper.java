@@ -1336,27 +1336,36 @@ public class EcoHelper {
 				ArrayList<Map<String, Object>> addList = SAPHelper.manager.addList(lefts, rights);
 				ArrayList<Map<String, Object>> removeList = SAPHelper.manager.removeList(lefts, rights);
 
+				ArrayList<String> addKey = new ArrayList<String>();
 				// 추가 항목 넣음
 				for (Map<String, Object> add : addList) {
 					String addOid = (String) add.get("oid");
 					WTPart addPart = (WTPart) CommonUtil.getObject(addOid);
+					// 부모_자식
+					String key = next_part.getNumber() + "_" + addPart.getNumber();
+
 					SAPSendBomDTO addDto = new SAPSendBomDTO();
 					addDto.setParentPartNumber(null);
 					addDto.setChildPartNumber(null);
-
 					addDto.setNewParentPartNumber(next_part.getNumber());
 					addDto.setNewChildPartNumber(addPart.getNumber());
-
 					addDto.setQty((int) add.get("qty"));
 					addDto.setUnit((String) add.get("unit"));
 					addDto.setSendType("추가품목");
-					sendList.add(addDto);
+					addDto.setKey(key);
+
+					if(addKey.contains(key)) {
+						addKey.add(key);)
+						sendList.add(addDto);
+					}
 				}
 
+				ArrayList<String> removeKey = new ArrayList<String>();
 				// 삭제 항목 넣음
 				for (Map<String, Object> remove : removeList) {
 					String removeOid = (String) remove.get("oid");
 					WTPart removePart = (WTPart) CommonUtil.getObject(removeOid);
+					String key = pre_part.getNumber() + "_" +removePart.getNumber();
 					SAPSendBomDTO removeDto = new SAPSendBomDTO();
 					removeDto.setParentPartNumber(pre_part.getNumber());
 					removeDto.setChildPartNumber(removePart.getNumber());
@@ -1365,14 +1374,18 @@ public class EcoHelper {
 					removeDto.setQty((int) remove.get("qty"));
 					removeDto.setUnit((String) remove.get("unit"));
 					removeDto.setSendType("삭제품");
-					sendList.add(removeDto);
+					
+					if(removeKey.contains(key)) {
+						removeKey.add(key);
+						sendList.add(removeDto);
+					}
 				}
 
 				// 변경 대상 리스트..
 				ArrayList<SAPSendBomDTO> changeList = SAPHelper.manager.getOneLevel(next_part, eco);
 				Iterator<SAPSendBomDTO> iterator = changeList.iterator();
 				List<SAPSendBomDTO> itemsToRemove = new ArrayList<>();
-
+//				ArrayList<String> changeKey = new ArrayList<String>();
 				while (iterator.hasNext()) {
 					SAPSendBomDTO dto = iterator.next();
 					dto.setSendType("변경품");
