@@ -37,6 +37,9 @@ String partNumber = request.getParameter("partNumber");
 		headerText : "번호",
 		dataType : "nemeric",
 		width : 40,
+		filter : {
+			inline : false
+		}
 	}, {
 		dataField : "number",
 		headerText : "품목번호",

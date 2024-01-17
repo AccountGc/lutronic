@@ -1491,7 +1491,7 @@ public class PartHelper {
 	 */
 	public Map<String, Object> seq(Map<String, Object> params) throws Exception {
 		Map<String, Object> map = new HashMap<>();
-		ArrayList<Map<String, String>> list = new ArrayList<>();
+		ArrayList<Map<String, Object>> list = new ArrayList<>();
 		String partNumber = (String) params.get("partNumber");
 		String sortKey = (String) params.get("sortKey");
 		String sortType = (String) params.get("sortType"); // 1오름 -1 내림
@@ -1516,7 +1516,8 @@ public class PartHelper {
 		while (result.hasMoreElements()) {
 			Object[] obj = (Object[]) result.nextElement();
 			WTPart part = (WTPart) obj[0];
-			Map<String, String> data = new HashMap<>();
+			Map<String, Object> data = new HashMap<>();
+			data.put("rowNum", rowNum++);
 			data.put("number", part.getNumber());
 			data.put("name", part.getName());
 			data.put("location", part.getLocation());

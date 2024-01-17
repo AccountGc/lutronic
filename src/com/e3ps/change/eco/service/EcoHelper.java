@@ -473,7 +473,14 @@ public class EcoHelper {
 				list.add(map);
 			} else {
 				WTPart pre_part = part;
-
+				map.put("part_oid", pre_part.getPersistInfo().getObjectIdentifier().getStringValue());
+				map.put("part_number", pre_part.getNumber());
+				map.put("part_name", pre_part.getName());
+				map.put("part_state", pre_part.getLifeCycleState().getDisplay());
+				map.put("part_version", pre_part.getVersionIdentifier().getSeries().getValue() + "."
+						+ pre_part.getIterationIdentifier().getSeries().getValue());
+				map.put("part_creator", pre_part.getCreatorFullName());
+				map.put("preMerge", false);
 
 				if (link.isRevise()) {
 					WTPart next_part = (WTPart) EChangeUtils.manager.getNext(part);
@@ -496,14 +503,7 @@ public class EcoHelper {
 						map.put("afterMerge", true);
 					}
 				} else {
-					map.put("next_oid", pre_part.getPersistInfo().getObjectIdentifier().getStringValue());
-					map.put("next_number", pre_part.getNumber());
-					map.put("next_name", pre_part.getName());
-					map.put("next_state", pre_part.getLifeCycleState().getDisplay());
-					map.put("next_version", pre_part.getVersionIdentifier().getSeries().getValue() + "."
-							+ pre_part.getIterationIdentifier().getSeries().getValue());
-					map.put("next_creator", pre_part.getCreatorFullName());
-					map.put("preMerge", false);
+					
 				}
 				list.add(map);
 			}

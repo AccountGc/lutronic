@@ -43,7 +43,7 @@ out.println(drill);
 					<table>
 						<tr>
 							<td class="left">
-								<img style="position: relative; top: 5px; right: 14px;" src="/Windchill/extcore/images/approval.jpg">
+								<img style="position: relative; top: 0px; right: 14px;" src="/Windchill/extcore/images/approval.jpg">
 							</td>
 						</tr>
 					</table>
@@ -53,7 +53,7 @@ out.println(drill);
 					<table>
 						<tr>
 							<td class="left">
-								<img style="position: relative; top: 5px; right: 14px;" src="/Windchill/extcore/images/notice.jpg">
+								<img style="position: relative; top: 0px; right: 14px;" src="/Windchill/extcore/images/notice.jpg">
 								<!-- 								<div style="float: right; position: relative; top: 23px; right: 20px;"> -->
 								<!-- 									<b>+ 더보기</b> -->
 								<!-- 								</div> -->

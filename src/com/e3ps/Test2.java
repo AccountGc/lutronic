@@ -3,6 +3,7 @@ package com.e3ps;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.regex.Pattern;
 
 import org.apache.commons.codec.binary.Base64;
 
@@ -20,12 +21,7 @@ public class Test2 {
 
 	public static void main(String[] args) throws Exception {
 
-		String s = ",CP,NE11,RC09";
-		String[] ss = s.split(",");
-		for (String a : ss) {
-			System.out.println(a);
-		}
-
+		System.out.println(!(Pattern.matches("^[0-9]+$", "VRM4_POLARIZER")));
 		System.exit(0);
 	}
 }
