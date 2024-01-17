@@ -133,7 +133,7 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 			</tr>
 		</table>
 
-		<div id="grid_wrap" style="height: 535px; border-top: 1px solid #3180c3;"></div> 
+		<div id="grid_wrap" style="height: 505px; border-top: 1px solid #3180c3;"></div> 
 		<%@include file="/extcore/jsp/common/aui-context.jsp"%>
 
 		<script type="text/javascript">

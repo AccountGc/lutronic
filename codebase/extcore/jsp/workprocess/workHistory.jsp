@@ -45,7 +45,7 @@ boolean isAuth = (boolean) request.getAttribute("isAuth");
 										<td height="1" width="100%"></td>
 									</tr>
 							</table>
-							<div id="grid_wrap1" style="height: 300px; border-top: 1px solid #3180c3;"></div>
+							<div id="grid_wrap1" style="height: 270px; border-top: 1px solid #3180c3;"></div>
 						</td>
 					</tr>
 				</table>
@@ -63,7 +63,7 @@ boolean isAuth = (boolean) request.getAttribute("isAuth");
 								<img src="/Windchill/extcore/images/header.png">&nbsp;외부 유저 메일
 							</div>
 							<div style="width:100%;overflow-x:hidden;border:1px;border-style:solid;border-color:#5F9EA0;padding:0px;margin:1px 1px 5px;">
-								<div id="grid_wrap2" style="height: 300px; border-top: 1px solid #3180c3;"></div>
+								<div id="grid_wrap2" style="height: 270px; border-top: 1px solid #3180c3;"></div>
 							</div>
 						</td>
 					</tr>

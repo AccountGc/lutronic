@@ -76,7 +76,7 @@ JSONArray data = (JSONArray) request.getAttribute("tree");
 	</colgroup>
 	<tr>
 		<td valign="top">
-			<div id="grid_wrap" style="height: 675px; border-top: 1px solid #3180c3;"></div>
+			<div id="grid_wrap" style="height: 645px; border-top: 1px solid #3180c3;"></div>
 		</td>
 		<td>&nbsp;</td>
 		<td valign="top">

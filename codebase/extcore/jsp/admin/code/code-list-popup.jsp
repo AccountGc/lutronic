@@ -74,7 +74,7 @@ String codeType = (String) request.getAttribute("codeType");
 		</td>
 	</tr>
 </table>
-<div id="grid_wrap" style="height: 700px; border-top: 1px solid #3180c3;"></div>
+<div id="grid_wrap" style="height: 670px; border-top: 1px solid #3180c3;"></div>
 <%@include file="/extcore/jsp/common/aui-context.jsp"%>
 <script type="text/javascript">
 	let myGridID;

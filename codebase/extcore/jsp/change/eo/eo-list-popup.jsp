@@ -147,7 +147,7 @@ boolean multi = (boolean) request.getAttribute("multi");
 	</tr>
 </table>
 
-<div id="grid_wrap" style="height: 410px; border-top: 1px solid #3180c3;"></div>
+<div id="grid_wrap" style="height: 380px; border-top: 1px solid #3180c3;"></div>
 <div id="grid_paging" class="aui-grid-paging-panel my-grid-paging-panel"></div>
 <%@include file="/extcore/jsp/common/aui-context.jsp"%>
 <script type="text/javascript">

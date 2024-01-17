@@ -85,11 +85,11 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 			</colgroup>
 			<tr>
 				<td valign="top">
-					<div id="grid_type" style="height: 705px; border-top: 1px solid #3180c3;"></div>
+					<div id="grid_type" style="height: 675px; border-top: 1px solid #3180c3;"></div>
 				</td>
 				<td valign="top">&nbsp;</td>
 				<td valign="top">
-					<div id="grid_wrap" style="height: 670px; border-top: 1px solid #3180c3;"></div>
+					<div id="grid_wrap" style="height: 640px; border-top: 1px solid #3180c3;"></div>
 					<div id="grid_paging" class="aui-grid-paging-panel my-grid-paging-panel"></div>
 					<%@include file="/extcore/jsp/common/aui-context.jsp"%>
 				</td>

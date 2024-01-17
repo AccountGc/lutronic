@@ -33,7 +33,7 @@ ArrayList<RohsData> rohsList = (ArrayList<RohsData>) request.getAttribute("rohsL
 				</td>
 			</tr>
 		</table>
-		<div id="grid_wrap" style="height: 785px; border-top: 1px solid #3180c3;"></div>
+		<div id="grid_wrap" style="height: 755px; border-top: 1px solid #3180c3;"></div>
 		<script type="text/javascript">
 			let myGridID;
 			const lifecycleList = [ {

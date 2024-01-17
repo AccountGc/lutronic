@@ -187,7 +187,7 @@ String state = (String) request.getAttribute("state");
 	</tr>
 </table>
 
-<div id="grid_wrap" style="height: 380px; border-top: 1px solid #3180c3;"></div>
+<div id="grid_wrap" style="height: 350px; border-top: 1px solid #3180c3;"></div>
 <%@include file="/extcore/jsp/common/aui-context.jsp"%>
 <div id="grid_paging" class="aui-grid-paging-panel my-grid-paging-panel"></div>
 <script type="text/javascript">

@@ -129,7 +129,7 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 			</tr>
 		</table>
 
-		<div id="grid_wrap" style="height: 570px; border-top: 1px solid #3180c3;"></div> <%@include file="/extcore/jsp/common/aui-context.jsp"%>
+		<div id="grid_wrap" style="height: 540px; border-top: 1px solid #3180c3;"></div> <%@include file="/extcore/jsp/common/aui-context.jsp"%>
 
 		<script type="text/javascript">
 			let myGridID;

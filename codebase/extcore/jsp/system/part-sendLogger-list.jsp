@@ -98,7 +98,7 @@ WTUser user = (WTUser) request.getAttribute("sessionUser");
 				</td>
 			</tr>
 		</table>
-		<div id="grid_wrap" style="height: 640px; border-top: 1px solid #3180c3;"></div>
+		<div id="grid_wrap" style="height: 610px; border-top: 1px solid #3180c3;"></div>
 		<div id="grid_paging" class="aui-grid-paging-panel my-grid-paging-panel"></div>
 		<%@include file="/extcore/jsp/common/aui-context.jsp"%>
 

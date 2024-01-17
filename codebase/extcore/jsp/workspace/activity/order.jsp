@@ -116,7 +116,7 @@ ArrayList<Map<String, Object>> list = (ArrayList<Map<String, Object>>) request.g
 			</tr>
 		</table>
 
-		<div id="grid_wrap" style="height: 470px; border-top: 1px solid #3180c3;"></div>
+		<div id="grid_wrap" style="height: 440px; border-top: 1px solid #3180c3;"></div>
 		<script>
 			let myGridiD;
 			const part_result_code = [ {

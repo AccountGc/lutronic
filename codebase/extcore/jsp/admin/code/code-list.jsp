@@ -115,7 +115,7 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 				</td>
 				<td valign="top">&nbsp;</td>
 				<td valign="top">
-					<div id="grid_wrap" style="height: 670px; border-top: 1px solid #3180c3;"></div>
+					<div id="grid_wrap" style="height: 640px; border-top: 1px solid #3180c3;"></div>
 				</td>
 			</tr>
 		</table>

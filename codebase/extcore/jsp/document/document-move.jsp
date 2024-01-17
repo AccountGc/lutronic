@@ -37,7 +37,7 @@ JSONArray moveList = (JSONArray) request.getAttribute("moveList");
 	</colgroup>
 	<tr>
 		<td>
-			<div id="grid_wrap1" style="height: 530px; border-top: 1px solid #3180c3;"></div>
+			<div id="grid_wrap1" style="height: 500px; border-top: 1px solid #3180c3;"></div>
 		</td>
 		<td>&nbsp;</td>
 		<td valign="middle">
@@ -56,7 +56,7 @@ JSONArray moveList = (JSONArray) request.getAttribute("moveList");
 		</td>
 		<td>&nbsp;</td>
 		<td>
-			<div id="grid_wrap2" style="height: 530px; border-top: 1px solid #3180c3;"></div>
+			<div id="grid_wrap2" style="height: 500px; border-top: 1px solid #3180c3;"></div>
 		</td>
 	</tr>
 </table>

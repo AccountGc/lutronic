@@ -21,7 +21,7 @@ String distribute = (String) request.getAttribute("distribute");
 						</td>
 					</tr>
 				</table>
-				<div id="grid_wrap" style="height: 500px; border-top: 1px solid #3180c3;"></div>
+				<div id="grid_wrap" style="height: 470px; border-top: 1px solid #3180c3;"></div>
 			</td>
 		</tr>
 	</table>

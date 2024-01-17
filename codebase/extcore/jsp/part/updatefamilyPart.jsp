@@ -42,7 +42,7 @@ String oid = (String) request.getAttribute("oid");
 						<td height=1 width=100%></td>
 					</tr>
 				</table>
-				<div id="grid_wrap" style="height: 670px; border-top: 1px solid #3180c3;"></div>
+				<div id="grid_wrap" style="height: 640px; border-top: 1px solid #3180c3;"></div>
 		</td>
 	</tr>
 </table>

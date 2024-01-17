@@ -88,7 +88,7 @@ WTPart root = (WTPart) request.getAttribute("root");
 	</colgroup>
 	<tr>
 		<td valign="top">
-			<div id="grid_wrap" style="height: 675px; border-top: 1px solid #3180c3;"></div>
+			<div id="grid_wrap" style="height: 645px; border-top: 1px solid #3180c3;"></div>
 		</td>
 		<td>&nbsp;</td>
 		<td valign="top">
@@ -121,7 +121,7 @@ WTPart root = (WTPart) request.getAttribute("root");
 					</td>
 				</tr>
 			</table>
-			<div id="grid_wrap2" style="height: 565px; border-top: 1px solid #3180c3;"></div>
+			<div id="grid_wrap2" style="height: 535px; border-top: 1px solid #3180c3;"></div>
 			<div id="grid_paging" class="aui-grid-paging-panel my-grid-paging-panel"></div>
 		</td>
 	</tr>
