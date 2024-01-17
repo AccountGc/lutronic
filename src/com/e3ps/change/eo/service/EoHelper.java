@@ -323,9 +323,15 @@ public class EoHelper {
 			for (int i = 0; i < ss.length; i++) {
 				String s = ss[i];
 				if (ss.length - 1 == i) {
-					display += NumberCodeHelper.manager.getNumberCodeName(s, "MODEL");
+					NumberCode n = NumberCodeHelper.manager.getNumberCode(s, "MODEL");
+					if (n != null) {
+						display += s + " [" + n.getName() + "]";
+					}
 				} else {
-					display += NumberCodeHelper.manager.getNumberCodeName(s, "MODEL") + ",";
+					NumberCode n = NumberCodeHelper.manager.getNumberCode(s, "MODEL");
+					if (n != null) {
+						display += s + " [" + n.getName() + "], ";
+					}
 				}
 			}
 		}

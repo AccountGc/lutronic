@@ -198,6 +198,14 @@ boolean multi = (boolean) request.getAttribute("multi");
 <script type="text/javascript">
 	let myGridID;
 	const columns = [ {
+		dataField : "rowNum",
+		headerText : "번호",
+		width : 40,
+		dataType : "numeric",
+		filter : {
+			inline : false
+		},
+	}, {
 		dataField : "number",
 		headerText : "ECO 번호",
 		dataType : "string",
@@ -209,7 +217,7 @@ boolean multi = (boolean) request.getAttribute("multi");
 		style : "aui-left",
 	}, {
 		dataField : "model",
-		headerText : "제품",
+		headerText : "프로젝트 코드 [명]",
 		dataType : "string",
 		width : 250,
 		style : "aui-left"
@@ -259,12 +267,12 @@ boolean multi = (boolean) request.getAttribute("multi");
 	function createAUIGrid(columnLayout) {
 		const props = {
 			headerHeight : 30,
-			showRowNumColumn : true,
+			showRowNumColumn : false,
 			showRowCheckColumn : true,
 			<%if (!multi) {%>
 			rowCheckToRadio : true,
 			<%}%>
-			rowNumHeaderText : "번호",
+// 			rowNumHeaderText : "번호",
 			showAutoNoDataMessage : false,
 			selectionMode : "multipleCells",
 			hoverMode : "singleRow",
@@ -328,7 +336,7 @@ boolean multi = (boolean) request.getAttribute("multi");
 			AUIGrid.removeAjaxLoader(myGridID);
 			if (data.result) {
 				totalPage = Math.ceil(data.total / data.pageSize);
-				createPagingNavigator(data.curPage, data.sessionid);
+				createPagingNavigator(data.total, data.curPage, data.sessionid);
 				AUIGrid.setGridData(myGridID, data.list);
 			} else {
 				alert(data.msg);

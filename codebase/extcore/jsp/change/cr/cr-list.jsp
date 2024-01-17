@@ -209,7 +209,7 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 					},
 				}, {
 					dataField : "model",
-					headerText : "제품명",
+					headerText : "프로젝트 코드 [명]",
 					dataType : "string",
 					width : 220,
 					style : "aui-left",

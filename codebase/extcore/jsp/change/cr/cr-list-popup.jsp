@@ -180,7 +180,7 @@ boolean multi = (boolean) request.getAttribute("multi");
 		width : 300,
 	}, {
 		dataField : "model",
-		headerText : "제품명",
+		headerText : "프로젝트 코드 [명]",
 		dataType : "string",
 		width : 220,
 		style : "aui-left",

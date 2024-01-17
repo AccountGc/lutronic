@@ -19,7 +19,8 @@ WTPart part = (WTPart) CommonUtil.getObject(oid);
 
 ArrayList<WTPart> list = new ArrayList<>();
 endRecursive(list, part);
-out.println(list.size());
+out.println(part.getNumber() + "<br>");
+out.println(list.size() + "<br>");
 for (WTPart p : list) {
 	out.println(p.getNumber() + "<br>");
 }
@@ -64,10 +65,10 @@ for (WTPart p : list) {
 				continue;
 			}
 			WTPart p = (WTPart) obj[1];
-			if (!isCollectNumber(part.getNumber())) {
-				if (isTopNumber(part.getNumber())) {
-					if (!list.contains(part)) {
-						list.add(part);
+			if (!isCollectNumber(p.getNumber())) {
+				if (isTopNumber(p.getNumber())) {
+					if (!list.contains(p)) {
+						list.add(p);
 					}
 				}
 			}

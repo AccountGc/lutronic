@@ -231,7 +231,7 @@ function createAUIGrid(columnLayout) {
 		<%if (!multi) {%>
 		rowCheckToRadio : true,
 		<%}%>
-		rowNumHeaderText : "번호",
+// 		rowNumHeaderText : "번호",
 		showAutoNoDataMessage : false,
 		selectionMode : "multipleCells",
 		hoverMode : "singleRow",

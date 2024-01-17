@@ -90,7 +90,7 @@ if(view || update){
 		},
 	}, {
 		dataField : "model",
-		headerText : "제품",
+		headerText : "프로젝트 코드 [명]",
 		dataType : "string",
 		width : 250,
 		style : "aui-left"

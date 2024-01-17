@@ -44,8 +44,8 @@ import com.e3ps.change.eco.dto.EcoDTO;
 import com.e3ps.change.ecpr.column.EcprColumn;
 import com.e3ps.change.ecrm.column.EcrmColumn;
 import com.e3ps.change.util.EChangeUtils;
+import com.e3ps.common.code.NumberCode;
 import com.e3ps.common.code.service.NumberCodeHelper;
-import com.e3ps.common.iba.IBAUtil;
 import com.e3ps.common.iba.IBAUtils;
 import com.e3ps.common.util.AUIGridUtil;
 import com.e3ps.common.util.CommonUtil;
@@ -60,8 +60,6 @@ import com.e3ps.part.service.PartHelper;
 import com.e3ps.sap.conn.SAPDev600Connection;
 import com.e3ps.sap.dto.SAPSendBomDTO;
 import com.e3ps.sap.service.SAPHelper;
-import com.e3ps.sap.util.SAPUtil;
-import com.e3ps.system.service.SystemHelper;
 import com.ibm.icu.text.DecimalFormat;
 import com.sap.conn.jco.JCoDestination;
 import com.sap.conn.jco.JCoDestinationManager;
@@ -74,7 +72,6 @@ import wt.content.ApplicationData;
 import wt.content.ContentHelper;
 import wt.content.ContentItem;
 import wt.content.ContentRoleType;
-import wt.doc.WTDocument;
 import wt.epm.EPMDocument;
 import wt.fc.PagingQueryResult;
 import wt.fc.PersistenceHelper;
@@ -266,9 +263,15 @@ public class EcoHelper {
 				String s = ss[i];
 				if (s.length() > 0) {
 					if (ss.length - 1 == i) {
-						display += NumberCodeHelper.manager.getNumberCodeName(s, "MODEL");
+						NumberCode n = NumberCodeHelper.manager.getNumberCode(s, "MODEL");
+						if (n != null) {
+							display += s + " [" + n.getName() + "]";
+						}
 					} else {
-						display += NumberCodeHelper.manager.getNumberCodeName(s, "MODEL") + ",";
+						NumberCode n = NumberCodeHelper.manager.getNumberCode(s, "MODEL");
+						if (n != null) {
+							display += s + " [" + n.getName() + "], ";
+						}
 					}
 				}
 			}

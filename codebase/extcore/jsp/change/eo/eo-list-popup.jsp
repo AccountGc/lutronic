@@ -153,6 +153,14 @@ boolean multi = (boolean) request.getAttribute("multi");
 <script type="text/javascript">
 let myGridID;
 const columns = [ {
+	dataField : "rowNum",
+	headerText : "번호",
+	width : 40,
+	dataType : "numeric",
+	filter : {
+		inline : false
+	},
+},{
 	dataField : "number",
 	headerText : "EO 번호",
 	dataType : "string",
@@ -164,7 +172,7 @@ const columns = [ {
 	style : "aui-left",
 }, {
 	dataField : "model",
-	headerText : "제품명",
+	headerText : "프로젝트 코드 [명]",
 	dataType : "string",
 	width : 250,
 }, {
@@ -192,12 +200,12 @@ const columns = [ {
 function createAUIGrid(columnLayout) {
 	const props = {
 		headerHeight : 30,
-		showRowNumColumn : true,
+		showRowNumColumn : false,
 		showRowCheckColumn : true,
 		<%if (!multi) {%>
 		rowCheckToRadio : true,
 		<%}%>
-		rowNumHeaderText : "번호",
+// 		rowNumHeaderText : "번호",
 		showAutoNoDataMessage : false,
 		selectionMode : "multipleCells",
 		hoverMode : "singleRow",
@@ -244,7 +252,11 @@ function auiCellClick(event) {
 	<%}%>
 }
 
-function loadGridData() {
+function loadGridData(movePage) {
+	if (movePage === undefined) {
+		document.getElementById("sessionid").value = 0;
+		document.getElementById("curPage").value = 1;
+	}
 	let params = new Object();
 	const url = getCallUrl("/eo/list");
 	const field = [ "name", "number", "createdFrom", "createdTo", "creatorOid", "state", "licensing", "model", "sortCheck", "sortValue", "riskType", "approveFrom", "approveTo" ];
@@ -257,8 +269,7 @@ function loadGridData() {
 		AUIGrid.removeAjaxLoader(myGridID);
 		if (data.result) {
 			totalPage = Math.ceil(data.total / data.pageSize);
-			document.getElementById("sessionid").value = data.sessionid;
-			createPagingNavigator(data.curPage);
+			createPagingNavigator(data.total, data.curPage, data.sessionid);
 			AUIGrid.setGridData(myGridID, data.list);
 		} else {
 			alert(data.msg);
