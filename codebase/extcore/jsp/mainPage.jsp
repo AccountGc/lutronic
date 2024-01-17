@@ -8,7 +8,8 @@
 <%@page import="wt.org.WTUser"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%
-Map<String, ArrayList<Map<String, Integer>>> dataMap = (Map<String, ArrayList<Map<String, Integer>>>) request.getAttribute("dataMap");
+Map<String, ArrayList<Map<String, Integer>>> dataMap = (Map<String, ArrayList<Map<String, Integer>>>) request
+		.getAttribute("dataMap");
 String start = (String) request.getAttribute("start");
 ArrayList<Map<String, Integer>> complete = (ArrayList<Map<String, Integer>>) dataMap.get("complete");
 ArrayList<Map<String, Integer>> progress = (ArrayList<Map<String, Integer>>) dataMap.get("progress");
@@ -28,7 +29,7 @@ ArrayList<Map<String, Integer>> progress = (ArrayList<Map<String, Integer>>) dat
 <body>
 	<form>
 		<!-- 결재 및 공지사항 -->
-		<table style="height: 400px; border: 1px solid black;">
+		<table style="height: 400px;">
 			<colgroup>
 				<col width="49%">
 				<col width="30px;">
@@ -120,7 +121,83 @@ ArrayList<Map<String, Integer>> progress = (ArrayList<Map<String, Integer>>) dat
 				<col width="50%">
 			</colgroup>
 			<tr>
-				<td>&nbsp;</td>
+				<td>
+					<div id="container1"></div>
+					<script type="text/javascript">
+					Highcharts.chart('container1', {
+					    chart: {
+					        type: 'bar'
+					    },
+					    title: {
+					        text: 'Historic World Population by Region',
+					        align: 'left'
+					    },
+					    subtitle: {
+					        text: 'Source: <a ' +
+					            'href="https://en.wikipedia.org/wiki/List_of_continents_and_continental_subregions_by_population"' +
+					            'target="_blank">Wikipedia.org</a>',
+					        align: 'left'
+					    },
+					    xAxis: {
+					        categories: ['Africa', 'America', 'Asia', 'Europe'],
+					        title: {
+					            text: null
+					        },
+					        gridLineWidth: 1,
+					        lineWidth: 0
+					    },
+					    yAxis: {
+					        min: 0,
+					        title: {
+					            text: 'Population (millions)',
+					            align: 'high'
+					        },
+					        labels: {
+					            overflow: 'justify'
+					        },
+					        gridLineWidth: 0
+					    },
+					    tooltip: {
+					        valueSuffix: ' millions'
+					    },
+					    plotOptions: {
+					        bar: {
+					            borderRadius: '50%',
+					            dataLabels: {
+					                enabled: true
+					            },
+					            groupPadding: 0.1
+					        }
+					    },
+					    legend: {
+					        layout: 'vertical',
+					        align: 'right',
+					        verticalAlign: 'top',
+					        x: -40,
+					        y: 80,
+					        floating: true,
+					        borderWidth: 1,
+					        backgroundColor:
+					            Highcharts.defaultOptions.legend.backgroundColor || '#FFFFFF',
+					        shadow: true
+					    },
+					    credits: {
+					        enabled: false
+					    },
+					    series: [{
+					        name: 'Year 1990',
+					        data: [631, 727, 3202, 721]
+					    }, {
+					        name: 'Year 2000',
+					        data: [814, 841, 3714, 726]
+					    }, {
+					        name: 'Year 2018',
+					        data: [1276, 1007, 4561, 746]
+					    }]
+					});
+					</script>
+				</td>
+
 				<td>
 					<div id="container"></div>
 					<script type="text/javascript">
@@ -134,14 +211,10 @@ ArrayList<Map<String, Integer>> progress = (ArrayList<Map<String, Integer>>) dat
 							},
 							xAxis : {
 								categories : [ 
-									<%
-										for(int i=0; i<5; i++) {
-											String s = String.valueOf(Integer.parseInt(start) + i);
-									%>
+									<%for (int i = 0; i < 5; i++) {
+	String s = String.valueOf(Integer.parseInt(start) + i);%>
 									'<%=s%>년',
-									<%
-										}
-									%>
+									<%}%>
 								]
 							},
 							yAxis : {
@@ -156,28 +229,18 @@ ArrayList<Map<String, Integer>> progress = (ArrayList<Map<String, Integer>>) dat
 							series : [ {
 								name : '진행중',
 								data : [ 
-									<%
-									for(int i=0; i<progress.size(); i++) {
-										Map<String, Integer> map = (Map<String, Integer>) progress.get(i);
-										System.out.println(map);
-									%>
-									<%=map.get(start+i)%>,
-									<%
-									}
-									%>
+									<%for (int i = 0; i < progress.size(); i++) {
+	Map<String, Integer> map = (Map<String, Integer>) progress.get(i);%>
+									<%=map.get(start + i)%>,
+									<%}%>
 								]
 							}, {
 								name : '완료됨',
 								data : [
-									<%
-									for(int i=0; i<complete.size(); i++) {
-										Map<String, Integer> map = (Map<String, Integer>) complete.get(i);
-										System.out.println(map);
-									%>
-									<%=map.get(start+i)%>,
-									<%
-									}
-									%>
+									<%for (int i = 0; i < complete.size(); i++) {
+	Map<String, Integer> map = (Map<String, Integer>) complete.get(i);%>
+									<%=map.get(start + i)%>,
+									<%}%>
 									
 								]	
 							} ]
