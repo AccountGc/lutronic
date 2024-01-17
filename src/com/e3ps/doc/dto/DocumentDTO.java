@@ -265,7 +265,6 @@ public class DocumentDTO {
 	 */
 	private void setAuth(WTDocument doc) throws Exception {
 		boolean isAdmin = CommonUtil.isAdmin();
-		RevisionControlled
 		boolean isCreator = CommonUtil.isCreator(doc);
 		// 승인된경우 프린트
 		if (check(doc, "APPROVED")) {
