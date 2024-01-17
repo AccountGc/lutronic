@@ -44,43 +44,22 @@ WTUser sessionUser = (WTUser) SessionHelper.manager.getPrincipal();
 			<%
 			}
 			%>
-			<input type="button" value="BOM" title="BOM" onclick="view();">
-			<input type="button" value="BOM 에디터" title="BOM 에디터" onclick="editor();">
-			<input type="button" value="COMPARE" title="COMPARE" onclick="compare();">
+			<input type="button" value="BOM 보기" title="BOM 보기" onclick="view();">
+			<input type="button" value="BOM 비교" title="BOM 비교" onclick="compare();" class="blue">
 			<%
-			if ("DEATH".equals(dto.getState()) && isAdmin) {
+				if(dto.is_modify()) {
 			%>
-			<input type="button" value="복원" title="복원" onclick="restore();">
-			<%
-			}
-			%>
+			<input type="button" value="BOM 편집" title="BOM 편집" onclick="editor();" class="gray">
 			<input type="button" value="속성 CLEARING" class="red" title="속성 CLEARING" onclick="_clean();">
-
 			<input type="button" value="일괄 수정" title="일괄 수정" onclick="packageUpdate();">
-			<%
-			// 			if (isAdmin) {
-			%>
 			<input type="button" value="수정" title="수정" class="blue" onclick="update();">
 			<input type="button" value="삭제" title="삭제" class="red" onclick="_delete();">
 			<input type="button" value="채번" title="채번" onclick="change();">
-			<%
-			if (dto.is_modify()) {
-			%>
 			<input type="button" value="채번(새버전)" title="채번(새버전)" class="blue" onclick="order();">
 			<%
 			}
 			%>
-			<%
-			// 			}
-			%>
 			<input type="button" value="닫기" title="닫기" class="gray" onclick="self.close();">
-			<%
-			if ("DEV_APPROVED".equals(dto.getState())) {
-			%>
-			<input type="button" value="상태변경" title="상태변경" onclick="changeDev();">
-			<%
-			}
-			%>
 		</td>
 	</tr>
 </table>

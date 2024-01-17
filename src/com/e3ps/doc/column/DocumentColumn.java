@@ -2,6 +2,7 @@ package com.e3ps.doc.column;
 
 import java.sql.Timestamp;
 
+import com.e3ps.common.code.NumberCode;
 import com.e3ps.common.code.service.NumberCodeHelper;
 import com.e3ps.common.iba.IBAUtils;
 import com.e3ps.common.util.AUIGridUtil;
@@ -122,6 +123,10 @@ public class DocumentColumn {
 	 * IBA 코드값 디스플레이값으로 변경
 	 */
 	private String keyToValue(String code, String codeType) throws Exception {
-		return NumberCodeHelper.manager.getNumberCodeName(code, codeType);
+		NumberCode n = NumberCodeHelper.manager.getNumberCode(code, codeType);
+		if (n != null) {
+			return n.getCode() + "[" + n.getName() + "]";
+		}
+		return "";
 	}
 }

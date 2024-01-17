@@ -812,7 +812,7 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 				}
 
 				const oid = document.getElementById("oid").value;
-				const description = document.getElementById("description").value;
+// 				const description = document.getElementById("description").value;
 
 				if (!confirm("BOM 편집을 완료했는지 한번 더 확인 해주세요.")) {
 					return false;
@@ -825,7 +825,7 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 				const url = getCallUrl("/activity/complete");
 				const params = {
 					oid : oid,
-					description : description,
+					description : "",
 					secondarys : secondarys,
 				};
 				parent.openLayer();

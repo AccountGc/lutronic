@@ -17,12 +17,14 @@ String height = request.getParameter("height");
 		dataField : "name",
 		headerText : "폴더명",
 		dataType : "string",
+// 		width : 250,
 	} ]
 
 	function _createAUIGrid(columnLayout) {
 		const props = {
 			rowIdField : "oid",
 			headerHeight : 30,
+			showAutoNoDataMessage : false,
 			showRowNumColumn : true,
 			rowNumHeaderText : "번호",
 			selectionMode : "multipleCells",

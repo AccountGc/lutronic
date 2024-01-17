@@ -24,11 +24,11 @@ boolean isAdmin = (boolean) request.getAttribute("isAdmin");
 			}
 			%>
 			<%
-			if (dto.is_validate()) {
+			// 			if (dto.is_validate()) {
 			%>
 			<input type="button" value="SAP검증" title="SAP검증" class="gray" onclick="validate();">
 			<%
-			}
+			// 			}
 			%>
 			<%
 			if (dto.is_modify()) {
@@ -107,7 +107,7 @@ boolean isAdmin = (boolean) request.getAttribute("isAdmin");
 			<tr>
 				<th class="lb">제품명</th>
 				<td class="indent5" colspan="3"><%=dto.getModel_name()%></td>
-			</tr>			
+			</tr>
 			<tr>
 				<th class="lb">변경사항</th>
 				<td colspan="3" class="indent5">
@@ -266,6 +266,28 @@ boolean isAdmin = (boolean) request.getAttribute("isAdmin");
 
 	function modify() {
 		document.location.href = getCallUrl("/eco/modify?oid=" + oid);
+	}
+
+	function validate() {
+		if (!confirm("SAP 실제 전송전 검증을 진행합니다.")) {
+			return false;
+		}
+		const oid = document.getElementById("oid").value;
+		const url = getCallUrl("/eco/validate");
+		const params = {
+			oid : oid
+		};
+		openLayer();
+		call(url, params, function(data) {
+			if (data.result) {
+				if (data.isValidate) {
+					alert("SAP 전송 검증이 성공하였습니다.");
+				} else {
+					alert("SAP 전송 검증시 실패 내역이 있습니다.");
+				}
+			}
+			closeLayer();
+		});
 	}
 
 	function excel() {

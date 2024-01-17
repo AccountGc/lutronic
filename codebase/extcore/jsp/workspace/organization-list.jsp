@@ -133,7 +133,7 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 			const list =
 		<%=list%>
 			;
-			const duty = [ "사장", "부사장" ];
+			const duty = [ "본부장", "마스터", "팀장", "프로" ];
 			const auths = [ "나의업무", "문서관리", "품목관리", "도면관리", "설계변경", "RoHS", "금형관리" ];
 			function _layout() {
 				return [ {

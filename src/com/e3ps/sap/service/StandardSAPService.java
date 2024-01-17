@@ -422,6 +422,7 @@ public class StandardSAPService extends StandardManager implements SAPService {
 						addDto.setNewChildPartNumber(addPart.getNumber());
 						addDto.setQty((int) add.get("qty"));
 						addDto.setUnit((String) add.get("unit"));
+						addDto.setSendType("추가");
 						sendList.add(addDto);
 
 						link.setSendType("ADD");
@@ -440,6 +441,7 @@ public class StandardSAPService extends StandardManager implements SAPService {
 						removeDto.setNewChildPartNumber(null);
 						removeDto.setQty((int) remove.get("qty"));
 						removeDto.setUnit((String) remove.get("unit"));
+						removeDto.setSendType("삭제");
 						sendList.add(removeDto);
 
 						EcoPartLink removeLink = EcoPartLink.newEcoPartLink((WTPartMaster) removePart.getMaster(), eco);
@@ -459,6 +461,7 @@ public class StandardSAPService extends StandardManager implements SAPService {
 					Iterator<SAPSendBomDTO> iterator = changeList.iterator();
 					while (iterator.hasNext()) {
 						SAPSendBomDTO dto = iterator.next();
+						dto.setSendType("변경");
 						String compNum = dto.getNewChildPartNumber();
 
 						// addList에서 같은 newChildPartNumber를 찾으면 changeList에서 제거
@@ -477,9 +480,9 @@ public class StandardSAPService extends StandardManager implements SAPService {
 
 				for (SAPSendBomDTO dto : sendList) {
 
-					System.out.println("이전부모품번 = " + dto.getParentPartNumber() + ", " + " 이전자식품번 =  "
-							+ dto.getChildPartNumber() + ", 신규부모품번 = " + dto.getNewParentPartNumber() + ", 신규자식품번 = "
-							+ dto.getNewChildPartNumber());
+					System.out.println("전송타입 = " + dto.getSendType() + " || 이전부모품번 = " + dto.getParentPartNumber()
+							+ ", " + " 이전자식품번 =  " + dto.getChildPartNumber() + ", 신규부모품번 = "
+							+ dto.getNewParentPartNumber() + ", 신규자식품번 = " + dto.getNewChildPartNumber());
 
 					bomTable.insertRow(idx);
 					bomTable.setValue("AENNR8", eco.getEoNumber()); // 변경번호 12자리?

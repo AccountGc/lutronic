@@ -2,6 +2,7 @@ package com.e3ps.change.activity.service;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
@@ -18,6 +19,7 @@ import com.e3ps.change.EOActivityLink;
 import com.e3ps.change.EcoPartLink;
 import com.e3ps.change.RequestOrderLink;
 import com.e3ps.change.activity.dto.ActDTO;
+import com.e3ps.change.activity.dto.ActivityComparator;
 import com.e3ps.change.activity.dto.DefDTO;
 import com.e3ps.change.util.EChangeUtils;
 import com.e3ps.common.code.NumberCode;
@@ -28,6 +30,7 @@ import com.e3ps.common.util.PageQueryUtils;
 import com.e3ps.common.util.QuerySpecUtils;
 import com.e3ps.common.util.StringUtil;
 import com.e3ps.doc.service.DocumentHelper;
+import com.e3ps.part.bom.util.BomComparator;
 import com.e3ps.part.service.PartHelper;
 
 import net.sf.json.JSONArray;
@@ -492,7 +495,7 @@ public class ActivityHelper {
 				// 아래 과거 데이터
 			}
 		}
-
+//		Collections.sort(list, new ActivityComparator());
 		return list;
 	}
 

@@ -1,62 +1,125 @@
-<%@page session="false"
-%><%@page contentType="text/html" pageEncoding="UTF-8"
-
-%><%@page import="wt.login.loginResource"
-
-%><%@taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"
-%><%@taglib uri="http://www.ptc.com/windchill/taglib/fmt" prefix="fmt"
-%><%@taglib uri="http://www.ptc.com/windchill/taglib/util" prefix="util"
-
-%><%--
- /* The output of this page is read by com.ptc.fba.FormBasedLogin to produce a form-based login GUI.
-  * This page can be customized to inform FormBasedLogin of additional fields, whether or not it is
-  * used as the login form.
-  * In order for FormBasedLogin to understand the output:
-  *   1) It MUST be valid XML.
-  *   2) All form inputs to be presented to the user (besides OK/Cancel/Yes/No) must be of type "text"
-  *      or "password".  Visible (non-hidden) inputs of other types will simply be ignored.
-  *   3) Each "text" or "password" input must have a corresponding label element and this element
-  *      must contain nothing other than the label text.
-  *   4) Form inputs of type "hidden" can also be included and used to provide pre-specified
-  *      (non-user-specified) inputs to the login.
-  * Note that the element ids "username" and "password" are used by FormBasedLogin to recognize the
-  * user name and password fields.
-  */
---%><util:locale
-/><fmt:setLocale value="${localeBean.locale}"
-/><fmt:setBundle basename="<%=loginResource.class.getName()%>"
-/><?xml version="1.0" encoding="UTF-8"?>
+<%@page import="java.util.Date"%>
+<%@page import="java.text.SimpleDateFormat"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <html>
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
-<title><fmt:message key='<%=loginResource.LOGIN_TO_WINDCHILL%>'/></title>
+<title>LUTRONIC PLM</title>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+<link rel="stylesheet" href="/Windchill/login/css/login.css" type="text/css">
+<link rel="shortcut icon" href="/Windchill/extcore/images/icon/poongsan_icon.png">
+<script type="text/javascript" src="https://code.jquery.com/jquery-1.10.2.min.js" /></script>
 </head>
-<body>
-<center>
-<h2><fmt:message key='<%=loginResource.LOGIN_TO_WINDCHILL%>'/></h2>
-<c:choose>
-<c:when test='${loginFailed}'>
-<font style="color: red; font-weight: bolder"><fmt:message key='<%=loginResource.RE_ENTER_CREDENTIALS%>'/></font>
-</c:when>
-<c:otherwise><b><fmt:message key='<%=loginResource.ENTER_CREDENTIALS%>'/></b></c:otherwise>
-</c:choose>
-<form method="POST" action="j_security_check" id="login">
-<table>
-<tr><td colspan="2" height="6"/></tr>
-<tr>
-<th scope="row" align="right"><label for="username"><fmt:message key='<%=loginResource.USER_NAME_LABEL%>'/></label></th>
-<td><input type="text" name="j_username" id="username" size="32" AUTOCOMPLETE="OFF" /></td>
-</tr>
-<tr>
-<th scope="row" align="right"><label for="password"><fmt:message key='<%=loginResource.PASSWORD_LABEL%>'/></label></th>
-<td><input type="password" name="j_password" id="password" size="32" AUTOCOMPLETE="OFF" /></td>
-</tr>
-<tr><td colspan="2" height="12"/></tr>
-<tr>
-<td colspan="2" align="center"><input type="submit" id="ok" value="<fmt:message key='<%=loginResource.OK%>'/>"/></td>
-</tr>
-</table>
-</form>
-</center>
+<body class="in">
+	<form method="post" action="j_security_check">
+		
+        <div class="in_container">
+        	<header>
+                <h1><span class="hide">LUTRONIC PLM</span></h1>
+            </header>
+            <section>
+            <form name="loginForm" action="/loginProcess.do" method="POST" autocomplete="off">
+                <i class="login mb30"></i>
+                <div class="text_form">
+                    <p>
+                        <label for="principal" ></label>
+                        <input id="j_username" type="text" name="j_username"  placeholder="ID">
+                    </p>
+                    <p>
+                        <label for="credential"></label>
+                        <input id="j_password" type="password" name="j_password"  placeholder="Password" />
+                    </p>
+                </div>
+                <a value="Login" onclick="_login();" class="btn">LOGIN</a>
+                <div class="checks check_box">
+                    <input type="checkbox" id="checkId" name="checkId">
+                    <label for="checkId">아이디저장</label>
+                </div>
+                
+            </form>
+            </section>
+        </div>
+		
+	</form>
 </body>
+
+
+	<script type="text/javascript">
+		function _login() {
+			document.forms[0].submit();
+			$checkId = $("#checkId");
+		}
+
+		document.addEventListener("keydown", function(event) {
+			const keyCode = event.keyCode || event.which;
+			if (keyCode === 13) {
+				_login();
+			}
+		})
+
+		document.addEventListener("DOMContentLoaded", function() {
+			const j_username = document.getElementById("j_username").focus();
+		})
+		
+		
+		//아이디저장
+		$(document).ready(function(){
+			var idChk = getCookie("idChk");
+			if(idChk!=""){
+				$("#j_username").val(idChk); 
+				$("#j_password").val(getCookie("pw")); 
+			}
+			 
+			if($("#j_username").val() != ""){ 
+				$("#idSaveCheck").attr("checked", true); 
+			}
+			 
+			$("#checkId").change(function(){ 
+				if($("#checkId").is(":checked")){ 
+					setCookie("idChk", $("#j_username").val(), 7); 
+					setCookie("pw", $("#j_password").val(), 7); 
+				}else{ 
+					deleteCookie("idChk");
+				}
+			});
+			 
+			$("#j_username").keyup(function(){ 
+				if($("#checkId").is(":checked")){
+					setCookie("idChk", $("#j_username").val(), 7); 
+				}
+			});
+			
+			$("#j_password").keyup(function(){ 
+				if($("#checkId").is(":checked")){
+					setCookie("pw", $("#j_password").val(), 7); 
+				}
+			});
+		});
+		
+		function setCookie(cookieName, value, exdays){
+		    var exdate = new Date();
+		    exdate.setDate(exdate.getDate() + exdays);
+		    var cookieValue = escape(value) + ((exdays==null) ? "" : "; expires=" + exdate.toGMTString());
+		    document.cookie = cookieName + "=" + cookieValue;
+		}
+		 
+		function deleteCookie(cookieName){
+			var expireDate = new Date();
+			expireDate.setDate(expireDate.getDate() - 1);
+			document.cookie = cookieName + "= " + "; expires=" + expireDate.toGMTString();
+		}
+			 
+		function getCookie(cookieName) {
+			cookieName = cookieName + '=';
+			var cookieData = document.cookie;
+			var start = cookieData.indexOf(cookieName);
+			var cookieValue = '';
+			if(start != -1){
+				start += cookieName.length;
+				var end = cookieData.indexOf(';', start);
+				if(end == -1)end = cookieData.length;
+				cookieValue = cookieData.substring(start, end);
+			}
+			return unescape(cookieValue);
+		}
+	</script>
 </html>

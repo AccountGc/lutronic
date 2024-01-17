@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Hashtable;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -44,6 +45,7 @@ import com.e3ps.change.ecpr.column.EcprColumn;
 import com.e3ps.change.ecrm.column.EcrmColumn;
 import com.e3ps.change.util.EChangeUtils;
 import com.e3ps.common.code.service.NumberCodeHelper;
+import com.e3ps.common.iba.IBAUtil;
 import com.e3ps.common.iba.IBAUtils;
 import com.e3ps.common.util.AUIGridUtil;
 import com.e3ps.common.util.CommonUtil;
@@ -55,7 +57,17 @@ import com.e3ps.common.util.StringUtil;
 import com.e3ps.groupware.service.GroupwareHelper;
 import com.e3ps.org.dto.PeopleDTO;
 import com.e3ps.part.service.PartHelper;
+import com.e3ps.sap.conn.SAPDev600Connection;
+import com.e3ps.sap.dto.SAPSendBomDTO;
+import com.e3ps.sap.service.SAPHelper;
+import com.e3ps.sap.util.SAPUtil;
+import com.e3ps.system.service.SystemHelper;
 import com.ibm.icu.text.DecimalFormat;
+import com.sap.conn.jco.JCoDestination;
+import com.sap.conn.jco.JCoDestinationManager;
+import com.sap.conn.jco.JCoFunction;
+import com.sap.conn.jco.JCoParameterList;
+import com.sap.conn.jco.JCoTable;
 
 import net.sf.json.JSONArray;
 import wt.content.ApplicationData;
@@ -1219,5 +1231,198 @@ public class EcoHelper {
 		map.put("progress", progress);
 		map.put("complete", complete);
 		return map;
+	}
+
+	/**
+	 * SAP 전송전 검증 해보기
+	 */
+	public Map<String, Object> validate(Map<String, Object> params) throws Exception {
+		Map<String, Object> map = new HashMap<>();
+		String oid = (String) params.get("oid");
+		EChangeOrder eco = (EChangeOrder) CommonUtil.getObject(oid);
+		System.out.println("SAP ECO BOM 전송 품목 검증 시작!");
+		boolean isValidate = validateSendEcoBom(eco);
+		System.out.println("SAP ECO BOM 전송 품목 검증 종료!");
+		map.put("isValidate", isValidate);
+		return map;
+	}
+
+	/**
+	 * BOM 전송전 검증
+	 */
+	private boolean validateSendEcoBom(EChangeOrder eco) throws Exception {
+		JCoDestination destination = JCoDestinationManager.getDestination(SAPDev600Connection.DESTINATION_NAME);
+		JCoFunction function = destination.getRepository().getFunction("ZPPIF_PDM_002");
+		if (function == null) {
+			throw new RuntimeException("STFC_CONNECTION not found in SAP.");
+		}
+
+		JCoParameterList importTable = function.getImportParameterList();
+		importTable.setValue("IV_WERKS", "1000"); // 플랜트
+		importTable.setValue("IV_TEST", "X"); // 플랜트
+
+		int idx = 1;
+
+		DecimalFormat df = new DecimalFormat("0000");
+		Timestamp t = new Timestamp(new Date().getTime());
+		String today = t.toString().substring(0, 10).replaceAll("-", "");
+
+		JCoTable ecoTable = function.getTableParameterList().getTable("ET_ECM");
+		ecoTable.appendRow();
+		ecoTable.setValue("AENNR8", eco.getEoNumber()); // 변경번호 12자리??
+		ecoTable.setValue("ZECMID", "ECO"); // EO/ECO 구분
+		ecoTable.setValue("DATUV", today); // 보내는 날짜
+		ecoTable.setValue("AEGRU", eco.getEoName()); // 변경사유 테스트 일단 한줄
+		ecoTable.setValue("AETXT", eco.getEoName()); // 변경 내역 첫줄만 일단 테스트
+
+		if (StringUtil.checkString(eco.getEoCommentA())) {
+			String AETXT_L = eco.getEoCommentA() != null ? eco.getEoCommentA() : "";
+			ecoTable.setValue("AETXT_L", AETXT_L.replaceAll("\n", "<br>"));
+		} else {
+			ecoTable.setValue("AETXT_L", ""); // 변경 내역 전체 내용
+		}
+		JCoTable bomTable = function.getTableParameterList().getTable("ET_BOM");
+		QueryResult qr = PersistenceHelper.manager.navigate(eco, "part", EcoPartLink.class, false);
+		while (qr.hasMoreElements()) {
+			EcoPartLink link = (EcoPartLink) qr.nextElement();
+			WTPartMaster master = link.getPart();
+			String version = link.getVersion();
+			WTPart target = PartHelper.manager.getPart(master.getNumber(), version);
+			boolean isPast = link.getPast();
+
+			WTPart next_part = null;
+			WTPart pre_part = null;
+
+			if (!isPast) { // 과거 아닐경우 과거 데이터는 어떻게 할지..???
+				boolean isRight = link.getRightPart();
+				boolean isLeft = link.getLeftPart();
+				// 오른쪽이면 다음 버전 품목을 전송해야한다.. 이게 맞는듯
+				if (isLeft) {
+					// 왼쪽이면 승인됨 데이터..그니깐 개정후 데이터를 보낸다 근데 변경점이 없지만 PDM상에서 버전은 올라간 상태
+					next_part = (WTPart) EChangeUtils.manager.getNext(target);
+					pre_part = target;
+				} else if (isRight) {
+					// 오른쪽 데이터면 애시당초 바귄 대상 품번 그대로 넣어준다..
+					next_part = target;
+					pre_part = SAPHelper.manager.getPre(target, eco);
+				}
+
+				ArrayList<SAPSendBomDTO> sendList = new ArrayList<SAPSendBomDTO>();
+				// 둘다 있을 경우
+				if (pre_part != null && next_part != null) {
+					ArrayList<Object[]> rights = SAPHelper.manager.sendList(next_part);
+					ArrayList<Object[]> lefts = SAPHelper.manager.sendList(pre_part);
+
+					ArrayList<Map<String, Object>> addList = SAPHelper.manager.addList(lefts, rights);
+					ArrayList<Map<String, Object>> removeList = SAPHelper.manager.removeList(lefts, rights);
+
+					// 추가 항목 넣음
+					for (Map<String, Object> add : addList) {
+						String addOid = (String) add.get("oid");
+						WTPart addPart = (WTPart) CommonUtil.getObject(addOid);
+						SAPSendBomDTO addDto = new SAPSendBomDTO();
+						addDto.setParentPartNumber(null);
+						addDto.setChildPartNumber(null);
+						addDto.setNewParentPartNumber(next_part.getNumber());
+						addDto.setNewChildPartNumber(addPart.getNumber());
+						addDto.setQty((int) add.get("qty"));
+						addDto.setUnit((String) add.get("unit"));
+						addDto.setSendType("추가품목");
+						sendList.add(addDto);
+
+						link.setSendType("ADD");
+						PersistenceHelper.manager.modify(link);
+
+					}
+
+					// 삭제 항목 넣음
+					for (Map<String, Object> remove : removeList) {
+						String removeOid = (String) remove.get("oid");
+						WTPart removePart = (WTPart) CommonUtil.getObject(removeOid);
+						SAPSendBomDTO removeDto = new SAPSendBomDTO();
+						removeDto.setParentPartNumber(pre_part.getNumber());
+						removeDto.setChildPartNumber(removePart.getNumber());
+						removeDto.setNewParentPartNumber(null);
+						removeDto.setNewChildPartNumber(null);
+						removeDto.setQty((int) remove.get("qty"));
+						removeDto.setUnit((String) remove.get("unit"));
+						removeDto.setSendType("삭제품");
+						sendList.add(removeDto);
+
+						EcoPartLink removeLink = EcoPartLink.newEcoPartLink((WTPartMaster) removePart.getMaster(), eco);
+						removeLink.setSendType("REMOVE");
+						removeLink.setVersion(removePart.getVersionIdentifier().getSeries().getValue());
+						removeLink.setBaseline(true);
+						removeLink.setPreOrder(false);
+						removeLink.setRightPart(false);
+						removeLink.setLeftPart(true);
+						removeLink.setPast(false);
+						PersistenceHelper.manager.save(removeLink);
+						// 삭제품 저장
+					}
+
+					// 변경 대상 리스트..
+					ArrayList<SAPSendBomDTO> changeList = SAPHelper.manager.getOneLevel(next_part, eco);
+					Iterator<SAPSendBomDTO> iterator = changeList.iterator();
+					while (iterator.hasNext()) {
+						SAPSendBomDTO dto = iterator.next();
+						dto.setSendType("변경품");
+						String compNum = dto.getNewChildPartNumber();
+
+						// addList에서 같은 newChildPartNumber를 찾으면 changeList에서 제거
+						for (Map<String, Object> addMap : addList) {
+							String addOid = (String) addMap.get("oid");
+							WTPart addPart = (WTPart) CommonUtil.getObject(addOid);
+							if (addPart.getNumber().equals(compNum)) {
+								iterator.remove();
+							}
+						}
+						link.setSendType("CHANGE");
+						PersistenceHelper.manager.modify(link);
+					}
+					sendList.addAll(changeList);
+				}
+
+				for (SAPSendBomDTO dto : sendList) {
+
+					System.out.println("전송타입 = " + dto.getSendType() + " || 이전부모품번 = " + dto.getParentPartNumber()
+							+ ", " + " 이전자식품번 =  " + dto.getChildPartNumber() + ", 신규부모품번 = "
+							+ dto.getNewParentPartNumber() + ", 신규자식품번 = " + dto.getNewChildPartNumber());
+
+					bomTable.insertRow(idx);
+					bomTable.setValue("AENNR8", eco.getEoNumber()); // 변경번호 12자리?
+					bomTable.setValue("SEQNO", df.format(idx)); // 항목번호 ?? 고정인지.. 애매한데
+					bomTable.setValue("MATNR_OLD", dto.getParentPartNumber()); // 이전 모품번
+					bomTable.setValue("IDNRK_OLD", dto.getChildPartNumber()); // 이전 자품번
+					bomTable.setValue("MATNR_NEW", dto.getNewParentPartNumber()); // 기존 모품번
+					bomTable.setValue("IDNRK_NEW", dto.getNewChildPartNumber()); // 기존 자품번
+					bomTable.setValue("MENGE", dto.getQty()); // 수량
+					bomTable.setValue("MEINS", dto.getUnit()); // 단위
+					bomTable.setValue("AENNR12", eco.getEoNumber() + df.format(idx)); // 변경번호 12자리
+					idx++;
+				}
+			}
+		}
+		function.execute(destination);
+
+		JCoParameterList result = function.getExportParameterList();
+		Object r_type = result.getValue("EV_STATUS");
+		Object r_msg = result.getValue("EV_MESSAGE");
+
+		JCoTable rtnTable = function.getTableParameterList().getTable("ET_BOM");
+		rtnTable.firstRow();
+		for (int i = 0; i < rtnTable.getNumRows(); i++, rtnTable.nextRow()) {
+			Object MATNR_OLD = rtnTable.getValue("MATNR_OLD");
+			Object ZIFSTA = rtnTable.getValue("ZIFSTA");
+			Object ZIFMSG = rtnTable.getValue("ZIFMSG");
+			System.out.println("MATNR_OLD+" + MATNR_OLD + ", ZIFSTA=" + ZIFSTA + ", ZIFMSG=" + ZIFMSG);
+		}
+		System.out.println("[ SAP JCO ] RETURN - TYPE:" + r_type);
+		System.out.println("[ SAP JCO ] RETURN - MESSAGE:" + r_msg);
+
+		if ("E".equals(r_type)) {
+			return false;
+		}
+		return true;
 	}
 }

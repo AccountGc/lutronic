@@ -274,7 +274,7 @@ const columns = [ {
 	width : 180,
 }, {
 	dataField : "model",
-	headerText : "프로젝트 코드",
+	headerText : "프로젝트 코드(명)",
 	dataType : "string",
 	width : 120,
 }, {

@@ -182,4 +182,21 @@ public class EcoController extends BaseController {
 		}
 		return result;
 	}
+	
+
+	@Description(value = "SAP 전송전 검증 해보기")
+	@ResponseBody
+	@PostMapping(value = "/validate")
+	public Map<String, Object> validate(@RequestBody Map<String, Object> params) throws Exception {
+		Map<String, Object> result = new HashMap<String, Object>();
+		try {
+			result = EcoHelper.manager.validate(params);
+			result.put("result", SUCCESS);
+		} catch (Exception e) {
+			e.printStackTrace();
+			result.put("result", FAIL);
+			result.put("msg", e.toString());
+		}
+		return result;
+	}
 }

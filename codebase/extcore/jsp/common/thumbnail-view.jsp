@@ -22,7 +22,7 @@ if (representable instanceof EPMDocument) {
 	part = PartHelper.manager.getPart(epm);
 	representation = PublishUtils.getRepresentation(part, true, null, false);
 } else if (representable instanceof WTPart) {
-	WTPart part = (WTPart) representable;
+	part = (WTPart) representable;
 	representation = PublishUtils.getRepresentation(part, true, null, false);
 }
 
