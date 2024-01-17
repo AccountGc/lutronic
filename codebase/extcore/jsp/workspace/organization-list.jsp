@@ -90,7 +90,7 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 					<img src="/Windchill/extcore/images/redo.gif" title="테이블 초기화" onclick="resetColumnLayout('organization-list');">
 				</td>
 				<td class="right">
-				<select name="_psize" id="_psize">
+					<select name="_psize" id="_psize">
 						<option value="10">10</option>
 						<option value="20" selected="selected">20</option>
 						<option value="30">30</option>
@@ -133,7 +133,7 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 			const list =
 		<%=list%>
 			;
-			const duty = [ "본부장", "마스터", "팀장", "프로" ];
+			const duty = [ "본부장/마스터", "마스터", "엑스퍼트/마스터", "팀장", "팀장/마스터", "코치", "프로" ];
 			const auths = [ "나의업무", "문서관리", "품목관리", "도면관리", "설계변경", "RoHS", "금형관리" ];
 			function _layout() {
 				return [ {
@@ -144,7 +144,7 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 					filter : {
 						inline : false
 					},
-				},{
+				}, {
 					dataField : "id",
 					headerText : "아이디",
 					dataType : "string",
@@ -199,17 +199,17 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 						showCheckAll : true,
 						list : auths,
 					},
-				}, 
-// 				{
-// 					dataField : "pdfAuth",
-// 					dataType : "boolean",
-// 					headerText : "PDF 권한",
-// 					width : 100,
-// 					renderer : {
-// 						type : "CheckBoxEditRenderer",
-// 						editable : true
-// 					}
-// 				},
+				},
+				// 				{
+				// 					dataField : "pdfAuth",
+				// 					dataType : "boolean",
+				// 					headerText : "PDF 권한",
+				// 					width : 100,
+				// 					renderer : {
+				// 						type : "CheckBoxEditRenderer",
+				// 						editable : true
+				// 					}
+				// 				},
 				{
 					dataField : "department_oid",
 					headerText : "부서",

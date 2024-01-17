@@ -474,6 +474,7 @@ public class EcoHelper {
 			} else {
 				WTPart pre_part = part;
 
+				System.out.println("revise=" + link.isRevise());
 				if (link.isRevise()) {
 					WTPart next_part = (WTPart) EChangeUtils.manager.getNext(part);
 					if (next_part != null) {
@@ -494,18 +495,25 @@ public class EcoHelper {
 						map.put("next_creator", next_part.getCreatorFullName());
 						map.put("next_state", next_part.getLifeCycleState().getDisplay());
 						map.put("afterMerge", false);
-					} else {
-						map.put("next_oid", pre_part.getPersistInfo().getObjectIdentifier().getStringValue());
-						map.put("next_number", pre_part.getNumber());
-						map.put("next_name", pre_part.getName());
-						map.put("next_state", pre_part.getLifeCycleState().getDisplay());
-						map.put("next_version", pre_part.getVersionIdentifier().getSeries().getValue() + "."
-								+ pre_part.getIterationIdentifier().getSeries().getValue());
-						map.put("next_creator", pre_part.getCreatorFullName());
-						map.put("preMerge", true);
+//					} else {
+//						map.put("next_oid", pre_part.getPersistInfo().getObjectIdentifier().getStringValue());
+//						map.put("next_number", pre_part.getNumber());
+//						map.put("next_name", pre_part.getName());
+//						map.put("next_state", pre_part.getLifeCycleState().getDisplay());
+//						map.put("next_version", pre_part.getVersionIdentifier().getSeries().getValue() + "."
+//								+ pre_part.getIterationIdentifier().getSeries().getValue());
+//						map.put("next_creator", pre_part.getCreatorFullName());
+//						map.put("preMerge", true);
 					}
 				} else {
-
+					map.put("next_oid", pre_part.getPersistInfo().getObjectIdentifier().getStringValue());
+					map.put("next_number", pre_part.getNumber());
+					map.put("next_name", pre_part.getName());
+					map.put("next_state", pre_part.getLifeCycleState().getDisplay());
+					map.put("next_version", pre_part.getVersionIdentifier().getSeries().getValue() + "."
+							+ pre_part.getIterationIdentifier().getSeries().getValue());
+					map.put("next_creator", pre_part.getCreatorFullName());
+					map.put("preMerge", true);
 				}
 				list.add(map);
 			}
@@ -1326,10 +1334,10 @@ public class EcoHelper {
 					SAPSendBomDTO addDto = new SAPSendBomDTO();
 					addDto.setParentPartNumber(null);
 					addDto.setChildPartNumber(null);
-					
+
 					addDto.setNewParentPartNumber(next_part.getNumber());
 					addDto.setNewChildPartNumber(addPart.getNumber());
-					
+
 					addDto.setQty((int) add.get("qty"));
 					addDto.setUnit((String) add.get("unit"));
 					addDto.setSendType("추가품목");

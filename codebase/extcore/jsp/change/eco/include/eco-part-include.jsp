@@ -473,7 +473,7 @@ String oid = request.getParameter("oid");
 			useContextMenu : true,
 			enableRightDownFocus : true,
 			filterLayerWidth : 320,
-			fixedColumnCount : 2,
+// 			fixedColumnCount : 2,
 			filterItemMoreMessage : "필터링 검색이 너무 많습니다. 검색을 이용해주세요.",
 			cellColMergeFunction : function(rowIndex, columnIndex, item) {
 				if (item.preMerge === true) {

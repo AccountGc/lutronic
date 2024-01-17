@@ -73,7 +73,7 @@ public class EcoDTO {
 		setOid(eco.getPersistInfo().getObjectIdentifier().getStringValue());
 		setName(eco.getEoName());
 		setNumber(eco.getEoNumber());
-		setSendType(eco.getSendType());
+		setSendTypeInfo(eco);
 		setState(eco.getLifeCycleState().getDisplay());
 		setCreator(eco.getCreatorFullName());
 		setCreatedDate(eco.getCreateTimestamp());
@@ -95,6 +95,17 @@ public class EcoDTO {
 		}
 		setContentMap(ContentUtils.getContentByRole(eco, "ECO"));
 		setAuth(eco);
+	}
+
+	private void setSendTypeInfo(EChangeOrder eco) throws Exception {
+		String sendType = eco.getSendType();
+		if ("ECO".equals(sendType)) {
+			setSendType("ECO");
+		} else if ("SCO".equals(sendType)) {
+			setSendType("SCO");
+		} else if ("ORDER".equals(sendType)) {
+			setSendType("선구매");
+		}
 	}
 
 	/**
