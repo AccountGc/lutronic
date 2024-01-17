@@ -180,7 +180,10 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 					headerText : "프로젝트 코드 [명]",
 					dataType : "string",
 					width : 350,
-					style : "aui-left"
+					style : "aui-left",
+					renderer : {
+						type : "TemplateRenderer"
+					},
 				}, {
 					dataField : "state",
 					headerText : "상태",

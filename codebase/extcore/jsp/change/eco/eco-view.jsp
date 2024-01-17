@@ -105,7 +105,7 @@ boolean isAdmin = (boolean) request.getAttribute("isAdmin");
 				<td class="indent5"><%=dto.getApproveDate()%></td>
 			</tr>
 			<tr>
-				<th class="lb">제품명</th>
+				<th class="lb">프로젝트 코드 [명]</th>
 				<td class="indent5" colspan="3"><%=dto.getModel_name()%></td>
 			</tr>
 			<tr>

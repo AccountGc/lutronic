@@ -213,6 +213,9 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 					dataType : "string",
 					width : 220,
 					style : "aui-left",
+					renderer : {
+						type : "TemplateRenderer"
+					},
 				}, {
 					dataField : "changeSection",
 					headerText : "변경사유",

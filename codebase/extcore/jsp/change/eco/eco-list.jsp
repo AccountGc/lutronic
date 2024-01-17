@@ -255,7 +255,10 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 					headerText : "프로젝트 코드 [명]",
 					dataType : "string",
 					width : 250,
-					style : "aui-left"
+					style : "aui-left",
+					renderer : {
+						type : "TemplateRenderer"
+					},
 				}, {
 					dataField : "sendType",
 					headerText : "ECO 타입",

@@ -59,8 +59,9 @@ iframe {
 						%>
 					</select>
 				</td>
+			</tr>
 			<tr>
-				<th class="req lb">제품명</th>
+				<th class="req lb">프로젝트 코드 [명]</th>
 				<td colspan="3" class="indent5 pt5">
 					<jsp:include page="/extcore/jsp/admin/code/include/code-include.jsp">
 						<jsp:param value="" name="oid" />

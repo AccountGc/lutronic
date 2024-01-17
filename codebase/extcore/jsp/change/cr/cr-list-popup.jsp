@@ -184,6 +184,9 @@ boolean multi = (boolean) request.getAttribute("multi");
 		dataType : "string",
 		width : 220,
 		style : "aui-left",
+		renderer : {
+			type : "TemplateRenderer"
+		},
 	}, {
 		dataField : "changeSection",
 		headerText : "변경사유",

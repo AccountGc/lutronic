@@ -265,12 +265,12 @@ public class EcoHelper {
 					if (ss.length - 1 == i) {
 						NumberCode n = NumberCodeHelper.manager.getNumberCode(s, "MODEL");
 						if (n != null) {
-							display += s + " [" + n.getName() + "]";
+							display += s + " [<font color='red'><b>" + n.getName() + "</b></font>]";
 						}
 					} else {
 						NumberCode n = NumberCodeHelper.manager.getNumberCode(s, "MODEL");
 						if (n != null) {
-							display += s + " [" + n.getName() + "], ";
+							display += s + " [<font color='red'><b>" + n.getName() + "</b></font>], ";
 						}
 					}
 				}

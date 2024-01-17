@@ -13,7 +13,7 @@ boolean create = "create".equals(mode);
 boolean header = Boolean.parseBoolean(request.getParameter("header"));
 boolean req = Boolean.parseBoolean(request.getParameter("req"));
 JSONArray data = null;
-if(view || update){
+if (view || update) {
 	data = AUIGridUtil.include(oid, "eco");
 }
 %>
@@ -28,8 +28,8 @@ if(view || update){
 	</tr>
 </table>
 <%
-	// 테이블 처리 여부
-	if(header) {
+// 테이블 처리 여부
+if (header) {
 %>
 <table class="create-table">
 	<colgroup>
@@ -37,7 +37,7 @@ if(view || update){
 		<col width="*">
 	</colgroup>
 	<tr>
-		<th class="lb <%if(req) {%> req<%}%>">관련 ECO</th>
+		<th class="lb <%if (req) {%> req<%}%>">관련 ECO</th>
 		<td class="indent5 <%if (!view) {%>pt5 <%}%>">
 			<%
 			if (create || update) {
@@ -52,11 +52,11 @@ if(view || update){
 	</tr>
 </table>
 <%
-	} else {
+} else {
 %>
 <div id="grid105" style="height: 30px; border-top: 1px solid #3180c3; margin: 5px;"></div>
 <%
-	}
+}
 %>
 <script type="text/javascript">
 	let myGridID105;
@@ -93,7 +93,10 @@ if(view || update){
 		headerText : "프로젝트 코드 [명]",
 		dataType : "string",
 		width : 250,
-		style : "aui-left"
+		style : "aui-left",
+		renderer : {
+			type : "TemplateRenderer"
+		},
 	}, {
 		dataField : "sendType",
 		headerText : "ECO 타입",

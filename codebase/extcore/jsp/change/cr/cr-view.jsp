@@ -100,7 +100,7 @@ iframe {
 				<td class="indent5"><%=dto.getWriteDate()%></td>
 			</tr>
 			<tr>
-				<th class="lb">제품명</th>
+				<th class="lb">프로젝트 코드 [명]</th>
 				<td class="indent5"><%=dto.getModel()%></td>
 				<th>수정일</th>
 				<td class="indent5"><%=dto.getModifiedDate_text()%></td>

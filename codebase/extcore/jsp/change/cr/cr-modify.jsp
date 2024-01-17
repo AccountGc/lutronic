@@ -57,7 +57,7 @@ iframe {
 		</td>
 	</tr>
 	<tr>
-		<th class="req lb">제품명</th>
+		<th class="req lb">프로젝트 코드 [명]</th>
 		<td colspan="3" class="indent5 pt5">
 			<jsp:include page="/extcore/jsp/admin/code/include/code-include.jsp">
 				<jsp:param value="<%=dto.getOid()%>" name="oid" />
@@ -65,7 +65,6 @@ iframe {
 				<jsp:param value="insert300" name="method" />
 				<jsp:param value="MODEL" name="codeType" />
 				<jsp:param value="true" name="multi" />
-				<jsp:param value="150" name="height" />
 			</jsp:include>
 		</td>
 	</tr>
