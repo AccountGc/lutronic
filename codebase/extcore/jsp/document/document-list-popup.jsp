@@ -274,9 +274,10 @@ const columns = [ {
 	width : 180,
 }, {
 	dataField : "model",
-	headerText : "프로젝트 코드(명)",
+	headerText : "프로젝트 코드 [명]",
 	dataType : "string",
 	width : 120,
+	style : "aui-left",
 }, {
 	dataField : "location",
 	headerText : "문서분류",

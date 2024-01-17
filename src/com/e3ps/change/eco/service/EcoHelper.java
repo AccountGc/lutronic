@@ -1353,9 +1353,8 @@ public class EcoHelper {
 					addDto.setUnit((String) add.get("unit"));
 					addDto.setSendType("추가품목");
 					addDto.setKey(key);
-
-					if(addKey.contains(key)) {
-						addKey.add(key);)
+					if (addKey.contains(key)) {
+						addKey.add(key);
 						sendList.add(addDto);
 					}
 				}
@@ -1365,7 +1364,7 @@ public class EcoHelper {
 				for (Map<String, Object> remove : removeList) {
 					String removeOid = (String) remove.get("oid");
 					WTPart removePart = (WTPart) CommonUtil.getObject(removeOid);
-					String key = pre_part.getNumber() + "_" +removePart.getNumber();
+					String key = pre_part.getNumber() + "_" + removePart.getNumber();
 					SAPSendBomDTO removeDto = new SAPSendBomDTO();
 					removeDto.setParentPartNumber(pre_part.getNumber());
 					removeDto.setChildPartNumber(removePart.getNumber());
@@ -1374,8 +1373,9 @@ public class EcoHelper {
 					removeDto.setQty((int) remove.get("qty"));
 					removeDto.setUnit((String) remove.get("unit"));
 					removeDto.setSendType("삭제품");
-					
-					if(removeKey.contains(key)) {
+					removeDto.setKey(key);
+
+					if (removeKey.contains(key)) {
 						removeKey.add(key);
 						sendList.add(removeDto);
 					}

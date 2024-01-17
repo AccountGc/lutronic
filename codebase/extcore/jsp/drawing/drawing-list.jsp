@@ -492,7 +492,7 @@ QuantityUnit[] unitList = (QuantityUnit[]) request.getAttribute("unitList");
 
 			function auiContextHandler(event) {
 				const item = event.item;
-				const oid = item.oid;
+				const oid = item.epm_oid;
 				let url;
 				switch (event.contextIndex) {
 				case 0:
