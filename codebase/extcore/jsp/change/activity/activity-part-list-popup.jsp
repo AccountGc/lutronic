@@ -387,23 +387,13 @@ function createAUIGrid(columnLayout) {
 		enableRightDownFocus : true,
 		filterLayerWidth : 320,
 		filterItemMoreMessage : "필터링 검색이 너무 많습니다. 검색을 이용해주세요.",
-		<%if (complete) {%>
 		rowCheckDisabledFunction: function (rowIndex, isChecked, item) {
-			logger(item);
-			if (item.state !== "작업 중") {
-				return false; // false 반환하면 disabled 처리됨
-			}
-			
-			if(item.number.charAt(0) !== "1") {
-				return false; // false 반환하면 disabled 처리됨
-			}
 			if(!item.visible) {
 				return false;
 			}
 			
 			return true;
 		}
-		<%}%>
 	};
 	myGridID = AUIGrid.create("#grid_wrap", columnLayout, props);
 	loadGridData();

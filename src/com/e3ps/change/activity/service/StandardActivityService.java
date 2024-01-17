@@ -776,7 +776,9 @@ public class StandardActivityService extends StandardManager implements Activity
 					// 작업중 혹은 승인중?
 					if (ee.getLifeCycleState().toString().equals("INWORK")
 							|| ee.getLifeCycleState().toString().equals("LINE_REGISTER")
-							|| ee.getLifeCycleState().toString().equals("APPROVING")) {
+							|| ee.getLifeCycleState().toString().equals("APPROVING")
+							|| ee.getLifeCycleState().toString().equals("ACTIVITY")) {
+
 						isExist = true;
 						msg = part.getNumber() + " 품목은 EO/ECO(" + ee.getEoNumber() + ")에서 설계변경이 진행중인 품목입니다.";
 						break;

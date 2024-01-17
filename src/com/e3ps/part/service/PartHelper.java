@@ -333,7 +333,8 @@ public class PartHelper {
 					// 작업중 혹은 승인중?
 					if (ee.getLifeCycleState().toString().equals("INWORK")
 							|| ee.getLifeCycleState().toString().equals("LINE_REGISTER")
-							|| ee.getLifeCycleState().toString().equals("APPROVING")) {
+							|| ee.getLifeCycleState().toString().equals("APPROVING")
+							|| ee.getLifeCycleState().toString().equals("ACTIVITY")) {
 						column.setVisible(false);
 					}
 				}
