@@ -14,6 +14,7 @@ import com.e3ps.change.EChangeActivityDefinition;
 import com.e3ps.change.EChangeActivityDefinitionRoot;
 import com.e3ps.change.EChangeOrder;
 import com.e3ps.change.EChangeRequest;
+import com.e3ps.change.EOActivityLink;
 import com.e3ps.change.EcoPartLink;
 import com.e3ps.change.RequestOrderLink;
 import com.e3ps.change.activity.dto.ActDTO;
@@ -733,17 +734,17 @@ public class ActivityHelper {
 	 */
 	public ArrayList<EChangeActivity> getActivity(EChangeOrder e) throws Exception {
 		ArrayList<EChangeActivity> list = new ArrayList<EChangeActivity>();
-		QuerySpec query = new QuerySpec();
-		int idx_eca = query.appendClassList(EChangeActivity.class, true);
-		int idx_eco = query.appendClassList(EChangeOrder.class, false);
-
-		QuerySpecUtils.toInnerJoin(query, EChangeActivity.class, EChangeOrder.class, "eoReference.key.id",
-				WTAttributeNameIfc.ID_NAME, idx_eca, idx_eco);
-		QuerySpecUtils.toEqualsAnd(query, idx_eca, EChangeActivity.class, "eoReference.key.id", e);
-		QueryResult result = PersistenceHelper.manager.find(query);
+//		QuerySpec query = new QuerySpec();
+//		int idx_eca = query.appendClassList(EChangeActivity.class, true);
+//		int idx_eco = query.appendClassList(EChangeOrder.class, false);
+//
+//		QuerySpecUtils.toInnerJoin(query, EChangeActivity.class, EChangeOrder.class, "eoReference.key.id",
+//				WTAttributeNameIfc.ID_NAME, idx_eca, idx_eco);
+//		QuerySpecUtils.toEqualsAnd(query, idx_eca, EChangeActivity.class, "eoReference.key.id", e);
+//		QueryResult result = PersistenceHelper.manager.find(query);
+		QueryResult result = PersistenceHelper.manager.navigate(e, "activity", EOActivityLink.class);
 		while (result.hasMoreElements()) {
-			Object[] obj = (Object[]) result.nextElement();
-			EChangeActivity eca = (EChangeActivity) obj[0];
+			EChangeActivity eca = (EChangeActivity) result.nextElement();
 			list.add(eca);
 		}
 		return list;
