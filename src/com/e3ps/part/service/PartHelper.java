@@ -192,6 +192,7 @@ public class PartHelper {
 		String specification = StringUtil.checkNull((String) params.get("specification"));
 		String ecoNo = StringUtil.checkNull((String) params.get("ecoNo"));
 		String eoNo = StringUtil.checkNull((String) params.get("eoNo"));
+		boolean eca = (boolean) params.get("eca");
 		boolean latest = (boolean) params.get("latest");
 		String preOrder = (String) params.get("preOrder");
 
@@ -322,7 +323,21 @@ public class PartHelper {
 		int rowNum = (pager.getCpage() - 1) * pager.getPsize() + 1;
 		while (result.hasMoreElements()) {
 			Object[] obj = (Object[]) result.nextElement();
-			PartColumn column = new PartColumn(obj);
+			WTPart part = (WTPart) obj[0];
+			PartColumn column = new PartColumn(part);
+			if (eca) {
+				QueryResult qr = PersistenceHelper.manager.navigate(part, "eco", EcoPartLink.class);
+				while (qr.hasMoreElements()) {
+					EChangeOrder ee = (EChangeOrder) qr.nextElement();
+					// 작업중 혹은 승인중?
+					if (ee.getLifeCycleState().toString().equals("INWORK")
+							|| ee.getLifeCycleState().toString().equals("LINE_REGISTER")
+							|| ee.getLifeCycleState().toString().equals("APPROVING")) {
+						column.setVisible(false);
+					}
+				}
+			}
+
 			column.setRowNum(rowNum++);
 			list.add(column);
 		}

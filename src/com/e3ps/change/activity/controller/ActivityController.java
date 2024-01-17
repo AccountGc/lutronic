@@ -3,6 +3,7 @@ package com.e3ps.change.activity.controller;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.springframework.context.annotation.Description;
@@ -467,5 +468,31 @@ public class ActivityController extends BaseController {
 			result.put("msg", e.toString());
 		}
 		return result;
+	}
+	
+	@Description(value = "ECA 관련 품목 팝업 페이지")
+	@GetMapping(value = "/popup")
+	public ModelAndView popup(@RequestParam String method, @RequestParam String multi,
+			@RequestParam(required = false) String complete) throws Exception {
+		ArrayList<NumberCode> modelList = NumberCodeHelper.manager.getArrayCodeList("MODEL");
+		ArrayList<NumberCode> deptcodeList = NumberCodeHelper.manager.getArrayCodeList("DEPTCODE");
+		ArrayList<NumberCode> matList = NumberCodeHelper.manager.getArrayCodeList("MAT");
+		ArrayList<NumberCode> productmethodList = NumberCodeHelper.manager.getArrayCodeList("PRODUCTMETHOD");
+		ArrayList<NumberCode> manufactureList = NumberCodeHelper.manager.getArrayCodeList("MANUFACTURE");
+		ArrayList<NumberCode> finishList = NumberCodeHelper.manager.getArrayCodeList("FINISH");
+		List<Map<String, String>> lifecycleList = CommonUtil.getLifeCycleState("LC_PART");
+		ModelAndView model = new ModelAndView();
+		model.addObject("complete", Boolean.parseBoolean(complete));
+		model.addObject("modelList", modelList);
+		model.addObject("deptcodeList", deptcodeList);
+		model.addObject("matList", matList);
+		model.addObject("productmethodList", productmethodList);
+		model.addObject("manufactureList", manufactureList);
+		model.addObject("finishList", finishList);
+		model.addObject("lifecycleList", lifecycleList);
+		model.addObject("method", method);
+		model.addObject("multi", Boolean.parseBoolean(multi));
+		model.setViewName("popup:/change/activity/activity-part-list-popup");
+		return model;
 	}
 }

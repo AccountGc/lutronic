@@ -346,6 +346,7 @@ public class OrgHelper {
 	 * 서명 다운로드 주소
 	 */
 	public String getSignFileName(String id) throws Exception {
+		SessionHelper.manager.getAdministrator();
 		String path = WTProperties.getLocalProperties().getProperty("wt.codebase.location") + File.separator + "extcore"
 				+ File.separator + "jsp" + File.separator + "org" + File.separator + "sign";
 		File save = new File(path);

@@ -417,7 +417,7 @@ out.println(drill);
 								type : 'column'
 							},
 							title : {
-								text : 'ECO 년도별 현황',
+								text : 'ECO 연도별 현황',
 								align : 'left'
 							},
 							xAxis : {

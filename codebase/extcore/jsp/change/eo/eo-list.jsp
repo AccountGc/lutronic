@@ -71,36 +71,6 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 				</td>
 			</tr>
 			<tr>
-				<th>구분</th>
-				<td>
-					&nbsp;
-					<div class="pretty p-switch">
-						<input type="radio" name="eoType" value="" checked>
-						<div class="state p-success">
-							<label>
-								<b>없음</b>
-							</label>
-						</div>
-					</div>
-					&nbsp;
-					<div class="pretty p-switch">
-						<input type="radio" name="eoType" value="DEV">
-						<div class="state p-success">
-							<label>
-								<b>개발</b>
-							</label>
-						</div>
-					</div>
-					&nbsp;
-					<div class="pretty p-switch">
-						<input type="radio" name="eoType" value="PRODUCT">
-						<div class="state p-success">
-							<label>
-								<b>양산</b>
-							</label>
-						</div>
-					</div>
-				</td>
 				<th>등록자</th>
 				<td class="indent5">
 					<input type="text" name="creator" id="creator" data-multi="false" class="width-200">
@@ -117,7 +87,7 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 			</tr>
 			<tr>
 				<th>프로젝트 코드</th>
-				<td class="indent5">
+				<td class="indent5" 채>
 					<input type="text" name="model" id="model" class="width-200">
 					<input type="hidden" name="modelcode" id="modelcode">
 					<img src="/Windchill/extcore/images/delete.png" class="delete" title="삭제" onclick="clearValue('model', 'code')">

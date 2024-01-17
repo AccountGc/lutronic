@@ -41,7 +41,9 @@ public class PartColumn {
 	private Timestamp modifiedDate;
 	private String modifiedDate_txt;
 	private boolean preOrder;
-
+	private boolean visible = true;
+	
+	
 	public PartColumn() {
 
 	}
