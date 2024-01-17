@@ -485,7 +485,7 @@ public class EcoHelper {
 								+ pre_part.getIterationIdentifier().getSeries().getValue());
 						map.put("part_creator", pre_part.getCreatorFullName());
 						map.put("preMerge", false);
-						
+
 						map.put("next_oid", next_part.getPersistInfo().getObjectIdentifier().getStringValue());
 						map.put("next_number", next_part.getNumber());
 						map.put("next_name", next_part.getName());
@@ -505,7 +505,7 @@ public class EcoHelper {
 						map.put("preMerge", true);
 					}
 				} else {
-					
+
 				}
 				list.add(map);
 			}
@@ -1326,8 +1326,10 @@ public class EcoHelper {
 					SAPSendBomDTO addDto = new SAPSendBomDTO();
 					addDto.setParentPartNumber(null);
 					addDto.setChildPartNumber(null);
+					
 					addDto.setNewParentPartNumber(next_part.getNumber());
 					addDto.setNewChildPartNumber(addPart.getNumber());
+					
 					addDto.setQty((int) add.get("qty"));
 					addDto.setUnit((String) add.get("unit"));
 					addDto.setSendType("추가품목");

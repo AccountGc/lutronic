@@ -135,6 +135,9 @@ public class StandardDrawingService extends StandardManager implements DrawingSe
 		Transaction trs = new Transaction();
 		try {
 			trs.start();
+			
+			SessionHelper.manager.setAdministrator();
+			
 			EPMDocument epm = (EPMDocument) CommonUtil.getObject(oid);
 			Representable representable = PublishUtils.findRepresentable(epm);
 			Representation representation = PublishUtils.getRepresentation(representable, true, null, false);

@@ -97,6 +97,7 @@ String partNumber = request.getParameter("partNumber");
 	function createAUIGrid(columnLayout) {
 		const props = {
 			headerHeight : 30,
+			showRowNumColumn : false,
 			showRowCheckColumn : false,
 			showAutoNoDataMessage : false,
 			selectionMode : "multipleCells",

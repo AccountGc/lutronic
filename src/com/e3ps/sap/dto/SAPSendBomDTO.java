@@ -25,6 +25,8 @@ public class SAPSendBomDTO {
 	private String newChildPartNumber;
 	private String newParentPartVersion;
 	private String newChildPartVersion;
+	private String parentPartVersion;
+	private String childPartVersion;
 	private int qty = 0;
 	private String unit;
 	private String sendType;

@@ -3900,6 +3900,9 @@ public class StandardPartService extends StandardManager implements PartService 
 		Transaction trs = new Transaction();
 		try {
 			trs.start();
+			
+			SessionHelper.manager.setAdministrator();
+			
 			WTPart part = (WTPart) CommonUtil.getObject(oid);
 			Representable representable = PublishUtils.findRepresentable(part);
 			Representation representation = PublishUtils.getRepresentation(representable, true, null, false);
