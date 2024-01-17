@@ -506,6 +506,15 @@ public class EcoHelper {
 //						map.put("preMerge", true);
 					}
 				} else {
+
+					map.put("part_oid", "");
+					map.put("part_number", "개정 전 데이터가 없습니다.");
+					map.put("part_name", "개정 전 데이터가 없습니다.");
+					map.put("part_state", "개정 전 데이터가 없습니다.");
+					map.put("part_version", "개정 전 데이터가 없습니다.");
+					map.put("part_creator", "개정 전 데이터가 없습니다.");
+					map.put("preMerge", true);
+
 					map.put("next_oid", pre_part.getPersistInfo().getObjectIdentifier().getStringValue());
 					map.put("next_number", pre_part.getNumber());
 					map.put("next_name", pre_part.getName());
@@ -513,7 +522,7 @@ public class EcoHelper {
 					map.put("next_version", pre_part.getVersionIdentifier().getSeries().getValue() + "."
 							+ pre_part.getIterationIdentifier().getSeries().getValue());
 					map.put("next_creator", pre_part.getCreatorFullName());
-					map.put("preMerge", true);
+					map.put("afterMerge", false);
 				}
 				list.add(map);
 			}

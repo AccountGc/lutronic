@@ -1130,7 +1130,7 @@ public class PartHelper {
 	/**
 	 * 완제품 재귀함수
 	 */
-	private void endRecursive(ArrayList<WTPart> list, WTPart part) throws Exception {
+	public void endRecursive(ArrayList<WTPart> list, WTPart part) throws Exception {
 		WTPartMaster master = (WTPartMaster) part.getMaster();
 
 		String viewName = part.getViewName();
@@ -1185,7 +1185,7 @@ public class PartHelper {
 	/**
 	 * 완제품 베이스라인 재귀함수
 	 */
-	private void endRecursive(ArrayList<WTPart> list, WTPart part, String baseline) throws Exception {
+	public void endRecursive(ArrayList<WTPart> list, WTPart part, String baseline) throws Exception {
 		WTPartMaster master = (WTPartMaster) part.getMaster();
 		State state = part.getLifeCycleState();
 		QuerySpec query = new QuerySpec();

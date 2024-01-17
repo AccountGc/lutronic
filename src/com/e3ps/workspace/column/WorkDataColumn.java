@@ -78,7 +78,7 @@ public class WorkDataColumn {
 				setViewUrl(this.context + "/doc/view?oid=" + getPoid());
 			}
 			setState(doc.getLifeCycleState().getDisplay());
-			setCreator(doc.getCreatorName());
+			setCreator(doc.getCreatorFullName());
 			setCreatedDate(doc.getCreateTimestamp());
 			setCreatedDate_txt(doc.getCreateTimestamp().toString().substring(0, 10));
 		} else if (per instanceof EChangeOrder) {

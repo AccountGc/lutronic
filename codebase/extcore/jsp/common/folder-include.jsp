@@ -140,6 +140,9 @@ String height = request.getParameter("height");
 
 	let timerId = null;
 	function _auiCellClick(event) {
+		if(event.treeIcon) {
+			return false;
+		}
 		const item = event.item;
 		if(item.isNew) {
 			return;
