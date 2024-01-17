@@ -121,15 +121,14 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 						<img src="/Windchill/extcore/images/header.png">
 						설변품목
 						<img src="/Windchill/extcore/images/fileicon/file_excel.gif" title="엑셀 다운로드" onclick="exportExcel();">
+						<input type="button" value="저장" title="저장" onclick="save();">
 						<input type="button" value="이전품목삭제" title="이전품목삭제" class="red" onclick="deleteRow();">
-						<input type="button" value="변경품목삭제" title="변경품목삭제" class="gray" onclick="prePart();">
 					</div>
 				</td>
 				<td class="right">
-					<!-- 					<input type="button" value="이전품목" title="이전품목" class="red" onclick="prePart();"> -->
-					<!-- 					<input type="button" value="품목개정" title="품목개정" onclick="revise();" class="gray"> -->
-					<!-- 					<input type="button" value="품목변경" title="품목변경" class="blue" onclick="popup100();"> -->
-					<input type="button" value="저장" title="저장" onclick="save();">
+					<input type="button" value="이전품목" title="이전품목" class="red" onclick="prePart();">
+					<input type="button" value="품목개정" title="품목개정" onclick="revise();" class="gray">
+					<input type="button" value="품목변경" title="품목변경" class="blue" onclick="replace();">
 					<input type="button" value="새로고침" title="새로고침" class="orange" onclick="document.location.reload();">
 				</td>
 			</tr>
@@ -702,7 +701,7 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 
 			function createAUIGrid(columnLayout) {
 				const props = {
-					showStateColumn : true,
+// 					showStateColumn : true,
 					headerHeight : 30,
 					fillColumnSizeMode : false,
 					showRowNumColumn : true,

@@ -1,3 +1,4 @@
+<%@page import="java.util.Iterator"%>
 <%@page import="java.util.ArrayList"%>
 <%@page import="java.util.Map"%>
 <%@page import="wt.fc.PagingSessionHelper"%>
@@ -13,6 +14,7 @@ Map<String, ArrayList<Map<String, Integer>>> dataMap = (Map<String, ArrayList<Ma
 String start = (String) request.getAttribute("start");
 ArrayList<Map<String, Integer>> complete = (ArrayList<Map<String, Integer>>) dataMap.get("complete");
 ArrayList<Map<String, Integer>> progress = (ArrayList<Map<String, Integer>>) dataMap.get("progress");
+Map<String, Integer> drill = (Map<String, Integer>) request.getAttribute("drill");
 %>
 <!DOCTYPE html>
 <html>
@@ -126,75 +128,283 @@ ArrayList<Map<String, Integer>> progress = (ArrayList<Map<String, Integer>>) dat
 					<script type="text/javascript">
 					Highcharts.chart('container1', {
 					    chart: {
-					        type: 'bar'
+					        type: 'column'
 					    },
 					    title: {
-					        text: 'Historic World Population by Region',
-					        align: 'left'
-					    },
-					    subtitle: {
-					        text: 'Source: <a ' +
-					            'href="https://en.wikipedia.org/wiki/List_of_continents_and_continental_subregions_by_population"' +
-					            'target="_blank">Wikipedia.org</a>',
-					        align: 'left'
+					        align: 'left',
+					        text: 'CR 변경사유 별 현황',
 					    },
 					    xAxis: {
-					        categories: ['Africa', 'America', 'Asia', 'Europe'],
-					        title: {
-					            text: null
-					        },
-					        gridLineWidth: 1,
-					        lineWidth: 0
+					        type: 'category'
 					    },
 					    yAxis: {
-					        min: 0,
 					        title: {
-					            text: 'Population (millions)',
-					            align: 'high'
-					        },
-					        labels: {
-					            overflow: 'justify'
-					        },
-					        gridLineWidth: 0
-					    },
-					    tooltip: {
-					        valueSuffix: ' millions'
-					    },
-					    plotOptions: {
-					        bar: {
-					            borderRadius: '50%',
-					            dataLabels: {
-					                enabled: true
-					            },
-					            groupPadding: 0.1
+					            text: 'CR 변경사유'
 					        }
 					    },
-					    legend: {
-					        layout: 'vertical',
-					        align: 'right',
-					        verticalAlign: 'top',
-					        x: -40,
-					        y: 80,
-					        floating: true,
-					        borderWidth: 1,
-					        backgroundColor:
-					            Highcharts.defaultOptions.legend.backgroundColor || '#FFFFFF',
-					        shadow: true
+					    plotOptions: {
+					        series: {
+					            borderWidth: 0,
+					            dataLabels: {
+					                enabled: true,
+					                format: '{point.y:.1f}%'
+					            }
+					        }
 					    },
-					    credits: {
-					        enabled: false
+
+					    tooltip: {
+					        headerFormat: '<span style="font-size:11px">{series.name}</span><br>',
+					        pointFormat: '<span style="color:{point.color}">{point.name}</span>: <b>{point.y:.2f}%</b> of total<br/>'
 					    },
-					    series: [{
-					        name: 'Year 1990',
-					        data: [631, 727, 3202, 721]
-					    }, {
-					        name: 'Year 2000',
-					        data: [814, 841, 3714, 726]
-					    }, {
-					        name: 'Year 2018',
-					        data: [1276, 1007, 4561, 746]
-					    }]
+					    series: [
+					        {
+					            name: '변경사유',
+					            colorByPoint: true,
+					            data: [
+					            	<%
+					            		Iterator it = drill.keySet().iterator();
+					            		while(it.hasNext()) {
+					            			String key = (String)it.next();
+					            			int value = drill.get(key);
+					            	%>
+					                {
+					                    name: '<%=key%>',
+					                    y: <%=value%>,
+					                    drilldown: '<%=key%>'
+					                },
+					            	<%
+					            		}
+					            	%>
+					            ]
+					        }
+					    ],
+					    drilldown: {
+					        breadcrumbs: {
+					            position: {
+					                align: 'right'
+					            }
+					        },
+					        series: [
+					            {
+					                name: 'Chrome',
+					                id: 'Chrome',
+					                data: [
+					                    [
+					                        'v65.0',
+					                        0.1
+					                    ],
+					                    [
+					                        'v64.0',
+					                        1.3
+					                    ],
+					                    [
+					                        'v63.0',
+					                        53.02
+					                    ],
+					                    [
+					                        'v62.0',
+					                        1.4
+					                    ],
+					                    [
+					                        'v61.0',
+					                        0.88
+					                    ],
+					                    [
+					                        'v60.0',
+					                        0.56
+					                    ],
+					                    [
+					                        'v59.0',
+					                        0.45
+					                    ],
+					                    [
+					                        'v58.0',
+					                        0.49
+					                    ],
+					                    [
+					                        'v57.0',
+					                        0.32
+					                    ],
+					                    [
+					                        'v56.0',
+					                        0.29
+					                    ],
+					                    [
+					                        'v55.0',
+					                        0.79
+					                    ],
+					                    [
+					                        'v54.0',
+					                        0.18
+					                    ],
+					                    [
+					                        'v51.0',
+					                        0.13
+					                    ],
+					                    [
+					                        'v49.0',
+					                        2.16
+					                    ],
+					                    [
+					                        'v48.0',
+					                        0.13
+					                    ],
+					                    [
+					                        'v47.0',
+					                        0.11
+					                    ],
+					                    [
+					                        'v43.0',
+					                        0.17
+					                    ],
+					                    [
+					                        'v29.0',
+					                        0.26
+					                    ]
+					                ]
+					            },
+					            {
+					                name: 'Firefox',
+					                id: 'Firefox',
+					                data: [
+					                    [
+					                        'v58.0',
+					                        1.02
+					                    ],
+					                    [
+					                        'v57.0',
+					                        7.36
+					                    ],
+					                    [
+					                        'v56.0',
+					                        0.35
+					                    ],
+					                    [
+					                        'v55.0',
+					                        0.11
+					                    ],
+					                    [
+					                        'v54.0',
+					                        0.1
+					                    ],
+					                    [
+					                        'v52.0',
+					                        0.95
+					                    ],
+					                    [
+					                        'v51.0',
+					                        0.15
+					                    ],
+					                    [
+					                        'v50.0',
+					                        0.1
+					                    ],
+					                    [
+					                        'v48.0',
+					                        0.31
+					                    ],
+					                    [
+					                        'v47.0',
+					                        0.12
+					                    ]
+					                ]
+					            },
+					            {
+					                name: 'Internet Explorer',
+					                id: 'Internet Explorer',
+					                data: [
+					                    [
+					                        'v11.0',
+					                        6.2
+					                    ],
+					                    [
+					                        'v10.0',
+					                        0.29
+					                    ],
+					                    [
+					                        'v9.0',
+					                        0.27
+					                    ],
+					                    [
+					                        'v8.0',
+					                        0.47
+					                    ]
+					                ]
+					            },
+					            {
+					                name: 'Safari',
+					                id: 'Safari',
+					                data: [
+					                    [
+					                        'v11.0',
+					                        3.39
+					                    ],
+					                    [
+					                        'v10.1',
+					                        0.96
+					                    ],
+					                    [
+					                        'v10.0',
+					                        0.36
+					                    ],
+					                    [
+					                        'v9.1',
+					                        0.54
+					                    ],
+					                    [
+					                        'v9.0',
+					                        0.13
+					                    ],
+					                    [
+					                        'v5.1',
+					                        0.2
+					                    ]
+					                ]
+					            },
+					            {
+					                name: 'Edge',
+					                id: 'Edge',
+					                data: [
+					                    [
+					                        'v16',
+					                        2.6
+					                    ],
+					                    [
+					                        'v15',
+					                        0.92
+					                    ],
+					                    [
+					                        'v14',
+					                        0.4
+					                    ],
+					                    [
+					                        'v13',
+					                        0.1
+					                    ]
+					                ]
+					            },
+					            {
+					                name: 'Opera',
+					                id: 'Opera',
+					                data: [
+					                    [
+					                        'v50.0',
+					                        0.96
+					                    ],
+					                    [
+					                        'v49.0',
+					                        0.82
+					                    ],
+					                    [
+					                        'v12.1',
+					                        0.14
+					                    ]
+					                ]
+					            }
+					        ]
+					    }
 					});
+
 					</script>
 				</td>
 
@@ -219,6 +429,9 @@ ArrayList<Map<String, Integer>> progress = (ArrayList<Map<String, Integer>>) dat
 							},
 							yAxis : {
 								min : 0,
+								title : {
+									text: '개수(개)',
+								}
 							},
 							plotOptions : {
 								column : {

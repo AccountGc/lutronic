@@ -423,10 +423,10 @@ public class StandardSAPService extends StandardManager implements SAPService {
 						addDto.setQty((int) add.get("qty"));
 						addDto.setUnit((String) add.get("unit"));
 						sendList.add(addDto);
-						
+
 						link.setSendType("ADD");
 						PersistenceHelper.manager.modify(link);
-						
+
 					}
 
 					// 삭제 항목 넣음
@@ -441,6 +441,17 @@ public class StandardSAPService extends StandardManager implements SAPService {
 						removeDto.setQty((int) remove.get("qty"));
 						removeDto.setUnit((String) remove.get("unit"));
 						sendList.add(removeDto);
+
+						EcoPartLink removeLink = EcoPartLink.newEcoPartLink((WTPartMaster) removePart.getMaster(), eco);
+						removeLink.setSendType("REMOVE");
+						removeLink.setVersion(removePart.getVersionIdentifier().getSeries().getValue());
+						removeLink.setBaseline(true);
+						removeLink.setPreOrder(false);
+						removeLink.setRightPart(false);
+						removeLink.setLeftPart(true);
+						removeLink.setPast(false);
+						PersistenceHelper.manager.save(removeLink);
+						// 삭제품 저장
 					}
 
 					// 변경 대상 리스트..

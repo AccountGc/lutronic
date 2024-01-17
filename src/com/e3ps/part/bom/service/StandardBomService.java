@@ -4,8 +4,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-import javax.xml.transform.Result;
-
 import com.e3ps.common.util.CommonUtil;
 import com.e3ps.common.util.QuerySpecUtils;
 
@@ -498,14 +496,14 @@ public class StandardBomService extends StandardManager implements BomService {
 			originals[0] = part;
 			
 			// 체크
-			QuerySpec query = new QuerySpec();
-			int idx = query.appendClassList(WTPartMaster.class, true);
-			QuerySpecUtils.toEquals(query, idx, WTPartMaster.class, WTPartMaster.NUMBER, part.getNumber());
-			QueryResult qr = PersistenceHelper.manager.find(query);
-			if(qr.size() > 0) {
-				map.put("exist", true);
-				return map;
-			}
+//			QuerySpec query = new QuerySpec();
+//			int idx = query.appendClassList(WTPartMaster.class, true);
+//			QuerySpecUtils.toEquals(query, idx, WTPartMaster.class, WTPartMaster.NUMBER, part.getNumber());
+//			QueryResult qr = PersistenceHelper.manager.find(query);
+//			if(qr.size() > 0) {
+//				map.put("exist", true);
+//				return map;
+//			}
 			
 			
 			copyInfoArray = EnterpriseHelper.service.newMultiObjectCopy(originals);

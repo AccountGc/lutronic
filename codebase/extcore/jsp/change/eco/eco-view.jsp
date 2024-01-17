@@ -88,7 +88,7 @@ boolean isAdmin = (boolean) request.getAttribute("isAdmin");
 			</tr>
 			<tr>
 				<th class="lb">ECO 타입</th>
-				<td class="indent5"><%=dto.getSendType()%></td>
+				<td class="indent5"><%=dto.getSendType() != null ? dto.getSendType() : ""%></td>
 				<th>등록일</th>
 				<td class="indent5"><%=dto.getCreatedDate_txt()%></td>
 			</tr>

@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.e3ps.change.activity.service.ActivityHelper;
+import com.e3ps.change.cr.service.CrHelper;
 import com.e3ps.change.eco.service.EcoHelper;
 import com.e3ps.common.history.service.LoginHistoryHelper;
 import com.e3ps.common.util.CommonUtil;
@@ -77,6 +78,8 @@ public class IndexController extends BaseController {
 			start = "2016";
 		}
 		Map<String, ArrayList<Map<String, Integer>>> dataMap = EcoHelper.manager.getChart(start);
+		Map<String, Integer> drill = CrHelper.manager.getDrill();
+		model.addObject("drill", drill);
 		model.addObject("start", start);
 		model.addObject("dataMap", dataMap);
 		model.setViewName("/extcore/jsp/mainPage.jsp");

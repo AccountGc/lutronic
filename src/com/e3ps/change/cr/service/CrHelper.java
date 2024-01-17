@@ -19,6 +19,7 @@ import com.e3ps.common.util.AUIGridUtil;
 import com.e3ps.common.util.CommonUtil;
 import com.e3ps.common.util.PageQueryUtils;
 import com.e3ps.common.util.QuerySpecUtils;
+import com.e3ps.common.util.StringUtil;
 import com.e3ps.doc.DocumentEOLink;
 import com.e3ps.doc.column.DocumentColumn;
 import com.e3ps.rohs.ROHSMaterial;
@@ -307,5 +308,71 @@ public class CrHelper {
 			rtn = number + "001";
 		}
 		return rtn;
+	}
+
+	/**
+	 * 차트 드릴다운 첫번째
+	 */
+	public Map<String, Integer> getDrill() throws Exception {
+		Map<String, Integer> result = new HashMap<>();
+
+		String[] ss = new String[] { "영업/마케팅", "원가 절감", "기능/성능 변경", "공정 변경", "자재 변경", "허가/규제 변경", "품질 개선", "라벨링",
+				"기타" };
+
+		int market = 0;
+		int cost = 0;
+		int perform = 0;
+		int line = 0;
+		int mat = 0;
+		int permission = 0;
+		int product = 0;
+		int label = 0;
+		int etc = 0;
+
+		QuerySpec query = new QuerySpec();
+		int idx = query.appendClassList(EChangeRequest.class, true);
+		QueryResult rs = PersistenceHelper.manager.find(query);
+		while (rs.hasMoreElements()) {
+			Object[] obj = (Object[]) rs.nextElement();
+			EChangeRequest cr = (EChangeRequest) obj[0];
+			String a = cr.getChangeSection();
+			// 구데잍..
+			if (StringUtil.checkString(a)) {
+				String[] t = a.split(",");
+				for (String tt : t) {
+					for (String s : ss) {
+						if (tt.equals("영업/마케팅")) {
+							++market;
+							result.put(s, market);
+						} else if (tt.equals("원가 절감")) {
+							++cost;
+							result.put(s, cost);
+						} else if (tt.equals("기능/성능 변경")) {
+							++perform;
+							result.put(s, permission);
+						} else if (tt.equals("공정 변경")) {
+							++line;
+							result.put(s, line);
+						} else if (tt.equals("자재 변경")) {
+							++mat;
+							result.put(s, mat);
+						} else if (tt.equals("허가/규제 변경")) {
+							++permission;
+							result.put(s, permission);
+						} else if (tt.equals("품질 개선")) {
+							++product;
+							result.put(s, product);
+						} else if (tt.equals("라벨링")) {
+							++label;
+							result.put(s, label);
+						} else if (tt.equals("기타")) {
+							++etc;
+							result.put(s, etc);
+						}
+					}
+				}
+			}
+		}
+		return result;
 	}
 }
