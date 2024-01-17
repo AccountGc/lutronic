@@ -1328,10 +1328,6 @@ public class EcoHelper {
 					addDto.setUnit((String) add.get("unit"));
 					addDto.setSendType("추가품목");
 					sendList.add(addDto);
-
-					link.setSendType("ADD");
-					PersistenceHelper.manager.modify(link);
-
 				}
 
 				// 삭제 항목 넣음
@@ -1347,17 +1343,6 @@ public class EcoHelper {
 					removeDto.setUnit((String) remove.get("unit"));
 					removeDto.setSendType("삭제품");
 					sendList.add(removeDto);
-
-					EcoPartLink removeLink = EcoPartLink.newEcoPartLink((WTPartMaster) removePart.getMaster(), eco);
-					removeLink.setSendType("REMOVE");
-					removeLink.setVersion(removePart.getVersionIdentifier().getSeries().getValue());
-					removeLink.setBaseline(true);
-					removeLink.setPreOrder(false);
-					removeLink.setRightPart(false);
-					removeLink.setLeftPart(true);
-					removeLink.setPast(false);
-					PersistenceHelper.manager.save(removeLink);
-					// 삭제품 저장
 				}
 
 				// 변경 대상 리스트..
@@ -1379,8 +1364,6 @@ public class EcoHelper {
 							break; // 이미 찾았으니 더 이상 검색할 필요가 없음
 						}
 					}
-					link.setSendType("CHANGE");
-					PersistenceHelper.manager.modify(link);
 				}
 
 				// itemsToRemove에 해당하는 모든 아이템을 changeList에서 제거
