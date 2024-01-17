@@ -147,8 +147,8 @@ String partNumber = request.getParameter("partNumber");
 			AUIGrid.removeAjaxLoader(myGridID);
 			if (data.result) {
 				totalPage = Math.ceil(data.total / data.pageSize);
-				createPagingNavigator(data.curPage, data.sessionid);
-				AUIGrid.setGridData(data.total, myGridID, data.list);
+				createPagingNavigator(data.total, data.curPage, data.sessionid);
+				AUIGrid.setGridData(myGridID, data.list);
 				if (movePage === undefined) {
 					AUIGrid.setSorting(myGridID, sortCache);
 					compField = null;
