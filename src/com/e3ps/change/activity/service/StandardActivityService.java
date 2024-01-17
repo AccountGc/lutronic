@@ -769,11 +769,13 @@ public class StandardActivityService extends StandardManager implements Activity
 			for (LinkedHashMap<String, Object> map : addRows) {
 				String part_oid = (String) map.get("part_oid");
 				WTPart part = (WTPart) CommonUtil.getObject(part_oid);
-				QueryResult qr = PersistenceHelper.manager.navigate(part, "eco", EcoPartLink.class);
+				QueryResult qr = PersistenceHelper.manager.navigate((WTPartMaster) part.getMaster(), "eco",
+						EcoPartLink.class);
 				while (qr.hasMoreElements()) {
 					EChangeOrder ee = (EChangeOrder) qr.nextElement();
 					// 작업중 혹은 승인중?
 					if (ee.getLifeCycleState().toString().equals("INWORK")
+							|| ee.getLifeCycleState().toString().equals("LINE_REGISTER")
 							|| ee.getLifeCycleState().toString().equals("APPROVING")) {
 						isExist = true;
 						msg = part.getNumber() + " 품목은 EO/ECO(" + ee.getEoNumber() + ")에서 설계변경이 진행중인 품목입니다.";

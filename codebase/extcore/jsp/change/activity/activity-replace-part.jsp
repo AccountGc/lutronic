@@ -172,7 +172,7 @@ if(t.equals("CHANGE")) {
 	}
 
 	function popup100() {
-		const url = getCallUrl("/part/popup?method=insert100&multi=true&complete=<%=complete%>");
+		const url = getCallUrl("/activity/popup?method=insert100&multi=true&complete=true");
 		_popup(url, 1600, 800, "n");
 	}
 

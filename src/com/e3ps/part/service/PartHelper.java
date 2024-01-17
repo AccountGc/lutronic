@@ -326,7 +326,8 @@ public class PartHelper {
 			WTPart part = (WTPart) obj[0];
 			PartColumn column = new PartColumn(part);
 			if (eca) {
-				QueryResult qr = PersistenceHelper.manager.navigate(part, "eco", EcoPartLink.class);
+				QueryResult qr = PersistenceHelper.manager.navigate((WTPartMaster) part.getMaster(), "eco",
+						EcoPartLink.class);
 				while (qr.hasMoreElements()) {
 					EChangeOrder ee = (EChangeOrder) qr.nextElement();
 					// 작업중 혹은 승인중?

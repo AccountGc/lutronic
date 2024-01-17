@@ -125,7 +125,7 @@ public class DocumentColumn {
 	private String keyToValue(String code, String codeType) throws Exception {
 		NumberCode n = NumberCodeHelper.manager.getNumberCode(code, codeType);
 		if (n != null) {
-			return n.getCode() + "[" + n.getName() + "]";
+			return n.getCode() + " [" + n.getName() + "]";
 		}
 		return "";
 	}

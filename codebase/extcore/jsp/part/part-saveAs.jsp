@@ -116,10 +116,10 @@
 						<col width="*">
 					</colgroup>
 					<tr>
-						<th class="req">품목 새품번</th>
+						<th class="req">품목 다른 품번</th>
 						<td class="indent5">
 							<input type="text" name="saveAsNum" id="saveAsNum" class="width-400">
-							<input type="button" value="새품번으로 저장" title="새품번으로저장" onclick="saveAs();" class="gray">
+							<input type="button" value="다른 품번으로 저장" title="다른 품번으로저장" onclick="saveAs();" class="gray">
 						</td>
 					</tr>
 				</table>
@@ -157,13 +157,13 @@
 		const tree = $.ui.fancytree.getTree("#righttable");
 		const saveAsNum = document.getElementById("saveAsNum");
 		if (tree === null) {
-			alert("새품번으로 저장할 BOM을 먼저 선택하세요.");
+			alert("다른 품번으로 저장할 BOM을 먼저 선택하세요.");
 			saveAsNum.focus();
 			return false;
 		}
 
 		if (saveAsNum.value === "") {
-			alert("저장할 새품번을 입력하세요.");
+			alert("저장할 다른 품번을 입력하세요.");
 			saveAsNum.focus();
 			return false;
 		}

@@ -19,7 +19,7 @@ WTPart part = (WTPart) CommonUtil.getObject(oid);
 
 ArrayList<WTPart> list = new ArrayList<>();
 endRecursive(list, part);
-
+out.println(list.size());
 for (WTPart p : list) {
 	out.println(p.getNumber() + "<br>");
 }
@@ -58,11 +58,6 @@ for (WTPart p : list) {
 		QuerySpecUtils.toLatest(query, idx_part, WTPart.class);
 		QuerySpecUtils.toOrderBy(query, idx_part, WTPart.class, WTPart.NUMBER, true);
 		QueryResult qr = PersistenceHelper.manager.find(query);
-		// 		if (qr.size() == 0) {
-		// // 			if (!list.contains(part)) {
-		// 				list.add(part);
-		// // 			}
-		// 		}
 		while (qr.hasMoreElements()) {
 			Object obj[] = (Object[]) qr.nextElement();
 			if (!(obj[1] instanceof WTPart)) {
