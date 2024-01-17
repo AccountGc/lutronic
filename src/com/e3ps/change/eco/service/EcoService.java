@@ -41,4 +41,5 @@ public interface EcoService {
 	 * SAP 전송후 전송품목에 대한 상태값 변경
 	 */
 	public abstract void ecoPartApproved(EChangeOrder eco) throws Exception;
+
 }

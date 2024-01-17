@@ -905,6 +905,23 @@ public class SAPHelper {
 				continue;
 			}
 			WTPart p = (WTPart) obj[1];
+			
+			if (SAPHelper.manager.skipEight(part.getNumber())) {
+				continue;
+			}
+
+			if (SAPHelper.manager.skipLength(part.getNumber())) {
+				continue;
+			}
+
+			if (SAPHelper.manager.skipEight(p.getNumber())) {
+				continue;
+			}
+
+			if (SAPHelper.manager.skipLength(p.getNumber())) {
+				continue;
+			}
+			
 			list.add(obj);
 			sendList(p, list);
 		}
@@ -930,6 +947,23 @@ public class SAPHelper {
 				continue;
 			}
 			WTPart p = (WTPart) obj[1];
+			
+			if (SAPHelper.manager.skipEight(part.getNumber())) {
+				continue;
+			}
+
+			if (SAPHelper.manager.skipLength(part.getNumber())) {
+				continue;
+			}
+
+			if (SAPHelper.manager.skipEight(p.getNumber())) {
+				continue;
+			}
+
+			if (SAPHelper.manager.skipLength(p.getNumber())) {
+				continue;
+			}
+			
 			list.add(obj);
 			sendList(p, list);
 		}
