@@ -971,7 +971,6 @@ public class PartHelper {
 		}
 
 		boolean isWorkCopy = WorkInProgressHelper.isWorkingCopy(part);
-		System.out.println("partHelper - isWorkCopy  : " + isWorkCopy);
 		if (isWorkCopy) {
 			throw new Exception("작업 복사본 부품 = " + part.getNumber());
 		}

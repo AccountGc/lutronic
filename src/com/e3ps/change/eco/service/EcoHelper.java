@@ -1363,26 +1363,28 @@ public class EcoHelper {
 				// 변경 대상 리스트..
 				ArrayList<SAPSendBomDTO> changeList = SAPHelper.manager.getOneLevel(next_part, eco);
 				Iterator<SAPSendBomDTO> iterator = changeList.iterator();
+				List<SAPSendBomDTO> itemsToRemove = new ArrayList<>();
+
 				while (iterator.hasNext()) {
 					SAPSendBomDTO dto = iterator.next();
 					dto.setSendType("변경품");
 					String compNum = dto.getNewChildPartNumber();
 
-					// addList에서 같은 newChildPartNumber를 찾으면 changeList에서 제거
-					Iterator<Map<String, Object>> addIterator = addList.iterator();
-					while (addIterator.hasNext()) {
-						Map<String, Object> addMap = addIterator.next();
+					// addList에서 같은 newChildPartNumber를 찾으면 itemsToRemove에 추가
+					for (Map<String, Object> addMap : addList) {
 						String addOid = (String) addMap.get("oid");
 						WTPart addPart = (WTPart) CommonUtil.getObject(addOid);
 						if (addPart.getNumber().equals(compNum)) {
-							addIterator.remove();
-							iterator.remove(); // iterator.remove()는 여기서 호출
+							itemsToRemove.add(dto);
+							break; // 이미 찾았으니 더 이상 검색할 필요가 없음
 						}
 					}
 					link.setSendType("CHANGE");
 					PersistenceHelper.manager.modify(link);
-					// link에 대한 변경이 의도된 것이라면 여기에 두세요
 				}
+
+				// itemsToRemove에 해당하는 모든 아이템을 changeList에서 제거
+				changeList.removeAll(itemsToRemove);
 
 				// 위의 반복문에서 변경된 changeList를 sendList에 추가
 				sendList.addAll(changeList);

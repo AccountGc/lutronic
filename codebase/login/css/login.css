@@ -1,104 +1,235 @@
-input {
-	height: 40px;
-	width: 100%;
-	margin: 20px auto;
-	border-left: none;
-	border-right: none;
-	border-top: none;
-	color: white;
-	background: #0b2144;
-	padding-left: 5px;
-	font-family: FontAwesome, "Open Sans", Verdana, sans-serif;
-	font-style: normal;
-	font-weight: normal;
-	text-decoration: inherit;
+
+
+
+* {
+    font-family: 'Poppins', sans-serif;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
 }
 
-button {
-	height: 40px;
-	width: 100%;
-	border-radius: 4px;
-	margin-top: 30px;
-	margin-bottom: 20px;
-	border: none;
-	background: #27d4e8;
-	color: #ffffff;
-	font-family: sans-serif;
-	font-weight: 700;
-	font-size: 14pt;
+body.in {
+    background: #f7f7f7;
 }
 
-form {
-	width: 90%;
-	margin: 40px auto;
-	text-align: center;
+.in_container {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    margin-top: -286px;
+    margin-left: -195px;
+    width: 390px;
+    height: 572px;
+    text-align: center;
 }
 
-input:focus {
-	outline: none
+header {
+    margin-bottom: 30px;
+    text-align: center;
 }
 
-.logo {
-	color: white;
-	font-family: sans-serif;
-	font-size: 15pt;
-	font-weight: 600;
-	text-align: center;
-	padding-top: 40px
+.in_container header h1 {
+    width: 100%;
+    height: 56px;
+    background: url(/Windchill/login/images/windchill-logo.png) no-repeat center;
 }
 
-.myform {
-	background: #0b2144;
-	width: 40%;
-	margin: auto;
-	height: 600px;
-	-webkit-box-shadow: 0px 0px 3px 1px rgba(38, 35, 128, 1);
-	-moz-box-shadow: 0px 0px 3px 1px rgba(38, 35, 128, 1);
-	box-shadow: 0px 0px 3px 1px rgba(38, 35, 128, 1);
+.hide {
+    font-size: 0;
+    line-height: 0;
 }
 
-.myform a {
-	text-decoration: none;
-	color: white;
-	font-family: sans-serif;
-	letter-spacing: .1em;
+.in_container section {
+    background: #fff;
+    padding: 60px;
+    box-shadow: 4px 5px 25px #e8e8e8;
 }
 
-::-webkit-input-placeholder {
-	/* Chrome/Opera/Safari */
-	color: #cccccc;
-
+section {
+    margin-bottom: 20px;
+    letter-spacing: -1px;
+    box-sizing: border-box;
 }
 
-.fa-cloud-upload {
-	font-size: 90px;
-
+.in_container section i {
+    display: block;
+    width: 100%;
+    height: 66px;
+    background: url(/Windchill/login/images/poongsan_logo.png) no-repeat center;
 }
 
-::-moz-placeholder {
-	/* Firefox 19+ */
-	color: #cccccc;
+.mb30 {
+    margin-bottom: 30px !important;
 }
 
-:-ms-input-placeholder {
-	/* IE 10+ */
-	color: #cccccc;
+
+.in_container section p {
+    font-size: 13px;
+    color: #666666;
 }
 
-:-moz-placeholder {
-	/* Firefox 18- */
-	color: #cccccc;
-
+.in_container section .text_form {
+    padding-bottom: 10px;
+}
+.text_form {
+    padding: 10px 0;
 }
 
-@media screen and (max-width:500px) {
-	.myform {
-		width: 80%;
+.in_container section .text_form p {
+    margin-bottom: 10px;
+}
+
+.in_container section p {
+    font-size: 13px;
+    color: #666666;
+}
+
+
+.in_container section .text_form label[for="principal"] {
+    background: url(/Windchill/login/images/userIcon.png) no-repeat center;
+}
+.in_container section .text_form label[for="credential"] {
+    background: url(/Windchill/login/images/pwIcon.png) no-repeat center;
+}
+
+.in_container section .text_form label {
+    position: absolute;
+    width: 40px;
+    height: 38px;
+}
+label {
+    cursor: pointer;
+}
+
+.in_container section .text_form input[type="text"], .in_container section .text_form input[type="password"] {
+    color: #888888;
+    font-size: 14px;
+    padding-left: 40px;
+    background: #fafafa;
+}
+input[type="text"], input[type="password"] {
+    width: 100%;
+    height: 34px;
+    border: 1px solid #dbdbdb;
+    padding: 10px 15px;
+    border-radius: 5px;
+    box-sizing: border-box;
+    letter-spacing: 0;
+}
+img, input, button, select, textarea {
+    vertical-align: middle;
+}
+
+.in_container section a.btn:hover {
+    background: #1DA3B6;
+}
+.in_container section a.btn {
+    margin-bottom: 15px;
+    background: #20B4CB;
+    height: 50px;
+    line-height: 50px;
+}
+a.btn {
+    display: block;
+    color: #fff;
+    font-size: 15px;
+    border-radius: 5px;
+    letter-spacing: 0;
+}
+a {
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.in_container section .check_box {
+    font-size: 13px;
+    color: #939393;
+}
+
+/* input-style */
+.checks {position: relative;}
+.checks input[type="checkbox"] {  /* 실제 체크박스는 화면에서 숨김 */
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip:rect(0,0,0,0);
+  border: 0
+}
+.checks input[type="checkbox"] + label {
+  display: inline-block;
+  position: relative;
+  cursor: pointer;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+}
+.checks input[type="checkbox"] + label:before {  /* 가짜 체크박스 */
+  content: ' ';
+  display: inline-block;
+  width: 15px;  /* 체크박스의 너비를 지정 */
+  height: 15px;  /* 체크박스의 높이를 지정 */
+  line-height: 15px; /* 세로정렬을 위해 높이값과 일치 */
+  margin: -1px 5px 0 0;
+  text-align: center;
+  vertical-align: middle;
+  background: #808df3;
+  border: 1px solid #808df3;
+  border-radius : 15px;
+  /*box-shadow: 0px 1px 2px rgba(0,0,0,0.05), inset 0px -15px 10px -12px rgba(0,0,0,0.05);*/
+}
+.checks input[type="checkbox"] + label:active:before,
+.checks input[type="checkbox"]:checked + label:active:before {
+  box-shadow: 0 1px 2px rgba(0,0,0,0.05), inset 0px 1px 3px rgba(0,0,0,0.1);
+}
+.checks input[type="checkbox"]:checked + label:before {  /* 체크박스를 체크했을때 */
+  content: '\2714';  /* 체크표시 유니코드 사용 */
+  color: #ffffff;
+  font-size:11px; /*체크표시 크기*/
+  font-weight:600; /*체크표시 굵기*/
+  background: #808df3;
+  /*border:1px solid #808df3;*/
+  box-shadow: 0px 1px 2px rgba(0,0,0,0.05), inset 0px -15px 10px -12px rgba(0,0,0,0.05), inset 15px 10px -12px rgba(255,255,255,0.1);
+}
+.checks input[type="checkbox"]:focus + label:before {
+  /*border-color:#a5cdf1;체크표시 후 선 색상*/
+  box-shadow:0 0 4px #89bfef; /* 체크표시 후 쉐도우 및 탭이동시 표시 */
+}
+
+/* ==== in login (내부) ==== */
+.in_container .checks input[type="checkbox"] + label:before {  /* 가짜 체크박스 */
+    background: #fff;
+    border: 1px solid #ceced4;
+}
+.in_container .checks input[type="checkbox"]:checked + label:before {  /* 체크박스를 체크했을때 */
+    content: '\2714';  /* 체크표시 유니코드 사용 */
+    color: #6171ea; /*체크표시 색상*/
+    font-size:11px; /*체크표시 크기*/
+    font-weight:600; /*체크표시 굵기*/
+    background: #ffffff;
+    /*border:1px solid #808df3;*/
+    box-shadow: 0px 1px 2px rgba(0,0,0,0.05), inset 0px -15px 10px -12px rgba(0,0,0,0.05), inset 15px 10px -12px rgba(255,255,255,0.1);
+  }
+.in_container .checks input[type="checkbox"]:focus + label:before {
+    /* border-color:#6171ea; 체크표시 후 선 색상*/
+    box-shadow:0 0 3px #d8d8d8; /*체크표시 후 쉐도우 및 탭이동시 표시 */
+  }
+/* BACKGROUND */
+
+
+
+/* RESPONSIVE */
+
+@media only screen and (max-width: 700px) {
+	
+	body.in {
+   	 background:#f7f7f7;
 	}
+	
+	.in_container {
+    margin-top: -206px;
+    height: 380px;
 }
-
-@media screen and (max-width:800px) {
-	.myform {
-		width: 60%;
-	}
 }

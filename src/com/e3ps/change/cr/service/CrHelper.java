@@ -348,7 +348,7 @@ public class CrHelper {
 						result.put("영업/마케팅", cost);
 					} else if (tt.equals("기능/성능 변경")) {
 						++perform;
-						result.put("기능/성능 변경", permission);
+						result.put("기능/성능 변경", perform);
 					} else if (tt.equals("공정 변경")) {
 						++line;
 						result.put("공정 변경", line);

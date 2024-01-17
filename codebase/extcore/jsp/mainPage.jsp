@@ -15,6 +15,7 @@ String start = (String) request.getAttribute("start");
 ArrayList<Map<String, Integer>> complete = (ArrayList<Map<String, Integer>>) dataMap.get("complete");
 ArrayList<Map<String, Integer>> progress = (ArrayList<Map<String, Integer>>) dataMap.get("progress");
 Map<String, Integer> drill = (Map<String, Integer>) request.getAttribute("drill");
+out.println(drill);
 %>
 <!DOCTYPE html>
 <html>
