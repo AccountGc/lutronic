@@ -278,6 +278,9 @@ const columns = [ {
 	dataType : "string",
 	width : 120,
 	style : "aui-left",
+	renderer : {
+		type : "TemplateRenderer"
+	},
 }, {
 	dataField : "location",
 	headerText : "문서분류",

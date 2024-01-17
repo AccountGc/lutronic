@@ -131,7 +131,7 @@ String tapOid = dto.getPersist().getPersistInfo().getObjectIdentifier().getStrin
 			alert(reassignUser.value + "사용자에게 " + data.msg);
 			if (data.result) {
 				opener.loadGridData();
-				opener.parent.updateWorkspace();
+				opener.parent.updateHeader();
 				self.close();
 			} else {
 				closeLayer();
@@ -155,7 +155,7 @@ String tapOid = dto.getPersist().getPersistInfo().getObjectIdentifier().getStrin
 			alert(data.msg);
 			if (data.result) {
 				opener.loadGridData();
-				opener.parent.updateWorkspace();
+				opener.parent.updateHeader();
 				self.close();
 			} else {
 				closeLayer();
@@ -178,7 +178,7 @@ String tapOid = dto.getPersist().getPersistInfo().getObjectIdentifier().getStrin
 			alert(data.msg);
 			if (data.result) {
 				opener.loadGridData();
-				opener.parent.updateWorkspace();
+				opener.parent.updateHeader();
 				self.close();
 			} else {
 				closeLayer();
@@ -202,7 +202,7 @@ String tapOid = dto.getPersist().getPersistInfo().getObjectIdentifier().getStrin
 			alert(data.msg);
 			if (data.result) {
 				opener.loadGridData();
-				opener.parent.updateWorkspace();
+				opener.parent.updateHeader();
 				self.close();
 			} else {
 				closeLayer();
@@ -225,7 +225,7 @@ String tapOid = dto.getPersist().getPersistInfo().getObjectIdentifier().getStrin
 			alert(data.msg);
 			if (data.result) {
 				opener.loadGridData();
-				opener.parent.updateWorkspace();
+				opener.parent.updateHeader();
 				self.close();
 			} else {
 				closeLayer();
@@ -250,7 +250,7 @@ String tapOid = dto.getPersist().getPersistInfo().getObjectIdentifier().getStrin
 			alert(data.msg);
 			if (data.result) {
 				opener.loadGridData();
-				opener.parent.updateWorkspace();
+				opener.parent.updateHeader();
 				self.close();
 			} else {
 				closeLayer();
@@ -273,7 +273,8 @@ String tapOid = dto.getPersist().getPersistInfo().getObjectIdentifier().getStrin
 	}
 	
 	function dataView() {
-		const url = "<%=dto.getViewUrl()%>";
+		const url = "<%=dto.getViewUrl()%>
+	";
 		_popup(url, 1600, 800, "n");
 	}
 

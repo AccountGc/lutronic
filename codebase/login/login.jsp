@@ -32,21 +32,13 @@
 						</button>
 					</div>
 
-					<input type="checkbox" name="terms" id="terms">
-					<label for="terms" style="position: relative; bottom: 12px; left: -5px;">
+					<input type="checkbox" name="checkId" id="checkId">
+					<label for="checkId" style="position: relative; bottom: 12px; left: -5px;">
 						<b>아이디 저장</b>
 					</label>
 				</div>
-
-				<!-- 				<div id="animation-container"> -->
-				<!-- 					<lottie-player src="https://assets3.lottiefiles.com/packages/lf20_aesgckiv.json" background="transparent" speed="1" style="width: 520px; height: 520px;" loop autoplay></lottie-player> -->
-				<!-- 				</div> -->
 			</div>
 		</div>
-
-
-		<!-- 		<script src="https://unpkg.com/@lottiefiles/lottie-player@latest/dist/lottie-player.js"></script> -->
-
 	</form>
 </body>
 
@@ -77,7 +69,7 @@
 		}
 
 		if ($("#j_username").val() != "") {
-			$("#idSaveCheck").attr("checked", true);
+			$("#checkId").attr("checked", true);
 		}
 
 		$("#checkId").change(function() {

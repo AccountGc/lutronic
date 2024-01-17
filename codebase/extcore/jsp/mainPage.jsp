@@ -9,20 +9,160 @@
 <%@page import="wt.org.WTUser"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%
+//결재 개수
+int workData = (int) request.getAttribute("workData");
+int eca = (int) request.getAttribute("eca");
 Map<String, ArrayList<Map<String, Integer>>> dataMap = (Map<String, ArrayList<Map<String, Integer>>>) request
 		.getAttribute("dataMap");
 String start = (String) request.getAttribute("start");
 ArrayList<Map<String, Integer>> complete = (ArrayList<Map<String, Integer>>) dataMap.get("complete");
 ArrayList<Map<String, Integer>> progress = (ArrayList<Map<String, Integer>>) dataMap.get("progress");
 Map<String, Integer> drill = (Map<String, Integer>) request.getAttribute("drill");
-out.println(drill);
+Map<String, Integer> count = (Map<String, Integer>) request.getAttribute("count");
 %>
 <!DOCTYPE html>
 <html>
 <head>
 <meta charset="UTF-8">
 <title></title>
-<style type="text/css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+<style>
+.container {
+	position: relative;
+}
+
+.color-circle {
+	width: 130px;
+	height: 130px;
+	border-radius: 50%;
+	margin: 28px;
+	display: inline-block;
+	position: relative;
+	bottom: 30px;
+}
+
+.color-circle a {
+	color: gray !important;
+}
+
+.white-icon {
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+	width: 60px; /* 아이콘의 크기 조절 */
+	height: 60px; /* 아이콘의 크기 조절 */
+	border-radius: 50%;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	color: #333; /* 아이콘 색상 설정 */
+}
+
+.circle-1 .white-icon i {
+	color: #fff;
+}
+
+.circle-1 {
+	background-color: #2ACCFF;
+	color: #2ACCFF;
+}
+
+.circle-2 .white-icon i {
+	color: #fff;
+}
+
+.circle-2 {
+	background-color: #97DE2D;
+	color: #97DE2D;
+}
+
+.circle-3 .white-icon i {
+	color: #fff;
+}
+
+.circle-3 {
+	background-color: #619AFE;
+	color: #619AFE;
+}
+
+.circle-4 .white-icon i {
+	color: #fff;
+}
+
+.circle-4 {
+	background-color: #B088FF;
+	color: #B088FF;
+}
+
+.additional-circle {
+	width: 55px;
+	height: 55px;
+	border-radius: 50%;
+	border: 1px solid #dedede;
+	margin: 10px;
+	display: inline-block;
+	position: relative;
+	background-color: white;
+	position: absolute;
+	top: 50%;
+	left: calc(100% + 20px); /* 원의 우측에 위치하도록 설정 */
+	transform: translate(-50%, -50%);
+	top: 10px;
+	margin: 10px;
+	display: inline-block;
+	position: relative;
+	background-color: white;
+	position: absolute;
+	top: 50%;
+	left: calc(100% + 20px); /* 원의 우측에 위치하도록 설정 */
+	transform: translate(-50%, -50%);
+	top: -5px;
+	left: 100px;
+}
+
+.span_text {
+	font-weight: bold;
+	font-size: 28px;
+	top: 8px;
+	position: relative;
+}
+
+.fa {
+	font-size: 60px; /* 아이콘 크기 조절 */
+}
+
+.circle-1 .circle-text {
+	color: gray;
+	font-weight: bold;
+	font-size: 24px;
+	position: relative;
+	top: 140px;
+}
+
+.circle-2 .circle-text {
+	color: gray;
+	font-weight: bold;
+	font-size: 24px;
+	position: relative;
+	top: 140px;
+}
+
+.circle-3 .circle-text {
+	color: gray;
+	font-weight: bold;
+	font-size: 24px;
+	position: relative;
+	top: 140px;
+}
+
+.circle-4 .circle-text {
+	color: gray;
+	font-weight: bold;
+	font-size: 24px;
+	position: relative;
+	top: 140px;
+}
 </style>
 <%@include file="/extcore/jsp/common/css.jsp"%>
 <%@include file="/extcore/jsp/common/script.jsp"%>
@@ -46,6 +186,64 @@ out.println(drill);
 								<img style="position: relative; top: 0px; right: 14px;" src="/Windchill/extcore/images/approval.jpg">
 							</td>
 						</tr>
+						<tr>
+							<td style="height: 330px; text-align: center;">
+								<div class="container">
+									<div class="color-circle circle-1">
+										<div class="additional-circle">
+											<span class="span_text">
+												<%=workData%>
+											</span>
+										</div>
+										<div class="white-icon">
+											<i class="fa fa-envelope"></i>
+										</div>
+										<div class="circle-text">
+											<a href="javascript:gotoUrl('/workData/list');">결재선지정</a>
+										</div>
+									</div>
+									<div class="color-circle circle-2">
+										<div class="additional-circle">
+											<span class="span_text">
+												<%=count.get("approval")%>
+											</span>
+										</div>
+										<div class="white-icon">
+											<i class="fa fa-handshake"></i>
+										</div>
+										<div class="circle-text">
+											<a href="javascript:gotoUrl('/workspace/approval');">결재함</a>
+										</div>
+									</div>
+									<div class="color-circle circle-3">
+										<div class="additional-circle">
+											<span class="span_text">
+												<%=count.get("agree")%>
+											</span>
+										</div>
+										<div class="white-icon">
+											<i class="fa fa-clock"></i>
+										</div>
+										<div class="circle-text">
+											<a href="javascript:gotoUrl('/workspace/agree);">합의함</a>
+										</div>
+									</div>
+									<div class="color-circle circle-4">
+										<div class="additional-circle">
+											<span class="span_text">
+												<%=eca%>
+											</span>
+										</div>
+										<div class="white-icon">
+											<i class="fa fa-book"></i>
+										</div>
+										<div class="circle-text">
+											<a href="javascript:gotoUrl('/eca/list');">ECA 활동함</a>
+										</div>
+									</div>
+								</div>
+							</td>
+						</tr>
 					</table>
 				</td>
 				<td valign="top">&nbsp;</td>
@@ -54,9 +252,6 @@ out.println(drill);
 						<tr>
 							<td class="left">
 								<img style="position: relative; top: 0px; right: 14px;" src="/Windchill/extcore/images/notice.jpg">
-								<!-- 								<div style="float: right; position: relative; top: 23px; right: 20px;"> -->
-								<!-- 									<b>+ 더보기</b> -->
-								<!-- 								</div> -->
 							</td>
 						</tr>
 						<tr>
@@ -116,9 +311,17 @@ out.println(drill);
 			</tr>
 		</table>
 
+		<br>
+		<table class="button-table">
+			<tr>
+				<td>
+					<input type="button" value="차트 보기" title="차트 보기" class="gray" onclick="openChart(this);">
+				</td>
+			</tr>
+		</table>
 
 		<!-- 차트 -->
-		<table>
+		<table id="chart_table" style="display: none;">
 			<colgroup>
 				<col width="50%">
 				<col width="50%">
@@ -162,20 +365,16 @@ out.println(drill);
 					            name: '변경사유',
 					            colorByPoint: true,
 					            data: [
-					            	<%
-					            		Iterator it = drill.keySet().iterator();
-					            		while(it.hasNext()) {
-					            			String key = (String)it.next();
-					            			int value = drill.get(key);
-					            	%>
+					            	<%Iterator it = drill.keySet().iterator();
+while (it.hasNext()) {
+	String key = (String) it.next();
+	int value = drill.get(key);%>
 					                {
 					                    name: '<%=key%>',
 					                    y: <%=value%>,
 					                    drilldown: '<%=key%>'
 					                },
-					            	<%
-					            		}
-					            	%>
+					            	<%}%>
 					            ]
 					        }
 					    ],
@@ -473,6 +672,22 @@ out.println(drill);
 
 			document.addEventListener("DOMContentLoaded", function() {
 			});
+			
+			function openChart(target) {
+				const t = document.getElementById("chart_table");
+				if(t.style.display === "none" ){
+					t.style.display = "";
+					target.value = "차트 숨기기";
+				} else {
+					t.style.display = "none";
+					target.value = "차트 보기";
+				}
+			}
+			
+			function gotoUrl(goUrl) {
+				const url = getCallUrl(goUrl);
+				document.location.href = url;
+			}
 		</script>
 	</form>
 </body>

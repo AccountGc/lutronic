@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 
 import org.apache.poi.ss.usermodel.DataFormatter;
@@ -410,11 +411,14 @@ public class StandardSAPService extends StandardManager implements SAPService {
 
 					ArrayList<Map<String, Object>> addList = SAPHelper.manager.addList(lefts, rights);
 					ArrayList<Map<String, Object>> removeList = SAPHelper.manager.removeList(lefts, rights);
-
+					ArrayList<String> addKey = new ArrayList<>();
 					// 추가 항목 넣음
 					for (Map<String, Object> add : addList) {
 						String addOid = (String) add.get("oid");
 						WTPart addPart = (WTPart) CommonUtil.getObject(addOid);
+						// 부모_자식
+						String key = next_part.getNumber() + "_" + addPart.getNumber();
+
 						SAPSendBomDTO addDto = new SAPSendBomDTO();
 						addDto.setParentPartNumber(null);
 						addDto.setChildPartNumber(null);
@@ -422,18 +426,24 @@ public class StandardSAPService extends StandardManager implements SAPService {
 						addDto.setNewChildPartNumber(addPart.getNumber());
 						addDto.setQty((int) add.get("qty"));
 						addDto.setUnit((String) add.get("unit"));
-						addDto.setSendType("추가");
-						sendList.add(addDto);
+						addDto.setSendType("추가품목");
+						addDto.setKey(key);
+						if (addKey.contains(key)) {
+							addKey.add(key);
+							sendList.add(addDto);
+						}
 
 						link.setSendType("ADD");
 						PersistenceHelper.manager.modify(link);
-
 					}
+
+					ArrayList<String> removeKey = new ArrayList<>();
 
 					// 삭제 항목 넣음
 					for (Map<String, Object> remove : removeList) {
 						String removeOid = (String) remove.get("oid");
 						WTPart removePart = (WTPart) CommonUtil.getObject(removeOid);
+						String key = pre_part.getNumber() + "_" + removePart.getNumber();
 						SAPSendBomDTO removeDto = new SAPSendBomDTO();
 						removeDto.setParentPartNumber(pre_part.getNumber());
 						removeDto.setChildPartNumber(removePart.getNumber());
@@ -441,40 +451,51 @@ public class StandardSAPService extends StandardManager implements SAPService {
 						removeDto.setNewChildPartNumber(null);
 						removeDto.setQty((int) remove.get("qty"));
 						removeDto.setUnit((String) remove.get("unit"));
-						removeDto.setSendType("삭제");
-						sendList.add(removeDto);
+						removeDto.setSendType("삭제품");
+						removeDto.setKey(key);
 
-						EcoPartLink removeLink = EcoPartLink.newEcoPartLink((WTPartMaster) removePart.getMaster(), eco);
-						removeLink.setSendType("REMOVE");
-						removeLink.setVersion(removePart.getVersionIdentifier().getSeries().getValue());
-						removeLink.setBaseline(true);
-						removeLink.setPreOrder(false);
-						removeLink.setRightPart(false);
-						removeLink.setLeftPart(true);
-						removeLink.setPast(false);
-						PersistenceHelper.manager.save(removeLink);
+						if (removeKey.contains(key)) {
+							removeKey.add(key);
+							sendList.add(removeDto);
+						}
+
+//						EcoPartLink removeLink = EcoPartLink.newEcoPartLink((WTPartMaster) removePart.getMaster(), eco);
+//						removeLink.setSendType("REMOVE");
+//						removeLink.setVersion(removePart.getVersionIdentifier().getSeries().getValue());
+//						removeLink.setBaseline(true);
+//						removeLink.setPreOrder(false);
+//						removeLink.setRightPart(false);
+//						removeLink.setLeftPart(true);
+//						removeLink.setPast(false);
+//						PersistenceHelper.manager.save(removeLink);
 						// 삭제품 저장
 					}
 
 					// 변경 대상 리스트..
 					ArrayList<SAPSendBomDTO> changeList = SAPHelper.manager.getOneLevel(next_part, eco);
 					Iterator<SAPSendBomDTO> iterator = changeList.iterator();
+					List<SAPSendBomDTO> itemsToRemove = new ArrayList<>();
+//					ArrayList<String> changeKey = new ArrayList<String>();
 					while (iterator.hasNext()) {
 						SAPSendBomDTO dto = iterator.next();
-						dto.setSendType("변경");
+						dto.setSendType("변경품");
 						String compNum = dto.getNewChildPartNumber();
 
-						// addList에서 같은 newChildPartNumber를 찾으면 changeList에서 제거
+						// addList에서 같은 newChildPartNumber를 찾으면 itemsToRemove에 추가
 						for (Map<String, Object> addMap : addList) {
 							String addOid = (String) addMap.get("oid");
 							WTPart addPart = (WTPart) CommonUtil.getObject(addOid);
 							if (addPart.getNumber().equals(compNum)) {
-								iterator.remove();
+								itemsToRemove.add(dto);
+								break; // 이미 찾았으니 더 이상 검색할 필요가 없음
 							}
 						}
-						link.setSendType("CHANGE");
-						PersistenceHelper.manager.modify(link);
 					}
+
+					// itemsToRemove에 해당하는 모든 아이템을 changeList에서 제거
+					changeList.removeAll(itemsToRemove);
+
+					// 위의 반복문에서 변경된 changeList를 sendList에 추가
 					sendList.addAll(changeList);
 				}
 

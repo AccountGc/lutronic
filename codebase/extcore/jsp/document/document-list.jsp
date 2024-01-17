@@ -301,6 +301,9 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 					dataType : "string",
 					width : 120,
 					style : "aui-left",
+					renderer : {
+						type : "TemplateRenderer"
+					},
 				}, {
 					dataField : "location",
 					headerText : "문서분류",
@@ -660,7 +663,7 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 				selectbox("_psize");
 				selectbox("preseration");
 				selectbox("deptcode");
-// 				finderUser("writer");
+				// 				finderUser("writer");
 				selectbox("classType1");
 				selectbox("classType2");
 				selectbox("classType3");

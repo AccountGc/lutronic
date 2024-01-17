@@ -79,6 +79,12 @@ public class IndexController extends BaseController {
 		}
 		Map<String, ArrayList<Map<String, Integer>>> dataMap = EcoHelper.manager.getChart(start);
 		Map<String, Integer> drill = CrHelper.manager.getDrill();
+		int workData = WorkDataHelper.manager.count();
+		int eca = ActivityHelper.manager.count();
+		Map<String, Integer> count = WorkspaceHelper.manager.count();
+		model.addObject("count", count);
+		model.addObject("workData", workData);
+		model.addObject("eca", eca);
 		model.addObject("drill", drill);
 		model.addObject("start", start);
 		model.addObject("dataMap", dataMap);

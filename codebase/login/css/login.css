@@ -83,7 +83,7 @@ button[type="button"] {
     color: #ED4B5E;
 }
 
-#terms {
+#checkId {
     width: 30px;
     height: 30px;
     appearance: none;
@@ -92,7 +92,7 @@ button[type="button"] {
     position: relative;
 }
 
-#terms:checked:after {
+#checkId:checked:after {
     content: '\2713';
     color: #7369AB;
     font-size: 24px;
@@ -101,7 +101,7 @@ button[type="button"] {
     left: 3px;
 }
 
-label[for="terms"] {
+label[for="checkId"] {
     display: inline-block;
     width: 80%;
     margin-left: 10px;

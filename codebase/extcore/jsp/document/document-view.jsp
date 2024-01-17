@@ -152,8 +152,8 @@ iframe {
 				<td class="indent5"><%=dto.getModifier()%></td>
 			</tr>
 			<tr>
-				<th class="lb">프로젝트 코드(명)</th>
-				<td class="indent5"><%=dto.getModel_code()%>[<%=dto.getModel_name() %>]</td>
+				<th class="lb">프로젝트 코드 [명]</th>
+				<td class="indent5"><%=dto.getModel_code()%> [<font color="red"><b><%=dto.getModel_name() %></b></font>]</td>
 				<th>보존년한</th>
 				<td class="indent5"><%=dto.getPreseration_name()%></td>
 				<th>부서</th>
