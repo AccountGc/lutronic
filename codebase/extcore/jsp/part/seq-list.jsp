@@ -33,6 +33,11 @@ String partNumber = request.getParameter("partNumber");
 <script type="text/javascript">
 	let myGridID;
 	const columns = [ {
+		dataField : "rowNum",
+		headerText : "번호",
+		dataType : "nemeric",
+		width : 40,
+	}, {
 		dataField : "number",
 		headerText : "품목번호",
 		dataType : "string",
@@ -89,9 +94,7 @@ String partNumber = request.getParameter("partNumber");
 	function createAUIGrid(columnLayout) {
 		const props = {
 			headerHeight : 30,
-			showRowNumColumn : true,
 			showRowCheckColumn : false,
-			rowNumHeaderText : "번호",
 			showAutoNoDataMessage : false,
 			selectionMode : "multipleCells",
 			hoverMode : "singleRow",
@@ -142,7 +145,7 @@ String partNumber = request.getParameter("partNumber");
 			if (data.result) {
 				totalPage = Math.ceil(data.total / data.pageSize);
 				createPagingNavigator(data.curPage, data.sessionid);
-				AUIGrid.setGridData(myGridID, data.list);
+				AUIGrid.setGridData(data.total, myGridID, data.list);
 				if (movePage === undefined) {
 					AUIGrid.setSorting(myGridID, sortCache);
 					compField = null;

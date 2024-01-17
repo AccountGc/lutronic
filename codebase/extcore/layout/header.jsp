@@ -453,7 +453,7 @@ int eca = (int) request.getAttribute("eca");
 			}
 			%>
 			<%
-// 			if (isDist) {
+			if (isDist) {
 			%>
 			<li>
 				<a href="#">
@@ -557,7 +557,7 @@ int eca = (int) request.getAttribute("eca");
 				<!-- 						</a> -->
 			</li>
 			<%
-// 			}
+			}
 			%>
 		</ul>
 	</div>
