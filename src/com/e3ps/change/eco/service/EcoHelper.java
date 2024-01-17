@@ -473,18 +473,19 @@ public class EcoHelper {
 				list.add(map);
 			} else {
 				WTPart pre_part = part;
-				map.put("part_oid", pre_part.getPersistInfo().getObjectIdentifier().getStringValue());
-				map.put("part_number", pre_part.getNumber());
-				map.put("part_name", pre_part.getName());
-				map.put("part_state", pre_part.getLifeCycleState().getDisplay());
-				map.put("part_version", pre_part.getVersionIdentifier().getSeries().getValue() + "."
-						+ pre_part.getIterationIdentifier().getSeries().getValue());
-				map.put("part_creator", pre_part.getCreatorFullName());
-				map.put("preMerge", false);
 
 				if (link.isRevise()) {
 					WTPart next_part = (WTPart) EChangeUtils.manager.getNext(part);
 					if (next_part != null) {
+						map.put("part_oid", pre_part.getPersistInfo().getObjectIdentifier().getStringValue());
+						map.put("part_number", pre_part.getNumber());
+						map.put("part_name", pre_part.getName());
+						map.put("part_state", pre_part.getLifeCycleState().getDisplay());
+						map.put("part_version", pre_part.getVersionIdentifier().getSeries().getValue() + "."
+								+ pre_part.getIterationIdentifier().getSeries().getValue());
+						map.put("part_creator", pre_part.getCreatorFullName());
+						map.put("preMerge", false);
+						
 						map.put("next_oid", next_part.getPersistInfo().getObjectIdentifier().getStringValue());
 						map.put("next_number", next_part.getNumber());
 						map.put("next_name", next_part.getName());
@@ -494,13 +495,14 @@ public class EcoHelper {
 						map.put("next_state", next_part.getLifeCycleState().getDisplay());
 						map.put("afterMerge", false);
 					} else {
-						map.put("next_oid", "");
-						map.put("next_number", "개정 후 데이터가 없습니다.");
-						map.put("next_name", "개정 후 데이터가 없습니다.");
-						map.put("next_state", "개정 후 데이터가 없습니다.");
-						map.put("next_version", "개정 후 데이터가 없습니다.");
-						map.put("next_creator", "개정 후 데이터가 없습니다.");
-						map.put("afterMerge", true);
+						map.put("next_oid", pre_part.getPersistInfo().getObjectIdentifier().getStringValue());
+						map.put("next_number", pre_part.getNumber());
+						map.put("next_name", pre_part.getName());
+						map.put("next_state", pre_part.getLifeCycleState().getDisplay());
+						map.put("next_version", pre_part.getVersionIdentifier().getSeries().getValue() + "."
+								+ pre_part.getIterationIdentifier().getSeries().getValue());
+						map.put("next_creator", pre_part.getCreatorFullName());
+						map.put("preMerge", true);
 					}
 				} else {
 					
