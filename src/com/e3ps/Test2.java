@@ -21,7 +21,8 @@ public class Test2 {
 
 	public static void main(String[] args) throws Exception {
 
-		System.out.println(!(Pattern.matches("^[0-9]+$", "VRM4_POLARIZER")));
+		String s = "8010309400";
+		System.out.print(s.startsWith("8"));
 		System.exit(0);
 	}
 }

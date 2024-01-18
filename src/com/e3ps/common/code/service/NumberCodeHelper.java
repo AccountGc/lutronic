@@ -101,6 +101,9 @@ public class NumberCodeHelper {
 	 * 코드 & 코드타입으로 코드 객체 찾아오기
 	 */
 	public NumberCode getNumberCode(String code, String codeType) throws Exception {
+		if (!StringUtil.checkString(code)) {
+			return null;
+		}
 		QuerySpec query = new QuerySpec();
 		int idx = query.appendClassList(NumberCode.class, true);
 		QuerySpecUtils.toEqualsAnd(query, idx, NumberCode.class, NumberCode.CODE, code);
@@ -375,7 +378,7 @@ public class NumberCodeHelper {
 		QuerySpecUtils.toEqualsAnd(query, idx, NumberCode.class, NumberCode.CODE_TYPE, codeType);
 
 		if (StringUtil.checkString(value)) {
-			if(query.getConditionCount() > 0) {
+			if (query.getConditionCount() > 0) {
 				query.appendAnd();
 			}
 			query.appendOpenParen();

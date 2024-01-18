@@ -267,10 +267,16 @@ public class DocumentDTO {
 		boolean isAdmin = CommonUtil.isAdmin();
 		boolean isCreator = CommonUtil.isCreator(doc);
 		// 승인된경우 프린트
+		WTDocumentTypeInfo info = doc.getTypeInfoWTDocument();
 		if (check(doc, "APPROVED")) {
 			String s = getClassType1_code();
 			if (!"DEV".equals(s) && !"INSTRUCTION".equals(s)) {
-				set_print(true);
+				if (info != null) {
+					String v = info.getPtc_rht_1();
+					if (v != null) {
+						set_print(true);
+					}
+				}
 			}
 		}
 

@@ -366,7 +366,7 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 						baseUrl : "javascript",
 						jsCallback : function(rowIndex, columnIndex, value, item) {
 							const oid = item.part_oid;
-							const url = getCallUrl("/part/view?oid=" + oid);
+							const url = getCallUrl("/distribute/partView?oid=" + oid);
 							_popup(url, 1600, 800, "n");
 						}
 					},
@@ -381,7 +381,7 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 						baseUrl : "javascript",
 						jsCallback : function(rowIndex, columnIndex, value, item) {
 							const oid = item.part_oid;
-							const url = getCallUrl("/part/view?oid=" + oid);
+							const url = getCallUrl("/distribute/partView?oid=" + oid);
 							_popup(url, 1600, 800, "n");
 						}
 					},
