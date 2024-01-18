@@ -598,8 +598,8 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 				twindate("created");
 				twindate("modified");
 				$("#_psize").bindSelectSetValue("20");
-				$("#state").bindSelectDisabled("APPROVED");
-				$("#state").bindDisable();
+				$("#state").bindSelectSetValue("APPROVED");
+				$("#state").bindSelectDisabled();
 			});
 
 			document.addEventListener("keydown", function(event) {

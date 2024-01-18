@@ -198,7 +198,7 @@ int eca = (int) request.getAttribute("eca");
 					</li>
 					<li>
 						<a onclick="moveToPage(this, '/part/saveAs', '> 품목관리 > 다른 품번으로 저장');">다른 품번으로 저장</a>
-					</li>					
+					</li>
 					<li>
 						<a onclick="moveToPage(this, '/part/batch', '> 품목관리 > 제품/품목 일괄 등록');">제품/품목 일괄 등록</a>
 					</li>
@@ -489,7 +489,7 @@ int eca = (int) request.getAttribute("eca");
 						<a onclick="moveToPage(this, '/org/organization', '> 나의업무 > 조직도');">조직도</a>
 					</li>
 					<li>
-<!-- 						<a onclick="moveToPage(this, '/groupware/password', '> 나의업무 > 비밀번호변경');">비밀번호 변경</a> -->
+						<!-- 						<a onclick="moveToPage(this, '/groupware/password', '> 나의업무 > 비밀번호변경');">비밀번호 변경</a> -->
 						<a onclick="_popup('/Windchill/plm/groupware/password', 800, 300, 'n');">비밀번호 변경</a>
 					</li>
 				</ul>
@@ -497,7 +497,7 @@ int eca = (int) request.getAttribute("eca");
 			<li>
 				<a href="#">
 					<i class="fa fa-desktop"></i>
-					<span class="nav-label">품목검색</span>
+					<span class="nav-label">품목관리</span>
 					<span class="fa arrow"></span>
 				</a>
 				<ul class="nav nav-second-level collapse">
@@ -531,7 +531,6 @@ int eca = (int) request.getAttribute("eca");
 					</li>
 					<li>
 						<a onclick="moveToPage(this, '/distribute/listECO', '> 설계변경 > ECO 검색');">ECO 검색</a>
-						<!-- 								<a onclick="moveToPage(this, '/changeECO/list', '> 설계변경 > ECO 검색');">ECO 검색</a> -->
 					</li>
 				</ul>
 			</li>
@@ -540,20 +539,12 @@ int eca = (int) request.getAttribute("eca");
 					<i class="fa fa-pie-chart"></i>
 					문서 검색
 				</a>
-				<!-- 						<a href="#" onclick="moveToPage(this, '/doc/list', '> 문서 관리 > 문서 검색');"> -->
-				<!-- 							<i class="fa fa-pie-chart"></i> -->
-				<!-- 							<span class="nav-label">문서 검색</span> -->
-				<!-- 						</a> -->
 			</li>
 			<li>
 				<a onclick="moveToPage(this, '/distribute/listMold', '> 금형관리 > 금형 검색');">
 					<i class="fa fa-files-o"></i>
 					금형 검색
 				</a>
-				<!-- 						<a href="#" onclick="moveToPage(this, '/mold/list', '> 금형관리 > 금형 검색');"> -->
-				<!-- 							<i class="fa fa-files-o"></i> -->
-				<!-- 							<span class="nav-label">금형 검색</span> -->
-				<!-- 						</a> -->
 			</li>
 			<%
 			}
