@@ -204,9 +204,13 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 					},
 				}, {
 					dataField : "model",
-					headerText : "제품명",
+					headerText : "프로젝트 코드 [명]",
 					dataType : "string",
-					width : 250,
+					width : 350,
+					style : "aui-left",
+					renderer : {
+						type : "TemplateRenderer"
+					},
 				}, {
 					dataField : "eoType",
 					headerText : "구분",
@@ -314,8 +318,8 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 				selectbox("_psize");
 				finderCode("model", "MODEL");
 				$("#_psize").bindSelectSetValue("20");
-				$("#state").bindSelectDisabled("APPROVED");
-				$("#state").bindDisable();
+				$("#state").bindSelectSetValue("APPROVED");
+				$("#state").bindSelectDisabled();
 			});
 
 			document.addEventListener("keydown", function(event) {

@@ -339,7 +339,7 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 				selectbox("createDepart");
 				$("#_psize").bindSelectSetValue("20");
 				$("#state").bindSelectDisabled("APPROVED");
-				$("#state").bindDisable();
+				$("#state").bindSelectDisabled();
 			});
 
 			document.addEventListener("keydown", function(event) {

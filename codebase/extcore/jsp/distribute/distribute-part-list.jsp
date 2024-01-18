@@ -552,7 +552,7 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 					document.getElementById("curPage").value = 1;
 				}
 				let params = new Object();
-				const field = [ "location", "partNumber", "partName", "createdFrom", "createdTo", "modifiedFrom", "modifiedTo", "state", "model", "productmethod", "deptcode", "unit", "weight", "mat", "finish", "remarks", "ecoNo", "eoNo", "creatorOid", "specification" ];
+				const field = [ "location", "partNumber", "partName", "createdFrom", "createdTo", "modifiedFrom", "modifiedTo", "state", "modelcode", "productmethod", "deptcode", "unit", "weight", "mat", "finish", "remarks", "ecoNo", "eoNo", "creatorOid", "specification" ];
 				const url = getCallUrl("/part/list");
 				const preOrder = document.querySelector("input[name=preOrder]:checked").value;
 				params = toField(params, field);
@@ -598,8 +598,8 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 				twindate("created");
 				twindate("modified");
 				$("#_psize").bindSelectSetValue("20");
-				$("#state").bindSelectDisabled("APPROVED");
-				$("#state").bindDisable();
+				$("#state").bindSelectSetValue("APPROVED");
+				$("#state").bindSelectDisabled();
 			});
 
 			document.addEventListener("keydown", function(event) {
@@ -723,7 +723,7 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 						twindate("modified");
 						$("#_psize").bindSelectSetValue("20");
 						$("#state").bindSelectDisabled("APPROVED");
-						$("#state").bindDisable();
+						$("#state").bindSelectDisabled();
 					} else {
 						el.style.display = "none";
 						target.value = "▼펼치기";
@@ -741,7 +741,7 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 						twindate("modified");
 						$("#_psize").bindSelectSetValue("20");
 						$("#state").bindSelectDisabled("APPROVED");
-						$("#state").bindDisable();
+						$("#state").bindSelectDisabled();
 					}
 				}
 			}

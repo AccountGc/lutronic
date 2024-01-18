@@ -1,4 +1,6 @@
 <%@page import="com.e3ps.part.service.PartHelper"%>
+<%@page import="java.util.Map"%>
+<%@page import="java.util.List"%>
 <%@page import="wt.session.SessionHelper"%>
 <%@page import="wt.part.QuantityUnit"%>
 <%@page import="wt.org.WTUser"%>
@@ -6,11 +8,8 @@
 <%@page import="com.e3ps.common.code.NumberCode"%>
 <%@page import="com.e3ps.drawing.service.DrawingHelper"%>
 <%@page import="com.e3ps.common.util.StringUtil"%>
-<%@page import="java.util.Map"%>
-<%@page import="java.util.List"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%
-ArrayList<NumberCode> modelList = (ArrayList<NumberCode>) request.getAttribute("modelList");
 ArrayList<NumberCode> deptcodeList = (ArrayList<NumberCode>) request.getAttribute("deptcodeList");
 ArrayList<NumberCode> matList = (ArrayList<NumberCode>) request.getAttribute("matList");
 ArrayList<NumberCode> productmethodList = (ArrayList<NumberCode>) request.getAttribute("productmethodList");
@@ -106,11 +105,10 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 						<option value="">선택</option>
 						<%
 						for (Map<String, String> lifecycle : lifecycleList) {
-							if (!lifecycle.get("code").equals("TEMPRARY")) {
+							String key = lifecycle.get("code");
 						%>
-						<option value="<%=lifecycle.get("code")%>"><%=lifecycle.get("name")%></option>
+						<option value="<%=key%>" <%if("APPROVED".equals(key)) { %> selected="selected" <%} %> ><%=lifecycle.get("name")%></option>
 						<%
-						}
 						}
 						%>
 					</select>
@@ -277,7 +275,7 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 				<td class="right">
 					<select name="_psize" id="_psize">
 						<option value="10">10</option>
-						<option value="10" selected="selected">20</option>
+						<option value="20" selected="selected">20</option>
 						<option value="30">30</option>
 						<option value="50">50</option>
 						<option value="100">100</option>
@@ -324,26 +322,30 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 						inline : false
 					},
 				},{
-					dataField : "_3d",
-					headerText : "3D",
+					dataField : "thumb",
+					headerText : "뷰",
 					dataType : "string",
-					width : 60,
+					width : 50,
 					renderer : {
 						type : "ImageRenderer",
 						altField : null,
-						onClick : function(event) {
-						}
+						imgHeight : 16,
+					},
+					filter : {
+						inline : false
 					},
 				}, {
-					dataField : "_2d",
-					headerText : "2D",
+					dataField : "icon",
+					headerText : "",
 					dataType : "string",
-					width : 60,
+					width : 50,
 					renderer : {
 						type : "ImageRenderer",
 						altField : null,
-						onClick : function(event) {
-						}
+						imgHeight : 16,
+					},
+					filter : {
+						inline : false
 					},
 				}, {
 					dataField : "number",
@@ -713,7 +715,7 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 						twindate("modified");
 						$("#_psize").bindSelectSetValue("20");
 						$("#state").bindSelectDisabled("APPROVED");
-						$("#state").bindDisable();
+						$("#state").bindSelectDisabled();
 					} else {
 						el.style.display = "none";
 						target.value = "▼펼치기";
@@ -731,7 +733,7 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 						twindate("modified");
 						$("#_psize").bindSelectSetValue("20");
 						$("#state").bindSelectDisabled("APPROVED");
-						$("#state").bindDisable();
+						$("#state").bindSelectDisabled();
 					}
 				}
 			}

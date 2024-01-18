@@ -162,7 +162,7 @@ WTUser user = (WTUser) request.getAttribute("sessionUser");
 			</tr>
 			<tr>
 				<th>금형개발비</th>
-				<td class="indent5" colspan="3">
+				<td class="indent5" colspan="5">
 					<input type="text" name="moldcost" id="moldcost" class="width-300">
 				</td>
 			</tr>
@@ -335,8 +335,8 @@ WTUser user = (WTUser) request.getAttribute("sessionUser");
 				twindate("modified");
 				selectbox("_psize");
 				$("#_psize").bindSelectSetValue("20");
-				$("#state").bindSelectDisabled("APPROVED");
-				$("#state").bindDisable();
+				$("#state").bindSelectSetValue("APPROVED");
+				$("#state").bindSelectDisabled();
 			});
 
 			document.addEventListener("keydown", function(event) {
