@@ -336,7 +336,7 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 				}
 				let params = new Object();
 				const url = getCallUrl("/eco/list");
-				const field = [ "name", "number", "model", "creatorOid", "createdFrom", "createdTo", "approveFrom", "approveTo", "state" ];
+				const field = [ "name", "number", "modelcode", "creatorOid", "createdFrom", "createdTo", "approveFrom", "approveTo", "state" ];
 				const rows104 = AUIGrid.getGridDataWithState(myGridID104, "gridState");
 				params.rows104 = rows104;
 				params.licensing = $('input[name=licensing]:checked').val();

@@ -537,7 +537,7 @@ QuantityUnit[] unitList = (QuantityUnit[]) request.getAttribute("unitList");
 				}
 				let params = new Object();
 				const url = getCallUrl("/drawing/list");
-				const field = [ "location", "cadDivision", "cadType", "number", "name", "createdFrom", "createdTo", "modifiedFrom", "modifiedTo", "creatorOid", "state", "model", "productmethod", "deptcode", "unit", "weight1", "weight2", "manufacture", "mat", "finish", "remarks", "specification" ];
+				const field = [ "location", "cadDivision", "cadType", "number", "name", "createdFrom", "createdTo", "modifiedFrom", "modifiedTo", "creatorOid", "state", "modelcode", "productmethod", "deptcode", "unit", "weight1", "weight2", "manufacture", "mat", "finish", "remarks", "specification" ];
 				const latest = document.querySelector("input[name=latest]:checked").value;
 				params = toField(params, field);
 				params.latest = JSON.parse(latest);

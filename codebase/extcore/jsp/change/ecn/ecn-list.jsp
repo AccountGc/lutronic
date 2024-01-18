@@ -319,7 +319,7 @@ boolean isEdit = (boolean) request.getAttribute("isEdit");
 				}
 				let params = new Object();
 				const url = getCallUrl("/ecn/list");
-				const field = [ "name", "number", "state", "creatorOid", "createdFrom", "createdTo", "model" ];
+				const field = [ "name", "number", "state", "creatorOid", "createdFrom", "createdTo", "modelcode" ];
 				params = toField(params, field);
 				AUIGrid.showAjaxLoader(myGridID);
 				parent.openLayer();

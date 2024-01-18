@@ -78,7 +78,7 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 					<img src="/Windchill/extcore/images/delete.png" class="delete" title="삭제" onclick="clearUser('creator')">
 				</td>
 				<th>등록일</th>
-				<td class="indent5">
+				<td class="indent5" colspan="3">
 					<input type="text" name="createdFrom" id="createdFrom" class="width-100">
 					~
 					<input type="text" name="createdTo" id="createdTo" class="width-100">
@@ -365,7 +365,7 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 				}
 				let params = new Object();
 				const url = getCallUrl("/eo/list");
-				const field = [ "name", "number", "createdFrom", "createdTo", "creatorOid", "state", "licensing", "model", "sortCheck", "sortValue", "riskType", "approveFrom", "approveTo" ];
+				const field = [ "name", "number", "createdFrom", "createdTo", "creatorOid", "state", "licensing", "modelcode", "sortCheck", "sortValue", "riskType", "approveFrom", "approveTo" ];
 				const rows104 = AUIGrid.getGridDataWithState(myGridID104, "gridState");
 				params.rows104 = rows104;
 				params.eoType = $('input[name=eoType]:checked').val();
