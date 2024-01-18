@@ -167,6 +167,11 @@ send(eco);
 					SAPSendBomDTO dto = iterator.next();
 					dto.setSendType("변경품");
 					String compNum = dto.getNewChildPartNumber();
+					
+// 					System.out.println("compNum="+compNum);
+// 					if (compNum.startsWith("8")) {
+// 						continue;
+// 					}
 
 					// addList에서 같은 newChildPartNumber를 찾으면 itemsToRemove에 추가
 					for (Map<String, Object> addMap : addList) {

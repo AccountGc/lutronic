@@ -33,7 +33,7 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 		<input type="hidden" name="sessionid" id="sessionid">
 		<input type="hidden" name="curPage" id="curPage">
 		<input type="hidden" name="sessionName" id="sessionName" value="<%=user.getFullName()%>">
-
+		<input type="hidden" name="oid" id="oid">
 		<table class="button-table">
 			<tr>
 				<td class="left">
@@ -57,7 +57,6 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 			<tr>
 				<th>품목분류</th>
 				<td class="indent5">
-					<input type="hidden" name="oid" id="oid">
 					<input type="hidden" name="location" id="location" value="<%=PartHelper.PART_ROOT%>">
 					<span id="locationText"><%=PartHelper.PART_ROOT%></span>
 				</td>
