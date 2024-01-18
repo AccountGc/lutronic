@@ -28,7 +28,6 @@ WTUser user = (WTUser) request.getAttribute("sessionUser");
 		<input type="hidden" name="location" id="location" value="/Default/금형문서">
 		<input type="hidden" name="lifecycle" id="lifecycle" value="LC_Default">
 		<input type="hidden" name="searchType" id="searchType" value="MOLD">
-		<input type="hidden" name="state" id="state" value="APPROVED">
 		<input type="hidden" name="sessionName" id="sessionName" value="<%=user.getFullName()%>">
 
 		<table class="button-table">
@@ -79,15 +78,14 @@ WTUser user = (WTUser) request.getAttribute("sessionUser");
 				<td class="indent5">
 					<select name="state" id="state" class="width-200">
 						<option value="">선택</option>
-						<%-- 						<% --%>
-						<!--  						for (Map<String, String> lifecycle : lifecycleList) { -->
-						<!--  							if (!lifecycle.get("code").equals("TEMPRARY")) { -->
-						<%-- 						%> --%>
-						<%-- 						<option value="<%=lifecycle.get("code")%>"><%=lifecycle.get("name")%></option> --%>
-						<%-- 						<% --%>
-						<!--  						} -->
-						<!--  						} -->
-						<%-- 						%> --%>
+						<%
+						for (Map<String, String> lifecycle : lifecycleList) {
+							String key = lifecycle.get("code");
+						%>
+						<option value="<%=key%>" <%if ("APPROVED".equals(key)) {%> selected="selected" <%}%>><%=lifecycle.get("name")%></option>
+						<%
+						}
+						%>
 					</select>
 				</td>
 				<th>등록자</th>
@@ -241,6 +239,12 @@ WTUser user = (WTUser) request.getAttribute("sessionUser");
 					headerText : "상태",
 					dataType : "string",
 					width : 100,
+					styleFunction : function(rowIndex, columnIndex, value, headerText, item, dataField) {
+						if (value === "승인됨") {
+							return "approved";
+						}
+						return null;
+					},
 				}, {
 					dataField : "creator",
 					headerText : "등록자",
@@ -322,7 +326,7 @@ WTUser user = (WTUser) request.getAttribute("sessionUser");
 				});
 				createAUIGrid(columns);
 				AUIGrid.resize(myGridID);
-				// 				selectbox("state");
+				selectbox("state");
 				finderCode("manufacture", "MANUFACTURE");
 				selectbox("moldtype");
 				selectbox("deptcode");
@@ -331,6 +335,8 @@ WTUser user = (WTUser) request.getAttribute("sessionUser");
 				twindate("modified");
 				selectbox("_psize");
 				$("#_psize").bindSelectSetValue("20");
+				$("#state").bindSelectDisabled("APPROVED");
+				$("#state").bindDisable();
 			});
 
 			document.addEventListener("keydown", function(event) {

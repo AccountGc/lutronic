@@ -25,7 +25,6 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 	<form>
 		<input type="hidden" name="sessionid" id="sessionid">
 		<input type="hidden" name="curPage" id="curPage">
-		<input type="hidden" name="state" id="state" value="APPROVED">
 		<input type="hidden" name="sessionName" id="sessionName" value="<%=user.getFullName()%>">
 
 		<table class="button-table">
@@ -63,11 +62,10 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 						<option value="">선택</option>
 						<%
 						for (Map<String, String> lifecycle : lifecycleList) {
-							if (!lifecycle.get("code").equals("TEMPRARY")) {
+							String key = lifecycle.get("code");
 						%>
-						<option value="<%=lifecycle.get("code")%>"><%=lifecycle.get("name")%></option>
+						<option value="<%=key%>" <%if("APPROVED".equals(key)) { %> selected="selected" <%} %> ><%=lifecycle.get("name")%></option>
 						<%
-						}
 						}
 						%>
 					</select>
@@ -237,6 +235,12 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 					headerText : "상태",
 					dataType : "string",
 					width : 100,
+					styleFunction : function(rowIndex, columnIndex, value, headerText, item, dataField) {
+						if (value === "승인됨") {
+							return "approved";
+						}
+						return null;
+					},
 				}, {
 					dataField : "creator",
 					headerText : "등록자",
@@ -327,6 +331,8 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 				selectbox("createDepart");
 				finderCode("model", "MODEL");
 				$("#_psize").bindSelectSetValue("20");
+				$("#state").bindSelectDisabled("APPROVED");
+				$("#state").bindDisable();
 			});
 
 			document.addEventListener("keydown", function(event) {

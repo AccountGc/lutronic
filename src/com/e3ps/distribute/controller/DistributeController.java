@@ -467,6 +467,7 @@ public class DistributeController extends BaseController {
 		ArrayList<NumberCode> deptcodeList = NumberCodeHelper.manager.getArrayCodeList("DEPTCODE");
 		ArrayList<NumberCode> manufactureList = NumberCodeHelper.manager.getArrayCodeList("MANUFACTURE");
 		ArrayList<NumberCode> moldTypeList = NumberCodeHelper.manager.getArrayCodeList("MOLDTYPE");
+		List<Map<String, String>> lifecycleList = CommonUtil.getLifeCycleState("LC_Default");
 		ModelAndView model = new ModelAndView();
 		boolean isAdmin = CommonUtil.isAdmin();
 		WTUser sessionUser = (WTUser) SessionHelper.manager.getPrincipal();
@@ -475,6 +476,7 @@ public class DistributeController extends BaseController {
 		model.addObject("moldTypeList", moldTypeList);
 		model.addObject("isAdmin", isAdmin);
 		model.addObject("sessionUser", sessionUser);
+		model.addObject("lifecycleList", lifecycleList);
 		model.setViewName("/extcore/jsp/distribute/distribute-mold-list.jsp");
 		return model;
 	}
