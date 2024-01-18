@@ -276,7 +276,7 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 				};
 				myGridID = AUIGrid.create("#grid_wrap", columnLayout, props);
 				loadGridData();
-				AUIGrid.bind(myGridID, "contextMenu", _auiContextMenuHandler);
+				AUIGrid.bind(myGridID, "contextMenu");
 				AUIGrid.bind(myGridID, "vScrollChange", function(event) {
 					hideContextMenu();
 				});
@@ -331,7 +331,7 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 				selectbox("createDepart");
 				finderCode("model", "MODEL");
 				$("#_psize").bindSelectSetValue("20");
-				$("#state").bindSelectDisabled("APPROVED");
+				$("#state").bindSelectSetValue("APPROVED");
 				$("#state").bindSelectDisabled();
 			});
 
