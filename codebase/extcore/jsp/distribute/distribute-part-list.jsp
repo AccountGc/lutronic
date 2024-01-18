@@ -572,7 +572,7 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 						twindate("modified");
 						$("#_psize").bindSelectSetValue("20");
 						$("#state").bindSelectDisabled("APPROVED");
-						$("#state").bindDisable();
+						$("#state").bindSelectDisabled();
 					} else {
 						el.style.display = "none";
 						target.value = "▼펼치기";
@@ -590,7 +590,7 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 						twindate("modified");
 						$("#_psize").bindSelectSetValue("20");
 						$("#state").bindSelectDisabled("APPROVED");
-						$("#state").bindDisable();
+						$("#state").bindSelectDisabled();
 					}
 				}
 			}
