@@ -104,9 +104,12 @@ public class IndexController extends BaseController {
 		// 배포 그룹이다
 		boolean isDist = false;
 		int distType = DistUtils.getType();
+		System.out.println("distType=" + distType);
 		if (distType == 2 || distType == 1) {
 			isDist = true;
 		}
+
+		System.out.println("isDist=" + isDist);
 
 		int workData = WorkDataHelper.manager.count();
 		int eca = ActivityHelper.manager.count();

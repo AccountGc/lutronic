@@ -206,7 +206,7 @@ while (qr.hasMoreElements()) {
 		while (qr.hasMoreElements()) {
 			MailUser user = (MailUser) qr.nextElement();
 			MailWTobjectLink link = MailWTobjectLink.newMailWTobjectLink((WTObject) ecpr, user);
-			PersistenceHelper.manager.delete(link);
+			PersistenceHelper.manager.save(link);
 		}
 
 		QuerySpec qs = new QuerySpec();

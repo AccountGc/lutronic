@@ -182,11 +182,6 @@ Map<String, Integer> count = (Map<String, Integer>) request.getAttribute("count"
 				<td valign="top">
 					<table>
 						<tr>
-							<td class="left">
-								<img style="position: relative; top: 0px; right: 14px;" src="/Windchill/extcore/images/approval.jpg">
-							</td>
-						</tr>
-						<tr>
 							<td style="height: 330px; text-align: center;">
 								<div class="container">
 									<div class="color-circle circle-1">
@@ -249,11 +244,6 @@ Map<String, Integer> count = (Map<String, Integer>) request.getAttribute("count"
 				<td valign="top">&nbsp;</td>
 				<td class="left" valign="top">
 					<table>
-						<tr>
-							<td class="left">
-								<img style="position: relative; top: 0px; right: 14px;" src="/Windchill/extcore/images/notice.jpg">
-							</td>
-						</tr>
 						<tr>
 							<td style="border: 2px solid #86bff9; height: 250px;" valign="top">
 								<table>
