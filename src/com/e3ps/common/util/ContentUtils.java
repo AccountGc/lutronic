@@ -98,6 +98,7 @@ public class ContentUtils {
 		if (result.hasMoreElements()) {
 			ApplicationData data = (ApplicationData) result.nextElement();
 			String fileIcon = getFileIcon(data.getFileName());
+			String ext = FileUtil.getExtension(data.getFileName());
 			primary = new HashMap<>();
 			primary.put("oid", holder.getPersistInfo().getObjectIdentifier().getStringValue());
 			primary.put("aoid", data.getPersistInfo().getObjectIdentifier().getStringValue());

@@ -256,6 +256,15 @@ boolean complete = (boolean) request.getAttribute("complete");
 <table class="button-table">
 	<tr>
 		<td class="right">
+			<div class="pretty p-switch">
+				<input type="checkbox" name="comp" value="true">
+				<div class="state p-success">
+					<label>
+						<b>완제품</b>
+					</label>
+				</div>
+			</div>
+			&nbsp;
 			<select name="_psize" id="_psize">
 				<option value="10">10</option>
 				<option value="20" selected="selected">20</option>
@@ -461,9 +470,17 @@ function loadGridData(movePage) {
 	const field = [ "location", "partNumber", "partName", "createdFrom", "createdTo", "modifiedFrom", "modifiedTo", "creator", "state", "model", "productmethod", "deptcode", "unit", "weight", "mat", "finish", "remarks",
 		"ecoNo", "eoNo" ,"creatorOid","specification"];
 	const  latest = document.querySelector("input[name=latest]:checked").value;
+	const  complete = document.querySelector("input[name=complete]:checked");
+	const preOrder = document.querySelector("input[name=preOrder]:checked").value;
 	params = toField(params, field);
 	params.latest = JSON.parse(latest);
 	params.eca = false;
+	params.preOrder = preOrder;
+	if(complete !== null) {
+		params.complete = JSON.parse(complete.value);
+	} else {
+		params.complete = false;
+	}
 	AUIGrid.showAjaxLoader(myGridID);
 	openLayer();
 	call(url, params, function(data) {

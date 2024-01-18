@@ -1440,10 +1440,14 @@ public class EcoHelper {
 		JCoTable rtnTable = function.getTableParameterList().getTable("ET_BOM");
 		rtnTable.firstRow();
 		for (int i = 0; i < rtnTable.getNumRows(); i++, rtnTable.nextRow()) {
-			Object MATNR_OLD = rtnTable.getValue("MATNR_OLD");
 			Object ZIFSTA = rtnTable.getValue("ZIFSTA");
 			Object ZIFMSG = rtnTable.getValue("ZIFMSG");
-			System.out.println("MATNR_OLD+" + MATNR_OLD + ", ZIFSTA=" + ZIFSTA + ", ZIFMSG=" + ZIFMSG);
+			Object MATNR_OLD = rtnTable.getValue("MATNR_OLD");
+			Object IDNRK_OLD = rtnTable.getValue("IDNRK_OLD");
+			Object MATNR_NEW = rtnTable.getValue("MATNR_NEW");
+			Object IDNRK_NEW = rtnTable.getValue("IDNRK_NEW");
+			System.out.println("이전부모 =  " + MATNR_OLD + ", 이전자식 = " + IDNRK_OLD + ", 신규부모 = " + MATNR_NEW + ", 신규자식 = "
+					+ IDNRK_NEW + ", ZIFSTA=" + ZIFSTA + ", ZIFMSG=" + ZIFMSG);
 		}
 		System.out.println("[ SAP JCO ] RETURN - TYPE:" + r_type);
 		System.out.println("[ SAP JCO ] RETURN - MESSAGE:" + r_msg);

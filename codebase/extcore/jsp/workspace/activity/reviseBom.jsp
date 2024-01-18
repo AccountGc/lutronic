@@ -126,6 +126,15 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 					</div>
 				</td>
 				<td class="right">
+					<div class="pretty p-switch">
+						<input type="checkbox" name="dummy" value="true">
+						<div class="state p-success">
+							<label>
+								<b>DUMMY 제외</b>
+							</label>
+						</div>
+					</div>
+					&nbsp;
 					<input type="button" value="이전품목" title="이전품목" class="red" onclick="prePart();">
 					<input type="button" value="품목개정" title="품목개정" onclick="revise();" class="gray">
 					<input type="button" value="품목변경" title="품목변경" class="blue" onclick="replace();">

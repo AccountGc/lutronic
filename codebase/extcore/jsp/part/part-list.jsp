@@ -65,7 +65,7 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 				</td>
 				<th>등록자</th>
 				<td class="indent5">
-					<input type="text" name="creator" id="creator" data-multi="false" class="width-300">
+					<input type="text" name="creator" id="creator" class="width-200">
 					<input type="hidden" name="creatorOid" id="creatorOid">
 					<img src="/Windchill/extcore/images/delete.png" class="delete" title="삭제" onclick="clearUser('creator')">
 				</td>
@@ -276,6 +276,15 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 					<img src="/Windchill/extcore/images/redo.gif" title="테이블 초기화" onclick="resetColumnLayout('part-list');">
 				</td>
 				<td class="right">
+					<div class="pretty p-switch">
+						<input type="checkbox" name="comp" value="true">
+						<div class="state p-success">
+							<label>
+								<b>완제품</b>
+							</label>
+						</div>
+					</div>
+					&nbsp;
 					<select name="_psize" id="_psize">
 						<option value="10">10</option>
 						<option value="20" selected="selected">20</option>
@@ -600,10 +609,16 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 				const field = [ "location", "partNumber", "partName", "createdFrom", "createdTo", "modifiedFrom", "modifiedTo", "state", "modelcode", "productmethod", "deptcode", "unit", "weight", "mat", "finish", "remarks", "ecoNo", "eoNo", "creatorOid", "specification" ];
 				const url = getCallUrl("/part/list");
 				const latest = document.querySelector("input[name=latest]:checked").value;
+				const complete = document.querySelector("input[name=comp]:checked");
 				const preOrder = document.querySelector("input[name=preOrder]:checked").value;
 				params = toField(params, field);
 				params.latest = JSON.parse(latest);
 				params.preOrder = preOrder;
+				if(complete !== null) {
+					params.complete = JSON.parse(complete.value);
+				} else {
+					params.complete = false;
+				}
 				params.eca = false;
 				logger(params);
 				AUIGrid.showAjaxLoader(myGridID);

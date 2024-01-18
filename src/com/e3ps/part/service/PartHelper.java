@@ -1,7 +1,6 @@
 package com.e3ps.part.service;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.List;
@@ -13,15 +12,11 @@ import javax.servlet.http.HttpServletRequest;
 import org.springframework.web.bind.annotation.RequestBody;
 
 import com.e3ps.change.EChangeOrder;
-import com.e3ps.change.EChangeRequest;
 import com.e3ps.change.EcoPartLink;
-import com.e3ps.change.EcrPartLink;
 import com.e3ps.change.eco.column.EcoColumn;
-import com.e3ps.change.service.ECOSearchHelper;
 import com.e3ps.common.folder.beans.CommonFolderHelper;
 import com.e3ps.common.iba.AttributeKey;
 import com.e3ps.common.iba.IBAUtils;
-import com.e3ps.common.message.Message;
 import com.e3ps.common.util.AUIGridUtil;
 import com.e3ps.common.util.CommonUtil;
 import com.e3ps.common.util.PageQueryUtils;
@@ -32,28 +27,20 @@ import com.e3ps.doc.column.DocumentColumn;
 import com.e3ps.drawing.service.DrawingHelper;
 import com.e3ps.part.PartToPartLink;
 import com.e3ps.part.column.PartColumn;
-import com.e3ps.part.dto.ObjectComarator;
-import com.e3ps.part.dto.PartDTO;
-import com.e3ps.part.dto.PartData;
 import com.e3ps.part.dto.PartTreeData;
 import com.e3ps.part.util.BomBroker;
-import com.e3ps.part.util.PartUtil;
 import com.e3ps.rohs.PartToRohsLink;
 import com.e3ps.rohs.ROHSMaterial;
 import com.e3ps.rohs.dto.RohsData;
-import com.e3ps.rohs.service.RohsHelper;
 import com.ptc.wpcfg.pdmabstr.PROEDependency;
 
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 import wt.clients.folder.FolderTaskLogic;
-import wt.content.ApplicationData;
-import wt.content.HolderToContent;
 import wt.doc.WTDocument;
 import wt.epm.EPMDocument;
 import wt.epm.EPMDocumentMaster;
 import wt.epm.build.EPMBuildRule;
-import wt.epm.structure.EPMDescribeLink;
 import wt.epm.structure.EPMReferenceLink;
 import wt.epm.structure.EPMStructureHelper;
 import wt.fc.PagingQueryResult;
@@ -69,7 +56,6 @@ import wt.iba.definition.litedefinition.AttributeDefDefaultView;
 import wt.iba.definition.service.IBADefinitionHelper;
 import wt.iba.value.BooleanValue;
 import wt.lifecycle.State;
-import wt.part.PartDocHelper;
 import wt.part.QuantityUnit;
 import wt.part.WTPart;
 import wt.part.WTPartBaselineConfigSpec;
@@ -79,7 +65,6 @@ import wt.part.WTPartHelper;
 import wt.part.WTPartMaster;
 import wt.part.WTPartStandardConfigSpec;
 import wt.part.WTPartUsageLink;
-import wt.pdmlink.PDMLinkProduct;
 import wt.query.ClassAttribute;
 import wt.query.QuerySpec;
 import wt.query.SearchCondition;
@@ -92,7 +77,6 @@ import wt.vc.config.LatestConfigSpec;
 import wt.vc.views.View;
 import wt.vc.views.ViewHelper;
 import wt.vc.wip.WorkInProgressHelper;
-import wt.viewmarkup.DerivedImage;
 
 public class PartHelper {
 
@@ -195,6 +179,7 @@ public class PartHelper {
 		boolean eca = (boolean) params.get("eca");
 		boolean latest = (boolean) params.get("latest");
 		String preOrder = (String) params.get("preOrder");
+		boolean complete = (boolean) params.get("complete");
 
 		QuerySpec query = new QuerySpec();
 		int idx = query.addClassList(WTPart.class, true);
@@ -221,6 +206,16 @@ public class PartHelper {
 		}
 		SearchCondition sc = new SearchCondition(WTPart.class, "state.state", "<>", "TEMPRARY");
 		query.appendWhere(sc, new int[] { idx });
+
+		if (complete) {
+			if (query.getConditionCount() > 0) {
+				query.appendAnd();
+				;
+			}
+			query.appendWhere(
+					new SearchCondition(WTPart.class, "master>number", SearchCondition.LIKE, "1_________", false),
+					new int[] { idx });
+		}
 
 		// 선구매 조건이 선택됫을 경우..
 		if ("yes".equals(preOrder) || "no".equals(preOrder)) {
@@ -368,69 +363,6 @@ public class PartHelper {
 		return itemSeqDefinition.getPersistInfo().getObjectIdentifier().getId();
 	}
 
-	public JSONArray include_PartList(String oid, String moduleType) throws Exception {
-		List<PartDTO> list = new ArrayList<PartDTO>();
-		try {
-			if (oid.length() > 0) {
-				QueryResult rt = null;
-				Object obj = (Object) CommonUtil.getObject(oid);
-				if ("doc".equals(moduleType)) {
-					WTDocument doc = (WTDocument) obj;
-					rt = PartDocHelper.service.getAssociatedParts(doc);
-					while (rt.hasMoreElements()) {
-						WTPart part = (WTPart) rt.nextElement();
-						PartDTO data = new PartDTO(part);
-						list.add(data);
-					}
-				} else if ("drawing".equals(moduleType)) {
-					EPMDocument epm = (EPMDocument) CommonUtil.getObject(oid);
-					QueryResult qr = PersistenceHelper.manager.navigate(epm, "describes", EPMDescribeLink.class);
-					while (qr.hasMoreElements()) {
-						WTPart part = (WTPart) qr.nextElement();
-						PartDTO data = new PartDTO(part);
-						list.add(data);
-					}
-				} else if ("ecr".equals(moduleType)) {
-					EChangeRequest ecr = (EChangeRequest) CommonUtil.getObject(oid);
-					QueryResult qr = PersistenceHelper.manager.navigate(ecr, "part", EcrPartLink.class, false);
-					while (qr.hasMoreElements()) {
-						EcrPartLink link = (EcrPartLink) qr.nextElement();
-						String version = link.getVersion();
-						WTPartMaster master = (WTPartMaster) link.getPart();
-						WTPart part = PartHelper.service.getPart(master.getNumber());
-						PartDTO data = new PartDTO(part);
-
-						list.add(data);
-					}
-				} else if ("eco".equals(moduleType.toLowerCase())) {
-					EChangeOrder eco = (EChangeOrder) obj;
-					rt = ECOSearchHelper.service.ecoPartLink(eco);
-					while (rt.hasMoreElements()) {
-						Object[] o = (Object[]) rt.nextElement();
-
-						EcoPartLink link = (EcoPartLink) o[0];
-
-						WTPartMaster master = (WTPartMaster) link.getPart();
-						String version = link.getVersion();
-
-						WTPart part = PartHelper.service.getPart(master.getNumber());
-						PartDTO data = new PartDTO(part);
-						// if(link.isBaseline()) data.setBaseline("checked");
-
-						list.add(data);
-					}
-				} else if ("rohs".equals(moduleType)) {
-					ROHSMaterial rohs = (ROHSMaterial) CommonUtil.getObject(oid);
-					list = RohsHelper.manager.getROHSToPartList(rohs);
-					Collections.sort(list, new ObjectComarator());
-				}
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		return JSONArray.fromObject(list);
-	}
-
 	/**
 	 * 부품 이력
 	 */
@@ -455,67 +387,6 @@ public class PartHelper {
 		}
 		return JSONArray.fromObject(list);
 	}
-
-//	public List<CommentsData> commentsList(String oid) throws Exception {
-//		List<CommentsData> comList = new ArrayList<CommentsData>();
-//		WTPart part = (WTPart) CommonUtil.getObject(oid);
-//		QuerySpec qs = new QuerySpec();
-//		int idx = qs.appendClassList(Comments.class, true);
-//
-//		qs.appendWhere(new SearchCondition(Comments.class, "wtpartReference.key.id", "=",
-//				part.getPersistInfo().getObjectIdentifier().getId()), new int[] { idx });
-//		qs.appendOrderBy(new OrderBy(new ClassAttribute(Comments.class, "cNum"), false), new int[] { idx });
-//		qs.appendOrderBy(new OrderBy(new ClassAttribute(Comments.class, "thePersistInfo.createStamp"), false),
-//				new int[] { idx });
-//
-//		QueryResult result = PersistenceHelper.manager.find(qs);
-//		while (result.hasMoreElements()) {
-//			Object[] obj = (Object[]) result.nextElement();
-//			CommentsData data = new CommentsData((Comments) obj[0]);
-//			comList.add(data);
-//		}
-//		return comList;
-//	}
-
-//	public int getCommentsChild(Comments com) throws Exception {
-//		WTPart part = com.getWtpart();
-//		int count = 0;
-//		QuerySpec qs = new QuerySpec();
-//		int idx = qs.appendClassList(Comments.class, true);
-//		qs.appendWhere(new SearchCondition(Comments.class, "wtpartReference.key.id", "=",
-//				part.getPersistInfo().getObjectIdentifier().getId()), new int[] { idx });
-//		qs.appendAnd();
-//		qs.appendWhere(new SearchCondition(Comments.class, "oPerson", "=", com.getOwner().getFullName()),
-//				new int[] { idx });
-//		qs.appendAnd();
-//		qs.appendWhere(new SearchCondition(Comments.class, "cNum", "=", com.getCNum()), new int[] { idx });
-//		qs.appendAnd();
-//		qs.appendWhere(new SearchCondition(Comments.class, "cStep", ">", com.getCStep()), new int[] { idx });
-//		qs.appendAnd();
-//		qs.appendWhere(new SearchCondition(Comments.class, "deleteYN", "=", "N"), new int[] { idx });
-//
-//		QueryResult result = PersistenceHelper.manager.find(qs);
-//		while (result.hasMoreElements()) {
-//			Object[] obj = (Object[]) result.nextElement();
-//			count++;
-//		}
-//		return count;
-//	}
-
-//	public JSONArray include_ChangeECOView(String oid, String moduleType) throws Exception {
-//		List<ECOData> list = new ArrayList<ECOData>();
-//		if (StringUtil.checkString(oid)) {
-//			if ("part".equals(moduleType)) {
-//				WTPart part = (WTPart) CommonUtil.getObject(oid);
-//				List<EChangeOrder> eolist = getPartTOECOList(part);
-//				for (EChangeOrder eco : eolist) {
-//					ECOData data = new ECOData(eco);
-//					list.add(data);
-//				}
-//			}
-//		}
-//		return JSONArray.fromObject(list);
-//	}
 
 	public Map<String, Object> listProduction(@RequestBody Map<String, Object> params) throws Exception {
 
@@ -655,112 +526,6 @@ public class PartHelper {
 		map.put("curPage", pager.getCpage());
 
 		return map;
-	}
-
-	public Map<String, Object> bomPartList(Map<String, Object> params) throws Exception {
-
-		Map<String, Object> result = new HashMap<String, Object>();
-
-		String oid = (String) params.get("oid");
-		String bomType = (String) params.get("bomType");
-		result.put("oid", oid);
-		result.put("bomType", bomType);
-
-		WTPart part = (WTPart) CommonUtil.getObject(oid);
-
-		BomBroker broker = new BomBroker();
-		ArrayList list = new ArrayList();
-		result.put("partNumber", part.getNumber());
-		String msg = null;
-		String title = "";
-
-		View[] views = ViewHelper.service.getAllViews();
-		String view = views[0].getName();
-
-		if ("up".equals(bomType)) {
-
-			list = broker.ancestorPart(part, ViewHelper.service.getView(view), null);
-			msg = Message.get("상위품목이 없습니다.");
-			title = Message.get("상위품목");
-		} else if ("down".equals(bomType)) {
-			list = broker.descentLastPart(part, ViewHelper.service.getView(view), null);
-			msg = Message.get("하위품목이 없습니다.");
-			title = Message.get("하위품목");
-		} else if ("end".equals(bomType)) {
-			PartTreeData root = broker.getTree(part, false, null);
-//			PartTreeData root = broker.getTree(part, false, null,ViewHelper.service.getView(view));
-			broker.setHtmlForm(root, list);
-			msg = Message.get("END ITEM이 없습니다.");
-
-			title = Message.get("END ITEM");
-		}
-		result.put("msg", msg);
-		result.put("title", title);
-		List<Map<String, String>> item = new ArrayList<Map<String, String>>();
-		if (list.size() > 0) {
-			Collections.sort(list, new ObjectComarator());
-			StringBuffer sb = new StringBuffer();
-			for (int i = 0; i < list.size(); i++) {
-				if ("end".equals(bomType)) {
-					PartTreeData data = (PartTreeData) list.get(i);
-
-					//// System.out.println("END ITEM data.number = " + data.number);
-					/*
-					 * if (data.children.size() > 0) { continue; } //자기자신 제외
-					 * if(part.getNumber().equals(data.number)){ continue; } //더미 제외
-					 * if(PartUtil.isChange(data.number)){ continue; }
-					 * 
-					 * //마스터 완제품 제외 if(PartUtil.isProductCheck(data.number) &&
-					 * !PartUtil.completeProductCheck(data.number)){ continue; }
-					 */
-					WTPart endPart = data.part;
-					System.out.println("endPart                     : " + endPart);
-					System.out.println("part                     : " + part);
-					if (endPart.getNumber().equals(part.getNumber())) {
-						continue;
-					}
-
-					String partNumter = endPart.getNumber();
-
-					if (PartUtil.isChange(partNumter)) {
-						continue;
-					}
-					//// System.out.println("partNumter =" + partNumter);
-					if (!PartUtil.completeProductCheck(partNumter)) {
-						continue;
-					}
-					String partendoid = CommonUtil.getOIDString(data.part);
-					Map<String, String> map = new HashMap<String, String>();
-					map.put("icon", CommonUtil.getObjectIconImageTag(data.part));
-					map.put("oid", data.part.getPersistInfo().getObjectIdentifier().toString());
-					map.put("number", data.number);
-					map.put("name", data.name);
-					map.put("state", data.part.getLifeCycleState().getDisplay(Message.getLocale()));
-					map.put("version", data.version + "." + data.iteration);
-					if (!sb.toString().contains(partendoid))
-						item.add(map);
-					sb.append(partendoid + ";");
-				} else {
-					Object[] o = (Object[]) list.get(i);
-					WTPart partD = (WTPart) o[1];
-					PartData data = new PartData(partD);
-
-					Map<String, String> map = new HashMap<String, String>();
-					map.put("icon", data.getIcon());
-					map.put("oid", data.getOid());
-					map.put("number", data.getNumber());
-					map.put("name", data.getName());
-//					map.put("state", data.getLifecycle());
-					map.put("version", data.getVersion());
-					String partendoid = CommonUtil.getOIDString(partD);
-					if (!sb.toString().contains(partendoid))
-						item.add(map);
-					sb.append(partendoid + ";");
-				}
-			}
-		}
-		result.put("list", item);
-		return result;
 	}
 
 	/**
