@@ -252,10 +252,13 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 					},
 				}, {
 					dataField : "model",
-					headerText : "제품",
+					headerText : "프로젝트 코드 [명]",
 					dataType : "string",
-					width : 250,
-					style : "aui-left"
+					width : 350,
+					style : "aui-left",
+					renderer : {
+						type : "TemplateRenderer"
+					},
 				}, {
 					dataField : "sendType",
 					headerText : "ECO 타입",
@@ -374,7 +377,7 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 				finderCode("model", "MODEL", "code");
 				$("#_psize").bindSelectSetValue("20");
 				$("#state").bindSelectDisabled("APPROVED");
-				$("#state").bindDisable();
+				$("#state").bindSelectDisabled();
 			});
 
 			document.addEventListener("keydown", function(event) {

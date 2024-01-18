@@ -6,7 +6,6 @@
 <%@page import="java.util.ArrayList"%>
 <%@page import="com.e3ps.common.code.NumberCode"%>
 <%
-ArrayList<NumberCode> modelList = (ArrayList<NumberCode>) request.getAttribute("modelList");
 ArrayList<NumberCode> sectionList = (ArrayList<NumberCode>) request.getAttribute("sectionList");
 List<Map<String, String>> lifecycleList = (List<Map<String, String>>) request.getAttribute("lifecycleList");
 ArrayList<NumberCode> deptcodeList = (ArrayList<NumberCode>) request.getAttribute("deptcodeList");
@@ -25,7 +24,6 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 	<form>
 		<input type="hidden" name="sessionid" id="sessionid">
 		<input type="hidden" name="curPage" id="curPage">
-		<input type="hidden" name="state" id="state" value="APPROVED">
 		<input type="hidden" name="sessionName" id="sessionName" value="<%=user.getFullName()%>">
 
 		<table class="button-table">
@@ -162,7 +160,7 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 				</td>
 			</tr>
 		</table>
-		<div id="grid_wrap" style="height: 505px; border-top: 1px solid #3180c3;"></div>
+		<div id="grid_wrap" style="height: 535px; border-top: 1px solid #3180c3;"></div>
 		<div id="grid_paging" class="aui-grid-paging-panel my-grid-paging-panel"></div>
 		<%@include file="/extcore/jsp/common/aui-context.jsp"%>
 
@@ -208,10 +206,13 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 					},
 				}, {
 					dataField : "model",
-					headerText : "제품명",
+					headerText : "프로젝트 코드 [명]",
 					dataType : "string",
-					width : 220,
+					width : 350,
 					style : "aui-left",
+					renderer : {
+						type : "TemplateRenderer"
+					},
 				}, {
 					dataField : "changeSection",
 					headerText : "변경사유",
@@ -243,7 +244,7 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 							return "approved";
 						}
 						return null;
-					},
+					}
 				}, {
 					dataField : "creator",
 					headerText : "등록자",
@@ -324,17 +325,16 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 				AUIGrid.resize(myGridID);
 				selectbox("state");
 				finderUser("creator");
-				// 				finderUser("writer");
 				twindate("created");
 				twindate("approve");
 				twindate("writed");
 				selectbox("_psize");
 				selectbox("changeSection");
 				selectbox("createDepart");
-				finderCode("model", "MODEL");
+				finderCode("model", "MODEL", "code");
 				$("#_psize").bindSelectSetValue("20");
 				$("#state").bindSelectDisabled("APPROVED");
-				$("#state").bindDisable();
+				$("#state").bindSelectDisabled();
 			});
 
 			document.addEventListener("keydown", function(event) {
