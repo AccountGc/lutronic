@@ -605,6 +605,7 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 				params.latest = JSON.parse(latest);
 				params.preOrder = preOrder;
 				params.eca = false;
+				logger(params);
 				AUIGrid.showAjaxLoader(myGridID);
 				parent.openLayer();
 				call(url, params, function(data) {
