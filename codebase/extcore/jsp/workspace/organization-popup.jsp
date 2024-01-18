@@ -11,6 +11,16 @@ boolean isMulti = Boolean.parseBoolean(multi);
 <input type="hidden" name="sessionid" id="sessionid">
 <input type="hidden" name="curPage" id="curPage">
 
+<table class="button-table">
+	<tr>
+		<td class="left">
+			<div class="header">
+				<img src="/Windchill/extcore/images/header.png">
+				조직도
+			</div>
+		</td>
+	</tr>
+</table>
 <table class="search-table">
 	<colgroup>
 		<col width="174">
@@ -62,7 +72,7 @@ boolean isMulti = Boolean.parseBoolean(multi);
 	<tr>
 		<td valign="top">
 			<jsp:include page="/extcore/jsp/workprocess/department-tree.jsp">
-				<jsp:param value="458" name="height" />
+				<jsp:param value="428" name="height" />
 			</jsp:include>
 		</td>
 		<td valign="top">&nbsp;</td>
@@ -81,64 +91,37 @@ boolean isMulti = Boolean.parseBoolean(multi);
 			headerText : "번호",
 			width : 40,
 			dataType : "numeric",
-			filter : {
-				inline : false
-			},
 		},{
 			dataField : "id",
 			headerText : "아이디",
 			dataType : "string",
 			width : 120,
-			filter : {
-				showIcon : true,
-				inline : true
-			},
 		}, {
 			dataField : "name",
 			headerText : "이름",
 			dataType : "string",
 			width : 120,
-			filter : {
-				showIcon : true,
-				inline : true
-			},
 		}, {
 			dataField : "auth",
 			headerText : "메뉴권한",
 			dataType : "string",
 			style : "aui-left",
-			filter : {
-				showIcon : true,
-				inline : true
-			},
 		}, {
 			dataField : "department_name",
 			headerText : "부서",
 			dataType : "string",
 			width : 150,
-			filter : {
-				showIcon : true,
-				inline : true
-			},
 		}, {
 			dataField : "duty",
 			headerText : "직위",
 			dataType : "string",
 			width : 130,
-			filter : {
-				showIcon : true,
-				inline : true
-			},
 		}, {
 			dataField : "email",
 			headerText : "이메일",
 			dataType : "string",
 			width : 250,
 			style : "aui-left",
-			filter : {
-				showIcon : true,
-				inline : true
-			},
 		} ]
 	}
 
@@ -146,7 +129,7 @@ boolean isMulti = Boolean.parseBoolean(multi);
 		const props = {
 			headerHeight : 30,
 			showRowNumColumn : false,
-			rowNumHeaderText : "번호",
+// 			rowNumHeaderText : "번호",
 			showAutoNoDataMessage : true,
 			selectionMode : "multipleCells",
 			hoverMode : "singleRow",
@@ -188,7 +171,7 @@ boolean isMulti = Boolean.parseBoolean(multi);
 			// 엑스트라 체크박스 체크 추가
 			AUIGrid.setCheckedRowsByIds(event.pid, rowId);
 		}
-		<%}else{%>
+		<%} else {%>
 		if (AUIGrid.isCheckedRowById(event.pid, item._$uid)) {
 			AUIGrid.addUncheckedRowsByIds(event.pid,item._$uid);
 		} else {

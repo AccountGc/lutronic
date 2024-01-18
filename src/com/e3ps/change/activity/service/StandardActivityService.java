@@ -463,7 +463,7 @@ public class StandardActivityService extends StandardManager implements Activity
 //						clist.add(p);
 //					}
 //				}
-				
+
 				if (!PartHelper.isCollectNumber(p.getNumber())) {
 					if (PartHelper.isTopNumber(p.getNumber())) {
 						if (!clist.contains(p)) {
@@ -471,7 +471,7 @@ public class StandardActivityService extends StandardManager implements Activity
 						}
 					}
 				}
-				
+
 				putModel(model, p, mlist);
 			}
 
@@ -873,6 +873,9 @@ public class StandardActivityService extends StandardManager implements Activity
 				}
 			}
 			// EO
+
+			eco = (EChangeOrder) PersistenceHelper.manager.refresh(eco);
+
 			eco.setModel(model);
 			PersistenceHelper.manager.modify(eco);
 

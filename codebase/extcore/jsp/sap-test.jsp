@@ -103,7 +103,6 @@ send(eco);
 					WTPart addPart = (WTPart) CommonUtil.getObject(addOid);
 					// 부모_자식
 					String key = next_part.getNumber() + "_" + addPart.getNumber();
-
 					if (next_part.getNumber().startsWith("8")) {
 						continue;
 					}
@@ -167,13 +166,12 @@ send(eco);
 					SAPSendBomDTO dto = iterator.next();
 					dto.setSendType("변경품");
 					String compNum = dto.getNewChildPartNumber();
+					String c = dto.getChildPartNumber();
 					
-// 					System.out.println("compNum="+compNum);
-// 					if (compNum.startsWith("8")) {
-// 						continue;
-// 					}
+					if (c.startsWith("8")) {
+						itemsToRemove.add(dto);
+					}
 
-					// addList에서 같은 newChildPartNumber를 찾으면 itemsToRemove에 추가
 					for (Map<String, Object> addMap : addList) {
 						String addOid = (String) addMap.get("oid");
 						WTPart addPart = (WTPart) CommonUtil.getObject(addOid);

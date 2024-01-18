@@ -478,9 +478,17 @@ public class StandardSAPService extends StandardManager implements SAPService {
 //					ArrayList<String> changeKey = new ArrayList<String>();
 					while (iterator.hasNext()) {
 						SAPSendBomDTO dto = iterator.next();
+						String c = dto.getChildPartNumber();
+						// 자식품
+						if (c.startsWith("8")) {
+							itemsToRemove.add(dto);
+						}
+						
 						dto.setSendType("변경품");
 						String compNum = dto.getNewChildPartNumber();
 
+						
+						
 						// addList에서 같은 newChildPartNumber를 찾으면 itemsToRemove에 추가
 						for (Map<String, Object> addMap : addList) {
 							String addOid = (String) addMap.get("oid");

@@ -118,6 +118,7 @@ public class EcoHelper {
 		String state = (String) params.get("state");
 		String approveFrom = (String) params.get("approveFrom");
 		String approveTo = (String) params.get("approveTo");
+		String model = (String) params.get("modelcode");
 
 		String licensing = (String) params.get("licensing");
 		String riskType = (String) params.get("riskType");
@@ -125,15 +126,12 @@ public class EcoHelper {
 		QuerySpec query = new QuerySpec();
 		int idx = query.appendClassList(EChangeOrder.class, true);
 
-		// 상태 임시저장 제외
-		if (query.getConditionCount() > 0) {
-			query.appendAnd();
-		}
-		query.appendWhere(new SearchCondition(EChangeOrder.class, EChangeOrder.LIFE_CYCLE_STATE,
-				SearchCondition.NOT_EQUAL, "TEMPRARY"), new int[] { idx });
 		QuerySpecUtils.toLikeAnd(query, idx, EChangeOrder.class, EChangeOrder.EO_NAME, name);
 		QuerySpecUtils.toLikeAnd(query, idx, EChangeOrder.class, EChangeOrder.EO_NUMBER, number);
+		QuerySpecUtils.toLikeAnd(query, idx, EChangeOrder.class, EChangeOrder.MODEL, model);
 		QuerySpecUtils.toCreatorQuery(query, idx, EChangeOrder.class, creatorOid);
+		QuerySpecUtils.toIn(query, idx, EChangeOrder.class, EChangeOrder.MODEL, model);
+
 		QuerySpecUtils.toTimeGreaterAndLess(query, idx, EChangeOrder.class, EChangeOrder.CREATE_TIMESTAMP, createdFrom,
 				createdTo);
 		if (approveFrom.length() > 0) {
@@ -151,11 +149,7 @@ public class EcoHelper {
 					SearchCondition.LESS_THAN_OR_EQUAL, approveTo), new int[] { idx });
 		}
 		QuerySpecUtils.toState(query, idx, EChangeOrder.class, state);
-		if (StringUtil.checkString(eoType)) {
-			QuerySpecUtils.toEqualsAnd(query, idx, EChangeOrder.class, EChangeOrder.EO_TYPE, eoType);
-		} else {
-			QuerySpecUtils.toEqualsAnd(query, idx, EChangeOrder.class, EChangeOrder.EO_TYPE, "CHANGE");
-		}
+		QuerySpecUtils.toEquals(query, idx, EChangeOrder.class, EChangeOrder.EO_TYPE, "CHANGE");
 		QuerySpecUtils.toEqualsAnd(query, idx, EChangeOrder.class, EChangeOrder.LICENSING_CHANGE, licensing);
 		QuerySpecUtils.toEqualsAnd(query, idx, EChangeOrder.class, EChangeOrder.RISK_TYPE, riskType);
 
@@ -217,10 +211,6 @@ public class EcoHelper {
 			String part_oid = row500.get("part_oid");
 			WTPart part = (WTPart) CommonUtil.getObject(part_oid);
 			clist.add(part);
-
-			// 제품명 담기
-//			model = putModel(model, part, mlist);
-
 			plist = PartHelper.manager.collectEndItem(part, plist);
 		}
 
