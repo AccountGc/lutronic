@@ -1,3 +1,9 @@
+<%@page import="wt.content.ContentRoleType"%>
+<%@page import="wt.content.ContentHelper"%>
+<%@page import="wt.part.WTPartDescribeLink"%>
+<%@page import="wt.fc.PersistenceHelper"%>
+<%@page import="wt.fc.QueryResult"%>
+<%@page import="java.util.Map"%>
 <%@page import="com.e3ps.common.util.CommonUtil"%>
 <%@page import="wt.part.WTPart"%>
 <%@page import="wt.session.SessionHelper"%>
@@ -27,7 +33,18 @@ WTUser sessionUser = (WTUser) SessionHelper.manager.getPrincipal();
 			</div>
 		</td>
 		<td class="right">
-			<input type="button" value="BOM" title="BOM" onclick="bom();">
+			<%
+			if (isAdmin) {
+			%>
+			<select name="state" id="state" class="width-100" onchange="lcm(this);">
+				<option value="">선택</option>
+				<option value="INWORK">작업 중</option>
+				<option value="APPROVED">승인됨</option>
+			</select>
+			<%
+			}
+			%>
+			<input type="button" value="BOM 보기" title="BOM 보기" onclick="view();">
 			<input type="button" value="닫기" title="닫기" class="gray" onclick="self.close();">
 		</td>
 	</tr>
@@ -38,16 +55,10 @@ WTUser sessionUser = (WTUser) SessionHelper.manager.getPrincipal();
 			<a href="#tabs-1">기본 정보</a>
 		</li>
 		<li>
-			<a href="#tabs-2">주도면</a>
-		</li>
-		<li>
 			<a href="#tabs-3">참조 항목</a>
 		</li>
 		<li>
 			<a href="#tabs-4">관련 객체</a>
-		</li>
-		<li>
-			<a href="#tabs-6">환경규제문서</a>
 		</li>
 		<li>
 			<a href="#tabs-7">이력 관리</a>
@@ -57,11 +68,11 @@ WTUser sessionUser = (WTUser) SessionHelper.manager.getPrincipal();
 		<table class="view-table">
 			<colgroup>
 				<col width="130">
-				<col width="500">
+				<col width="300">
 				<col width="130">
-				<col width="320">
+				<col width="300">
 				<col width="80">
-				<col width="100">
+				<col width="150">
 			</colgroup>
 			<tr>
 				<th class="lb" colspan="6"><%=dto.getName()%></th>
@@ -86,7 +97,17 @@ WTUser sessionUser = (WTUser) SessionHelper.manager.getPrincipal();
 				</td>
 				<th>REV</th>
 				<td class="indent5">
-					<%=dto.getVersion()%>(<%=dto.getViewName()%>)
+					<%=dto.getVersion()%>
+					<%
+					if (!dto.isLatest()) {
+					%>
+					&nbsp;
+					<b>
+						<a href="javascript:latest();">(최신버전으로)</a>
+					</b>
+					<%
+					}
+					%>
 				</td>
 			</tr>
 			<tr>
@@ -102,11 +123,32 @@ WTUser sessionUser = (WTUser) SessionHelper.manager.getPrincipal();
 				<td class="indent5"><%=dto.getModifyDate()%></td>
 			</tr>
 			<tr>
+				<th class="lb">주 도면</th>
+				<td class="indent5" colspan="3">
+					<%
+					if (dto.getEpm_oid() != null) {
+					%>
+					<a href="javascript:viewEpm('<%=dto.getEpm_oid()%>');"><%=dto.getEpm_value()%></a>
+					<%
+					} else {
+					%>
+					<font color="red">
+						<b>도면파일이 없습니다.</b>
+					</font>
+					<%
+					}
+					%>
+				</td>
+			</tr>
+			<tr>
 				<th class="lb">첨부파일</th>
-				<td class="indent5" colspan="5">
-					<jsp:include page="/extcore/jsp/common/content/include_primaryFileView.jsp">
+				<td class="indent5" colspan="3">
+					<jsp:include page="/extcore/jsp/common/secondary-view.jsp">
 						<jsp:param value="<%=dto.getOid()%>" name="oid" />
 					</jsp:include>
+				</td>
+				<td class="center" colspan="2">
+					<input type="button" value="CREO VIEW" title="CREO VIEW" class="gray" onclick="openCreoView();">
 				</td>
 			</tr>
 		</table>
@@ -203,7 +245,7 @@ WTUser sessionUser = (WTUser) SessionHelper.manager.getPrincipal();
 			%>
 			<table class="view-table">
 				<colgroup>
-					<col width="160">
+					<col width="155">
 					<col width="*">
 				</colgroup>
 				<tr>
@@ -225,22 +267,11 @@ WTUser sessionUser = (WTUser) SessionHelper.manager.getPrincipal();
 		<%@include file="/extcore/jsp/common/include/comments-include.jsp"%>
 	</div>
 
-	<!-- 	주도면 -->
-	<div id="tabs-2">
-		<jsp:include page="/extcore/jsp/drawing/drawingView_include.jsp">
-			<jsp:param value="part" name="moduleType" />
-			<jsp:param value="main" name="epmType" />
-			<jsp:param value="<%=dto.getOid()%>" name="oid" />
-			<jsp:param value="주도면" name="title" />
-			<jsp:param value="epmOid" name="paramName" />
-		</jsp:include>
-	</div>
-
 	<!-- 참조 항목 -->
 	<div id="tabs-3">
 		<jsp:include page="/extcore/jsp/drawing/include_viewReferenceBy.jsp">
 			<jsp:param value="part" name="moduleType" />
-			<jsp:param value="<%=dto.getEpmOid()%>" name="oid" />
+			<jsp:param value="<%=dto.getEpm_oid()%>" name="oid" />
 		</jsp:include>
 	</div>
 
@@ -260,44 +291,64 @@ WTUser sessionUser = (WTUser) SessionHelper.manager.getPrincipal();
 
 </div>
 <script type="text/javascript">
-	function bom() {
+	function viewEpm(oid) {
+		const url = getCallUrl("/drawing/view?oid=" + oid);
+		_popup(url, 1300, 650, "n");
+	}
+
+	// BOM 뷰
+	function view() {
 		const oid = document.getElementById("oid").value;
 		const url = getCallUrl("/bom/view?oid=" + oid);
 		_popup(url, 1600, 800, "n");
+	}
+
+	// 수정
+	function update() {
+		const oid = document.getElementById("oid").value;
+		const url = getCallUrl("/part/update?oid=" + oid);
+		document.location.href = url;
+	};
+
+	//삭제
+	function _delete() {
+
+		if (!confirm("연관된 내용들이 다 삭제 됩니다. (EX:문서, EO, ECO..)\n삭제하시겠습니까?")) {
+			return false;
+		}
+
+		const oid = document.getElementById("oid").value;
+		const url = getCallUrl("/part/delete?oid=" + oid);
+		openLayer();
+		call(url, null, function(data) {
+			alert(data.msg);
+			if (data.result) {
+				opener.loadGridData();
+				self.close();
+			} else {
+				closeLayer();
+			}
+		}, "GET");
+	}
+
+	// 최신버전으로 페이지 이동
+	function latest() {
+		const oid = document.getElementById("oid").value;
+		const url = getCallUrl("/part/latest?oid=" + oid);
+		_popup(url, 1600, 550, "n");
 	}
 
 	document.addEventListener("DOMContentLoaded", function() {
 		$("#tabs").tabs({
 			active : 0,
 			activate : function(event, ui) {
-				var tabId = ui.newPanel.prop("id");
-				let isCreated = false;
+				const tabId = ui.newPanel.prop("id");
 				switch (tabId) {
 				case "tabs-1":
 					$(".comment-table").show();
 					break;
-				case "tabs-2":
-					isCreated = AUIGrid.isCreated(drawingGridID);
-					if (isCreated) {
-						AUIGrid.resize(drawingGridID);
-						$(".comment-table").hide();
-					} else {
-						createAUIGridDrawing(columnsDrawing);
-						$(".comment-table").hide();
-					}
-					break;
-				case "tabs-3":
-					isCreated = AUIGrid.isCreated(refbyGridID);
-					if (isCreated) {
-						AUIGrid.resize(refbyGridID);
-						$(".comment-table").hide();
-					} else {
-						createAUIGrid3(columnRefby);
-						$(".comment-table").hide();
-					}
-					break;
 				case "tabs-4":
-					isCreated90 = AUIGrid.isCreated(myGridID90);
+					const isCreated90 = AUIGrid.isCreated(myGridID90);
 					if (isCreated90) {
 						AUIGrid.resize(myGridID90);
 						$(".comment-table").hide();
@@ -306,7 +357,7 @@ WTUser sessionUser = (WTUser) SessionHelper.manager.getPrincipal();
 						$(".comment-table").hide();
 					}
 
-					isCreated106 = AUIGrid.isCreated(myGridID106);
+					const isCreated106 = AUIGrid.isCreated(myGridID106);
 					if (isCreated106) {
 						AUIGrid.resize(myGridID106);
 						$(".comment-table").hide();
@@ -314,25 +365,12 @@ WTUser sessionUser = (WTUser) SessionHelper.manager.getPrincipal();
 						createAUIGrid106(columns106);
 						$(".comment-table").hide();
 					}
-					break;
-				case "tabs-5":
-					isCreated = AUIGrid.isCreated(adminGridID);
-					if (isCreated) {
-						AUIGrid.resize(adminGridID);
-						$(".comment-table").hide();
+
+					const isCreated105 = AUIGrid.isCreated(myGridID105); // 다운로드이력
+					if (isCreated105) {
+						AUIGrid.resize(myGridID105);
 					} else {
-						createAUIGridAdmin(columnsAdmin);
-						$(".comment-table").hide();
-					}
-					break;
-				case "tabs-6":
-					isCreated = AUIGrid.isCreated(enDocGridID);
-					if (isCreated) {
-						AUIGrid.resize(enDocGridID);
-						$(".comment-table").hide();
-					} else {
-						createAUIGridEnDoc(columnEnDoc);
-						$(".comment-table").hide();
+						createAUIGrid105(columns105);
 					}
 					break;
 				case "tabs-7":
@@ -349,32 +387,37 @@ WTUser sessionUser = (WTUser) SessionHelper.manager.getPrincipal();
 						createAUIGrid51(columns51);
 					}
 					break;
-				case "tabs-8":
-					const isCreated80 = AUIGrid.isCreated(myGridID80); // 상위 품목
-					if (isCreated80) {
-						AUIGrid.resize(myGridID80);
-					} else {
-						createAUIGrid80(columns80);
-					}
-
-					const isCreated81 = AUIGrid.isCreated(myGridID81); // 하위 품목
-					if (isCreated81) {
-						AUIGrid.resize(myGridID81);
-					} else {
-						createAUIGrid81(columns81);
-					}
-
-					const isCreated82 = AUIGrid.isCreated(myGridID82); // end item
-					if (isCreated82) {
-						AUIGrid.resize(myGridID82);
-					} else {
-						createAUIGrid82(columns82);
-					}
-					break;
 				}
 			},
 		});
+		selectbox("state");
 	});
+
+	function _clean() {
+		if (!confirm("속성 CLEANING을 하시겠습니까?")) {
+			return false;
+		}
+		const oid = document.getElementById("oid").value;
+		const url = getCallUrl("/part/_clean");
+		const params = {
+			oid : oid
+		};
+		openLayer();
+		call(url, params, function(data) {
+			alert(data.msg);
+			if (data.result) {
+				document.location.reload();
+			}
+			closeLayer();
+		})
+	}
+
+	// BOM 에디터
+	function editor() {
+		const oid = document.getElementById("oid").value;
+		const url = getCallUrl("/bom/editor?oid=" + oid);
+		_popup(url, "", "", "f");
+	}
 
 	window.addEventListener("resize", function() {
 		AUIGrid.resize(drawingGridID);
@@ -401,10 +444,14 @@ WTUser sessionUser = (WTUser) SessionHelper.manager.getPrincipal();
 		}
 	})
 
-	$("#packageUpdate").click(function() {
+	$("#auiBom").click(function() {
+		auiBom(oid, '');
+	});
+
+	function packageUpdate() {
 		const url = getCallUrl("/part/updateAUIPackagePart?oid=" + oid);
 		_popup(url, 1500, 600, "n");
-	})
+	}
 
 	$("#bomE").click(function() {
 		var url = getCallUrl("/part/bomEditor") + "?oid=" + oid;
@@ -412,80 +459,75 @@ WTUser sessionUser = (WTUser) SessionHelper.manager.getPrincipal();
 
 	})
 
-	$("#Compare").click(function() {
-		var str = "/Windchill/netmarkets/jsp/structureCompare/StructureCompare.jsp?oid=OR:" + $("#oid").val() + "&ncId=2374138740478986248&locale=ko"
-		_popup(str, 1300, 600, "n");
-	})
+	function compare() {
+		const oid = document.getElementById("oid").value;
+		const url = "/Windchill/netmarkets/jsp/structureCompare/StructureCompare.jsp?oid=OR:" + oid + "&ncId=5304500442831603818&locale=ko";
+		_popup(url, 1600, 600, "n");
+	}
 
-	$("#orderNumber").click(function() {
-		const url = getCallUrl("/part/partChange?oid=" + oid);
+	function change() {
+		const url = getCallUrl("/part/change?oid=" + oid);
 		_popup(url, 1500, 600, "n");
-	})
+	}
 
-	$("#orderNumber_NewVersion").click(function() {
-		const url = getCallUrl("/part/updateAUIPartChange?oid=" + oid);
+	// 새채번 팝업
+	function order() {
+		const url = getCallUrl("/part/order?oid=" + oid);
 		_popup(url, 1500, 600, "n");
-	})
+	}
 
-	$("#restore").click(function() {
-		if (confirm("복원하시겠습니까?")) {
-			partStateChange('INWORK');
-		}
-	})
-	$('#changeDev').click(function() {
-		if (confirm("변경하시겠습니까?")) {
-			partStateChange('INWORK');
-		}
-	})
-
-	$("#attributeCleaning").click(function() {
-		if (confirm("속성 Clearing 하시겠습니까?")) {
-
-			var form = $("form[name=partViewForm]").serialize();
-			var url = getCallUrl("/part/attributeCleaning");
-			var params = {
-				"oid" : $("#oid").val()
-			};
-
-			call(url, params, function(data) {
-				alert(data.message);
-				if (data.result) {
-					location.reload();
+	function openCreoView() {
+		const oid = document.getElementById("oid").value;
+		const callUrl = getCallUrl("/part/getCreoViewUrl?oid=" + oid);
+		call(callUrl, null, function(res) {
+			if (res.result) {
+				const params = {
+					browser : "chrome",
+					linkurl : "/Windchill/wtcore/jsp/wvs/edrview.jsp?url=" + res.url
+				};
+				if (!checkUrl(res.url)) {
+					alert("썸네일이 없습니다.\n자동 재변환을 진행합니다.");
+					publish(oid);
+					return false;
 				}
-			}, "POST");
-		}
-	})
-
-	window.partStateChange = function(state) {
-		var url = getURLString("part", "partStateChange", "do");
-		$.ajax({
-			type : "POST",
-			url : url,
-			data : {
-				oid : $("#oid").val(),
-				state : state
-			},
-			dataType : "json",
-			async : true,
-			cache : false,
-			error : function(data) {
-				var msg = "등록 오류";
-				alert(msg);
-			},
-			beforeSend : function() {
-				gfn_StartShowProcessing();
-			},
-			complete : function() {
-				gfn_EndShowProcessing();
-			},
-			success : function(data) {
-				if (data.result) {
-					alert("상태가 변경되었습니다.");
-					location.reload();
-				} else {
-					alert(data.message);
-				}
+				$.ajax({
+					type : "POST",
+					url : "/Windchill/netmarkets/jsp/wvs/wvsGW.jsp?class=com.ptc.wvs.server.ui.UIHelper&method=getOpenInCreoViewServiceCustomURI",
+					data : jQuery.param(params, true),
+					processData : false,
+					async : true,
+					dataType : "json",
+					cache : false,
+					timeout : 600000,
+					success : function(res) {
+						document.location.href = res.uri;
+					}
+				})
 			}
-		});
+		}, "GET");
+	}
+
+	function checkUrl(url) {
+		const index = url.indexOf("ContentHolder=");
+		if (index !== -1) {
+			const str = url.substring(index + "ContentHolder=".length, index + "ContentHolder=".length + 1);
+			if (str !== "&") {
+				return true;
+			} else {
+				return false;
+			}
+		} else {
+			return false;
+		}
+	}
+
+	// 재변환
+	function publish(oid) {
+		const url = getCallUrl("/part/publish?oid=" + oid);
+		parent.openLayer();
+		call(url, null, function(data) {
+			alert(data.msg);
+			parent.closeLayer();
+		}, "GET");
 	}
 </script>

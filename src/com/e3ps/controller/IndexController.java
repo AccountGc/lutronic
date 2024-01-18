@@ -103,7 +103,7 @@ public class IndexController extends BaseController {
 		// 배포 확인
 		// 배포 그룹이다
 		boolean isDist = false;
-		int distType = DistUtils.getType();
+		int distType = DistUtils.distributeInnerType();
 		System.out.println("distType=" + distType);
 		if (distType == 2 || distType == 1) {
 			isDist = true;
