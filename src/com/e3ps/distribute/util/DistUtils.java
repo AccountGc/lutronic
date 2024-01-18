@@ -40,7 +40,8 @@ public class DistUtils {
 				continue;
 			}
 
-			if (group.getBusinessType().equals("WTGroup")) {
+			System.out.println("group=" + group.getBusinessType());
+			if (group.getBusinessType().equals("WTOrganization")) {
 				if (group.getName().equals("DistributeInner")) {
 					if (CommonUtil.isMember("DistributeInner", user)) {
 						return 1;

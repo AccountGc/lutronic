@@ -108,13 +108,13 @@ public class EcprDTO {
 	 * 권한 설정
 	 */
 	private void setAuth(ECPRRequest ecpr) throws Exception {
-		boolean isAdmin = CommonUtil.isAdmin(); 
+		boolean isAdmin = CommonUtil.isAdmin();
 		boolean isCreator = CommonUtil.isCreator(ecpr);
 		if (check(ecpr, "APPROVED") && is_isNew()) {
 			set_print(true);
 		}
 
-		if ((check(ecpr, "INWORK") ||check(ecpr, "LINE_REGISTER") || check(ecpr, "RETURN"))) {
+		if ((check(ecpr, "INWORK") || check(ecpr, "LINE_REGISTER") || check(ecpr, "RETURN"))) {
 			set_modify(true);
 		}
 

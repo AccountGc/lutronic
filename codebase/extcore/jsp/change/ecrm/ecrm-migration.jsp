@@ -1,3 +1,11 @@
+<%@page import="com.e3ps.common.code.NumberCode"%>
+<%@page import="com.e3ps.common.code.service.NumberCodeHelper"%>
+<%@page import="com.e3ps.download.DownloadHistory"%>
+<%@page import="com.e3ps.org.MailUser"%>
+<%@page import="com.e3ps.org.MailWTobjectLink"%>
+<%@page import="wt.fc.WTObject"%>
+<%@page import="com.e3ps.change.EcrmToDocumentLink"%>
+<%@page import="com.e3ps.doc.DocumentToDocumentLink"%>
 <%@page import="wt.util.WTProperties"%>
 <%@page import="java.io.File"%>
 <%@page import="java.io.InputStream"%>
@@ -27,6 +35,8 @@
 <%@page import="wt.folder.Folder"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%
+delete();
+
 String loc = "/Default/문서/03. 2023년(이전문서)/01.공유폴더/06.설계변경 위험관리";
 Folder ff = FolderTaskLogic.getFolder(loc, WCUtil.getWTContainerRef());
 
@@ -44,8 +54,7 @@ query.appendAnd();
 
 int f_idx = query.appendClassList(IteratedFolderMemberLink.class, false);
 ClassAttribute fca = new ClassAttribute(IteratedFolderMemberLink.class, "roleBObjectRef.key.branchId");
-SearchCondition fsc = new SearchCondition(fca, "=",
-		new ClassAttribute(WTDocument.class, "iterationInfo.branchId"));
+SearchCondition fsc = new SearchCondition(fca, "=", new ClassAttribute(WTDocument.class, "iterationInfo.branchId"));
 fsc.setFromIndicies(new int[] { f_idx, idx }, 0);
 fsc.setOuterJoin(0);
 query.appendWhere(fsc, new int[] { f_idx, idx });
@@ -56,24 +65,25 @@ query.appendWhere(new SearchCondition(IteratedFolderMemberLink.class, "roleAObje
 
 QuerySpecUtils.toLatest(query, idx, WTDocument.class);
 QueryResult result = PersistenceHelper.manager.find(query);
-out.println("="+result.size());
+out.println("=" + result.size());
+int i = 0;
 while (result.hasMoreElements()) {
-	Object[] obj = (Object[])result.nextElement();
-	WTDocument doc = (WTDocument)obj[0];
+	Object[] obj = (Object[]) result.nextElement();
+	WTDocument doc = (WTDocument) obj[0];
 
 	ECRMRequest ecrm = ECRMRequest.newECRMRequest();
 	ecrm.setEoName(doc.getName());
 	ecrm.setEoNumber(doc.getNumber());
-	
-// 	Timestamp today = new Timestamp(currentDate.getTime());
-// 	ecrm.setCreateDate(today.toString().substring(0, 10));
-// 	ecrm.setWriter(sessionUser.getFullName());
-// 	ecrm.setCreateDepart(data.getDepartment_name());
 	ecrm.setModel(IBAUtil.getStringValue(doc, "MODEL"));
 	ecrm.setIsNew(false);
-// 	ecrm.setChangeSection(changeSection);
-// 	ecrm.setContents(contents);
 	ecrm.setEoCommentA(doc.getDescription());
+
+	String deptcode_code = IBAUtil.getStringValue(doc, "DEPTCODE");
+	String deptcode_name = keyToValue(deptcode_code, "DEPTCODE");
+	ecrm.setCreateDepart(deptcode_name);
+
+	String writer = IBAUtil.getStringValue(doc, "DSGN");
+	ecrm.setWriter(writer); // 작성자
 
 	String location = "/Default/설계변경/ECRM";
 	String lifecycle = "LC_Default";
@@ -82,22 +92,22 @@ while (result.hasMoreElements()) {
 	FolderHelper.assignLocation((FolderEntry) ecrm, folder);
 	// 문서 lifeCycle 설정
 	LifeCycleHelper.setLifeCycle(ecrm,
-			LifeCycleHelper.service.getLifeCycleTemplate(lifecycle, WCUtil.getWTContainerRef())); // Lifecycle
+	LifeCycleHelper.service.getLifeCycleTemplate(lifecycle, WCUtil.getWTContainerRef())); // Lifecycle
 	ecrm = (ECRMRequest) PersistenceHelper.manager.save(ecrm);
-			
+
 	ecrm = (ECRMRequest) PersistenceHelper.manager.refresh(ecrm);
 
 	LifeCycleHelper.service.setLifeCycleState(ecrm, State.toState(doc.getLifeCycleState().toString()));
-			
-	
+
+	saveLink(doc, ecrm);
+
 	String temp = WTProperties.getLocalProperties().getProperty("wt.temp") + File.separator + "mig";
 	File f = new File(temp);
 	if (!f.exists()) {
 		f.mkdirs();
 	}
 
-	QueryResult rs = ContentHelper.service.getContentsByRole(ecrm, ContentRoleType.PRIMARY);
-	int i =0;
+	QueryResult rs = ContentHelper.service.getContentsByRole(doc, ContentRoleType.PRIMARY);
 	while (rs.hasMoreElements()) {
 		ApplicationData data = (ApplicationData) rs.nextElement();
 		byte[] buffer = new byte[10240];
@@ -120,7 +130,7 @@ while (result.hasMoreElements()) {
 	}
 
 	rs.reset();
-	rs = ContentHelper.service.getContentsByRole(ecrm, ContentRoleType.SECONDARY);
+	rs = ContentHelper.service.getContentsByRole(doc, ContentRoleType.SECONDARY);
 	while (rs.hasMoreElements()) {
 		ApplicationData data = (ApplicationData) rs.nextElement();
 		byte[] buffer = new byte[10240];
@@ -147,55 +157,93 @@ while (result.hasMoreElements()) {
 out.println("종료");
 %>
 
-<%!
-<%!private void saveLink(EChangeRequest e, ECPRRequest ecpr) throws Exception {
-	QueryResult qr = PersistenceHelper.manager.navigate(e, "eco", RequestOrderLink.class);
-	while (qr.hasMoreElements()) {
-		EChangeOrder eco = (EChangeOrder) qr.nextElement();
-		EcoToEcprLink link = EcoToEcprLink.newEcoToEcprLink(eco, ecpr);
-		PersistenceHelper.manager.save(link);
-	}
+<%!private void saveLink(WTDocument doc, ECRMRequest ecrm) throws Exception {
+		// 관련 문서
+		QueryResult qr = PersistenceHelper.manager.navigate(doc, "useBy", DocumentToDocumentLink.class);
+		while (qr.hasMoreElements()) {
+			WTDocument ref = (WTDocument) qr.nextElement();
+			EcrmToDocumentLink link = EcrmToDocumentLink.newEcrmToDocumentLink(ecrm, ref);
+			PersistenceHelper.manager.save(link);
+		}
 
-	qr.reset();
-	qr = PersistenceHelper.manager.navigate(e, "useBy", EcrToEcrLink.class);
-	while (qr.hasMoreElements()) {
-		EChangeRequest cr = (EChangeRequest) qr.nextElement();
-		CrToEcprLink link = CrToEcprLink.newCrToEcprLink(cr, ecpr);
-		PersistenceHelper.manager.save(link);
-	}
+		qr.reset();
+		qr = PersistenceHelper.manager.navigate((WTObject) doc, "user", MailWTobjectLink.class);
+		while (qr.hasMoreElements()) {
+			MailUser user = (MailUser) qr.nextElement();
+			MailWTobjectLink link = MailWTobjectLink.newMailWTobjectLink((WTObject) ecrm, user);
+			PersistenceHelper.manager.save(link);
+		}
 
-	qr.reset();
-	qr = PersistenceHelper.manager.navigate(e, "doc", CrToDocumentLink.class);
-	while (qr.hasMoreElements()) {
-		WTDocument doc = (WTDocument) qr.nextElement();
-		EcprToDocumentLink link = EcprToDocumentLink.newEcprToDocumentLink(ecpr, doc);
-		PersistenceHelper.manager.save(link);
-	}
+		QuerySpec qs = new QuerySpec();
+		int i = qs.appendClassList(DownloadHistory.class, true);
+		QuerySpecUtils.toEquals(qs, i, DownloadHistory.class, "persistReference.key.id", doc);
+		QueryResult rs = PersistenceHelper.manager.find(qs);
+		while (rs.hasMoreElements()) {
+			Object[] oo = (Object[]) rs.nextElement();
+			DownloadHistory d = (DownloadHistory) oo[0];
 
-	qr.reset();
-	qr = PersistenceHelper.manager.navigate((WTObject) e, "user", MailWTobjectLink.class);
-	while (qr.hasMoreElements()) {
-		MailUser user = (MailUser) qr.nextElement();
-		MailWTobjectLink link = MailWTobjectLink.newMailWTobjectLink((WTObject) ecpr, user);
-		PersistenceHelper.manager.delete(link);
-	}
+			DownloadHistory history = DownloadHistory.newDownloadHistory();
+			history.setName(d.getName());
+			history.setPersist(ecrm);
+			history.setCnt(1);
+			history.setUser(d.getUser());
+			PersistenceHelper.manager.save(history);
+		}
 
-	QuerySpec qs = new QuerySpec();
-	int i = qs.appendClassList(DownloadHistory.class, true);
-	QuerySpecUtils.toEquals(qs, i, DownloadHistory.class, "persistReference.key.id", ecpr);
-	QueryResult rs = PersistenceHelper.manager.find(qs);
-	while (rs.hasMoreElements()) {
-		Object[] oo = (Object[]) rs.nextElement();
-		DownloadHistory d = (DownloadHistory) oo[0];
+	}%>
 
-		DownloadHistory history = DownloadHistory.newDownloadHistory();
-		history.setName(d.getName());
-		history.setPersist(ecpr);
-		history.setCnt(1);
-		history.setUser(d.getUser());
-		PersistenceHelper.manager.save(history);
 
-	}
+<%!private String keyToValue(String code, String codeType) throws Exception {
+		String value = "";
+		NumberCode n = NumberCodeHelper.manager.getNumberCode(code, codeType);
+		if (n != null) {
+			value = n.getName();
+		} else {
+			value = code;
+		}
+		return value;
+	}%>
 
-}%>
-%>
+<%!private void delete() throws Exception {
+		QuerySpec query = new QuerySpec();
+		int idx = query.appendClassList(ECRMRequest.class, true);
+		SearchCondition sc = new SearchCondition(ECRMRequest.class, ECRMRequest.EO_NUMBER, SearchCondition.NOT_LIKE,
+				"%ECRM%");
+		query.appendWhere(sc, new int[] { idx });
+
+		QueryResult rs = PersistenceHelper.manager.find(query);
+		System.out.println("rs=" + rs.size());
+		int k=0;
+		while (rs.hasMoreElements()) {
+			Object[] obj = (Object[]) rs.nextElement();
+			ECRMRequest ecrm = (ECRMRequest) obj[0];
+
+			QueryResult qr = PersistenceHelper.manager.navigate(ecrm, "doc", EcrmToDocumentLink.class, false);
+			while (qr.hasMoreElements()) {
+				EcrmToDocumentLink link = (EcrmToDocumentLink) qr.nextElement();
+				PersistenceHelper.manager.delete(link);
+			}
+
+			qr.reset();
+			qr = PersistenceHelper.manager.navigate((WTObject) ecrm, "user", MailWTobjectLink.class, false);
+			while (qr.hasMoreElements()) {
+				MailWTobjectLink link = (MailWTobjectLink) qr.nextElement();
+				PersistenceHelper.manager.delete(link);
+			}
+
+			QuerySpec qs = new QuerySpec();
+			int i = qs.appendClassList(DownloadHistory.class, true);
+			QuerySpecUtils.toEquals(qs, i, DownloadHistory.class, "persistReference.key.id", ecrm);
+			QueryResult result = PersistenceHelper.manager.find(qs);
+			while (result.hasMoreElements()) {
+				Object[] oo = (Object[]) result.nextElement();
+				DownloadHistory h = (DownloadHistory) oo[0];
+				PersistenceHelper.manager.delete(h);
+			}
+
+			PersistenceHelper.manager.delete(ecrm);
+			System.out.println("k = " + k + "번째 ECRM 삭제");
+			k++;
+		}
+
+	}%>

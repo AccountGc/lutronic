@@ -16,6 +16,13 @@ boolean isAdmin = (boolean) request.getAttribute("isAdmin");
 			</div>
 		</td>
 		<td class="right">
+			<%
+			if (dto.is_excel()) {
+			%>
+			<input type="button" value="엑셀다운" title="엑셀다운" class="red" onclick="excel();">
+			<%
+			}
+			%>
 			<input type="button" value="닫기" title="닫기" class="gray" onclick="self.close();">
 		</td>
 	</tr>
@@ -27,11 +34,14 @@ boolean isAdmin = (boolean) request.getAttribute("isAdmin");
 			<a href="#tabs-1">기본 정보</a>
 		</li>
 		<li>
-			<a href="#tabs-2">설변 활동</a>
+			<a href="#tabs-2">변경 품목</a>
 		</li>
-<!-- 		<li> -->
-<!-- 			<a href="#tabs-3">설변 품목</a> -->
-<!-- 		</li> -->
+		<li>
+			<a href="#tabs-3">산출물</a>
+		</li>
+		<li>
+			<a href="#tabs-0">관련 객체</a>
+		</li>
 		<li>
 			<a href="#tabs-4">이력 관리</a>
 		</li>
@@ -58,8 +68,8 @@ boolean isAdmin = (boolean) request.getAttribute("isAdmin");
 				<td class="indent5"><%=dto.getCreator()%></td>
 			</tr>
 			<tr>
-				<th class="lb">구분</th>
-				<td class="indent5"><%=dto.getState()%></td>
+				<th class="lb">ECO 타입</th>
+				<td class="indent5"><%=dto.getSendType() != null ? dto.getSendType() : ""%></td>
 				<th>등록일</th>
 				<td class="indent5"><%=dto.getCreatedDate_txt()%></td>
 			</tr>
@@ -76,51 +86,39 @@ boolean isAdmin = (boolean) request.getAttribute("isAdmin");
 				<td class="indent5"><%=dto.getApproveDate()%></td>
 			</tr>
 			<tr>
+				<th class="lb">프로젝트 코드 [명]</th>
+				<td class="indent5" colspan="3"><%=dto.getModel_name()%></td>
+			</tr>
+			<tr>
 				<th class="lb">변경사항</th>
 				<td colspan="3" class="indent5">
-					<textarea rows="5" readonly="readonly" id="eoCommentA" rows="5"><%=dto.getEoCommentA()%></textarea>
+					<div class="textarea-auto">
+						<textarea rows="5" readonly="readonly" id="eoCommentA" rows="5"><%=dto.getEoCommentA()%></textarea>
+					</div>
 				</td>
 			</tr>
 			<tr>
 				<th class="lb">변경사유</th>
 				<td colspan="3" class="indent5">
-					<textarea rows="5" readonly="readonly" id="eoCommentB" rows="5"><%=dto.getEoCommentB()%></textarea>
+					<div class="textarea-auto">
+						<textarea rows="5" readonly="readonly" id="eoCommentB" rows="5"><%=dto.getEoCommentB()%></textarea>
+					</div>
 				</td>
 			</tr>
 			<tr>
 				<th class="lb">특기사항</th>
 				<td colspan="3" class="indent5">
-					<textarea rows="5" readonly="readonly" id="eoCommentC" rows="5"><%=dto.getEoCommentC()%></textarea>
+					<div class="textarea-auto">
+						<textarea rows="5" readonly="readonly" id="eoCommentC" rows="5"><%=dto.getEoCommentC()%></textarea>
+					</div>
 				</td>
 			</tr>
 			<tr>
 				<th class="lb">기타사항</th>
 				<td colspan="3" class="indent5">
-					<textarea rows="5" readonly="readonly" id="eoCommentD" rows="5"><%=dto.getEoCommentD()%></textarea>
-				</td>
-			</tr>
-			<tr>
-				<th class="lb">설계변경 부품 내역파일</th>
-				<td class="indent5" colspan="3">
-					<%
-					Map<String, Object> contentMap = dto.getContentMap();
-					if (contentMap != null) {
-					%>
-					<div>
-						<a href="<%=contentMap.get("url")%>">
-							<span style="position: relative; bottom: 2px;"><%=contentMap.get("name")%></span>
-							<img src="<%=contentMap.get("fileIcon")%>" style="position: relative; top: 1px;">
-						</a>
+					<div class="textarea-auto">
+						<textarea rows="5" readonly="readonly" id="eoCommentD" rows="5"><%=dto.getEoCommentD()%></textarea>
 					</div>
-					<%
-					} else {
-					%>
-					<font color="red">
-						<b>등록된 계변경 부품 내역파일이 없습니다.</b>
-					</font>
-					<%
-					}
-					%>
 				</td>
 			</tr>
 			<tr>
@@ -132,24 +130,25 @@ boolean isAdmin = (boolean) request.getAttribute("isAdmin");
 				</td>
 			</tr>
 		</table>
-	</div>
-	
-	<div id="tabs-2">
-		<jsp:include page="/extcore/jsp/change/activity/include/activity-include.jsp">
+		<jsp:include page="/extcore/jsp/change/activity/include/activity-view.jsp">
 			<jsp:param value="<%=dto.getOid()%>" name="oid" />
-			<jsp:param value="view" name="mode" />
-			<jsp:param value="250" name="height" />
 		</jsp:include>
 	</div>
-	
-<!-- 	<div id="tabs-3"> -->
-<%-- 		<jsp:include page="/extcore/jsp/change/eco/include/eco-part-include.jsp"> --%>
-<%-- 			<jsp:param value="<%=dto.getOid()%>" name="oid" /> --%>
-<%-- 			<jsp:param value="view" name="mode" /> --%>
-<%-- 			<jsp:param value="true" name="multi" /> --%>
-<%-- 		</jsp:include> --%>
-<!-- 	</div> -->
-	
+	<div id="tabs-0">
+		<jsp:include page="/extcore/jsp/change/eco/include/eco-reference-include.jsp">
+			<jsp:param value="<%=dto.getOid()%>" name="oid" />
+		</jsp:include>
+	</div>
+	<div id="tabs-2">
+		<jsp:include page="/extcore/jsp/change/eco/include/eco-part-include.jsp">
+			<jsp:param value="<%=dto.getOid()%>" name="oid" />
+		</jsp:include>
+	</div>
+	<div id="tabs-3">
+		<jsp:include page="/extcore/jsp/change/include/change-output.jsp">
+			<jsp:param value="<%=dto.getOid()%>" name="oid" />
+		</jsp:include>
+	</div>
 	<div id="tabs-4">
 		<!-- 이력관리 -->
 		<jsp:include page="/extcore/jsp/change/eco/include/eco-record-include.jsp">
@@ -161,39 +160,52 @@ boolean isAdmin = (boolean) request.getAttribute("isAdmin");
 <script type="text/javascript">
 	const oid = document.getElementById("oid").value;
 
-	function autoHeight() {
-		const eoCommentC = document.getElementById("eoCommentC");
-		eoCommentC.style.height = "auto";
-		eoCommentC.style.height = "500px";
-		// 		const style = window.getComputedStyle(eoCommentC);
-		// 		console.log(style);
-
-	}
-
 	document.addEventListener("DOMContentLoaded", function() {
 		$("#tabs").tabs({
 			active : 0,
 			activate : function(event, ui) {
-				var tabId = ui.newPanel.prop("id");
+				const tabId = ui.newPanel.prop("id");
 				switch (tabId) {
-				case "tabs-1":
-					break;
-				case "tabs-2":
-					const isCreated200 = AUIGrid.isCreated(myGridID200); // 설변 활동
-					if (isCreated200) {
-						AUIGrid.resize(myGridID200);
+				case "tabs-0":
+					const isCreated101 = AUIGrid.isCreated(myGridID101); // 다운로드이력
+					if (isCreated101) {
+						AUIGrid.resize(myGridID101);
 					} else {
-						createAUIGrid200(columns200);
+						createAUIGrid101(columns101);
+					}
+					const isCreated103 = AUIGrid.isCreated(myGridID103); // 다운로드이력
+					if (isCreated103) {
+						AUIGrid.resize(myGridID103);
+					} else {
+						createAUIGrid103(columns103);
+					}
+					const isCreated110 = AUIGrid.isCreated(myGridID110); // 다운로드이력
+					if (isCreated110) {
+						AUIGrid.resize(myGridID110);
+					} else {
+						createAUIGrid110(columns110);
+					}
+					const isCreated111 = AUIGrid.isCreated(myGridID111); // 다운로드이력
+					if (isCreated111) {
+						AUIGrid.resize(myGridID111);
+					} else {
+						createAUIGrid111(columns111);
 					}
 					break;
-// 				case "tabs-3":
-// 					const isCreated500 = AUIGrid.isCreated(myGridID500); // 설변 활동
-// 					if (isCreated500) {
-// 						AUIGrid.resize(myGridID500);
-// 					} else {
-// 						createAUIGrid500(columns500);
-// 					}
-// 					break;
+				case "tabs-2":
+					const isCreated500 = AUIGrid.isCreated(myGridID500); // 다운로드이력
+					if (isCreated500) {
+						AUIGrid.resize(myGridID500);
+					} else {
+						createAUIGrid500(columns500);
+					}
+					const isCreated510 = AUIGrid.isCreated(myGridID510); // 다운로드이력
+					if (isCreated510) {
+						AUIGrid.resize(myGridID510);
+					} else {
+						createAUIGrid510(columns510);
+					}
+					break;
 				case "tabs-4":
 					const isCreated51 = AUIGrid.isCreated(myGridID51); // 다운로드이력
 					if (isCreated51) {
@@ -217,31 +229,30 @@ boolean isAdmin = (boolean) request.getAttribute("isAdmin");
 				}
 			}
 		});
-
-		autoHeight();
+		createAUIGrid700(columns700);
+		AUIGrid.resize(myGridID700);
+		autoTextarea();
 	});
-	
-	function modify() {
-		document.location.href = getCallUrl("/eco/modify?oid=" + oid);
-	}
-	
-	function _delete() {
 
-		if (!confirm("삭제 하시겠습니까?")) {
-			return false;
-		}
+	window.addEventListener("resize", function() {
+		AUIGrid.resize(myGridID101);
+		AUIGrid.resize(myGridID1010);
+		AUIGrid.resize(myGridID700);
+		AUIGrid.resize(myGridID500);
+		AUIGrid.resize(myGridID510);
+		AUIGrid.resize(myGridID51);
+		AUIGrid.resize(myGridID10000);
+		AUIGrid.resize(myGridID10001);
+	})
 
+	function excel() {
 		const oid = document.getElementById("oid").value;
-		const url = getCallUrl("/eco/delete?oid=" + oid);
-		openLayer();
+		const url = getCallUrl("/eco/excel?oid=" + oid);
 		call(url, null, function(data) {
-			alert(data.msg);
+			logger(data);
 			if (data.result) {
-				opener.loadGridData();
-				self.close();
-			} else {
-				clsoeLayer();
+
 			}
-		}, "DELETE");
+		}, "GET");
 	}
 </script>

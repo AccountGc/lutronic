@@ -4,6 +4,8 @@ import java.util.HashMap;
 import java.util.Hashtable;
 
 import com.e3ps.change.ECOChange;
+import com.e3ps.change.ECPRRequest;
+import com.e3ps.change.ECRMRequest;
 import com.e3ps.change.EChangeOrder;
 import com.e3ps.change.EChangeRequest;
 import com.e3ps.common.util.StringUtil;
@@ -200,6 +202,10 @@ public class MailUtils {
 			}
 		} else if (lcm instanceof AsmApproval) {
 			target = "일괄결재";
+		} else if (lcm instanceof ECPRRequest) {
+			target = "ECPR";
+		} else if (lcm instanceof ECRMRequest) {
+			target = "ECRM";
 		}
 		return target;
 	}
@@ -240,6 +246,6 @@ public class MailUtils {
 	 * 외부 메일 발송용 함수
 	 */
 	public void sendExternalMail(LifeCycleManaged per) throws Exception {
-		
+
 	}
 }
