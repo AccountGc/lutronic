@@ -131,7 +131,7 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 			<tr>
 				<th>작성자</th>
 				<td class="indent5">
-					<input type="text" name="writer" id="writer" data-multi="false" class="width-200">
+					<input type="text" name="writer" id="writer" class="width-200">
 				</td>
 				<th>수정일</th>
 				<td class="indent5">
@@ -233,7 +233,7 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 						<jsp:param value="<%=DocumentHelper.DOCUMENT_ROOT%>" name="location" />
 						<jsp:param value="product" name="container" />
 						<jsp:param value="list" name="mode" />
-						<jsp:param value="535" name="height" />
+						<jsp:param value="565" name="height" />
 						<jsp:param value="doc" name="type" />
 					</jsp:include>
 				</td>

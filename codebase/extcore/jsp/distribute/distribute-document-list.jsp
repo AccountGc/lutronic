@@ -29,7 +29,6 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 	<form>
 		<input type="hidden" name="sessionid" id="sessionid">
 		<input type="hidden" name="curPage" id="curPage">
-		<input type="hidden" name="state" id="state" value="APPROVED">
 		<input type="hidden" name="sessionName" id="sessionName" value="<%=user.getFullName()%>">
 
 		<table class="button-table">
@@ -42,7 +41,7 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 				</td>
 			</tr>
 		</table>
-		
+
 		<table class="search-table">
 			<colgroup>
 				<col width="130">
@@ -115,22 +114,21 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 				<td class="indent5">
 					<select name="state" id="state" class="width-200">
 						<option value="">선택</option>
-<%-- 						<% --%>
-<!--  						for (Map<String, String> lifecycle : lifecycleList) { -->
-<!--  							if (!lifecycle.get("code").equals("TEMPRARY")) { -->
-<%-- 						%> --%>
-<%-- 						<option value="<%=lifecycle.get("code")%>"><%=lifecycle.get("name")%></option> --%>
-<%-- 						<% --%>
-<!--  						} -->
-<!--  						} -->
-<%-- 						%> --%>
+						<%
+						for (Map<String, String> lifecycle : lifecycleList) {
+							String key = lifecycle.get("code");
+						%>
+						<option value="<%=key%>" <%if("APPROVED".equals(key)) { %> selected="selected" <%} %> ><%=lifecycle.get("name")%></option>
+						<%
+						}
+						%>
 					</select>
 				</td>
 			</tr>
 			<tr>
 				<th>작성자</th>
 				<td class="indent5">
-					<input type="text" name="writer" id="writer" data-multi="false" class="width-200">
+					<input type="text" name="writer" id="writer" class="width-200">
 				</td>
 				<th>수정일</th>
 				<td class="indent5">
@@ -212,7 +210,7 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 						<option value="100">100</option>
 					</select>
 					<input type="button" value="검색" title="검색" onclick="loadGridData();">
-<!-- 					<input type="button" value="일괄 다운로드" title="일괄 다운로드" onclick="download();"> -->
+					<!-- 					<input type="button" value="일괄 다운로드" title="일괄 다운로드" onclick="download();"> -->
 				</td>
 			</tr>
 		</table>
@@ -228,7 +226,7 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 						<jsp:param value="<%=DocumentHelper.DOCUMENT_ROOT%>" name="location" />
 						<jsp:param value="product" name="container" />
 						<jsp:param value="list" name="mode" />
-						<jsp:param value="535" name="height" />
+						<jsp:param value="565" name="height" />
 						<jsp:param value="doc" name="type" />
 					</jsp:include>
 				</td>
@@ -251,7 +249,7 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 					filter : {
 						inline : false
 					},
-				},{
+				}, {
 					dataField : "name",
 					headerText : "문서명",
 					dataType : "string",
@@ -282,9 +280,13 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 					},
 				}, {
 					dataField : "model",
-					headerText : "프로젝트 코드",
+					headerText : "프로젝트 코드 [명]",
 					dataType : "string",
+					style : "aui-left",
 					width : 120,
+					renderer : {
+						type : "TemplateRenderer"
+					},
 				}, {
 					dataField : "location",
 					headerText : "문서분류",
@@ -319,6 +321,12 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 					headerText : "상태",
 					dataType : "string",
 					width : 80,
+					styleFunction : function(rowIndex, columnIndex, value, headerText, item, dataField) {
+						if (value === "승인됨") {
+							return "approved";
+						}
+						return null;
+					}
 				}, {
 					dataField : "writer",
 					headerText : "작성자",
@@ -368,8 +376,8 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 				const props = {
 					headerHeight : 30,
 					showRowNumColumn : false,
-					showRowCheckColumn : true,
-					rowNumHeaderText : "번호",
+// 					showRowCheckColumn : true,
+// 					rowNumHeaderText : "번호",
 					showAutoNoDataMessage : false,
 					selectionMode : "multipleCells",
 					hoverMode : "singleRow",
@@ -392,34 +400,15 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 					hideContextMenu();
 				});
 			}
-			
+
 			function auiContextMenuHandler(event) {
 				const menu = [ {
 					label : "문서 정보보기",
 					callback : auiContextHandler
-				}, {
-					label : "_$line" // label 에 _$line 을 설정하면 라인을 긋는 아이템으로 인식합니다.
-				}, {
-					label : "버전이력보기",
-					callback : auiContextHandler
-				}, {
-					label : "결재이력보기",
-					callback : auiContextHandler
-				}, {
-					label : "_$line" // label 에 _$line 을 설정하면 라인을 긋는 아이템으로 인식합니다.
-				}, {
-					label : "결재회수(결재선유지)",
-					callback : auiContextHandler
-				}, {
-					label : "결재회수(결재선초기화)",
-					callback : auiContextHandler
-				}, {
-					label : "인쇄하기",
-					callback : auiContextHandler
 				} ];
 				return menu;
 			}
-			
+
 			function auiContextHandler(event) {
 				const item = event.item;
 				const oid = item.oid;
@@ -437,63 +426,6 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 					url = getCallUrl("/doc/view?oid=" + oid);
 					_popup(url, "", "", "f");
 					break;
-				case 1:
-					break;
-				// 				case 2:
-				// 					url = getCallUrl("/doc/asdf?oid=" + oid);
-				// 					download.src = url;
-				// 					break;
-				// 				case 3:
-				// 					url = getCallUrl("/doc/asdf?oid=" + oid);
-				// 					download.src = url;
-				// 					break;
-				case 2:
-					url = getCallUrl("/doc/iteration?oid=" + oid + "&popup=true");
-					_popup(url, 1600, 600, "n");
-					break;
-				case 3:
-					url = getCallUrl("/workspace/history?oid=" + oid + "&popup=true");
-					_popup(url, 1200, 400, "n");
-					break;
-				case 5:
-					if ("승인중" !== state) {
-						alert("승인중 상태의 문서만 결재회수가 가능합니다.");
-						return false;
-					}
-
-					if (!confirm("기존 지정한 결재선 유지한 상태로 결재회수를 합니다.\n진행하시겠습니까?")) {
-						return false;
-					}
-					url = getCallUrl("/workspace/withdraw?oid=" + oid + "&remove=false");
-					parent.openLayer();
-					call(url, null, function(data) {
-						alert(data.msg);
-						if (data.result) {
-							document.location.href = getCallUrl("/workData/list");
-						} else {
-							parent.closeLayer();
-						}
-					}, "GET");
-					break;
-				case 6:
-					if ("승인중" !== state) {
-						alert("승인중 상태의 문서만 결재회수가 가능합니다.");
-						return false;
-					}
-					if (!confirm("결재선을 초기화 상태로 결재회수를 합니다.\n진행하시겠습니까?")) {
-						return false;
-					}
-					url = getCallUrl("/workspace/withdraw?oid=" + oid + "&remove=true");
-					parent.openLayer();
-					call(url, null, function(data) {
-						alert(data.msg);
-						if (data.result) {
-							document.location.href = getCallUrl("/workData/list");
-						} else {
-							parent.closeLayer();
-						}
-					}, "GET");
-					break;
 				}
 			}
 
@@ -502,7 +434,7 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 					document.getElementById("sessionid").value = 0;
 					document.getElementById("curPage").value = 1;
 				}
-				
+
 				let params = new Object();
 				const url = getCallUrl("/doc/list");
 				const field = [ "location", "classType1", "classType2", "classType3", "name", "number", "state", "creatorOid", "createdFrom", "createdTo", "modifiedFrom", "modifiedTo", "preseration", "modelcode", "deptcode", "writer", "description" ];
@@ -524,14 +456,14 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 					parent.closeLayer();
 				});
 			}
-			
+
 			function first(obj) {
 				const classType1 = obj.value;
 				if (classType1 !== "") {
 					loadClassType2(classType1);
 				}
 			}
-			
+
 			function loadClassType2(classType1) {
 				const url = getCallUrl("/class/classType2?classType1=" + classType1);
 				call(url, null, function(data) {
@@ -589,23 +521,24 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 				AUIGrid.resize(myGridID);
 				_createAUIGrid(_columns);
 				AUIGrid.resize(_myGridID);
-// 				selectbox("state");
+				selectbox("state");
 				finderUser("creator");
 				twindate("created");
 				twindate("modified");
 				selectbox("_psize");
 				selectbox("preseration");
 				selectbox("deptcode");
-// 				finderUser("writer");
 				selectbox("classType1");
 				selectbox("classType2");
 				selectbox("classType3");
 				finderCode("model", "MODEL");
 				$("#_psize").bindSelectSetValue("20");
+				$("#state").bindSelectDisabled("APPROVED");
+				$("#state").bindDisable();
 			});
 
 			function exportExcel() {
-				const exceptColumnFields = [ "primary","secondary" ];
+				const exceptColumnFields = [ "primary", "secondary" ];
 				const sessionName = document.getElementById("sessionName").value;
 				exportToExcel("문서 리스트", "문서", "문서 리스트", exceptColumnFields, sessionName);
 			}
@@ -624,20 +557,6 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 			window.addEventListener("resize", function() {
 				AUIGrid.resize(myGridID);
 			});
-			
-			//일괄 다운로드
-// 			function download() {
-// 				const items = AUIGrid.getCheckedRowItemsAll(myGridID);
-// 				if (items.length == 0) {
-// 					alert("다운로드할 문서를 선택하세요.");
-// 					return false;
-// 				}
-// 				let oids = [];
-// 				items.forEach((item)=>{
-// 				    oids.push(item.oid)
-// 				});
-// 				document.location.href = "/Windchill/plm/content/downloadZIP?oids=" + oids;
-// 			}
 		</script>
 	</form>
 </body>

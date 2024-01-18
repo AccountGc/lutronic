@@ -55,25 +55,29 @@ import wt.vc.baseline.ManagedBaseline;
 @Controller
 @RequestMapping(value = "/distribute/**")
 public class DistributeController extends BaseController {
-	
-	/** 배포 메인 페이지
+
+	/**
+	 * 배포 메인 페이지
+	 * 
 	 * @param request
 	 * @param response
 	 * @return
-	 * @throws Exception 
+	 * @throws Exception
 	 */
 	@RequestMapping("/main")
-	public ModelAndView main(HttpServletRequest request, HttpServletResponse response) throws Exception{
-		
+	public ModelAndView main(HttpServletRequest request, HttpServletResponse response) throws Exception {
+
 		String viewName = "distribute:/distribute/main";
-		
+
 		ModelAndView model = new ModelAndView();
-		model.addObject("module","distribute");
+		model.addObject("module", "distribute");
 		model.setViewName(viewName);
 		return model;
 	}
-	
-	/** 작업합 페이지
+
+	/**
+	 * 작업합 페이지
+	 * 
 	 * @param request
 	 * @param response
 	 * @return
@@ -83,53 +87,59 @@ public class DistributeController extends BaseController {
 	public ModelAndView listWorkItem(HttpServletRequest request, HttpServletResponse response) throws Exception {
 		ModelAndView model = new ModelAndView();
 		model.addObject("menu", "menu1");
-		model.addObject("module","distribute");
+		model.addObject("module", "distribute");
 		model.addObject("isAdmin", CommonUtil.isAdmin());
 		model.setViewName("distribute:/distribute/listWorkItem");
 		return model;
 	}
-	
-	/** 작업함 리스트 리턴
+
+	/**
+	 * 작업함 리스트 리턴
+	 * 
 	 * @param request
 	 * @param response
 	 * @return
 	 */
 	@ResponseBody
 	@RequestMapping("/listWorkItemAction")
-	public Map<String,Object> listWorkItemAction(HttpServletRequest request, HttpServletResponse response) {
-		Map<String,Object> result = null;
+	public Map<String, Object> listWorkItemAction(HttpServletRequest request, HttpServletResponse response) {
+		Map<String, Object> result = null;
 		try {
 			result = GroupwareHelper.service.listWorkItemAction(request, response);
-		} catch(Exception e) {
+		} catch (Exception e) {
 			e.printStackTrace();
-			result = new HashMap<String,Object>();
+			result = new HashMap<String, Object>();
 		}
 		return result;
 	}
-	
-	/** 결재 상세화면
+
+	/**
+	 * 결재 상세화면
+	 * 
 	 * @param request
 	 * @param response
 	 * @return
 	 */
 	@RequestMapping("/approval")
-	public ModelAndView approval(HttpServletRequest request, HttpServletResponse response)  {
+	public ModelAndView approval(HttpServletRequest request, HttpServletResponse response) {
 		ModelAndView model = null;
 		try {
 			model = GroupwareHelper.service.approval(request, response);
-		} catch(Exception e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 			model = new ModelAndView();
 		}
 		String action = request.getParameter("action");
-		model.setViewName("distribute:/workprocess/"+ action);
+		model.setViewName("distribute:/workprocess/" + action);
 		model.addObject("menu", "menu1");
-		model.addObject("module","distribute");
-		model.addObject("distributeType",DistributeUtil.Distribute_Inner);
+		model.addObject("module", "distribute");
+		model.addObject("distributeType", DistributeUtil.Distribute_Inner);
 		return model;
 	}
-	
-	/** 진행중, 완료함, 수신함 페이지
+
+	/**
+	 * 진행중, 완료함, 수신함 페이지
+	 * 
 	 * @param request
 	 * @param response
 	 * @return
@@ -137,20 +147,21 @@ public class DistributeController extends BaseController {
 	@RequestMapping("/listItem")
 	public ModelAndView listItem(HttpServletRequest request, HttpServletResponse response) {
 		ModelAndView model = new ModelAndView();
-		model.addObject("module","distribute");
-		
+		model.addObject("module", "distribute");
+
 		String state = request.getParameter("state");
-		
-		
-		model.addObject("menu","menu2");
-		
+
+		model.addObject("menu", "menu2");
+
 		model.setViewName("distribute:/distribute/listItem");
 		model.addObject("state", state);
-		
+
 		return model;
 	}
-	
-	/**	비밀번호 변경 페이지
+
+	/**
+	 * 비밀번호 변경 페이지
+	 * 
 	 * @param request
 	 * @param response
 	 * @return
@@ -158,34 +169,37 @@ public class DistributeController extends BaseController {
 	 */
 	@RequestMapping("/changePassword")
 	public ModelAndView changePassword(HttpServletRequest request, HttpServletResponse response) throws Exception {
-		
+
 		String id = request.getParameter("id");
-		
-		if(!StringUtil.checkString(id)) {
-			WTUser user = (WTUser)SessionHelper.manager.getPrincipal();
-			
+
+		if (!StringUtil.checkString(id)) {
+			WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
+
 			id = user.getName();
-			if ( id.equals("Administrator")) id="wcadmin";
+			if (id.equals("Administrator"))
+				id = "wcadmin";
 		}
-		
+
 		String isPop = request.getParameter("isPop");
-		
+
 		ModelAndView model = new ModelAndView();
 		model.addObject("menu", "menu3");
 		model.addObject("module", "distribute");
 		model.addObject("id", id);
 		model.addObject("isPop", isPop);
-		
+
 		String viewName = "distribute:/distribute/changePassword";
-		if("true".equals(isPop)) {
+		if ("true".equals(isPop)) {
 			viewName = "popup:/distribute/changePassword";
 		}
-		
+
 		model.setViewName(viewName);
 		return model;
 	}
-	
-	/**	조직도 페이지
+
+	/**
+	 * 조직도 페이지
+	 * 
 	 * @param request
 	 * @param response
 	 * @return
@@ -199,10 +213,10 @@ public class DistributeController extends BaseController {
 		model.setViewName("distribute:/distribute/companyTree");
 		return model;
 	}
-	
+
 	@Description(value = "품목 검색 페이지")
 	@GetMapping(value = "/listPart")
-	public ModelAndView listPart() throws Exception{
+	public ModelAndView listPart() throws Exception {
 		ArrayList<NumberCode> modelList = NumberCodeHelper.manager.getArrayCodeList("MODEL");
 		ArrayList<NumberCode> deptcodeList = NumberCodeHelper.manager.getArrayCodeList("DEPTCODE");
 		ArrayList<NumberCode> matList = NumberCodeHelper.manager.getArrayCodeList("MAT");
@@ -211,7 +225,7 @@ public class DistributeController extends BaseController {
 		ArrayList<NumberCode> finishList = NumberCodeHelper.manager.getArrayCodeList("FINISH");
 		List<Map<String, String>> lifecycleList = CommonUtil.getLifeCycleState("LC_PART");
 		QuantityUnit[] unitList = QuantityUnit.getQuantityUnitSet();
-		
+
 		ModelAndView model = new ModelAndView();
 		model.addObject("modelList", modelList);
 		model.addObject("deptcodeList", deptcodeList);
@@ -224,7 +238,7 @@ public class DistributeController extends BaseController {
 		model.setViewName("/extcore/jsp/distribute/distribute-part-list.jsp");
 		return model;
 	}
-	
+
 	@Description(value = "품목 상세보기")
 	@RequestMapping("/partView")
 	public ModelAndView partView(@RequestParam(value = "oid") String oid) throws Exception {
@@ -239,10 +253,10 @@ public class DistributeController extends BaseController {
 		model.setViewName("popup:/distribute/part-view");
 		return model;
 	}
-	
+
 	@Description(value = "완제품 검색 페이지")
 	@GetMapping(value = "/listProduction")
-	public ModelAndView listProduction() throws Exception{
+	public ModelAndView listProduction() throws Exception {
 		ArrayList<NumberCode> modelList = NumberCodeHelper.manager.getArrayCodeList("MODEL");
 		ArrayList<NumberCode> deptcodeList = NumberCodeHelper.manager.getArrayCodeList("DEPTCODE");
 		ArrayList<NumberCode> matList = NumberCodeHelper.manager.getArrayCodeList("MAT");
@@ -251,7 +265,7 @@ public class DistributeController extends BaseController {
 		ArrayList<NumberCode> finishList = NumberCodeHelper.manager.getArrayCodeList("FINISH");
 		QuantityUnit[] unitList = QuantityUnit.getQuantityUnitSet();
 		List<Map<String, String>> lifecycleList = CommonUtil.getLifeCycleState("LC_PART");
-		
+
 		ModelAndView model = new ModelAndView();
 		model.addObject("modelList", modelList);
 		model.addObject("deptcodeList", deptcodeList);
@@ -264,7 +278,7 @@ public class DistributeController extends BaseController {
 		model.setViewName("/extcore/jsp/distribute/part-list.jsp");
 		return model;
 	}
-	
+
 	@Description(value = "완제품 검색 실행")
 	@ResponseBody
 	@PostMapping(value = "/listProduction")
@@ -280,7 +294,7 @@ public class DistributeController extends BaseController {
 		}
 		return result;
 	}
-	
+
 	@Description(value = "완제품 상세보기")
 	@RequestMapping("/productView")
 	public ModelAndView productView(@RequestParam(value = "oid") String oid) throws Exception {
@@ -295,10 +309,10 @@ public class DistributeController extends BaseController {
 		model.setViewName("popup:/distribute/product-view");
 		return model;
 	}
-	
+
 	@Description(value = "EO 검색 페이지")
 	@GetMapping(value = "/listEO")
-	public ModelAndView listEO() throws Exception{
+	public ModelAndView listEO() throws Exception {
 		ArrayList<NumberCode> modelList = NumberCodeHelper.manager.getArrayCodeList("MODEL");
 		List<Map<String, String>> lifecycleList = CommonUtil.getLifeCycleState("LC_ECO");
 		ModelAndView model = new ModelAndView();
@@ -307,20 +321,21 @@ public class DistributeController extends BaseController {
 		model.setViewName("/extcore/jsp/distribute/distribute-eo-list.jsp");
 		return model;
 	}
-	
+
 	@ResponseBody
 	@RequestMapping("/listPagingEOAction")
-	public Map<String,Object> listPagingEOAction(HttpServletRequest request, HttpServletResponse response){
-		Map<String,Object> map = new HashMap<>();
+	public Map<String, Object> listPagingEOAction(HttpServletRequest request, HttpServletResponse response) {
+		Map<String, Object> map = new HashMap<>();
 		try {
-			 map = ECOSearchHelper.service.listPagingAUIEOAction(request, response);//ECRSearchHelper.service.listECRAction(request, response);
+			map = ECOSearchHelper.service.listPagingAUIEOAction(request, response);// ECRSearchHelper.service.listECRAction(request,
+																					// response);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		
+
 		return map;
 	}
-	
+
 	@Description(value = "EO 상세보기")
 	@GetMapping(value = "/eoView")
 	public ModelAndView eoView(@RequestParam String oid) throws Exception {
@@ -332,14 +347,14 @@ public class DistributeController extends BaseController {
 		model.setViewName("popup:/distribute/eo-view");
 		return model;
 	}
-	
-	@Description(value="CR 검색 페이지")
+
+	@Description(value = "CR 검색 페이지")
 	@GetMapping(value = "/listCR")
 	public ModelAndView listCR() throws Exception {
 		List<Map<String, String>> lifecycleList = CommonUtil.getLifeCycleState("LC_Default");
 		ArrayList<NumberCode> deptcodeList = NumberCodeHelper.manager.getArrayCodeList("DEPTCODE");
 		ArrayList<NumberCode> sectionList = NumberCodeHelper.manager.getArrayCodeList("CHANGESECTION");
-		
+
 		ModelAndView model = new ModelAndView();
 		model.addObject("lifecycleList", lifecycleList);
 		model.addObject("deptcodeList", deptcodeList);
@@ -347,15 +362,15 @@ public class DistributeController extends BaseController {
 		model.setViewName("/extcore/jsp/distribute/distribute-cr-list.jsp");
 		return model;
 	}
-	
-	@Description(value="ECPR 검색 페이지")
+
+	@Description(value = "ECPR 검색 페이지")
 	@GetMapping(value = "/listECPR")
 	public ModelAndView listECPR() throws Exception {
 		List<Map<String, String>> lifecycleList = CommonUtil.getLifeCycleState("LC_Default");
 		ArrayList<NumberCode> deptcodeList = NumberCodeHelper.manager.getArrayCodeList("DEPTCODE");
 		ArrayList<NumberCode> sectionList = NumberCodeHelper.manager.getArrayCodeList("CHANGESECTION");
 		ArrayList<NumberCode> modelList = NumberCodeHelper.manager.getArrayCodeList("MODEL");
-		
+
 		ModelAndView model = new ModelAndView();
 		model.addObject("lifecycleList", lifecycleList);
 		model.addObject("deptcodeList", deptcodeList);
@@ -364,14 +379,14 @@ public class DistributeController extends BaseController {
 		model.setViewName("/extcore/jsp/distribute/distribute-ecpr-list.jsp");
 		return model;
 	}
-	
-	@Description(value="ECRM 검색 페이지")
+
+	@Description(value = "ECRM 검색 페이지")
 	@GetMapping(value = "/listECRM")
 	public ModelAndView listECRM() throws Exception {
 		List<Map<String, String>> lifecycleList = CommonUtil.getLifeCycleState("LC_Default");
 		ArrayList<NumberCode> deptcodeList = NumberCodeHelper.manager.getArrayCodeList("DEPTCODE");
 		ArrayList<NumberCode> sectionList = NumberCodeHelper.manager.getArrayCodeList("CHANGESECTION");
-		
+
 		ModelAndView model = new ModelAndView();
 		model.addObject("lifecycleList", lifecycleList);
 		model.addObject("deptcodeList", deptcodeList);
@@ -379,8 +394,8 @@ public class DistributeController extends BaseController {
 		model.setViewName("/extcore/jsp/distribute/distribute-ecrm-list.jsp");
 		return model;
 	}
-		
-	@Description(value="ECO 검색 페이지")
+
+	@Description(value = "ECO 검색 페이지")
 	@GetMapping(value = "/listECO")
 	public ModelAndView listECO() throws Exception {
 		List<Map<String, String>> lifecycleList = CommonUtil.getLifeCycleState("LC_ECO");
@@ -389,20 +404,20 @@ public class DistributeController extends BaseController {
 		model.setViewName("/extcore/jsp/distribute/distribute-eco-list.jsp");
 		return model;
 	}
-	
+
 	@ResponseBody
 	@RequestMapping("/listPagingECOAction")
-	public Map<String,Object> listPagingECOAction(HttpServletRequest request, HttpServletResponse response){
-		Map<String,Object> map = new HashMap<String,Object>();
+	public Map<String, Object> listPagingECOAction(HttpServletRequest request, HttpServletResponse response) {
+		Map<String, Object> map = new HashMap<String, Object>();
 		try {
 			map = ECOSearchHelper.service.listPagingAUIECOAction(request, response);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		
+
 		return map;
 	}
-	
+
 	@Description(value = "ECO 상세보기")
 	@GetMapping(value = "/ecoView")
 	public ModelAndView ecoView(@RequestParam String oid) throws Exception {
@@ -414,16 +429,18 @@ public class DistributeController extends BaseController {
 		model.setViewName("popup:/distribute/eco-view");
 		return model;
 	}
-	
+
 	@Description(value = "문서검색 페이지")
 	@GetMapping(value = "/listDocument")
-	public ModelAndView listDocument() throws Exception{
+	public ModelAndView listDocument() throws Exception {
 		ArrayList<NumberCode> preserationList = NumberCodeHelper.manager.getArrayCodeList("PRESERATION");
 		ArrayList<NumberCode> deptcodeList = NumberCodeHelper.manager.getArrayCodeList("DEPTCODE");
 		ArrayList<NumberCode> modelList = NumberCodeHelper.manager.getArrayCodeList("MODEL");
 		// 문서 대분류
 		ArrayList<Map<String, String>> classTypes1 = DocumentClassHelper.manager.getClassTypes1();
+		List<Map<String, String>> lifecycleList = CommonUtil.getLifeCycleState("LC_Default");
 		ModelAndView model = new ModelAndView();
+		model.addObject("lifecycleList", lifecycleList);
 		model.addObject("preserationList", preserationList);
 		model.addObject("deptcodeList", deptcodeList);
 		model.addObject("modelList", modelList);
@@ -431,7 +448,7 @@ public class DistributeController extends BaseController {
 		model.setViewName("/extcore/jsp/distribute/distribute-document-list.jsp");
 		return model;
 	}
-	
+
 	@Description(value = "문서 상세보기")
 	@GetMapping(value = "/documentView")
 	public ModelAndView documentView(@RequestParam String oid) throws Exception {
@@ -443,10 +460,10 @@ public class DistributeController extends BaseController {
 		model.setViewName("popup:/distribute/document-view");
 		return model;
 	}
-	
+
 	@Description(value = "금형 검색 페이지")
 	@RequestMapping("/listMold")
-	public ModelAndView listMold() throws Exception{
+	public ModelAndView listMold() throws Exception {
 		ArrayList<NumberCode> deptcodeList = NumberCodeHelper.manager.getArrayCodeList("DEPTCODE");
 		ArrayList<NumberCode> manufactureList = NumberCodeHelper.manager.getArrayCodeList("MANUFACTURE");
 		ArrayList<NumberCode> moldTypeList = NumberCodeHelper.manager.getArrayCodeList("MOLDTYPE");
@@ -461,7 +478,7 @@ public class DistributeController extends BaseController {
 		model.setViewName("/extcore/jsp/distribute/distribute-mold-list.jsp");
 		return model;
 	}
-	
+
 	@Description(value = "금형 상세 페이지")
 	@GetMapping(value = "/moldView")
 	public ModelAndView moldView(@RequestParam String oid) throws Exception {
@@ -475,23 +492,23 @@ public class DistributeController extends BaseController {
 		model.setViewName("popup:/distribute/mold-view");
 		return model;
 	}
-	
+
 	/***********************************************************************************************/
-	
+
 	@RequestMapping("/include_DistributeECOList")
-	public ModelAndView include_DistributeECOList(HttpServletRequest request, HttpServletResponse response){
+	public ModelAndView include_DistributeECOList(HttpServletRequest request, HttpServletResponse response) {
 		String oid = request.getParameter("oid");
 		String moduleType = request.getParameter("moduleType");
 		String title = StringUtil.checkReplaceStr(request.getParameter("title"), Message.get("관련 ECO"));
-		
+
 		List<ECOData> list = new ArrayList<ECOData>();
 		try {
-			list = ECOSearchHelper.service.include_DistributeEOList(oid,moduleType);
-		} catch(Exception e) {
-			
+			list = ECOSearchHelper.service.include_DistributeEOList(oid, moduleType);
+		} catch (Exception e) {
+
 			e.printStackTrace();
 		}
-		
+
 		ModelAndView model = new ModelAndView();
 		model.addObject("list", list);
 		model.addObject("moduleType", moduleType);
@@ -499,40 +516,41 @@ public class DistributeController extends BaseController {
 		model.setViewName("include:/distribute/include_DistributeECOList");
 		return model;
 	}
-	
+
 	@RequestMapping("/viewChangePart")
-	public ModelAndView viewChangePart(HttpServletRequest request, HttpServletResponse response, @RequestParam(value="ecoNumber") String ecoNumber) throws Exception {
-		
-		
+	public ModelAndView viewChangePart(HttpServletRequest request, HttpServletResponse response,
+			@RequestParam(value = "ecoNumber") String ecoNumber) throws Exception {
+
 		ModelAndView model = new ModelAndView();
-		//String  ecoNumber = request.getParameter("ecoNumber");
-		
-		model.addObject("ecoNumber",ecoNumber);
+		// String ecoNumber = request.getParameter("ecoNumber");
+
+		model.addObject("ecoNumber", ecoNumber);
 		model.setViewName("popup:/distribute/viewChangePart");
 		return model;
 	}
-	
+
 	@ResponseBody
 	@RequestMapping(value = "/listPARTERPAction")
-	public List<PARTERPData> listPARTERPAction(HttpServletRequest request, HttpServletResponse response) throws Exception{
-		 
+	public List<PARTERPData> listPARTERPAction(HttpServletRequest request, HttpServletResponse response)
+			throws Exception {
+
 		String ecoNumber = request.getParameter("ecoNumber");
 		List<PARTERPData> itemList = ERPSearchHelper.service.listPARTERPAction(ecoNumber);
-		
+
 		return itemList;
 	}
-	
+
 	@ResponseBody
 	@RequestMapping(value = "/listBOMERPAction")
-	public List<BOMERPData> listBOMERPAction(HttpServletRequest request, HttpServletResponse response) throws Exception{
-		 
+	public List<BOMERPData> listBOMERPAction(HttpServletRequest request, HttpServletResponse response)
+			throws Exception {
+
 		String ecoNumber = request.getParameter("ecoNumber");
 		List<BOMERPData> itemList = ERPSearchHelper.service.listBOMERPAction(ecoNumber);
-		
+
 		return itemList;
 	}
-	
-	
+
 	@RequestMapping("/viewPartBom")
 	public ModelAndView viewPartBom(HttpServletRequest request, HttpServletResponse response) {
 		ModelAndView model = new ModelAndView();
@@ -542,70 +560,62 @@ public class DistributeController extends BaseController {
 		String desc = StringUtil.checkReplaceStr(request.getParameter("desc"), "true");
 		String view = request.getParameter("view");
 		String baseName = "";
-		List<Map<String,String>> list = null;
+		List<Map<String, String>> list = null;
 		try {
 			list = ChangeHelper.service.getGroupingBaseline(oid, "", "");
-			ManagedBaseline line = (ManagedBaseline)CommonUtil.getObject(baseline);
-			if(line != null){
+			ManagedBaseline line = (ManagedBaseline) CommonUtil.getObject(baseline);
+			if (line != null) {
 				baseName = line.getName();
 			}
-			
-		} catch(Exception e) {
-			list = new ArrayList<Map<String,String>>();
+
+		} catch (Exception e) {
+			list = new ArrayList<Map<String, String>>();
 			e.printStackTrace();
 		}
-		model.addObject("baseName",baseName);
+		model.addObject("baseName", baseName);
 		model.addObject("oid", oid);
 		model.addObject("list", list);
 		model.addObject("baseline", baseline);
 		model.addObject("allBaseline", allBaseline);
 		model.addObject("desc", desc);
-		//model.addObject("bsobj", bsobj);
+		// model.addObject("bsobj", bsobj);
 		model.addObject("view", view);
 		model.setViewName("popup:/distribute/viewPartBom");
-	
-	
+
 		return model;
 	}
+
 	/*
-	@RequestMapping("/viewAUIBOMDwon")
-	public ModelAndView viewPartBaselineBOM(HttpServletRequest request, HttpServletResponse response) {
-		ModelAndView model = new ModelAndView();
-		String oid = request.getParameter("oid");
-		String baseline = "";
-		String allBaseline = StringUtil.checkReplaceStr(request.getParameter("allBaseline"), "false");
-		String desc = StringUtil.checkReplaceStr(request.getParameter("desc"), "true");
-		String view = request.getParameter("view");
-		
-		List<Map<String,String>> list = null;
-		try {
-			list = ChangeHelper.service.listEulB_IncludeAction(oid, "", "");
-		} catch(Exception e) {
-			list = new ArrayList<Map<String,String>>();
-			e.printStackTrace();
-		}
-		model.addObject("oid", oid);
-		model.addObject("list", list);
-		model.addObject("baseline", baseline);
-		model.addObject("allBaseline", allBaseline);
-		model.addObject("desc", desc);
-		//model.addObject("bsobj", bsobj);
-		model.addObject("view", view);
-		model.setViewName("popup:/distribute/viewAUIBOMDwon");
-	
-	
-		return model;
-	}
-	*/
+	 * @RequestMapping("/viewAUIBOMDwon") public ModelAndView
+	 * viewPartBaselineBOM(HttpServletRequest request, HttpServletResponse response)
+	 * { ModelAndView model = new ModelAndView(); String oid =
+	 * request.getParameter("oid"); String baseline = ""; String allBaseline =
+	 * StringUtil.checkReplaceStr(request.getParameter("allBaseline"), "false");
+	 * String desc = StringUtil.checkReplaceStr(request.getParameter("desc"),
+	 * "true"); String view = request.getParameter("view");
+	 * 
+	 * List<Map<String,String>> list = null; try { list =
+	 * ChangeHelper.service.listEulB_IncludeAction(oid, "", ""); } catch(Exception
+	 * e) { list = new ArrayList<Map<String,String>>(); e.printStackTrace(); }
+	 * model.addObject("oid", oid); model.addObject("list", list);
+	 * model.addObject("baseline", baseline); model.addObject("allBaseline",
+	 * allBaseline); model.addObject("desc", desc); //model.addObject("bsobj",
+	 * bsobj); model.addObject("view", view);
+	 * model.setViewName("popup:/distribute/viewAUIBOMDwon");
+	 * 
+	 * 
+	 * return model; }
+	 */
 	@ResponseBody
 	@RequestMapping(value = "/viewPartBomAction")
-	public List<Map<String, Object>> viewPartBomAction(HttpServletRequest request, HttpServletResponse response) throws Exception{
-		 
+	public List<Map<String, Object>> viewPartBomAction(HttpServletRequest request, HttpServletResponse response)
+			throws Exception {
+
 		List<Map<String, Object>> list = BomSearchHelper.service.getAUIPartTreeAction(request, response);
-		
+
 		return list;
 	}
-	
+
 	@RequestMapping("/viewAUIBOMDwon")
 	public ModelAndView viewAUIBOMDwon(HttpServletRequest request, HttpServletResponse response) {
 		ModelAndView model = new ModelAndView();
@@ -614,12 +624,12 @@ public class DistributeController extends BaseController {
 		String allBaseline = StringUtil.checkReplaceStr(request.getParameter("allBaseline"), "false");
 		String desc = StringUtil.checkReplaceStr(request.getParameter("desc"), "true");
 		String view = request.getParameter("view");
-		
-		List<Map<String,String>> list = null;
+
+		List<Map<String, String>> list = null;
 		try {
 			list = ChangeHelper.service.listEulB_IncludeAction(oid, "", "");
-		} catch(Exception e) {
-			list = new ArrayList<Map<String,String>>();
+		} catch (Exception e) {
+			list = new ArrayList<Map<String, String>>();
 			e.printStackTrace();
 		}
 		model.addObject("oid", oid);
@@ -627,16 +637,16 @@ public class DistributeController extends BaseController {
 		model.addObject("baseline", baseline);
 		model.addObject("allBaseline", allBaseline);
 		model.addObject("desc", desc);
-		//model.addObject("bsobj", bsobj);
+		// model.addObject("bsobj", bsobj);
 		model.addObject("view", view);
 		model.setViewName("popup:/distribute/viewAUIBOMDwon");
-	
-	
+
 		return model;
 	}
-	
+
 	/**
 	 * 최신 Baseline
+	 * 
 	 * @param request
 	 * @param response
 	 * @return
@@ -648,73 +658,70 @@ public class DistributeController extends BaseController {
 		String oid = request.getParameter("oid");
 		ManagedBaseline line = ChangeHelper.service.getLastBaseline(oid);
 		String baseline = request.getParameter("baseline");
-		String baseName ="";
-		if(line != null){
+		String baseName = "";
+		if (line != null) {
 			baseline = CommonUtil.getOIDString(line);
 			baseName = line.getName();
 		}
 		String allBaseline = StringUtil.checkReplaceStr(request.getParameter("allBaseline"), "false");
 		String desc = StringUtil.checkReplaceStr(request.getParameter("desc"), "true");
 		String view = request.getParameter("view");
-		
-		List<Map<String,String>> list = null;
+
+		List<Map<String, String>> list = null;
 		try {
 			list = ChangeHelper.service.getGroupingBaseline(oid, "", "");
-		} catch(Exception e) {
-			list = new ArrayList<Map<String,String>>();
+		} catch (Exception e) {
+			list = new ArrayList<Map<String, String>>();
 			e.printStackTrace();
 		}
-		//System.out.println("baseName =" + baseName);
-		model.addObject("baseName",baseName);
+		// System.out.println("baseName =" + baseName);
+		model.addObject("baseName", baseName);
 		model.addObject("oid", oid);
 		model.addObject("list", list);
 		model.addObject("baseline", baseline);
 		model.addObject("allBaseline", allBaseline);
 		model.addObject("desc", desc);
-		//model.addObject("bsobj", bsobj);
+		// model.addObject("bsobj", bsobj);
 		model.addObject("view", view);
 		model.setViewName("popup:/distribute/viewPartBom");
-	
-	
+
 		return model;
 	}
-	
+
 	@RequestMapping("/partTreeCompare")
-	public ModelAndView partTreeCompare(HttpServletRequest request, HttpServletResponse response) throws WTRuntimeException, WTException {
-		
+	public ModelAndView partTreeCompare(HttpServletRequest request, HttpServletResponse response)
+			throws WTRuntimeException, WTException {
+
 		String oid = request.getParameter("oid");
 		String oid2 = request.getParameter("oid2");
-		String baseline = null;//request.getParameter("baseline");
+		String baseline = null;// request.getParameter("baseline");
 		String baseline2 = request.getParameter("baseline2");
-		
-		
-		
-		
+
 		String title1 = "";
 		String title2 = "";
-		
+
 		ManagedBaseline bsobj = null;
-		if(baseline!=null && baseline.length()>0){
-		    bsobj = (ManagedBaseline)CommonUtil.getObject(baseline);
+		if (baseline != null && baseline.length() > 0) {
+			bsobj = (ManagedBaseline) CommonUtil.getObject(baseline);
 		}
-		
+
 		ManagedBaseline bsobj2 = null;
-		if(baseline2!=null && baseline2.length()>0){
-		   bsobj2 = (ManagedBaseline)CommonUtil.getObject(baseline2);
+		if (baseline2 != null && baseline2.length() > 0) {
+			bsobj2 = (ManagedBaseline) CommonUtil.getObject(baseline2);
 		}
-		
-		if(bsobj == null) {
+
+		if (bsobj == null) {
 			title1 = "최신BOM 전개";
-		}else {
+		} else {
 			title1 = "Baseline전개  - " + bsobj.getName();
 		}
-		
-		if(bsobj2 == null) {
+
+		if (bsobj2 == null) {
 			title2 = "최신BOM 전개";
-		}else {
+		} else {
 			title2 = "Baseline전개  - " + bsobj2.getName();
 		}
-		
+
 		ModelAndView model = new ModelAndView();
 		model.addObject("oid", oid);
 		model.addObject("oid2", oid2);
@@ -725,6 +732,5 @@ public class DistributeController extends BaseController {
 		model.setViewName("popup:/part/partTreeCompare");
 		return model;
 	}
-	
-	
+
 }
