@@ -288,7 +288,6 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 					hideContextMenu();
 				});
 			}
-
 			function loadGridData(movePage) {
 				if (movePage === undefined) {
 					document.getElementById("sessionid").value = 0;
@@ -325,15 +324,16 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 				AUIGrid.resize(myGridID);
 				selectbox("state");
 				finderUser("creator");
+// 				finderUser("writer");
 				twindate("created");
 				twindate("approve");
 				twindate("writed");
 				selectbox("_psize");
 				selectbox("changeSection");
 				selectbox("createDepart");
-				finderCode("model", "MODEL", "code");
+				finderCode("model", "MODEL");
 				$("#_psize").bindSelectSetValue("20");
-				$("#state").bindSelectDisabled("APPROVED");
+				$("#state").bindSelectSetValue("APPROVED");
 				$("#state").bindSelectDisabled();
 			});
 
