@@ -248,7 +248,7 @@ ArrayList<Map<String, String>> classTypes1 = (ArrayList<Map<String, String>>) re
 				<jsp:param value="<%=location%>" name="location" />
 				<jsp:param value="product" name="container" />
 				<jsp:param value="list" name="mode" />
-				<jsp:param value="423" name="height" />
+				<jsp:param value="393" name="height" />
 			</jsp:include>
 		</td>
 		<td valign="top">&nbsp;</td>

@@ -292,7 +292,7 @@ QuantityUnit[] unitList = (QuantityUnit[]) request.getAttribute("unitList");
 						<jsp:param value="<%=DrawingHelper.PART_ROOT%>" name="location" />
 						<jsp:param value="product" name="container" />
 						<jsp:param value="list" name="mode" />
-						<jsp:param value="623" name="height" />
+						<jsp:param value="600" name="height" />
 					</jsp:include>
 				</td>
 				<td valign="top">&nbsp;</td>

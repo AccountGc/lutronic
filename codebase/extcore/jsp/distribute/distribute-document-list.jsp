@@ -228,7 +228,7 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 						<jsp:param value="<%=DocumentHelper.DOCUMENT_ROOT%>" name="location" />
 						<jsp:param value="product" name="container" />
 						<jsp:param value="list" name="mode" />
-						<jsp:param value="565" name="height" />
+						<jsp:param value="535" name="height" />
 						<jsp:param value="doc" name="type" />
 					</jsp:include>
 				</td>

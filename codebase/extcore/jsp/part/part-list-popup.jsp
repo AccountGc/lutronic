@@ -283,7 +283,7 @@ boolean complete = (boolean) request.getAttribute("complete");
 				<jsp:param value="<%=PartHelper.PART_ROOT%>" name="location" />
 				<jsp:param value="product" name="container" />
 				<jsp:param value="list" name="mode" />
-				<jsp:param value="483" name="height" />
+				<jsp:param value="453" name="height" />
 			</jsp:include>
 		</td>
 		<td valign="top">&nbsp;</td>

@@ -301,7 +301,7 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 						<jsp:param value="<%=PartHelper.PART_ROOT%>" name="location" />
 						<jsp:param value="product" name="container" />
 						<jsp:param value="list" name="mode" />
-						<jsp:param value="600" name="height" />
+						<jsp:param value="605" name="height" />
 					</jsp:include>
 				</td>
 				<td valign="top">&nbsp;</td>

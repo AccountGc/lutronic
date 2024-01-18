@@ -117,7 +117,7 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 			<tr>
 				<td valign="top">
 					<jsp:include page="/extcore/jsp/workprocess/department-tree.jsp">
-						<jsp:param value="670" name="height" />
+						<jsp:param value="640" name="height" />
 					</jsp:include>
 				</td>
 				<td valign="top">&nbsp;</td>

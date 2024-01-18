@@ -182,7 +182,7 @@ String state = (String) request.getAttribute("state");
 				<jsp:param value="<%=location%>" name="location" />
 				<jsp:param value="product" name="container" />
 				<jsp:param value="list" name="mode" />
-				<jsp:param value="445" name="height" />
+				<jsp:param value="415" name="height" />
 			</jsp:include>
 		</td>
 		<td valign="top">&nbsp;</td>
