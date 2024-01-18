@@ -376,7 +376,7 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 				selectbox("_psize");
 				finderCode("model", "MODEL", "code");
 				$("#_psize").bindSelectSetValue("20");
-				$("#state").bindSelectDisabled("APPROVED");
+				$("#state").bindSelectSetValue("APPROVED");
 				$("#state").bindSelectDisabled();
 			});
 

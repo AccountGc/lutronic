@@ -701,38 +701,38 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 					if (display === "none") {
 						el.style.display = "table-row";
 						target.value = "▲접기";
+						selectbox("state");
 						finderCode("model", "MODEL");
 						selectbox("productmethod");
-						selectbox("state");
 						selectbox("deptcode");
 						selectbox("unit");
 						selectbox("mat");
 						selectbox("finish");
-						selectbox("manufacture");
+						finderCode("manufacture", "MANUFACTURE");
 						selectbox("_psize");
 						finderUser("creator");
 						twindate("created");
 						twindate("modified");
 						$("#_psize").bindSelectSetValue("20");
-						$("#state").bindSelectDisabled("APPROVED");
+						$("#state").bindSelectSetValue("APPROVED");
 						$("#state").bindSelectDisabled();
 					} else {
 						el.style.display = "none";
 						target.value = "▼펼치기";
+						selectbox("state");
 						finderCode("model", "MODEL");
 						selectbox("productmethod");
-						selectbox("state");
 						selectbox("deptcode");
 						selectbox("unit");
 						selectbox("mat");
 						selectbox("finish");
-						selectbox("manufacture");
+						finderCode("manufacture", "MANUFACTURE");
 						selectbox("_psize");
 						finderUser("creator");
 						twindate("created");
 						twindate("modified");
 						$("#_psize").bindSelectSetValue("20");
-						$("#state").bindSelectDisabled("APPROVED");
+						$("#state").bindSelectSetValue("APPROVED");
 						$("#state").bindSelectDisabled();
 					}
 				}
