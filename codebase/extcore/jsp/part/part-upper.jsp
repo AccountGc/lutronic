@@ -39,7 +39,7 @@ JSONArray upper = (JSONArray) request.getAttribute("upper");
 				const url = getCallUrl("/part/view?oid=" + oid);
 				_popup(url, 1600, 800, "n");
 			}
-		},			
+		},
 	}, {
 		headerText : "품목번호",
 		dataField : "name",
@@ -49,7 +49,13 @@ JSONArray upper = (JSONArray) request.getAttribute("upper");
 		headerText : "상태",
 		dataField : "state",
 		dataType : "string",
-		width : 80
+		width : 80,
+		styleFunction : function(rowIndex, columnIndex, value, headerText, item, dataField) {
+			if (value === "승인됨") {
+				return "approved";
+			}
+			return null;
+		}
 	}, {
 		headerText : "REV",
 		dataField : "version",
@@ -68,9 +74,11 @@ JSONArray upper = (JSONArray) request.getAttribute("upper");
 			hoverMode : "singleRow",
 		};
 		myGridID = AUIGrid.create("#grid_wrap", columnLayout, props);
-		AUIGrid.setGridData(myGridID, <%=upper%>);
+		AUIGrid.setGridData(myGridID,
+<%=upper%>
+	);
 	}
-	
+
 	document.addEventListener("DOMContentLoaded", function() {
 		createAUIGrid(columns);
 		AUIGrid.resize(myGridID);

@@ -85,6 +85,13 @@ while (result.hasMoreElements()) {
 
 	String writer = IBAUtil.getStringValue(doc, "DSGN");
 	ecrm.setWriter(writer); // 작성자
+	ecrm.setCreateDate(doc.getCreateTimestamp().toString().substring(0, 10));
+
+	String state = doc.getLifeCycleState().toString();
+
+	if ("APPROVED".equals(state)) {
+		ecrm.setApproveDate(doc.getModifyTimestamp().toString().substring(0, 10));
+	}
 
 	String location = "/Default/설계변경/ECRM";
 	String lifecycle = "LC_Default";
@@ -98,7 +105,7 @@ while (result.hasMoreElements()) {
 
 	ecrm = (ECRMRequest) PersistenceHelper.manager.refresh(ecrm);
 
-	LifeCycleHelper.service.setLifeCycleState(ecrm, State.toState(doc.getLifeCycleState().toString()));
+	LifeCycleHelper.service.setLifeCycleState(ecrm, State.toState(state));
 
 	saveLink(doc, ecrm);
 
@@ -212,7 +219,7 @@ out.println("종료");
 
 		QueryResult rs = PersistenceHelper.manager.find(query);
 		System.out.println("rs=" + rs.size());
-		int k=0;
+		int k = 0;
 		while (rs.hasMoreElements()) {
 			Object[] obj = (Object[]) rs.nextElement();
 			ECRMRequest ecrm = (ECRMRequest) obj[0];

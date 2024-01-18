@@ -732,15 +732,15 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 					url = getCallUrl("/part/viewHistory?oid=" + part_oid);
 					_popup(url, 1200, 500, "n");
 					break;
-				case 10:
+				case 11:
 					url = getCallUrl("/part/upper?oid=" + part_oid);
 					_popup(url, 600, 430, "n");
 					break;
-				case 11:
+				case 12:
 					url = getCallUrl("/part/lower?oid=" + part_oid);
 					_popup(url, 600, 430, "n");
 					break;
-				case 12:
+				case 13:
 					url = getCallUrl("/part/end?oid=" + part_oid);
 					_popup(url, 600, 430, "n");
 					break;

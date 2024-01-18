@@ -49,7 +49,13 @@ JSONArray end = (JSONArray) request.getAttribute("end");
 		headerText : "상태",
 		dataField : "state",
 		dataType : "string",
-		width : 80
+		width : 80,
+		styleFunction : function(rowIndex, columnIndex, value, headerText, item, dataField) {
+			if (value === "승인됨") {
+				return "approved";
+			}
+			return null;
+		}		
 	}, {
 		headerText : "REV",
 		dataField : "version",
