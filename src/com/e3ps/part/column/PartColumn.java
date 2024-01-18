@@ -23,6 +23,8 @@ public class PartColumn {
 	private boolean latest = false;
 	private int rowNum;
 	private String part_oid; // 부품
+	private String epm_oid;
+	private String epm_2d_oid;
 	private String thumb;
 	private String number;
 	private String name;
@@ -42,8 +44,7 @@ public class PartColumn {
 	private String modifiedDate_txt;
 	private boolean preOrder;
 	private boolean visible = true;
-	
-	
+
 	public PartColumn() {
 
 	}
@@ -75,6 +76,18 @@ public class PartColumn {
 			setIcon("/Windchill/extcore/images/icon/part.gif");
 		}
 		setCheckout(isCheckedOut);
+		setEpmInfo(part);
+	}
+
+	private void setEpmInfo(WTPart part) throws Exception {
+		EPMDocument epm = PartHelper.manager.getEPMDocument(part);
+		if (epm != null) {
+			setEpm_oid(epm.getPersistInfo().getObjectIdentifier().getStringValue());
+			EPMDocument epm2d = PartHelper.manager.getEPMDocument2D(epm);
+			if (epm2d != null) {
+				setEpm_2d_oid(epm2d.getPersistInfo().getObjectIdentifier().getStringValue());
+			}
+		}
 	}
 
 	/**

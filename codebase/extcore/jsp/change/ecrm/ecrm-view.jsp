@@ -122,6 +122,9 @@ iframe {
 					%>
 				</td>
 			</tr>
+			<%
+			if (dto.is_isNew()) {
+			%>
 			<tr>
 				<th class="lb">내용</th>
 				<td colspan="5" class="indent7 pb8">
@@ -135,10 +138,20 @@ iframe {
 					</script>
 				</td>
 			</tr>
-			<!-- 			<tr> -->
-			<!-- 				<th class="lb">변경사유</th> -->
-			<%-- 				<td colspan="3" class="indent5"><%=dto.getEoCommentA()%></td> --%>
-			<!-- 			</tr> -->
+			<%
+			} else {
+			%>
+			<tr>
+				<th class="lb">내용</th>
+				<td colspan="5" class="indent5">
+					<div class="textarea-auto">
+						<textarea rows="5" readonly="readonly" rows="5"><%=dto.getEoCommentA() != null ? dto.getEoCommentA() : ""%></textarea>
+					</div>
+				</td>
+			</tr>
+			<%
+			}
+			%>
 			<!-- 			<tr> -->
 			<!-- 				<th class="lb">변경사항</th> -->
 			<%-- 				<td colspan="3" class="indent5"><%=dto.getEoCommentB()%></td> --%>
@@ -263,7 +276,7 @@ iframe {
 		AUIGrid.resize(myGridID10000);
 		AUIGrid.resize(myGridID10001);
 	});
-	
+
 	function print() {
 		const oid = document.getElementById("oid").value;
 		const url = getCallUrl("/ecrm/print?oid=" + oid);

@@ -550,6 +550,15 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 						label : "썸네일 보기(3D)",
 						callback : auiContextHandler
 					}, {
+						label : "품목 정보보기",
+						callback : auiContextHandler
+					}, {
+						label : "도면 정보보기(3D)",
+						callback : auiContextHandler
+					}, {
+						label : "도면 정보보기(2D)",
+						callback : auiContextHandler
+					}, {
 						label : "_$line" // label 에 _$line 을 설정하면 라인을 긋는 아이템으로 인식합니다.
 					}, {
 						label : "속성보기",
@@ -588,7 +597,7 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 					document.getElementById("curPage").value = 1;
 				}
 				let params = new Object();
-				const field = [ "location", "partNumber", "partName", "createdFrom", "createdTo", "modifiedFrom", "modifiedTo", "state", "model", "productmethod", "deptcode", "unit", "weight", "mat", "finish", "remarks", "ecoNo", "eoNo", "creatorOid", "specification" ];
+				const field = [ "location", "partNumber", "partName", "createdFrom", "createdTo", "modifiedFrom", "modifiedTo", "state", "modelcode", "productmethod", "deptcode", "unit", "weight", "mat", "finish", "remarks", "ecoNo", "eoNo", "creatorOid", "specification" ];
 				const url = getCallUrl("/part/list");
 				const latest = document.querySelector("input[name=latest]:checked").value;
 				const preOrder = document.querySelector("input[name=preOrder]:checked").value;
@@ -657,47 +666,69 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 			function auiContextHandler(event) {
 				const item = event.item;
 				const part_oid = item.part_oid;
+				const epm_oid = item.epm_oid;
+				const epm_2d_oid = item.epm_2d_oid;
 				let url;
 				switch (event.contextIndex) {
 				case 0:
 					url = getCallUrl("/part/thumbnail?oid=" + part_oid);
 					_popup(url, 800, 600, "n");
 					break;
+				case 1:
+					url = getCallUrl("/part/view?oid=" + part_oid);
+					_popup(url, 1600, 800, "n");
+					break;
 				case 2:
+					if (epm_oid === null) {
+						alert("도면(3D) 존재하지 않습니다.");
+						return false;
+					}
+					url = getCallUrl("/drawing/view?oid=" + epm_oid);
+					_popup(url, 1600, 800, "n");
+					break;
+				case 3:
+					if (epm_2d_oid === null) {
+						alert("도면(2D) 존재하지 않습니다.");
+						return false;
+					}
+					url = getCallUrl("/drawing/view?oid=" + epm_2d_oid);
+					_popup(url, 1600, 800, "n");
+					break;
+				case 5:
 					//속성
 					url = getCallUrl("/part/attr?oid=" + part_oid);
 					_popup(url, 1000, 500, "n");
 					break;
-				case 3:
+				case 6:
 					//BOM 뷰
 					url = getCallUrl("/bom/view?oid=" + part_oid);
 					_popup(url, 1600, 800, "n");
 					break;
-				case 4:
+				case 7:
 					url = getCallUrl("/bom/editor?oid=" + part_oid);
 					_popup(url, "", "", "f");
 					break;
-				case 5:
+				case 8:
 					url = "/Windchill/netmarkets/jsp/structureCompare/StructureCompare.jsp?oid=OR:" + part_oid + "&ncId=5304500442831603818&locale=ko";
 					_popup(url, 1600, 600, "n");
 					break;
-				case 6:
+				case 9:
 					url = getCallUrl("/part/viewHistory?oid=" + part_oid);
 					_popup(url, 1200, 500, "n");
 					break;
-				case 8:
+				case 10:
 					url = getCallUrl("/part/upper?oid=" + part_oid);
 					_popup(url, 600, 430, "n");
 					break;
-				case 9:
+				case 11:
 					url = getCallUrl("/part/lower?oid=" + part_oid);
 					_popup(url, 600, 430, "n");
 					break;
-				case 10:
+				case 12:
 					url = getCallUrl("/part/end?oid=" + part_oid);
 					_popup(url, 600, 430, "n");
 					break;
-				case 12:
+				case 15:
 					publish(part_oid);
 					break;
 				}

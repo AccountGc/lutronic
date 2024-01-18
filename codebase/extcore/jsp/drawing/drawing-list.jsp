@@ -483,6 +483,12 @@ QuantityUnit[] unitList = (QuantityUnit[]) request.getAttribute("unitList");
 				} else {
 					hideContextMenu();
 					const menu = [ {
+						label : "도면 정보보기",
+						callback : auiContextHandler
+					}, {
+						label : "품목 정보보기",
+						callback : auiContextHandler
+					}, {
 						label : "재변환",
 						callback : auiContextHandler
 					} ];
@@ -492,10 +498,23 @@ QuantityUnit[] unitList = (QuantityUnit[]) request.getAttribute("unitList");
 
 			function auiContextHandler(event) {
 				const item = event.item;
-				const oid = item.epm_oid;
+				const epm_oid = item.epm_oid;
+				const part_oid = item.part_oid;
 				let url;
 				switch (event.contextIndex) {
 				case 0:
+					url = getCallUrl("/drawing/view?oid=" + epm_oid);
+					_popup(url, 1600, 800, "n");
+					break;
+				case 1:
+					if (part_oid === null) {
+						alert("품목이 없습니다.");
+						return false;
+					}
+					url = getCallUrl("/part/view?oid=" + part_oid);
+					_popup(url, 1600, 800, "n");
+					break;
+				case 2:
 					publish(oid);
 					break;
 				}
@@ -549,24 +568,24 @@ QuantityUnit[] unitList = (QuantityUnit[]) request.getAttribute("unitList");
 					return false;
 				}
 
-// 				let checker = true;
-// 				for (let i = 0; i < gridData.length; i++) {
-// 					const cadTypeKey = gridData[i].item.cadTypeKey;
-// 					if (cadTypeKey !== "CADDRAWING") {
-// 						checker = false;
-// 						break;
-// 					}
-// 				}
+				// 				let checker = true;
+				// 				for (let i = 0; i < gridData.length; i++) {
+				// 					const cadTypeKey = gridData[i].item.cadTypeKey;
+				// 					if (cadTypeKey !== "CADDRAWING") {
+				// 						checker = false;
+				// 						break;
+				// 					}
+				// 				}
 
-// 				if (checker) {
-					if (p) {
-						p.setData(gridData);
-					} else {
-						alert('팝업 창이 열려 있지 않습니다.');
-					}
-// 				} else {
-// 					alert("2D도면만 추가가 가능합니다.");
-// 				}
+				// 				if (checker) {
+				if (p) {
+					p.setData(gridData);
+				} else {
+					alert('팝업 창이 열려 있지 않습니다.');
+				}
+				// 				} else {
+				// 					alert("2D도면만 추가가 가능합니다.");
+				// 				}
 			}
 
 			document.addEventListener("DOMContentLoaded", function() {

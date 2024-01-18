@@ -180,7 +180,7 @@ public class PartHelper {
 		String modifiedTo = StringUtil.checkNull((String) params.get("modifiedTo"));
 		String creatorOid = StringUtil.checkNull((String) params.get("creatorOid"));
 		String state = StringUtil.checkNull((String) params.get("state"));
-		String model = StringUtil.checkNull((String) params.get("model"));
+		String model = StringUtil.checkNull((String) params.get("modelcode"));
 		String productmethod = StringUtil.checkNull((String) params.get("productmethod"));
 		String deptcode = StringUtil.checkNull((String) params.get("deptcode"));
 		String unit = StringUtil.checkNull((String) params.get("unit"));

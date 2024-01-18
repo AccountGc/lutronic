@@ -5,6 +5,7 @@ import java.sql.Timestamp;
 
 import com.e3ps.common.util.ThumbnailUtil;
 import com.e3ps.drawing.service.DrawingHelper;
+import com.e3ps.part.service.PartHelper;
 import com.fasterxml.jackson.annotation.JsonFormat;
 
 import lombok.Getter;
@@ -21,6 +22,7 @@ import wt.vc.VersionControlHelper;
 public class EpmColumn {
 
 	private String epm_oid; // 3D
+	private String part_oid;
 	private String thumb;
 	private String icon;
 	private boolean latest;
@@ -67,6 +69,14 @@ public class EpmColumn {
 		setModifier(epm.getModifierName());
 		setModifiedDate(epm.getModifyTimestamp());
 		setModifiedDate_txt(epm.getModifyTimestamp().toString().substring(0, 10));
+		setPartInfo(epm);
+	}
+
+	private void setPartInfo(EPMDocument epm) throws Exception {
+		WTPart part = PartHelper.manager.getPart(epm);
+		if (part != null) {
+			setPart_oid(part.getPersistInfo().getObjectIdentifier().getStringValue());
+		}
 	}
 
 	/**

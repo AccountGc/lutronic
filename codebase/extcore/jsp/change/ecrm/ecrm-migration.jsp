@@ -77,6 +77,7 @@ while (result.hasMoreElements()) {
 	ecrm.setModel(IBAUtil.getStringValue(doc, "MODEL"));
 	ecrm.setIsNew(false);
 	ecrm.setEoCommentA(doc.getDescription());
+	ecrm.setPeriod("P004");
 
 	String deptcode_code = IBAUtil.getStringValue(doc, "DEPTCODE");
 	String deptcode_name = keyToValue(deptcode_code, "DEPTCODE");
@@ -113,7 +114,6 @@ while (result.hasMoreElements()) {
 		byte[] buffer = new byte[10240];
 		InputStream is = ContentServerHelper.service.findLocalContentStream(data);
 		String name = data.getFileName().replaceAll("->", "").replaceAll("\"", " ");
-		System.out.println("name=" + name);
 		File file = new File(temp + File.separator + name);
 		FileOutputStream fos = new FileOutputStream(file);
 		int j = 0;
@@ -136,7 +136,6 @@ while (result.hasMoreElements()) {
 		byte[] buffer = new byte[10240];
 		InputStream is = ContentServerHelper.service.findLocalContentStream(data);
 		String name = data.getFileName().replaceAll("->", "").replaceAll("\"", " ");
-		System.out.println("name1=" + name);
 		File file = new File(temp + File.separator + name);
 		FileOutputStream fos = new FileOutputStream(file);
 		int j = 0;
