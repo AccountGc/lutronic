@@ -329,7 +329,7 @@ boolean multi = (boolean) request.getAttribute("multi");
 		}
 		let params = new Object();
 		const url = getCallUrl("/eco/list");
-		const field = [ "name", "number", "creatorOid", "createdFrom", "createdTo", "approveFrom", "approveTo", "state" ];
+		const field = [ "name", "number", "creatorOid", "createdFrom", "createdTo", "approveFrom", "approveTo", "state", "modelcode" ];
 		const rows104 = AUIGrid.getGridDataWithState(myGridID104, "gridState");
 		params.rows104 = rows104;
 		params = toField(params, field);
