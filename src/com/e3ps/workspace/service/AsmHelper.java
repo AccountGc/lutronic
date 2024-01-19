@@ -60,7 +60,7 @@ public class AsmHelper {
 			Object[] obj = (Object[]) result.nextElement();
 			AsmApproval asm = (AsmApproval) obj[0];
 			Map<String, String> data = new HashMap<>();
-			data.put("rowNum", rowNum++);
+			data.put("rowNum", String.valueOf(rowNum++));
 			data.put("oid", asm.getPersistInfo().getObjectIdentifier().getStringValue());
 			data.put("number", asm.getNumber());
 			data.put("name", asm.getName());
