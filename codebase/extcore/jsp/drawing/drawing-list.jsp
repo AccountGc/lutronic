@@ -503,7 +503,7 @@ QuantityUnit[] unitList = (QuantityUnit[]) request.getAttribute("unitList");
 					_popup(url, 1600, 800, "n");
 					break;
 				case 2:
-					publish(oid);
+					publish(epm_oid);
 					break;
 				}
 			};

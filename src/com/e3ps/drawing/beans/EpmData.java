@@ -186,7 +186,7 @@ public class EpmData {
 			Representation _representation = PublishUtils.getRepresentation(epm);
 			if (_representation != null) {
 				// step
-				QueryResult qr = ContentHelper.service.getContentsByRole(_representation, ContentRoleType.SECONDARY);
+				QueryResult qr = ContentHelper.service.getContentsByRole(_representation, ContentRoleType.ADDITIONAL_FILES);
 				while (qr.hasMoreElements()) {
 					ApplicationData data = (ApplicationData) qr.nextElement();
 					String ext = FileUtil.getExtension(data.getFileName());
