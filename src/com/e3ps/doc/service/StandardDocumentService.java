@@ -556,6 +556,7 @@ public class StandardDocumentService extends StandardManager implements Document
 			// 기존 결재선 지정 삭제..
 			WorkData wd = WorkDataHelper.manager.getWorkData(doc);
 			if (wd != null) {
+				System.out.println("기존 결재선 삭제!");
 				PersistenceHelper.manager.delete(wd);
 			}
 

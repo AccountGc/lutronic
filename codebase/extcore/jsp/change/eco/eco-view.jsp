@@ -283,7 +283,9 @@ boolean isAdmin = (boolean) request.getAttribute("isAdmin");
 				if (data.isValidate) {
 					alert("SAP 전송 검증이 성공하였습니다.");
 				} else {
-					alert("SAP 전송 검증시 실패 내역이 있습니다.");
+					const url = getCallUrl("/eco/resultPage");
+					let p = _popup(url, 1100, 550, "n");
+					p.rtnList = data.rtnList;
 				}
 			}
 			closeLayer();

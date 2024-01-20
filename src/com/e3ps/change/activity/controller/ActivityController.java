@@ -28,7 +28,6 @@ import com.e3ps.controller.BaseController;
 import com.e3ps.org.service.OrgHelper;
 import com.e3ps.part.bom.service.BomHelper;
 import com.e3ps.workspace.dto.EcaDTO;
-import com.e3ps.workspace.service.WorkspaceHelper;
 
 import net.sf.json.JSONArray;
 import wt.org.WTUser;
@@ -458,7 +457,7 @@ public class ActivityController extends BaseController {
 		Map<String, Object> result = new HashMap<String, Object>();
 		try {
 			WTUser user = (WTUser) CommonUtil.getObject(oid);
-			EChangeActivity eca = (EChangeActivity)CommonUtil.getObject(aoid);
+			EChangeActivity eca = (EChangeActivity) CommonUtil.getObject(aoid);
 			ActivityHelper.service.reassign(eca, user);
 			result.put("msg", user.getFullName() + "사용자 에게 ECA활동이 위임 되었습니다.");
 			result.put("result", SUCCESS);
@@ -469,7 +468,7 @@ public class ActivityController extends BaseController {
 		}
 		return result;
 	}
-	
+
 	@Description(value = "ECA 관련 품목 팝업 페이지")
 	@GetMapping(value = "/popup")
 	public ModelAndView popup(@RequestParam String method, @RequestParam String multi,
@@ -494,5 +493,23 @@ public class ActivityController extends BaseController {
 		model.addObject("multi", Boolean.parseBoolean(multi));
 		model.setViewName("popup:/change/activity/activity-part-list-popup");
 		return model;
+	}
+
+	@Description(value = "설변품목 더미 제외여부")
+	@ResponseBody
+	@GetMapping(value = "/reloadData")
+	public Map<String, Object> reloadData(@RequestParam String oid, @RequestParam String skip) throws Exception {
+		Map<String, Object> result = new HashMap<>();
+		try {
+			boolean isSkip = Boolean.parseBoolean(skip);
+			ArrayList<Map<String, Object>> list = ActivityHelper.manager.getEcoRevisePart(oid, isSkip);
+			result.put("list", list);
+			result.put("result", SUCCESS);
+		} catch (Exception e) {
+			e.printStackTrace();
+			result.put("result", FAIL);
+			result.put("msg", e.toString());
+		}
+		return result;
 	}
 }

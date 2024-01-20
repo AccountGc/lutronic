@@ -31,6 +31,8 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 		<input type="hidden" name="curPage" id="curPage">
 		<input type="hidden" name="sessionName" id="sessionName" value="<%=user.getFullName()%>">
 		<input type="hidden" name="oid" id="oid">
+		<input type="hidden" name="sortKey" id="sortKey">
+		<input type="hidden" name="sortType" id="sortType">
 		<!-- 다운로드 링크 위한 프레임 -->
 		<!-- 		<iframe id="download" name="download" style="display: none;"></iframe> -->
 		<table class="button-table">
@@ -256,6 +258,7 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 					filter : {
 						inline : false
 					},
+					sortable : false
 				}, {
 					dataField : "name",
 					headerText : "문서명",
@@ -301,6 +304,7 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 					dataType : "string",
 					width : 120,
 					style : "aui-left",
+					sortable : false,
 					renderer : {
 						type : "TemplateRenderer"
 					},
@@ -310,26 +314,31 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 					dataType : "string",
 					style : "aui-left",
 					width : 250,
+					sortable : false
 				}, {
 					dataField : "classType1_name",
 					headerText : "대분류",
 					dataType : "string",
 					width : 100,
+					sortable : false
 				}, {
 					dataField : "classType2_name",
 					headerText : "중분류",
 					dataType : "string",
 					width : 200,
+					sortable : false
 				}, {
 					dataField : "classType3_name",
 					headerText : "소분류",
 					dataType : "string",
 					width : 100,
+					sortable : false
 				}, {
 					dataField : "version",
 					headerText : "REV",
 					dataType : "string",
 					width : 80,
+					sortable : false,
 					renderer : {
 						type : "TemplateRenderer"
 					},
@@ -349,6 +358,7 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 					headerText : "작성자",
 					dataType : "string",
 					width : 100,
+					sortable : false
 				}, {
 					dataField : "creator",
 					headerText : "등록자",
@@ -369,6 +379,7 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 					headerText : "주 첨부파일",
 					dataType : "string",
 					width : 80,
+					sortable : false,
 					renderer : {
 						type : "TemplateRenderer"
 					},
@@ -380,6 +391,7 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 					headerText : "첨부파일",
 					dataType : "string",
 					width : 100,
+					sortable : false,
 					renderer : {
 						type : "TemplateRenderer"
 					},
@@ -414,6 +426,27 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 				AUIGrid.bind(myGridID, "hScrollChange", function(event) {
 					hideContextMenu();
 				});
+				AUIGrid.bind(myGridID, "sorting", auiSortingHandler);
+			}
+
+			let sortCache = [];
+			let compField;
+			function auiSortingHandler(event) {
+				const sortingFields = event.sortingFields;
+				if (sortingFields.length > 0) {
+					const key = sortingFields[0].dataField;
+					if (compField !== key) {
+						compField = key;
+						const sortType = sortingFields[0].sortType; // 오름차순 1 내림 -1
+						sortCache[0] = {
+							dataField : key,
+							sortType : sortType
+						};
+						document.getElementById("sortKey").value = key;
+						document.getElementById("sortType").value = sortType;
+						loadGridData();
+					}
+				}
 			}
 
 			function _auiContextMenuHandler(event) {
@@ -572,12 +605,13 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 
 				let params = new Object();
 				const url = getCallUrl("/doc/list");
-				const field = [ "location", "classType1", "classType2", "classType3", "name", "number", "state", "creatorOid", "createdFrom", "createdTo", "modifiedFrom", "modifiedTo", "preseration", "modelcode", "deptcode", "writer", "description" ];
+				const field = [ "sortKey", "sortType", "location", "classType1", "classType2", "classType3", "name", "number", "state", "creatorOid", "createdFrom", "createdTo", "modifiedFrom", "modifiedTo", "preseration", "modelcode", "deptcode", "writer", "description" ];
 				params = toField(params, field);
 				const latest = document.querySelector("input[name=latest]:checked").value;
 				params.latest = JSON.parse(latest);
 				AUIGrid.showAjaxLoader(myGridID);
 				parent.openLayer();
+				logger(params);
 				call(url, params, function(data) {
 					logger(data);
 					AUIGrid.removeAjaxLoader(myGridID);
@@ -585,6 +619,10 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 						totalPage = Math.ceil(data.total / data.pageSize);
 						createPagingNavigator(data.total, data.curPage, data.sessionid);
 						AUIGrid.setGridData(myGridID, data.list);
+						if (movePage === undefined) {
+							AUIGrid.setSorting(myGridID, sortCache);
+							compField = null;
+						}
 					} else {
 						alert(data.msg);
 					}

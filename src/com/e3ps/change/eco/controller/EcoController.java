@@ -2,6 +2,7 @@ package com.e3ps.change.eco.controller;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -16,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.e3ps.change.activity.service.ActivityHelper;
 import com.e3ps.change.eco.dto.EcoDTO;
 import com.e3ps.change.eco.service.EcoHelper;
 import com.e3ps.common.code.NumberCode;
@@ -23,14 +25,32 @@ import com.e3ps.common.code.service.NumberCodeHelper;
 import com.e3ps.common.util.CommonUtil;
 import com.e3ps.controller.BaseController;
 
+import net.sf.json.JSONArray;
+
 @Controller
 @RequestMapping(value = "/eco/**")
 public class EcoController extends BaseController {
-	
-	
+
+	@Description(value = "설변품목 더미 제외여부")
+	@ResponseBody
+	@GetMapping(value = "/reloadData")
+	public Map<String, Object> reloadData(@RequestParam String oid, @RequestParam String skip) throws Exception {
+		Map<String, Object> result = new HashMap<>();
+		try {
+			ArrayList<Map<String, Object>> list = EcoHelper.manager.reloadData(oid, skip);
+			result.put("list", list);
+			result.put("result", SUCCESS);
+		} catch (Exception e) {
+			e.printStackTrace();
+			result.put("result", FAIL);
+			result.put("msg", e.toString());
+		}
+		return result;
+	}
+
 	@Description(value = "ECO 설계변경 통보서")
 	@ResponseBody
-	@GetMapping(value="/excel")
+	@GetMapping(value = "/excel")
 	public Map<String, Object> excel(@RequestParam String oid) throws Exception {
 		Map<String, Object> result = new HashMap<>();
 		try {
@@ -182,7 +202,6 @@ public class EcoController extends BaseController {
 		}
 		return result;
 	}
-	
 
 	@Description(value = "SAP 전송전 검증 해보기")
 	@ResponseBody
@@ -192,6 +211,37 @@ public class EcoController extends BaseController {
 		try {
 			result = EcoHelper.manager.validate(params);
 			result.put("result", SUCCESS);
+		} catch (Exception e) {
+			e.printStackTrace();
+			result.put("result", FAIL);
+			result.put("msg", e.toString());
+		}
+		return result;
+	}
+
+	@Description(value = "SAP 검증 결과 팝업페이지")
+	@GetMapping(value = "/resultPage")
+	public ModelAndView resultPage() throws Exception {
+		ModelAndView model = new ModelAndView();
+		model.setViewName("popup:/change/eco/eco-sap-resultPage");
+		return model;
+	}
+	
+	@Description(value = "설변품목 정보 저장")
+	@PostMapping(value = "/save")
+	@ResponseBody
+	public Map<String, Object> save(@RequestBody Map<String, ArrayList<LinkedHashMap<String, Object>>> params)
+			throws Exception {
+		ArrayList<LinkedHashMap<String, Object>> editRows = params.get("editRows");
+		Map<String, Object> result = new HashMap<String, Object>();
+		try {
+
+			HashMap<String, ArrayList<LinkedHashMap<String, Object>>> dataMap = new HashMap<>();
+			dataMap.put("editRows", editRows); // 수정행
+
+			EcoHelper.service.save(dataMap);
+			result.put("result", SUCCESS);
+			result.put("msg", SAVE_MSG);
 		} catch (Exception e) {
 			e.printStackTrace();
 			result.put("result", FAIL);

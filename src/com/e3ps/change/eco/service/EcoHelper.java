@@ -60,6 +60,9 @@ import com.e3ps.part.service.PartHelper;
 import com.e3ps.sap.conn.SAPDev600Connection;
 import com.e3ps.sap.dto.SAPSendBomDTO;
 import com.e3ps.sap.service.SAPHelper;
+import com.e3ps.workspace.ApprovalLine;
+import com.e3ps.workspace.ApprovalMaster;
+import com.e3ps.workspace.service.WorkspaceHelper;
 import com.ibm.icu.text.DecimalFormat;
 import com.sap.conn.jco.JCoDestination;
 import com.sap.conn.jco.JCoDestinationManager;
@@ -370,7 +373,7 @@ public class EcoHelper {
 			map.put("part_state_code", link.getPartStateCode());
 			map.put("preOrder", preOrder);
 			map.put("weight", link.getWeight());
-
+			map.put("link_oid", link.getPersistInfo().getObjectIdentifier().getStringValue());
 			// 과거 데이터 처리
 			if (!isPast) {
 
@@ -765,7 +768,8 @@ public class EcoHelper {
 		XSSFCell creatDate2 = sheet.getRow(31).getCell(3);
 		creatDate2.setCellValue(dto.getCreatedDate_txt());
 
-		WTUser user = (WTUser) eco.getCreator().getObject();
+		WTUser user = (WTUser) eco.getCreator().getPrincipal();
+
 		PeopleDTO pdto = new PeopleDTO(user);
 
 		// 작성부서 (32-I, 31-8)
@@ -872,57 +876,107 @@ public class EcoHelper {
 		 */
 
 		int row = 45;
+		int rowNum = 1;
+		QueryResult rs = PersistenceHelper.manager.navigate(eco, "part", EcoPartLink.class, false);
+		while (rs.hasMoreElements()) {
+			EcoPartLink eLink = (EcoPartLink) rs.nextElement();
+			WTPartMaster mm = eLink.getPart();
+			WTPart pp = PartHelper.manager.getPart(mm.getNumber(), eLink.getVersion());
 
-//		List<Map<String, String>> excelList = getECO_RoleTypeExcelData(eco);
-//
-//		for (Map<String, String> excelMap : excelList) {
-//
-//			if (row > 45) {
-//				POIUtil.copyRow(workbook, sheet, (row - 1), 1);
-//			}
-//
-//			// NO (B, 1)
-//			XSSFCell excelNo = sheet.getRow(row).getCell(1);
-//			excelNo.setCellValue((String) excelMap.get("no"));
-//
-//			// 변경 전 품번 (C, 2)
-//			XSSFCell oldPartNumber = sheet.getRow(row).getCell(2);
-//			oldPartNumber.setCellValue((String) excelMap.get("oldPartNumber"));
-//
-//			// 변경 후 품번 (F, 5)
-//			XSSFCell newPartNumber = sheet.getRow(row).getCell(5);
-//			newPartNumber.setCellValue((String) excelMap.get("newPartNumber"));
-//
-//			// 품명 (G, 6)
-//			XSSFCell partName = sheet.getRow(row).getCell(6);
-//			partName.setCellValue((String) excelMap.get("partName"));
-//
-//			// 부품 상태 코드 (I, 8)
-//			XSSFCell stateCode = sheet.getRow(row).getCell(8);
-//			stateCode.setCellValue((String) excelMap.get("stateCode"));
-//
-//			// 납품 장비 (J, 9)
-//			XSSFCell deliveryProduct = sheet.getRow(row).getCell(9);
-//			deliveryProduct.setCellValue((String) excelMap.get("deliveryProduct"));
-//
-//			// 완성 장비 (K, 10)
-//			XSSFCell completeProduct = sheet.getRow(row).getCell(10);
-//			completeProduct.setCellValue((String) excelMap.get("completeProduct"));
-//
-//			// 사내 재고 (L, 11)
-//			XSSFCell companyStock = sheet.getRow(row).getCell(11);
-//			companyStock.setCellValue((String) excelMap.get("companyStock"));
-//
-//			// 발주 부품 (M, 12)
-//			XSSFCell orderProduct = sheet.getRow(row).getCell(12);
-//			orderProduct.setCellValue((String) excelMap.get("orderProduct"));
-//
-//			// 중량 (N, 13)
-//			XSSFCell wegiht = sheet.getRow(row).getCell(13);
-//			wegiht.setCellValue((String) excelMap.get("wegiht"));
-//
-//			row++;
-//		}
+			if (row > 45) {
+				POIUtil.copyRow(workbook, sheet, (row - 1), 1);
+			}
+
+			boolean isPast = eLink.getPast();
+			boolean isLeft = eLink.getLeftPart();
+			boolean isRight = eLink.getRightPart();
+			
+			String preNumber = "";
+			String preName = "";
+			String nextNumber = "";
+			String nextName = "";
+
+			if (!isPast) {
+				// 신규 ECO
+				// 신규 작성 데이터는 무조건 히스토리가 이제는 존재
+				// 왼쪽으로 들어가는건 다음거를 구한다
+				if(isLeft) {
+					preNumber = pp.getNumber();
+					preName = pp.getName();
+					WTPart nextPart = EChangeUtils.manager.getEcoNextPart(eco, pp);
+					if(nextPart != null) {
+						nextNumber = nextPart.getNumber();
+						nextName = nextPart.getName();
+					}
+					
+					// 오른쪽으로 들어가는거는 이전을 구한다
+				} else if(isRight) {
+					WTPart prePart = EChangeUtils.manager.getEcoPrePart(eco, pp);
+					if(prePart != null) {
+						preNumber = prePart.getNumber();
+						preName = prePart.getName();		
+					}
+					nextNumber = pp.getNumber();
+					nextName = pp.getName();
+				}				
+			} else {
+				// 과거 ECO
+				preNumber = pp.getNumber();
+				preName = pp.getName();
+				if (eLink.isRevise()) {
+					WTPart nextPart = (WTPart) EChangeUtils.manager.getNext(prePart);
+					if (nextPart != null) {
+						nextNumber = nextPart.getNumber();
+						nextName = nextPart.getName();
+					}
+				}
+			}
+
+			// 과거데이터
+
+			// NO (B, 1)
+			XSSFCell excelNo = sheet.getRow(row).getCell(1);
+			excelNo.setCellValue(rowNum);
+
+			// 변경 전 품번 (C, 2)
+			XSSFCell oldPartNumber = sheet.getRow(row).getCell(2);
+			oldPartNumber.setCellValue(preNumber);
+
+			// 변경 후 품번 (F, 5)
+			XSSFCell newPartNumber = sheet.getRow(row).getCell(5);
+			newPartNumber.setCellValue(nextNumber);
+
+			// 품명 (G, 6)
+			XSSFCell partName = sheet.getRow(row).getCell(6);
+			partName.setCellValue(preName != null ? preName : nextName); / /변경전 없나???
+
+			// 부품 상태 코드 (I, 8)
+			XSSFCell stateCode = sheet.getRow(row).getCell(8);
+			stateCode.setCellValue(eLink.getPartStateCode());
+
+			// 납품 장비 (J, 9)
+			XSSFCell deliveryProduct = sheet.getRow(row).getCell(9);
+			deliveryProduct.setCellValue(eLink.getDelivery());
+
+			// 완성 장비 (K, 10)
+			XSSFCell completeProduct = sheet.getRow(row).getCell(10);
+			completeProduct.setCellValue(eLink.getComplete());
+
+			// 사내 재고 (L, 11)
+			XSSFCell companyStock = sheet.getRow(row).getCell(11);
+			companyStock.setCellValue(eLink.getInner());
+
+			// 발주 부품 (M, 12)
+			XSSFCell orderProduct = sheet.getRow(row).getCell(12);
+			orderProduct.setCellValue(eLink.getOrders());
+
+			// 중량 (N, 13)
+			XSSFCell wegiht = sheet.getRow(row).getCell(13);
+			wegiht.setCellValue(eLink.getWeight());
+
+			rowNum++;
+			row++;
+		}
 
 		/**
 		 * 설계변경 부품 내역 끝
@@ -1123,9 +1177,12 @@ public class EcoHelper {
 
 		startRow = row;
 
-		List<Map<String, Object>> appList = GroupwareHelper.service.getApprovalList(oid);
+		ApprovalMaster master = WorkspaceHelper.manager.getMaster(eco);
+		ArrayList<ApprovalLine> lines = WorkspaceHelper.manager.getAllLines(master);
 
-		for (Map<String, Object> amap : appList) {
+//		List<Map<String, Object>> appList = GroupwareHelper.service.getApprovalList(oid);
+
+		for (ApprovalLine line : lines) {
 
 			if (row > startRow) {
 				POIUtil.copyRow(workbook, sheet, (row - 1), 1);
@@ -1133,13 +1190,12 @@ public class EcoHelper {
 
 			// 이름 (B, 1)
 			XSSFCell name = sheet.getRow(row).getCell(1);
-			name.setCellValue((String) amap.get("userName"));
+			name.setCellValue(line.getOwnership().getOwner().getFullName());
 
 			// 날짜 (D, 3)
 			String processDate = "";
-			if (amap.get("processDate") != null) {
-				System.out.println((amap.get("processDate")).getClass());
-				processDate = DateUtil.subString(((Object) amap.get("processDate")).toString(), 0, 10);
+			if (line.getCompleteTime() != null) {
+				processDate = line.getCompleteTime().toString().substring(0, 10);
 			}
 
 			XSSFCell date = sheet.getRow(row).getCell(3);
@@ -1147,10 +1203,10 @@ public class EcoHelper {
 
 			// 내용 (F, 5)
 			XSSFCell description = sheet.getRow(row).getCell(5);
-			description.setCellValue((String) amap.get("comment"));
+			description.setCellValue(line.getDescription() != null ? line.getDescription() : "");
 			XSSFRow comDescRow = (XSSFRow) sheet.getRow(row);
 			int descheight = comDescRow.getHeight();
-			String comdescd = (String) amap.get("comment");
+			String comdescd = line.getDescription() != null ? line.getDescription() : "";
 			if (null != comdescd) {
 				for (int i = 0; i < comdescd.length(); i++) {
 					char ca = comdescd.charAt(i);
@@ -1242,16 +1298,16 @@ public class EcoHelper {
 		String oid = (String) params.get("oid");
 		EChangeOrder eco = (EChangeOrder) CommonUtil.getObject(oid);
 		System.out.println("SAP ECO BOM 전송 품목 검증 시작!");
-		boolean isValidate = validateSendEcoBom(eco);
+		map = validateSendEcoBom(eco);
 		System.out.println("SAP ECO BOM 전송 품목 검증 종료!");
-		map.put("isValidate", isValidate);
 		return map;
 	}
 
 	/**
 	 * BOM 전송전 검증
 	 */
-	private boolean validateSendEcoBom(EChangeOrder eco) throws Exception {
+	private Map<String, Object> validateSendEcoBom(EChangeOrder eco) throws Exception {
+		Map<String, Object> rs = new HashMap<>();
 		JCoDestination destination = JCoDestinationManager.getDestination(SAPDev600Connection.DESTINATION_NAME);
 		JCoFunction function = destination.getRepository().getFunction("ZPPIF_PDM_002");
 		if (function == null) {
@@ -1416,7 +1472,9 @@ public class EcoHelper {
 
 		JCoTable rtnTable = function.getTableParameterList().getTable("ET_BOM");
 		rtnTable.firstRow();
+		ArrayList<Map<String, Object>> rtnList = new ArrayList<Map<String, Object>>();
 		for (int i = 0; i < rtnTable.getNumRows(); i++, rtnTable.nextRow()) {
+			Map<String, Object> rtnMap = new HashMap<>();
 			Object ZIFSTA = rtnTable.getValue("ZIFSTA");
 			Object ZIFMSG = rtnTable.getValue("ZIFMSG");
 			Object MATNR_OLD = rtnTable.getValue("MATNR_OLD");
@@ -1425,13 +1483,196 @@ public class EcoHelper {
 			Object IDNRK_NEW = rtnTable.getValue("IDNRK_NEW");
 			System.out.println("이전부모 =  " + MATNR_OLD + ", 이전자식 = " + IDNRK_OLD + ", 신규부모 = " + MATNR_NEW + ", 신규자식 = "
 					+ IDNRK_NEW + ", ZIFSTA=" + ZIFSTA + ", ZIFMSG=" + ZIFMSG);
+
+			rtnMap.put("MATNR_OLD", MATNR_OLD);
+			rtnMap.put("IDNRK_OLD", IDNRK_OLD);
+			rtnMap.put("MATNR_NEW", MATNR_NEW);
+			rtnMap.put("IDNRK_NEW", IDNRK_NEW);
+			rtnMap.put("ZIFSTA", ZIFSTA);
+			rtnMap.put("ZIFMSG", ZIFMSG);
+			rtnList.add(rtnMap);
+
 		}
 		System.out.println("[ SAP JCO ] RETURN - TYPE:" + r_type);
 		System.out.println("[ SAP JCO ] RETURN - MESSAGE:" + r_msg);
 
 		if ("E".equals(r_type)) {
-			return false;
+			rs.put("isValidate", false);
+		} else {
+			rs.put("isValidate", true);
 		}
-		return true;
+		rs.put("rtnList", rtnList);
+		return rs;
+	}
+
+	/**
+	 * 설변품목 더미 제외 여부
+	 */
+	public ArrayList<Map<String, Object>> reloadData(String oid, String skip) throws Exception {
+		ArrayList<Map<String, Object>> list = new ArrayList<Map<String, Object>>();
+		boolean isSkip = Boolean.parseBoolean(skip);
+		EChangeOrder eco = (EChangeOrder) CommonUtil.getObject(oid);
+		QueryResult result = PersistenceHelper.manager.navigate(eco, "part", EcoPartLink.class, false);
+		while (result.hasMoreElements()) {
+			EcoPartLink link = (EcoPartLink) result.nextElement();
+			WTPartMaster master = link.getPart();
+			WTPart part = PartHelper.manager.getPart(master.getNumber(), link.getVersion());
+
+			if (isSkip) {
+				if (EChangeUtils.isDummy(part.getNumber())) {
+					System.out.println("더미 품목 = " + part.getNumber());
+					continue;
+				}
+			}
+
+			Map<String, Object> map = new HashMap<>();
+
+			boolean isPast = link.getPast();
+			boolean preOrder = link.getPreOrder();
+			map.put("delivery", link.getDelivery());
+			map.put("complete", link.getComplete());
+			map.put("inner", link.getInner());
+			map.put("order", link.getOrders());
+			map.put("part_state_code", link.getPartStateCode());
+			map.put("preOrder", preOrder);
+			map.put("weight", link.getWeight());
+
+			// 과거 데이터 처리
+			if (!isPast) {
+
+				boolean isRight = link.getRightPart();
+				boolean isLeft = link.getLeftPart();
+				boolean isApproved = part.getLifeCycleState().toString().equals("APPROVED");
+				boolean isFour = part.getNumber().startsWith("4"); // 4로 시작하는것은 무조건 모두 새품번
+				boolean isRevise = link.isRevise();
+
+				if (isLeft) {
+					map.put("part_oid", part.getPersistInfo().getObjectIdentifier().getStringValue());
+					map.put("part_number", part.getNumber());
+					map.put("part_name", part.getName());
+					map.put("part_state", part.getLifeCycleState().getDisplay());
+					map.put("part_version", part.getVersionIdentifier().getSeries().getValue() + "."
+							+ part.getIterationIdentifier().getSeries().getValue());
+					map.put("part_creator", part.getCreatorFullName());
+
+					// 개정된 데이터가 없을 경우
+					if (!isRevise && !isFour) {
+						map.put("next_oid", "");
+						map.put("next_number", "개정 후 데이터가 없습니다.");
+						map.put("next_name", "개정 후 데이터가 없습니다.");
+						map.put("next_state", "개정 후 데이터가 없습니다.");
+						map.put("next_version", "개정 후 데이터가 없습니다.");
+						map.put("next_creator", "개정 후 데이터가 없습니다.");
+						map.put("afterMerge", true);
+					} else {
+						WTPart next_part = (WTPart) EChangeUtils.manager.getNext(part);
+						if (next_part != null) {
+							// 개정데이터가 있을경우
+							map.put("next_oid", next_part.getPersistInfo().getObjectIdentifier().getStringValue());
+							map.put("next_number", next_part.getNumber());
+							map.put("next_name", next_part.getName());
+							map.put("next_version", next_part.getVersionIdentifier().getSeries().getValue() + "."
+									+ next_part.getIterationIdentifier().getSeries().getValue());
+							map.put("next_creator", next_part.getCreatorFullName());
+							map.put("next_state", next_part.getLifeCycleState().getDisplay());
+							map.put("afterMerge", false);
+						} else {
+							map.put("next_oid", "");
+							map.put("next_number", "개정 후 데이터가 없습니다.");
+							map.put("next_name", "개정 후 데이터가 없습니다.");
+							map.put("next_state", "개정 후 데이터가 없습니다.");
+							map.put("next_version", "개정 후 데이터가 없습니다.");
+							map.put("next_creator", "개정 후 데이터가 없습니다.");
+							map.put("afterMerge", true);
+						}
+					}
+				} else if (isRight) {
+					WTPart pre_part = EChangeUtils.manager.getEcoPrePart(eco, part);
+					// 변경후
+					map.put("next_oid", part.getPersistInfo().getObjectIdentifier().getStringValue());
+					map.put("next_number", part.getNumber());
+					map.put("next_name", part.getName());
+					map.put("next_state", part.getLifeCycleState().getDisplay());
+					map.put("next_version", part.getVersionIdentifier().getSeries().getValue() + "."
+							+ part.getIterationIdentifier().getSeries().getValue());
+					map.put("next_creator", part.getCreatorFullName());
+
+					if (pre_part == null) {
+						map.put("part_oid", "");
+						map.put("part_number", "개정 전 데이터가 없습니다.");
+						map.put("part_name", "개정 전 데이터가 없습니다.");
+						map.put("part_state", "개정 전 데이터가 없습니다.");
+						map.put("part_version", "개정 전 데이터가 없습니다.");
+						map.put("part_creator", "개정 전 데이터가 없습니다.");
+						map.put("preMerge", true);
+					} else {
+						map.put("part_oid", pre_part.getPersistInfo().getObjectIdentifier().getStringValue());
+						map.put("part_number", pre_part.getNumber());
+						map.put("part_name", pre_part.getName());
+						map.put("part_state", pre_part.getLifeCycleState().getDisplay());
+						map.put("part_version", pre_part.getVersionIdentifier().getSeries().getValue() + "."
+								+ pre_part.getIterationIdentifier().getSeries().getValue());
+						map.put("part_creator", pre_part.getCreatorFullName());
+						map.put("preMerge", false);
+					}
+				}
+				list.add(map);
+			} else {
+				WTPart pre_part = part;
+
+				System.out.println("revise=" + link.isRevise());
+				if (link.isRevise()) {
+					WTPart next_part = (WTPart) EChangeUtils.manager.getNext(part);
+					if (next_part != null) {
+						map.put("part_oid", pre_part.getPersistInfo().getObjectIdentifier().getStringValue());
+						map.put("part_number", pre_part.getNumber());
+						map.put("part_name", pre_part.getName());
+						map.put("part_state", pre_part.getLifeCycleState().getDisplay());
+						map.put("part_version", pre_part.getVersionIdentifier().getSeries().getValue() + "."
+								+ pre_part.getIterationIdentifier().getSeries().getValue());
+						map.put("part_creator", pre_part.getCreatorFullName());
+						map.put("preMerge", false);
+
+						map.put("next_oid", next_part.getPersistInfo().getObjectIdentifier().getStringValue());
+						map.put("next_number", next_part.getNumber());
+						map.put("next_name", next_part.getName());
+						map.put("next_version", next_part.getVersionIdentifier().getSeries().getValue() + "."
+								+ next_part.getIterationIdentifier().getSeries().getValue());
+						map.put("next_creator", next_part.getCreatorFullName());
+						map.put("next_state", next_part.getLifeCycleState().getDisplay());
+						map.put("afterMerge", false);
+//					} else {
+//						map.put("next_oid", pre_part.getPersistInfo().getObjectIdentifier().getStringValue());
+//						map.put("next_number", pre_part.getNumber());
+//						map.put("next_name", pre_part.getName());
+//						map.put("next_state", pre_part.getLifeCycleState().getDisplay());
+//						map.put("next_version", pre_part.getVersionIdentifier().getSeries().getValue() + "."
+//								+ pre_part.getIterationIdentifier().getSeries().getValue());
+//						map.put("next_creator", pre_part.getCreatorFullName());
+//						map.put("preMerge", true);
+					}
+				} else {
+
+					map.put("part_oid", "");
+					map.put("part_number", "개정 전 데이터가 없습니다.");
+					map.put("part_name", "개정 전 데이터가 없습니다.");
+					map.put("part_state", "개정 전 데이터가 없습니다.");
+					map.put("part_version", "개정 전 데이터가 없습니다.");
+					map.put("part_creator", "개정 전 데이터가 없습니다.");
+					map.put("preMerge", true);
+
+					map.put("next_oid", pre_part.getPersistInfo().getObjectIdentifier().getStringValue());
+					map.put("next_number", pre_part.getNumber());
+					map.put("next_name", pre_part.getName());
+					map.put("next_state", pre_part.getLifeCycleState().getDisplay());
+					map.put("next_version", pre_part.getVersionIdentifier().getSeries().getValue() + "."
+							+ pre_part.getIterationIdentifier().getSeries().getValue());
+					map.put("next_creator", pre_part.getCreatorFullName());
+					map.put("afterMerge", false);
+				}
+				list.add(map);
+			}
+		}
+		return list;
 	}
 }

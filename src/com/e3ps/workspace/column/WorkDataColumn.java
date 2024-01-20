@@ -95,7 +95,7 @@ public class WorkDataColumn {
 			}
 
 			setState(eco.getLifeCycleState().getDisplay());
-			setCreator(eco.getCreatorName());
+			setCreator(eco.getCreatorFullName());
 			setCreatedDate(eco.getCreateTimestamp());
 			setCreatedDate_txt(eco.getCreateTimestamp().toString().substring(0, 10));
 		} else if (per instanceof EChangeRequest) {
@@ -104,20 +104,10 @@ public class WorkDataColumn {
 			setName(ecr.getEoName());
 			setPersistType("CR");
 			setState(ecr.getLifeCycleState().getDisplay());
-			setCreator(ecr.getCreatorName());
+			setCreator(ecr.getCreatorFullName());
 			setCreatedDate(ecr.getCreateTimestamp());
 			setCreatedDate_txt(ecr.getCreateTimestamp().toString().substring(0, 10));
 			setViewUrl(this.context + "/cr/view?oid=" + getPoid());
-//		} else if (per instanceof ROHSMaterial) {
-//			ROHSMaterial rohs = (ROHSMaterial) per;
-//			setNumber(rohs.getNumber());
-//			setName(rohs.getName());
-//			setPersistType("ROHS");
-//			setState(rohs.getLifeCycleState().getDisplay());
-//			setCreator(rohs.getCreatorName());
-//			setCreatedDate(rohs.getCreateTimestamp());
-//			setCreatedDate_txt(rohs.getCreateTimestamp().toString().substring(0, 10));
-//			setViewUrl(this.context + "/rohs/view?oid=" + getPoid());
 		} else if (per instanceof AsmApproval) {
 			AsmApproval asm = (AsmApproval) per;
 			String number = asm.getNumber();
@@ -138,7 +128,7 @@ public class WorkDataColumn {
 			}
 			setName(asm.getName());
 			setState(asm.getLifeCycleState().getDisplay());
-			setCreator(asm.getCreatorName());
+			setCreator(asm.getCreatorFullName());
 			setCreatedDate(asm.getCreateTimestamp());
 			setCreatedDate_txt(asm.getCreateTimestamp().toString().substring(0, 10));
 			setViewUrl(this.context + "/asm/view?oid=" + getPoid());
@@ -148,7 +138,7 @@ public class WorkDataColumn {
 			setName(part.getName());
 			setPersistType("품목");
 			setState(part.getLifeCycleState().getDisplay());
-			setCreator(part.getCreatorName());
+			setCreator(part.getCreatorFullName());
 			setCreatedDate(part.getCreateTimestamp());
 			setCreatedDate_txt(part.getCreateTimestamp().toString().substring(0, 10));
 			setViewUrl(this.context + "/part/view?oid=" + getPoid());
@@ -158,7 +148,7 @@ public class WorkDataColumn {
 			setName(ecpr.getEoName());
 			setPersistType("ECPR");
 			setState(ecpr.getLifeCycleState().getDisplay());
-			setCreator(ecpr.getCreatorName());
+			setCreator(ecpr.getCreatorFullName());
 			setCreatedDate(ecpr.getCreateTimestamp());
 			setCreatedDate_txt(ecpr.getCreateTimestamp().toString().substring(0, 10));
 			setViewUrl(this.context + "/ecpr/view?oid=" + getPoid());
@@ -168,7 +158,7 @@ public class WorkDataColumn {
 			setName(ecrm.getEoName());
 			setPersistType("ECRM");
 			setState(ecrm.getLifeCycleState().getDisplay());
-			setCreator(ecrm.getCreatorName());
+			setCreator(ecrm.getCreatorFullName());
 			setCreatedDate(ecrm.getCreateTimestamp());
 			setCreatedDate_txt(ecrm.getCreateTimestamp().toString().substring(0, 10));
 			setViewUrl(this.context + "/ecrm/view?oid=" + getPoid());

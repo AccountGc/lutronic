@@ -826,17 +826,34 @@ public class StandardActivityService extends StandardManager implements Activity
 				link.setPast(false); // 과거 데이터가 아님
 				PersistenceHelper.manager.save(link);
 
-				WTPart prevPart = ActivityHelper.manager.prevPart(part.getNumber());
-				if (prevPart != null) {
-					PartToPartLink pLink = PartToPartLink.newPartToPartLink(prevPart.getMaster(), part.getMaster());
-					pLink.setPreVersion(prevPart.getVersionIdentifier().getSeries().getValue());
-					pLink.setAfterVersion(part.getVersionIdentifier().getSeries().getValue());
-					pLink.setEco(eco);
-					PersistenceHelper.manager.save(pLink);
+				link = (EcoPartLink) PersistenceHelper.manager.refresh(link);
+
+//				boolean isLeft = link.getLeftPart();
+				boolean isRight = link.getRightPart();
+
+				// 오른쪽으로 작업중 넣었을 경우
+				if (isRight) {
+					WTPart prevPart = ActivityHelper.manager.prevPart(part.getNumber());
+					if (prevPart != null) {
+						PartToPartLink pLink = PartToPartLink.newPartToPartLink(prevPart.getMaster(), part.getMaster());
+						pLink.setPreVersion(prevPart.getVersionIdentifier().getSeries().getValue());
+						pLink.setAfterVersion(part.getVersionIdentifier().getSeries().getValue());
+						pLink.setEco(eco);
+						PersistenceHelper.manager.save(pLink);
+					}
 				}
 
 				// 완제품 링크 해야 할거같음..
 				JSONArray end = PartHelper.manager.end(part_oid, null);
+
+				// 선택 품목 추가
+				Map<String, String> partMap = new HashMap<>();
+				partMap.put("oid", part.getPersistInfo().getObjectIdentifier().getStringValue());
+				end.add(partMap);
+
+				System.out.println("end=" + end.size());
+
+				ArrayList<String> modelList = new ArrayList<>();
 				for (int i = 0; i < end.size(); i++) {
 					Map<String, String> m = (Map<String, String>) end.get(i);
 					String s = m.get("oid");
@@ -857,15 +874,18 @@ public class StandardActivityService extends StandardManager implements Activity
 
 					// endPart 쭉 돌아서 프로젝트 모델 값 입력
 					ArrayList<WTPart> ll = PartHelper.manager.descendants(endPart);
+
+					System.out.println("ll=" + ll.size());
 					for (int k = 0; k < ll.size(); k++) {
 						WTPart pp = (WTPart) ll.get(k);
 						String value = IBAUtil.getStringValue(pp, "MODEL");
+						System.out.println("k=" + k + ", model = " + value);
 						if (ll.size() - 1 == k) {
-							if (!model.contains(value)) {
+							if (!modelList.contains(value)) {
 								model += value;
 							}
 						} else {
-							if (!model.contains(value)) {
+							if (!modelList.contains(value)) {
 								model += value + ",";
 							}
 						}
@@ -873,6 +893,8 @@ public class StandardActivityService extends StandardManager implements Activity
 				}
 			}
 			// EO
+
+			System.out.println("model=" + model);
 
 			eco = (EChangeOrder) PersistenceHelper.manager.refresh(eco);
 
@@ -1020,6 +1042,15 @@ public class StandardActivityService extends StandardManager implements Activity
 					String group = (String) map.get("group");
 					if (StringUtil.checkString(group)) {
 						String[] groups = group.split(",");
+
+						// 기존그룹 삭제 후 다시 연결
+						QueryResult rs = PersistenceHelper.manager.navigate((WTPartMaster) nextPart.getMaster(), "ecr",
+								PartGroupLink.class, false);
+						while (rs.hasMoreElements()) {
+							PartGroupLink link = (PartGroupLink) rs.nextElement();
+							PersistenceHelper.manager.delete(link);
+						}
+
 						for (String s : groups) {
 							EChangeRequest ecr = (EChangeRequest) CommonUtil.getObject(s.trim());
 							PartGroupLink link = PartGroupLink.newPartGroupLink((WTPartMaster) nextPart.getMaster(),

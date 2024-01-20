@@ -42,7 +42,7 @@ ArrayList<NumberCode> productmethod = (ArrayList<NumberCode>) request.getAttribu
 		<col width="450px">
 	</colgroup>
 	<tr>
-		<th class="lb">프로젝트코드</th>
+		<th class="lb">프로젝트 코드</th>
 		<td class="indent5">
 			<%
 			if (isAdmin) {

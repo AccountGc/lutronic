@@ -316,7 +316,8 @@ public class WorkspaceHelper {
 
 		PageQueryUtils pager = new PageQueryUtils(params, query);
 		PagingQueryResult result = pager.find();
-		int rowNum = (pager.getCpage() - 1) * pager.getPsize() + 1;		while (result.hasMoreElements()) {
+		int rowNum = (pager.getCpage() - 1) * pager.getPsize() + 1;
+		while (result.hasMoreElements()) {
 			Object[] obj = (Object[]) result.nextElement();
 			ApprovalMaster master = (ApprovalMaster) obj[0];
 			Persistable per = master.getPersist();
@@ -370,7 +371,8 @@ public class WorkspaceHelper {
 
 		PageQueryUtils pager = new PageQueryUtils(params, query);
 		PagingQueryResult result = pager.find();
-		int rowNum = (pager.getCpage() - 1) * pager.getPsize() + 1;		while (result.hasMoreElements()) {
+		int rowNum = (pager.getCpage() - 1) * pager.getPsize() + 1;
+		while (result.hasMoreElements()) {
 			Object[] obj = (Object[]) result.nextElement();
 			ApprovalMaster master = (ApprovalMaster) obj[0];
 			Persistable per = master.getPersist();
@@ -881,7 +883,8 @@ public class WorkspaceHelper {
 
 		PageQueryUtils pager = new PageQueryUtils(params, query);
 		PagingQueryResult result = pager.find();
-		int rowNum = (pager.getCpage() - 1) * pager.getPsize() + 1;		while (result.hasMoreElements()) {
+		int rowNum = (pager.getCpage() - 1) * pager.getPsize() + 1;
+		while (result.hasMoreElements()) {
 			Object[] obj = (Object[]) result.nextElement();
 			ApprovalLine approvalLine = (ApprovalLine) obj[0];
 			ApprovalMaster m = approvalLine.getMaster();
@@ -1137,13 +1140,6 @@ public class WorkspaceHelper {
 	}
 
 	/**
-	 * 최종 결재 종료 후 수신자에게 메일 전송
-	 */
-	public void sendReceiveMail(Persistable per) throws Exception {
-//		ArrayList<ApprovalLine> list = 
-	}
-
-	/**
 	 * 최종 결재 종료 후 외부메일 유저에게 메일 전송
 	 */
 	public void sendExternalMail(Persistable per) throws Exception {
@@ -1156,7 +1152,8 @@ public class WorkspaceHelper {
 				throw new Exception(name + " 사용자의 이메일 주소가 없습ㄴ디ㅏ.");
 			}
 			// 반복적 메일 전송..
-			MailUtils.manager.sendExternalMail((LifeCycleManaged) per);
+			MailUtils.manager.sendExternalMail((LifeCycleManaged) per, user);
 		}
 	}
+
 }

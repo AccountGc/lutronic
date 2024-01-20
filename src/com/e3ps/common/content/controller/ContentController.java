@@ -112,7 +112,11 @@ public class ContentController extends BaseController {
 				h = (ContentHolder) CommonUtil.getObject(holder);
 				if (h instanceof EPMDocument) {
 					EPMDocument e = (EPMDocument) h;
-					name = e.getCADName();
+					if (e.getAuthoringApplication().toString().equals("OTHER")) {
+						name = URLEncoder.encode(data.getFileName(), "UTF-8").replaceAll("\\+", "%20");
+					} else {
+						name = e.getCADName();
+					}
 				} else {
 					name = URLEncoder.encode(data.getFileName(), "UTF-8").replaceAll("\\+", "%20");
 				}

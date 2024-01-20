@@ -6,6 +6,7 @@
 <%@include file="/extcore/jsp/common/auigrid.jsp"%>
 <%
 NoticeDTO dto = (NoticeDTO) request.getAttribute("dto");
+boolean isMain = (boolean) request.getAttribute("isMain");
 %>
 <input type="hidden" name="oid" id="oid" value="<%=dto.getOid()%>">
 <table class="button-table">
@@ -84,7 +85,7 @@ NoticeDTO dto = (NoticeDTO) request.getAttribute("dto");
 <script type="text/javascript">
 	const oid = document.getElementById("oid").value;
 	function modify() {
-		const url = getCallUrl("/notice/modify?oid=" + oid);
+		const url = getCallUrl("/notice/modify?oid=" + oid + "&main=<%=isMain%>");
 		document.location.href = url;
 	}
 
@@ -92,12 +93,22 @@ NoticeDTO dto = (NoticeDTO) request.getAttribute("dto");
 		if (!confirm("삭제하시겠습니까?")) {
 			return false;
 		}
-		const url = getCallUrl("/notice/delete?oid=" + oid);
+		const url = getCallUrl("/notice/delete?oid=" + oid + "&main=<%=isMain%>");
 		openLayer();
 		call(url, null, function(data) {
 			alert(data.msg);
 			if (data.result) {
+				<%
+					if(isMain) {
+				%>
+				opener.document.location.reload();
+				<%
+					} else {
+				%>
 				opener.loadGridData();
+				<%
+					}
+				%>
 				self.close();
 			} else {
 				closeLayer();

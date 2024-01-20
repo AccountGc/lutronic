@@ -104,7 +104,12 @@ public class ContentUtils {
 			primary.put("aoid", data.getPersistInfo().getObjectIdentifier().getStringValue());
 			if (holder instanceof EPMDocument) {
 				EPMDocument d = (EPMDocument) holder;
-				primary.put("name", d.getCADName());
+				if (d.getAuthoringApplication().toString().equals("OTHER")) {
+					primary.put("name", data.getFileName());
+				} else {
+					primary.put("name", d.getCADName());
+				}
+
 			} else {
 				primary.put("name", data.getFileName());
 			}

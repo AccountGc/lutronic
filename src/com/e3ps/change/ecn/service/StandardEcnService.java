@@ -1,9 +1,7 @@
 package com.e3ps.change.ecn.service;
 
-import java.sql.Timestamp;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Map;
 
 import com.e3ps.change.EChangeNotice;
@@ -16,6 +14,7 @@ import com.e3ps.change.PartToSendLink;
 import com.e3ps.change.RequestOrderLink;
 import com.e3ps.change.util.EChangeUtils;
 import com.e3ps.common.code.service.NumberCodeHelper;
+import com.e3ps.common.mail.MailUtils;
 import com.e3ps.common.util.CommonUtil;
 import com.e3ps.common.util.DateUtil;
 import com.e3ps.common.util.WCUtil;
@@ -34,7 +33,6 @@ import wt.part.WTPartMaster;
 import wt.pom.Transaction;
 import wt.services.StandardManager;
 import wt.util.WTException;
-import wt.vc.VersionControlHelper;
 
 public class StandardEcnService extends StandardManager implements EcnService {
 
@@ -192,6 +190,10 @@ public class StandardEcnService extends StandardManager implements EcnService {
 				}
 				idx++;
 			}
+			
+
+			// 메일 전송 ECN 담당자 지정을 위한 (RA팀 팀장님으로 강제 전송)
+			MailUtils.manager.sendEcnWorkUser();
 
 			trs.commit();
 			trs = null;

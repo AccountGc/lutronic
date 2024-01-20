@@ -1,6 +1,8 @@
 package com.e3ps.change.eco.service;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
 
 import com.e3ps.change.EChangeOrder;
 import com.e3ps.change.EOCompletePartLink;
@@ -41,5 +43,10 @@ public interface EcoService {
 	 * SAP 전송후 전송품목에 대한 상태값 변경
 	 */
 	public abstract void ecoPartApproved(EChangeOrder eco) throws Exception;
+
+	/**
+	 * 설변 품목 창에서 통보서를 위한 저장
+	 */
+	public abstract void save(HashMap<String, ArrayList<LinkedHashMap<String, Object>>> dataMap) throws Exception;
 
 }

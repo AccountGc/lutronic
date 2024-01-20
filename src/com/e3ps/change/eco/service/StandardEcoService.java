@@ -2,6 +2,8 @@ package com.e3ps.change.eco.service;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Vector;
@@ -563,6 +565,55 @@ public class StandardEcoService extends StandardManager implements EcoService {
 					}
 				}
 			}
+			trs.commit();
+			trs = null;
+		} catch (Exception e) {
+			e.printStackTrace();
+			trs.rollback();
+			throw e;
+		} finally {
+			if (trs != null)
+				trs.rollback();
+		}
+	}
+
+	@Override
+	public void save(HashMap<String, ArrayList<LinkedHashMap<String, Object>>> dataMap) throws Exception {
+		ArrayList<LinkedHashMap<String, Object>> editRows = dataMap.get("editRows");
+		Transaction trs = new Transaction();
+		try {
+			trs.start();
+
+			for (LinkedHashMap<String, Object> editRow : editRows) {
+				String link_oid = (String) editRow.get("link_oid");
+				String delivery = (String) editRow.get("delivery");
+				String complete = (String) editRow.get("complete");
+				String inner = (String) editRow.get("inner");
+				String order = (String) editRow.get("order");
+				String partStateCode = (String) editRow.get("part_state_code");
+
+				Object object = editRow.get("weight");
+				double value = 0D;
+				if (object != null) {
+					if (object instanceof Double) {
+						value = (double) editRow.get("weight");
+					} else if (object instanceof Integer) {
+						int weight = (int) editRow.get("weight");
+						value = (double) weight;
+					}
+				}
+
+				EcoPartLink eLink = (EcoPartLink) CommonUtil.getObject(link_oid);
+				eLink.setPartStateCode(partStateCode);
+				eLink.setDelivery(delivery);
+				eLink.setComplete(complete);
+				eLink.setInner(inner);
+				eLink.setOrders(order);
+				eLink.setWeight(value);
+
+				PersistenceHelper.manager.modify(eLink);
+			}
+
 			trs.commit();
 			trs = null;
 		} catch (Exception e) {

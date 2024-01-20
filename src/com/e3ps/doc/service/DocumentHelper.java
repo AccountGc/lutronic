@@ -141,6 +141,13 @@ public class DocumentHelper {
 		String classType2 = (String) params.get("classType2");
 		String classType3 = (String) params.get("classType3");
 
+		// 정렬
+		String sortKey = (String) params.get("sortKey");
+		String sortType = (String) params.get("sortType");
+
+		System.out.println("so=" + sortKey);
+		System.out.println("so1=" + sortType);
+
 		QuerySpec query = new QuerySpec();
 		int idx = query.appendClassList(WTDocument.class, true);
 		int idx_m = query.appendClassList(WTDocumentMaster.class, false);
@@ -222,7 +229,8 @@ public class DocumentHelper {
 			QuerySpecUtils.toLatest(query, idx, WTDocument.class);
 		}
 
-		QuerySpecUtils.toOrderBy(query, idx, WTDocument.class, WTDocument.MODIFY_TIMESTAMP, true);
+		boolean sort = QuerySpecUtils.toSort(sortType);
+		QuerySpecUtils.toOrderBy(query, idx, WTDocument.class, toSortKey(sortKey), sort);
 
 		PageQueryUtils pager = new PageQueryUtils(params, query);
 		PagingQueryResult result = pager.find();
@@ -241,6 +249,27 @@ public class DocumentHelper {
 		map.put("sessionid", pager.getSessionId());
 		map.put("curPage", pager.getCpage());
 		return map;
+	}
+
+	/**
+	 * 정렬키값
+	 */
+	private String toSortKey(String sortKey) throws Exception {
+
+		if ("name".equals(sortKey)) {
+			return WTDocument.NAME;
+		} else if ("number".equals(sortKey)) {
+			return WTDocument.NUMBER;
+		} else if ("state".equals(sortKey)) {
+			return WTDocument.LIFE_CYCLE_STATE;
+		} else if ("creator".equals(sortKey)) {
+			return (WTDocument.CREATOR + "." + WTAttributeNameIfc.REF_OBJECT_ID);
+		} else if ("modifiedDate".equals(sortKey)) {
+			return WTDocument.MODIFY_TIMESTAMP;
+		} else if ("createdDate".equals(sortKey)) {
+			return WTDocument.CREATE_TIMESTAMP;
+		}
+		return WTDocument.CREATE_TIMESTAMP;
 	}
 
 	/**

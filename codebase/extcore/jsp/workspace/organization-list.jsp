@@ -238,10 +238,19 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 						valueField : "name",
 						validator : function(oldValue, newValue, item, dataField, fromClipboard, which) {
 							let isValid = false;
-							for (let i = 0, len = list.length; i < len; i++) {
-								if (list[i]["name"] == newValue) {
-									isValid = true;
-									break;
+							if (!fromClipboard) {
+								for (let i = 0, len = list.length; i < len; i++) {
+									if (list[i]["name"] == newValue) {
+										isValid = true;
+										break;
+									}
+								}
+							} else {
+								for (let i = 0, len = list.length; i < len; i++) {
+									if (list[i]["oid"] == newValue) {
+										isValid = true;
+										break;
+									}
 								}
 							}
 							return {

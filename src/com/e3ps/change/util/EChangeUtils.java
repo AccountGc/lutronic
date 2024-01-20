@@ -324,6 +324,30 @@ public class EChangeUtils {
 		return pre_part;
 	}
 
+	
+	/**
+	 * ECO와 연관 시켜 개정품 이력 품목
+	 */
+	public WTPart getEcoNextPart(EChangeOrder eco, WTPart before) throws Exception {
+		WTPart next_part = null;
+		WTPartMaster master = before.getMaster();
+		QuerySpec query = new QuerySpec();
+		int idx = query.appendClassList(PartToPartLink.class, true);
+
+		QuerySpecUtils.toEqualsAnd(query, idx, PartToPartLink.class, "ecoReference.key.id", eco);
+		QuerySpecUtils.toEqualsAnd(query, idx, PartToPartLink.class, "roleAObjectRef.key.id", master);
+		QueryResult result = PersistenceHelper.manager.find(query);
+		while (result.hasMoreElements()) {
+			Object[] obj = (Object[]) result.nextElement();
+			PartToPartLink link = (PartToPartLink) obj[0];
+			WTPartMaster m = link.getAfter();
+			String version = link.getAfterVersion();
+			next_part = PartHelper.manager.getPart(m.getNumber(), version);
+		}
+		return next_part;
+	}
+
+	
 	/**
 	 * ECO 관련 목품 그룹핑 정보
 	 */

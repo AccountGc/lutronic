@@ -35,7 +35,7 @@ iframe {
 		</td>
 		<td class="right">
 			<%
-			if (isAdmin) {
+			if (isAdmin && dto.isLatest()) {
 			%>
 			<select name="state" id="state" class="width-100" onchange="lcm(this);">
 				<option value="">선택</option>

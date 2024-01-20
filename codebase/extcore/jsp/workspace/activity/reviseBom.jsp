@@ -121,20 +121,21 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 						<img src="/Windchill/extcore/images/header.png">
 						설변품목
 						<img src="/Windchill/extcore/images/fileicon/file_excel.gif" title="엑셀 다운로드" onclick="exportExcel();">
+						&nbsp;
+						<div class="pretty p-switch">
+							<input type="checkbox" name="dummy" value="true" onclick="reloadData();">
+							<div class="state p-success">
+								<label>
+									<b>더미제외</b>
+								</label>
+							</div>
+						</div>
+						&nbsp;
 						<input type="button" value="저장" title="저장" onclick="save();">
 						<input type="button" value="이전품목삭제" title="이전품목삭제" class="red" onclick="deleteRow();">
 					</div>
 				</td>
 				<td class="right">
-					<div class="pretty p-switch">
-						<input type="checkbox" name="dummy" value="true">
-						<div class="state p-success">
-							<label>
-								<b>DUMMY 제외</b>
-							</label>
-						</div>
-					</div>
-					&nbsp;
 					<input type="button" value="이전품목" title="이전품목" class="red" onclick="prePart();">
 					<input type="button" value="품목개정" title="품목개정" onclick="revise();" class="gray">
 					<input type="button" value="품목변경" title="품목변경" class="blue" onclick="replace();">
@@ -313,22 +314,16 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 					cellColMerge : true, // 셀 가로 병합 실행
 					cellColSpan : 5, // 셀 가로 병합 대상은 6개로 설정
 					renderer : {
-						type : "ButtonRenderer",
-						labelText : "품목 개정",
-						onClick : function(event) {
-						},
-					},					
-// 					renderer : {
-// 						type : "LinkRenderer",
-// 						baseUrl : "javascript",
-// 						jsCallback : function(rowIndex, columnIndex, value, item) {
-// 							const oid = item.next_oid;
-// 							if (oid !== "" && oid !== undefined) {
-// 								const url = getCallUrl("/part/view?oid=" + oid);
-// 								_popup(url, 1600, 800, "n");
-// 							}
-// 						}
-// 					},
+						type : "LinkRenderer",
+						baseUrl : "javascript",
+						jsCallback : function(rowIndex, columnIndex, value, item) {
+							const oid = item.next_oid;
+							if (oid !== "" && oid !== undefined) {
+								const url = getCallUrl("/part/view?oid=" + oid);
+								_popup(url, 1600, 800, "n");
+							}
+						}
+					},
 					styleFunction : function(rowIndex, columnIndex, value, headerText, item, dataField) {
 						if (item.afterMerge === true) {
 							return "afterMerge";
@@ -749,6 +744,7 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 				AUIGrid.setGridData(myGridID,
 		<%=JSONArray.fromObject(list)%>
 			);
+				AUIGrid.bind(myGridID, "cellClick", auiCellClick);
 				AUIGrid.bind(myGridID, "contextMenu", function(event) {
 					const menu = [ {
 						label : "주 도면 및 참조도면",
@@ -767,6 +763,18 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 				});
 			}
 
+
+			function auiCellClick(event) {
+				const item = event.item;
+				const rowIdField = AUIGrid.getProp(event.pid, "rowIdField"); // rowIdField 얻기
+				const rowId = item[rowIdField];
+				
+				if (AUIGrid.isCheckedRowById(event.pid, item._$uid)) {
+					AUIGrid.addUncheckedRowsByIds(event.pid,item._$uid);
+				} else {
+					AUIGrid.addCheckedRowsByIds(event.pid, item._$uid);
+				}
+			}
 			function auiContextHandler(event) {
 				const item = event.item;
 				const oid = document.getElementById("oid").value;
@@ -966,6 +974,16 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 					alert("수정 내역이 없습니다.");
 					return false;
 				}
+				
+				for(let i=0; i<editRows.length; i++) {
+					const item = editRows[i];
+					const rowIndex = AUIGrid.rowIdToIndex(myGridID, item._$uid);
+					if (isNull(item.next_oid)) {
+						AUIGrid.showToastMessage(myGridID, rowIndex, 6, "개정 후 품목이 없습니다.");
+						return false;
+					}
+				}
+				
 
 				if (!confirm("저장 하시겠습니까?")) {
 					return false;
@@ -1081,6 +1099,38 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 						AUIGrid.addRow(myGridID, newItem, rowIndex);
 					})
 				}
+			}
+			
+			function reloadData() {
+				const addRows = AUIGrid.getAddedRowItems(myGridID);
+				const editRows = AUIGrid.getEditedRowItems(myGridID);
+				const removeRows = AUIGrid.getRemovedItems(myGridID);
+				if (editRows.length !== 0 || removeRows.length !== 0 || addRows.length !== 0) {
+					alert("먼저 수정내역을 저장하세요.");
+					return false;
+				}
+				
+				const oid = document.getElementById("oid").value; 
+				const dummy = document.querySelector("input[name=dummy]:checked");
+				let skip;
+				if (dummy !== null) {
+					skip = "true";
+				} else {
+					skip = "false";
+				}
+				const url = getCallUrl("/activity/reloadData?oid=" + oid + "&skip=" + skip);
+				parent.openLayer();
+				call(url, null, function(data) {
+					logger(data);
+					if(data.result) {
+						AUIGrid.clearGridData(myGridID);
+						AUIGrid.setGridData(myGridID, data.list);
+					} else {
+						alert(data.msg);
+					}
+					parent.closeLayer();
+				}, "GET");
+				
 			}
 
 			function reassign() {

@@ -32,6 +32,18 @@ public class QuerySpecUtils {
 	}
 
 	/**
+	 * 정렬
+	 */
+	public static boolean toSort(String sortType) throws Exception {
+		if ("1".equals(sortType)) {
+			return false;
+		} else if ("-1".equals(sortType)) {
+			return true;
+		}
+		return false;
+	}
+
+	/**
 	 * 도면, 문서 기타 등 윈칠에서 관리하는 객체에 대한 최신 버전 쿼리문 작성
 	 */
 	public static void toLatest(QuerySpec query, int idx, Class clazz) throws Exception {

@@ -328,6 +328,13 @@ public class ActivityHelper {
 	 * ECO 활동 대상 품목들
 	 */
 	public ArrayList<Map<String, Object>> getEcoRevisePart(String oid) throws Exception {
+		return getEcoRevisePart(oid, false);
+	}
+
+	/**
+	 * ECO 활동 대상 품목들
+	 */
+	public ArrayList<Map<String, Object>> getEcoRevisePart(String oid, boolean isSkip) throws Exception {
 		Persistable per = CommonUtil.getObject(oid);
 		EChangeOrder eco = null;
 		if (per instanceof EChangeActivity) {
@@ -356,6 +363,14 @@ public class ActivityHelper {
 			Object[] obj = (Object[]) qr.nextElement();
 			EcoPartLink link = (EcoPartLink) obj[0];
 			WTPartMaster master = link.getPart();
+
+			if (isSkip) {
+				if (EChangeUtils.isDummy(master.getNumber())) {
+					System.out.println("더미 품목 = " + master.getNumber());
+					continue;
+				}
+			}
+
 			Map<String, Object> map = new HashMap<String, Object>();
 			String version = link.getVersion();
 			WTPart part = PartHelper.manager.getPart(master.getNumber(), version);

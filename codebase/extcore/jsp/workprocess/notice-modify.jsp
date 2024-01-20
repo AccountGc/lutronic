@@ -3,6 +3,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%
 NoticeDTO dto = (NoticeDTO) request.getAttribute("dto");
+boolean isMain = (boolean) request.getAttribute("isMain");
 %>
 <input type="hidden" name="oid" id="oid" value="<%=dto.getOid()%>">
 <table class="button-table">
@@ -109,7 +110,17 @@ NoticeDTO dto = (NoticeDTO) request.getAttribute("dto");
 		call(url, params, function(data) {
 			alert(data.msg);
 			if (data.result) {
+				<%
+					if(isMain) {
+				%>
+				opener.document.location.reload();
+				<%
+					} else {
+				%>
 				opener.loadGridData();
+				<%
+					}
+				%>
 				self.close();
 			} else {
 				closeLayer();

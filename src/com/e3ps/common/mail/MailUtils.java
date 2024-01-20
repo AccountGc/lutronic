@@ -1,5 +1,6 @@
 package com.e3ps.common.mail;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Hashtable;
 
@@ -9,10 +10,13 @@ import com.e3ps.change.ECRMRequest;
 import com.e3ps.change.EChangeOrder;
 import com.e3ps.change.EChangeRequest;
 import com.e3ps.common.util.StringUtil;
+import com.e3ps.org.MailUser;
 import com.e3ps.rohs.ROHSMaterial;
+import com.e3ps.workspace.ApprovalLine;
 import com.e3ps.workspace.AsmApproval;
 
 import wt.doc.WTDocument;
+import wt.fc.Persistable;
 import wt.lifecycle.LifeCycleManaged;
 import wt.org.WTUser;
 import wt.part.WTPart;
@@ -130,6 +134,18 @@ public class MailUtils {
 			description = "";
 			type = "부품";
 			viewString = part.getNumber() + "-[" + part.getName() + "]";
+		} else if (lcm instanceof ECPRRequest) {
+			ECPRRequest ecpr = (ECPRRequest) lcm;
+			creatorName = ecpr.getCreatorFullName();
+			description = ecpr.getContents();
+			type = "ECPR";
+			viewString = ecpr.getEoNumber() + "-[" + ecpr.getEoName() + "]";
+		} else if (lcm instanceof ECRMRequest) {
+			ECRMRequest ecrm = (ECRMRequest) lcm;
+			creatorName = ecrm.getCreatorFullName();
+			description = ecrm.getContents();
+			type = "ECRM";
+			viewString = ecrm.getEoNumber() + "-[" + ecrm.getEoName() + "]";
 		} else if (lcm instanceof ECOChange) {
 			ECOChange e = (ECOChange) lcm;
 			creatorName = e.getCreatorFullName();
@@ -245,7 +261,76 @@ public class MailUtils {
 	/**
 	 * 외부 메일 발송용 함수
 	 */
-	public void sendExternalMail(LifeCycleManaged per) throws Exception {
+	public void sendExternalMail(LifeCycleManaged per, MailUser toUser) throws Exception {
+		Hashtable<String, Object> hash = new Hashtable<>();
+		WTUser fromUser = (WTUser) SessionHelper.manager.getAdministrator();
 
+		String targetName = getTargetName((LifeCycleManaged) per);
+		String subject = targetName + "의 알림 메일입니다.";
+
+		HashMap<String, String> to = new HashMap<>();
+//		WTUser toUser = (WTUser) SessionHelper.manager.getPrincipal();
+		if (!StringUtil.checkString(toUser.getEmail())) {
+			throw new Exception("받는 사람 = " + toUser.getName() + " 이메일 주소가 없습니다.");
+		}
+
+		to.put(toUser.getEmail(), toUser.getName());
+
+		Hashtable<String, String> data = setParseData((LifeCycleManaged) per);
+		data.put("workName", "");
+		data.put("Location", "");
+
+		MailHtmlContentTemplate mhct = MailHtmlContentTemplate.getInstance();
+		String mcontent = mhct.htmlContent(data, "mail_notice.html");
+
+		hash.put("FROM", fromUser);
+		hash.put("TO", to);
+		hash.put("SUBJECT", subject);
+		hash.put("CONTENT", mcontent);
+
+		sendMail(hash);
+	}
+
+	/**
+	 * 수신 메일 전송
+	 */
+	public void sendReceiveMail(Persistable per, ArrayList<ApprovalLine> ll) throws Exception {
+		for (ApprovalLine receiveLine : ll) {
+			Hashtable<String, Object> hash = new Hashtable<>();
+			WTUser fromUser = (WTUser) SessionHelper.manager.getAdministrator();
+
+			String targetName = getTargetName((LifeCycleManaged) per);
+			String subject = targetName + "의 수신 요청 알림 메일입니다.";
+
+			HashMap<String, String> to = new HashMap<>();
+//			WTUser toUser = (WTUser) SessionHelper.manager.getPrincipal();
+			WTUser toUser = (WTUser) receiveLine.getOwnership().getOwner().getPrincipal();
+			if (!StringUtil.checkString(toUser.getEMail())) {
+				throw new Exception("받는 사람 = " + toUser.getFullName() + " 이메일 주소가 없습니다.");
+			}
+
+			to.put(toUser.getEMail(), toUser.getFullName());
+
+			Hashtable<String, String> data = setParseData((LifeCycleManaged) per);
+			data.put("workName", "수신");
+			data.put("Location", "수신함");
+
+			MailHtmlContentTemplate mhct = MailHtmlContentTemplate.getInstance();
+			String mcontent = mhct.htmlContent(data, "mail_notice.html");
+
+			hash.put("FROM", fromUser);
+			hash.put("TO", to);
+			hash.put("SUBJECT", subject);
+			hash.put("CONTENT", mcontent);
+
+			sendMail(hash);
+		}
+	}
+
+	/**
+	 * ECN 담당자 지정 요청 메일
+	 */
+	public void sendEcnWorkUser() throws Exception {
+		
 	}
 }

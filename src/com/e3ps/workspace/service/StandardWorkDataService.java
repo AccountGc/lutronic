@@ -3,6 +3,7 @@ package com.e3ps.workspace.service;
 import java.util.ArrayList;
 import java.util.Map;
 
+import com.e3ps.change.EChangeOrder;
 import com.e3ps.common.mail.MailUtils;
 import com.e3ps.common.util.CommonUtil;
 import com.e3ps.org.service.MailUserHelper;
@@ -42,7 +43,14 @@ public class StandardWorkDataService extends StandardManager implements WorkData
 
 			WorkData data = WorkData.newWorkData();
 			data.setPer(per);
-			data.setOwnership(ownership);
+			if (per instanceof EChangeOrder) {
+				// 설변일 경우..
+				EChangeOrder e = (EChangeOrder) per;
+				data.setOwnership(e.getOwnership());
+			} else {
+				data.setOwnership(ownership);
+			}
+
 			PersistenceHelper.manager.save(data);
 
 			LifeCycleHelper.service.setLifeCycleState((LifeCycleManaged) per, State.toState("LINE_REGISTER"));

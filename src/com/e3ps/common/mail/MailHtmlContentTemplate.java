@@ -2,7 +2,8 @@ package com.e3ps.common.mail;
 
 import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileReader;
+import java.io.FileInputStream;
+import java.io.InputStreamReader;
 import java.util.Hashtable;
 
 public class MailHtmlContentTemplate {
@@ -42,7 +43,7 @@ public class MailHtmlContentTemplate {
 					+ "Windchill" + File.separator + "codebase" + File.separator + "mailTemplate" + File.separator
 					+ template);
 
-			in = new BufferedReader(new FileReader(file));
+			in = new BufferedReader(new InputStreamReader(new FileInputStream(file), "UTF-8"));
 			StringBuffer buf = new StringBuffer();
 			String line;
 			while ((line = in.readLine()) != null) {

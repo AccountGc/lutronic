@@ -78,11 +78,13 @@ public class NoticeController extends BaseController {
 
 	@Description(value = "공지사항 상세 페이지")
 	@GetMapping(value = "/view")
-	public ModelAndView view(@RequestParam String oid) throws Exception {
+	public ModelAndView view(@RequestParam String oid, @RequestParam(required = false) String main) throws Exception {
 		NoticeHelper.service.read(oid);
 		Notice notice = (Notice) CommonUtil.getObject(oid);
 		NoticeDTO dto = new NoticeDTO(notice);
+		boolean isMain = Boolean.parseBoolean(main);
 		ModelAndView model = new ModelAndView();
+		model.addObject("isMain", isMain);
 		model.addObject("dto", dto);
 		model.setViewName("popup:/workprocess/notice-view");
 		return model;
@@ -101,9 +103,11 @@ public class NoticeController extends BaseController {
 
 	@Description(value = "공지사항 수정 페이지")
 	@GetMapping(value = "/modify")
-	public ModelAndView modify(@RequestParam String oid) throws Exception {
+	public ModelAndView modify(@RequestParam String oid, @RequestParam(required = false) String main) throws Exception {
 		ModelAndView model = new ModelAndView();
 		NoticeDTO dto = new NoticeDTO(oid);
+		boolean isMain = Boolean.parseBoolean(main);
+		model.addObject("isMain", isMain);
 		model.addObject("dto", dto);
 		model.setViewName("popup:/workprocess/notice-modify");
 		return model;

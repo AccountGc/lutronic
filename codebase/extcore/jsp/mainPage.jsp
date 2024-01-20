@@ -245,7 +245,7 @@ Map<String, Integer> count = (Map<String, Integer>) request.getAttribute("count"
 				<td class="left" valign="top">
 					<table>
 						<tr>
-							<td style="border: 2px solid #86bff9; height: 250px;" valign="top">
+							<td style="border: 2px solid #86bff9; height: 190px;" valign="top">
 								<table>
 									<colgroup>
 										<col width="70px;">
@@ -275,7 +275,7 @@ Map<String, Integer> count = (Map<String, Integer>) request.getAttribute("count"
 									QuerySpec query = new QuerySpec();
 									int idx = query.appendClassList(Notice.class, true);
 									QuerySpecUtils.toOrderBy(query, idx, Notice.class, Notice.CREATE_TIMESTAMP, true);
-									QueryResult rs = PagingSessionHelper.openPagingSession(0, 10, query);
+									QueryResult rs = PagingSessionHelper.openPagingSession(0, 5, query);
 									int k = 0;
 									while (rs.hasMoreElements()) {
 										Object[] obj = (Object[]) rs.nextElement();
@@ -656,7 +656,7 @@ while (it.hasNext()) {
 
 		<script type="text/javascript">
 			function view(oid) {
-				const url = getCallUrl("/notice/view?oid=" + oid);
+				const url = getCallUrl("/notice/view?oid=" + oid + "&main=true");
 				_popup(url, 1000, 500, "n");
 			}
 
