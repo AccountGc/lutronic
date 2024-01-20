@@ -98,7 +98,7 @@ public class QuerySpecUtils {
 		SearchCondition sc = null;
 		if (value instanceof String) {
 			String param = (String) value;
-			if (StringUtil.isNull(param)) {
+			if (!StringUtil.checkString(param)) {
 				return;
 			}
 			if (query.getConditionCount() > 0) {
@@ -137,7 +137,7 @@ public class QuerySpecUtils {
 		SearchCondition sc = null;
 		if (value instanceof String) {
 			String param = (String) value;
-			if (StringUtil.isNull(param)) {
+			if (!StringUtil.checkString(param)) {
 				return;
 			}
 			sc = new SearchCondition(clazz, column, SearchCondition.EQUAL, param);
@@ -164,7 +164,7 @@ public class QuerySpecUtils {
 		SearchCondition sc = null;
 		if (value instanceof String) {
 			String param = (String) value;
-			if (StringUtil.isNull(param)) {
+			if (!StringUtil.checkString(param)) {
 				return;
 			}
 			if (query.getConditionCount() > 0) {
@@ -197,7 +197,7 @@ public class QuerySpecUtils {
 	 */
 	public static void toLikeLeftOr(QuerySpec query, int idx, Class clazz, String column, String value)
 			throws Exception {
-		if (StringUtil.isNull(value)) {
+		if (!StringUtil.checkString(value)) {
 			return;
 		}
 		if (query.getConditionCount() > 0) {
@@ -215,7 +215,7 @@ public class QuerySpecUtils {
 	 */
 	public static void toLikeRightOr(QuerySpec query, int idx, Class clazz, String column, String value)
 			throws Exception {
-		if (StringUtil.isNull(value)) {
+		if (!StringUtil.checkString(value)) {
 			return;
 		}
 		if (query.getConditionCount() > 0) {
@@ -232,7 +232,7 @@ public class QuerySpecUtils {
 	 * 쿼리문에 '%' like '%' (or) 조건 추가
 	 */
 	public static void toLike(QuerySpec query, int idx, Class clazz, String column, String value) throws Exception {
-		if (StringUtil.isNull(value)) {
+		if (!StringUtil.checkString(value)) {
 			return;
 		}
 		ClassAttribute ca = new ClassAttribute(clazz, column);
@@ -246,7 +246,7 @@ public class QuerySpecUtils {
 	 * 쿼리문에 '%' like '%' (or) 조건 추가
 	 */
 	public static void toLikeOr(QuerySpec query, int idx, Class clazz, String column, String value) throws Exception {
-		if (StringUtil.isNull(value)) {
+		if (!StringUtil.checkString(value)) {
 			return;
 		}
 		if (query.getConditionCount() > 0) {
@@ -264,7 +264,7 @@ public class QuerySpecUtils {
 	 */
 	public static void toLikeLeftAnd(QuerySpec query, int idx, Class clazz, String column, String value)
 			throws Exception {
-		if (StringUtil.isNull(value)) {
+		if (!StringUtil.checkString(value)) {
 			return;
 		}
 		if (query.getConditionCount() > 0) {
@@ -282,7 +282,7 @@ public class QuerySpecUtils {
 	 */
 	public static void toLikeRightAnd(QuerySpec query, int idx, Class clazz, String column, String value)
 			throws Exception {
-		if (StringUtil.isNull(value)) {
+		if (!StringUtil.checkString(value)) {
 			return;
 		}
 		if (query.getConditionCount() > 0) {
@@ -299,7 +299,7 @@ public class QuerySpecUtils {
 	 * 쿼리문에 '%' like '%' (and) 조건 추가
 	 */
 	public static void toLikeAnd(QuerySpec query, int idx, Class clazz, String column, String value) throws Exception {
-		if (StringUtil.isNull(value)) {
+		if (!StringUtil.checkString(value)) {
 			return;
 		}
 
@@ -373,7 +373,7 @@ public class QuerySpecUtils {
 	 */
 	public static void toTimeGreaterEqualsThan(QuerySpec query, int idx, Class clazz, String column, String time)
 			throws Exception {
-		if (StringUtil.isNull(time)) {
+		if (!StringUtil.checkString(time)) {
 			return;
 		}
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
@@ -402,7 +402,7 @@ public class QuerySpecUtils {
 	 */
 	public static void toTimeLessEqualsThan(QuerySpec query, int idx, Class clazz, String column, String time)
 			throws Exception {
-		if (StringUtil.isNull(time)) {
+		if (!StringUtil.checkString(time)) {
 			return;
 		}
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
@@ -431,7 +431,7 @@ public class QuerySpecUtils {
 	 */
 	public static void toTimeGreaterThan(QuerySpec query, int idx, Class clazz, String column, String time)
 			throws Exception {
-		if (StringUtil.isNull(time)) {
+		if (!StringUtil.checkString(time)) {
 			return;
 		}
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
@@ -460,7 +460,7 @@ public class QuerySpecUtils {
 	 */
 	public static void toTimeLessThan(QuerySpec query, int idx, Class clazz, String column, String time)
 			throws Exception {
-		if (StringUtil.isNull(time)) {
+		if (!StringUtil.checkString(time)) {
 			return;
 		}
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
@@ -496,7 +496,7 @@ public class QuerySpecUtils {
 		SearchCondition sc = null;
 		if (value instanceof String) {
 			String param = (String) value;
-			if (StringUtil.isNull(param)) {
+			if (!StringUtil.checkString(param)) {
 				return;
 			}
 			if (query.getConditionCount() > 0) {
@@ -539,7 +539,7 @@ public class QuerySpecUtils {
 	 * Ownable.class 인터페이스를 구현한 객체에 대해서만 사용할 수 있는 작성사 검색 쿼리
 	 */
 	public static void toCreator(QuerySpec query, int idx, Class clazz, String oid) throws Exception {
-		if (StringUtil.isNull(oid)) {
+		if (!StringUtil.checkString(oid)) {
 			return;
 		}
 		if (query.getConditionCount() > 0) {
@@ -555,7 +555,7 @@ public class QuerySpecUtils {
 	 * 일반적인 작성자
 	 */
 	public static void creatorQuery(QuerySpec query, int idx, Class clazz, String oid) throws Exception {
-		if (StringUtil.isNull(oid)) {
+		if (!StringUtil.checkString(oid)) {
 			return;
 		}
 		if (query.getConditionCount() > 0) {
@@ -571,12 +571,13 @@ public class QuerySpecUtils {
 	 * 일반적인 등록자
 	 */
 	public static void toCreatorQuery(QuerySpec query, int idx, Class clazz, String oid) throws Exception {
-		if (StringUtil.isNull(oid)) {
+		if (!StringUtil.checkString(oid)) {
 			return;
 		}
 		if (query.getConditionCount() > 0) {
 			query.appendAnd();
 		}
+		System.out.println("시작ㅁㄻㄴㄻㄴㄻ");
 		WTUser creator = (WTUser) CommonUtil.getObject(oid);
 		SearchCondition sc = new SearchCondition(clazz, "creator.key.id", "=",
 				creator.getPersistInfo().getObjectIdentifier().getId());
@@ -587,7 +588,7 @@ public class QuerySpecUtils {
 	 * 일반적인 수정자
 	 */
 	public static void modifierQuery(QuerySpec query, int idx, Class clazz, String oid) throws Exception {
-		if (StringUtil.isNull(oid)) {
+		if (!StringUtil.checkString(oid)) {
 			return;
 		}
 		if (query.getConditionCount() > 0) {
@@ -603,7 +604,7 @@ public class QuerySpecUtils {
 	 * 라이프사이클을 사용하는 객체 상태값 검색
 	 */
 	public static void toState(QuerySpec query, int idx, Class clazz, String value) throws Exception {
-		if (StringUtil.isNull(value)) {
+		if (!StringUtil.checkString(value)) {
 			return;
 		}
 		if (query.getConditionCount() > 0) {
@@ -618,11 +619,11 @@ public class QuerySpecUtils {
 	 */
 	public static void toTimeGreaterAndLess(QuerySpec query, int idx, Class clazz, String column, String createdFrom,
 			String createdTo) throws Exception {
-		if (!StringUtil.isNull(createdFrom)) {
+		if (StringUtil.checkString(createdFrom)) {
 			toTimeGreaterEqualsThan(query, idx, clazz, column, createdFrom);
 		}
 
-		if (!StringUtil.isNull(createdTo)) {
+		if (StringUtil.checkString(createdTo)) {
 			toTimeLessEqualsThan(query, idx, clazz, column, createdTo);
 		}
 	}
@@ -635,6 +636,7 @@ public class QuerySpecUtils {
 			query.appendAnd();
 		}
 
+		System.out.println("여기");
 		SearchCondition sc = null;
 		ClassAttribute ca = new ClassAttribute(clazz, column);
 		if (value instanceof long[]) {
@@ -657,7 +659,7 @@ public class QuerySpecUtils {
 	public static void toIBAEqualsAnd(QuerySpec query, Class clazz, int idx, String attrName, String attrValue)
 			throws Exception {
 
-		if (StringUtil.isNull(attrValue)) {
+		if (!StringUtil.checkString(attrValue)) {
 			return;
 		}
 
@@ -690,7 +692,7 @@ public class QuerySpecUtils {
 	public static void toIBALikeAnd(QuerySpec query, Class clazz, int idx, String attrName, String attrValue)
 			throws Exception {
 
-		if (StringUtil.isNull(attrValue)) {
+		if (!StringUtil.checkString(attrValue)) {
 			return;
 		}
 

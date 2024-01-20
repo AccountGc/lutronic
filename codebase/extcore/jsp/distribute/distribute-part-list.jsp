@@ -273,7 +273,7 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 				</td>
 				<td class="right">
 					<div class="pretty p-switch">
-						<input type="checkbox" name="comp" value="true">
+						<input type="checkbox" name="comp" value="true" onclick="loadGridData();">
 						<div class="state p-success">
 							<label>
 								<b>완제품</b>

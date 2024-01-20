@@ -276,7 +276,7 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 				</td>
 				<td class="right">
 					<div class="pretty p-switch">
-						<input type="checkbox" name="comp" value="true">
+						<input type="checkbox" name="comp" value="true" onclick="loadGridData();">
 						<div class="state p-success">
 							<label>
 								<b>완제품</b>
@@ -284,7 +284,7 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 						</div>
 					</div>
 					&nbsp;
-					<select name="_psize" id="_psize">
+					<select name="_psize" id="_psize" onchange="loadGridData();">
 						<option value="10">10</option>
 						<option value="20" selected="selected">20</option>
 						<option value="30">30</option>

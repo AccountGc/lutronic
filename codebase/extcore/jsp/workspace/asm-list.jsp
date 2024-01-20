@@ -344,7 +344,7 @@ boolean isAdmin = (boolean) request.getAttribute("isAdmin");
 					document.getElementById("curPage").value = 1;
 				}
 				let params = new Object();
-				const field = [ "name", "createdFrom", "createdTo", "creatorOid", "state" ];
+				const field = [ "name", "number", "createdFrom", "createdTo", "creatorOid", "state" ];
 				params = toField(params, field);
 				const number = toId("number");
 				const numberType = toId("numberType");

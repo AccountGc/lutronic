@@ -154,6 +154,7 @@ iframe {
 	function modify() {
 		const oid = document.getElementById("oid");
 		const name = document.getElementById("name");
+		const period = document.getElementById("period").value;
 		// 관련문서
 		const rows90 = AUIGrid.getGridDataWithState(myGridID90, "gridState");
 		// 관련CR
@@ -210,6 +211,7 @@ iframe {
 		params.secondarys = secondarys;
 		const url = getCallUrl("/ecpr/modify");
 		openLayer();
+		logger(params);
 		call(url, params, function(data) {
 			alert(data.msg);
 			if (data.result) {

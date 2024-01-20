@@ -164,11 +164,11 @@ public class DocumentHelper {
 				WTAttributeNameIfc.ID_NAME, idx, idx_m);
 
 		// 상태 임시저장 제외
-		if (query.getConditionCount() > 0) {
-			query.appendAnd();
-		}
-		query.appendWhere(new SearchCondition(WTDocument.class, WTDocument.LIFE_CYCLE_STATE, SearchCondition.NOT_EQUAL,
-				"TEMPRARY"), new int[] { idx });
+//		if (query.getConditionCount() > 0) {
+//			query.appendAnd();
+//		}
+//		query.appendWhere(new SearchCondition(WTDocument.class, WTDocument.LIFE_CYCLE_STATE, SearchCondition.NOT_EQUAL,
+//				"TEMPRARY"), new int[] { idx });
 
 		QuerySpecUtils.toLikeAnd(query, idx, WTDocument.class, WTDocument.NAME, name);
 		QuerySpecUtils.toLikeAnd(query, idx, WTDocument.class, WTDocument.NUMBER, number);

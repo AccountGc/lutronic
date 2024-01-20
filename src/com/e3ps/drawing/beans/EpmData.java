@@ -158,7 +158,10 @@ public class EpmData {
 						String name = data.getFileName().replace("_drw", "");
 						this.dxf.put("name", name);
 						this.dxf.put("fileSizeKB", data.getFileSizeKB() + "KB");
-						this.dxf.put("url", ContentHelper.getDownloadURL(representation, data, false, name).toString());
+						this.dxf.put("url",
+								"/Windchill/plm/content/download?oid="
+										+ data.getPersistInfo().getObjectIdentifier().getStringValue() + "&hoid="
+										+ representation.getPersistInfo().getObjectIdentifier().getStringValue());
 					}
 				}
 
@@ -171,7 +174,11 @@ public class EpmData {
 						String name = data.getFileName().replace("pdf_", "").replace("_drw", "");
 						this.pdf.put("name", name);
 						this.pdf.put("fileSizeKB", data.getFileSizeKB() + "KB");
-						this.pdf.put("url", ContentHelper.getDownloadURL(representation, data, false, name).toString());
+//						this.pdf.put("url", ContentHelper.getDownloadURL(representation, data, false, name).toString());
+						this.pdf.put("url",
+								"/Windchill/plm/content/download?oid="
+										+ data.getPersistInfo().getObjectIdentifier().getStringValue() + "&hoid="
+										+ representation.getPersistInfo().getObjectIdentifier().getStringValue());
 					}
 				}
 			}
@@ -183,11 +190,13 @@ public class EpmData {
 				while (qr.hasMoreElements()) {
 					ApplicationData data = (ApplicationData) qr.nextElement();
 					String ext = FileUtil.getExtension(data.getFileName());
-					if ("stp".equalsIgnoreCase(ext)) {
+					if ("step".equalsIgnoreCase(ext) || "stp".equalsIgnoreCase(ext)) {
 						this.step.put("name", data.getFileName());
 						this.step.put("fileSizeKB", data.getFileSizeKB() + "KB");
-						this.step.put("url", ContentHelper
-								.getDownloadURL(_representation, data, false, data.getFileName()).toString());
+						this.step.put("url",
+								"/Windchill/plm/content/download?oid="
+										+ data.getPersistInfo().getObjectIdentifier().getStringValue() + "&hoid="
+										+ _representation.getPersistInfo().getObjectIdentifier().getStringValue());
 					}
 				}
 			}

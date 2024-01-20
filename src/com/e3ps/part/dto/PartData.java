@@ -12,6 +12,8 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.e3ps.common.code.NumberCode;
+import com.e3ps.common.code.service.NumberCodeHelper;
 import com.e3ps.common.iba.AttributeKey;
 import com.e3ps.common.iba.IBAUtil;
 import com.e3ps.common.query.SearchUtil;
@@ -78,6 +80,9 @@ public class PartData {
 	private String deptcode;
 	private String manufacture;
 
+	private String manufacture_name;
+	private String model_name;
+
 	private String lineImg = "joinbottom";
 	private String mat;
 	private String finish;
@@ -114,15 +119,27 @@ public class PartData {
 //		setIcon(BasicTemplateProcessor.getObjectIconImgTag(part));
 		setNumber(part.getNumber());
 		setUnit(part.getDefaultUnit().toString());
-		
+
 		setLast(CommonUtil.isLatestVersion(part));
-		
+
 		String ecoNumber = "";
 		HashMap map = IBAUtil.getAttributes(part);
-		setModel((String) map.get(AttributeKey.IBAKey.IBA_MODEL)); // 프로젝트 코드
+
+		String model_code = (String) map.get(AttributeKey.IBAKey.IBA_MODEL); // 프로젝트 코드
+		NumberCode model = NumberCodeHelper.manager.getNumberCode(model_code, "MODEL");
+		if (model != null) {
+			setModel(model_code);
+			setModel_name(model.getName());
+		}
 		setProductmethod((String) map.get(AttributeKey.IBAKey.IBA_PRODUCTMETHOD));// 제작방법
 		setDeptcode((String) map.get(AttributeKey.IBAKey.IBA_DEPTCODE)); // 부서 코드
-		setManufacture((String) map.get(AttributeKey.IBAKey.IBA_MANUFACTURE));// MANUFATURER
+
+		String manufaturer_code = (String) map.get(AttributeKey.IBAKey.IBA_MANUFACTURE);
+		NumberCode manufaturer = NumberCodeHelper.manager.getNumberCode(manufaturer_code, "MANUFACTURE");
+		if (manufaturer != null) {
+			setManufacture(manufaturer_code);// MANUFATURER
+			setManufacture_name(manufaturer.getName());
+		}
 		setMat((String) map.get(AttributeKey.IBAKey.IBA_MAT));// 재질
 		setFinish((String) map.get(AttributeKey.IBAKey.IBA_FINISH));// 재질
 		setRemark((String) map.get(AttributeKey.IBAKey.IBA_REMARKS));// 비고
@@ -138,8 +155,8 @@ public class PartData {
 //    	setState(part.getLifeCycleState().toString());
 		setState(part.getLifeCycleState().getDisplay());
 		setCreator(part.getCreatorFullName());
-    	setCreateDate(DateUtil.getDateString(part.getCreateTimestamp(),"a"));
-    	setModifyDate(DateUtil.getDateString(part.getModifyTimestamp(),"a"));
+		setCreateDate(DateUtil.getDateString(part.getCreateTimestamp(), "a"));
+		setModifyDate(DateUtil.getDateString(part.getModifyTimestamp(), "a"));
 
 //    	if(epm == null){
 //			epm = DrawingHelper.service.getEPMDocument(part);
@@ -379,7 +396,7 @@ public class PartData {
 		String partName4 = StringUtil.checkNull(IBAUtil.getAttrValue(part, "PARTNAME4"));
 		setPartName4(partName4);
 	}
-	
+
 //	public String getPartName(int index) {
 //		try {
 //			
@@ -615,64 +632,64 @@ public class PartData {
 	 * 
 	 * @return
 	 */
-	public boolean isGENERIC(WTPart part){
-		
+	public boolean isGENERIC(WTPart part) {
+
 		boolean isGENERIC = false;
 		int status;
-		try{
-			if(epm != null){
-				
+		try {
+			if (epm != null) {
+
 				status = epm.getFamilyTableStatus();
-				//System.out.println("getFamilyTableStatus1 =" +status );
-				if(status == 2 || status == 3){
+				// System.out.println("getFamilyTableStatus1 =" +status );
+				if (status == 2 || status == 3) {
 					isGENERIC = true;
 				}
-			}else{
+			} else {
 				epm = DrawingHelper.service.getEPMDocument(part);
-				if(epm != null){
+				if (epm != null) {
 					status = epm.getFamilyTableStatus();
-					//System.out.println("getFamilyTableStatus2 =" +status );
-					if(status == 2 || status == 3){
+					// System.out.println("getFamilyTableStatus2 =" +status );
+					if (status == 2 || status == 3) {
 						isGENERIC = true;
 					}
 				}
-				
+
 			}
-			//System.out.println("======= isGENERIC ============" + epm + ":" + isGENERIC);
-		}catch(Exception e){
+			// System.out.println("======= isGENERIC ============" + epm + ":" + isGENERIC);
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		
+
 		return isGENERIC;
 	}
 
-	public boolean isINSTANCE(WTPart part){
-		
+	public boolean isINSTANCE(WTPart part) {
+
 		boolean isINSTANCE = false;
 		int status;
-		try{
-			if(epm != null){
-				
+		try {
+			if (epm != null) {
+
 				status = epm.getFamilyTableStatus();
-				
-				if(status == 1){
+
+				if (status == 1) {
 					isINSTANCE = true;
 				}
-			}else{
+			} else {
 				epm = DrawingHelper.service.getEPMDocument(part);
-				if(epm != null){
+				if (epm != null) {
 					status = epm.getFamilyTableStatus();
-					
-					if(status == 1 ){
+
+					if (status == 1) {
 						isINSTANCE = true;
 					}
 				}
-				
+
 			}
-		}catch(Exception e){
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		
+
 		return isINSTANCE;
 	}
 
@@ -681,29 +698,29 @@ public class PartData {
 	 * 
 	 * @return
 	 */
-	public boolean isFamliyModify(WTPart part){
-		//System.out.println("======= isFamliyModify ============");
-		return (isGENERIC(part) && this.isLast()&& isWorking());
+	public boolean isFamliyModify(WTPart part) {
+		// System.out.println("======= isFamliyModify ============");
+		return (isGENERIC(part) && this.isLast() && isWorking());
 	}
-	
-	
-	 public boolean isWorking(){
-			return  ("INWORK").equals(this.getState());
-			
-		}
-	 
+
+	public boolean isWorking() {
+		return ("INWORK").equals(this.getState());
+
+	}
+
 //	
 //	/**
 //	 * 속성 clearing 
 //	 */
-	public boolean isClearing(){
+	public boolean isClearing() {
 		String ver = this.version;
-		
+
 		boolean isClearing = ver.equals("A") && "INWORK".equals(this.getState());
-		
+
 		return isClearing;
-		
+
 	}
+
 	public ArrayList<Object[]> getDescPartlist() {
 		Comparator comparator = new Comparator<Object[]>() {
 			@Override

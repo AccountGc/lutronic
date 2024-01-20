@@ -95,7 +95,7 @@ public class DrawingHelper {
 		String state = StringUtil.checkNull((String) params.get("state"));
 		String autoCadLink = StringUtil.checkNull((String) params.get("autoCadLink"));
 		String unit = StringUtil.checkNull((String) params.get("unit"));
-		String model = StringUtil.checkNull((String) params.get("model"));
+		String model = StringUtil.checkNull((String) params.get("modelcode"));
 		String productmethod = StringUtil.checkNull((String) params.get("productmethod"));
 		String deptcode = StringUtil.checkNull((String) params.get("deptcode"));
 		String weight1 = StringUtil.checkNull((String) params.get("weight1"));

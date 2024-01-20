@@ -12,9 +12,9 @@
 </head>
 <body>
 	<form>
-		<input type="hidden" name="lifecycle" id="lifecycle" value="LC_PART" />
-		<input type="hidden" name="fid" id="fid" value="" />
-		<input type="hidden" name="location" id="location" value="/Default/PART_Drawing" />
+		<input type="hidden" name="lifecycle" id="lifecycle" value="LC_PART">
+		<input type="hidden" name="fid" id="fid" value="">
+		<input type="hidden" name="location" id="location" value="/Default/PART_Drawing">
 
 		<table class="button-table">
 			<tr>
@@ -43,10 +43,6 @@
 					<input type="hidden" name="location" id="location" value="<%=DocumentHelper.DOCUMENT_ROOT%>">
 					<span id="locationText"> /Default/PART_Drawing </span>
 					<input type="button" value="폴더선택" title="폴더선택" onclick="folder();" class="blue">
-
-					<!-- 					<span id="locationName"> -->
-					<!--                			/Default/PART_Drawing -->
-					<!--                		</span> -->
 				</td>
 			</tr>
 			<tr>
@@ -102,7 +98,6 @@
 
 		<script type="text/javascript">
 			function create(temp) {
-// 				const temprary = JSON.parse(temp); // 임시저장
 				const location = toId("location");
 				const number = document.getElementById("number");
 				const name = document.getElementById("name");
@@ -142,13 +137,12 @@
 					lifecycle : lifecycle,
 					fid : fid,
 					location : location,
-					number : number,
-					name : name,
+					number : number.value,
+					name : name.value,
 					description : description,
 					primary : primary == null ? '' : primary.value,
 					secondarys : secondarys,
 					rows91 : rows91,
-// 					temprary : temprary
 				}
 
 				const url = getCallUrl("/drawing/create");
@@ -165,9 +159,6 @@
 			document.addEventListener("DOMContentLoaded", function() {
 				createAUIGrid91(columns91);
 				AUIGrid.resize(partGridID91);
-				selectbox("state");
-				selectbox("type");
-				selectbox("depart");
 			});
 
 			document.addEventListener("keydown", function(event) {

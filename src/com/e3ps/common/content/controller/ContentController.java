@@ -120,8 +120,6 @@ public class ContentController extends BaseController {
 				name = URLEncoder.encode(data.getFileName(), "UTF-8").replaceAll("\\+", "%20");
 			}
 
-			System.out.println("name=" + name);
-
 			// 다운로드 이력 생성..
 			DownloadHistoryHelper.service.create(oid);
 

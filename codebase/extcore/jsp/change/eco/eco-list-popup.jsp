@@ -84,6 +84,7 @@ boolean multi = (boolean) request.getAttribute("multi");
 		<th class="lb">프로젝트 코드</th>
 		<td class="indent5">
 			<input type="text" name="model" id="model" class="width-200">
+			<input type="hidden" name="modelcode" id="modelcode">
 			<img src="/Windchill/extcore/images/delete.png" class="delete" title="삭제" onclick="clearUser('model')">
 		</td>
 		<th>인허가변경</th>

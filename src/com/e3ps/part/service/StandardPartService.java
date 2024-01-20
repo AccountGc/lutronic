@@ -516,7 +516,6 @@ public class StandardPartService extends StandardManager implements PartService 
 				String oldPartName = part.getName();
 
 				part = (WTPart) getWorkingCopy(part);
-				boolean temprary = (boolean) params.get("temprary");
 				String partName1 = StringUtil.checkNull((String) params.get("partName1")); // 품목명1 (NumberCode)
 				String partName2 = StringUtil.checkNull((String) params.get("partName2")); // 품목명2 (NumberCode)
 				String partName3 = StringUtil.checkNull((String) params.get("partName3")); // 품목명3 (NumberCode)
@@ -663,18 +662,8 @@ public class StandardPartService extends StandardManager implements PartService 
 					copyInstanceAttribute(part, params);
 				}
 
-				if (temprary) {
-					State state = State.toState("TEMPRARY");
-					LifeCycleHelper.service.setLifeCycleState(part, state);
-				} else {
-					State state = State.toState("INWORK");
-					LifeCycleHelper.service.setLifeCycleState(part, state);
-
-					// 결재시작
-					if (approvalRows != null) {
-//						WorkspaceHelper.service.register(part, agreeRows, approvalRows, receiveRows);
-					}
-				}
+				State state = State.toState("INWORK");
+				LifeCycleHelper.service.setLifeCycleState(part, state);
 
 				trx.commit();
 				trx = null;
@@ -3900,9 +3889,9 @@ public class StandardPartService extends StandardManager implements PartService 
 		Transaction trs = new Transaction();
 		try {
 			trs.start();
-			
+
 			SessionHelper.manager.setAdministrator();
-			
+
 			WTPart part = (WTPart) CommonUtil.getObject(oid);
 			Representable representable = PublishUtils.findRepresentable(part);
 			Representation representation = PublishUtils.getRepresentation(representable, true, null, false);

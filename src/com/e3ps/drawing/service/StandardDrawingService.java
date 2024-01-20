@@ -135,9 +135,9 @@ public class StandardDrawingService extends StandardManager implements DrawingSe
 		Transaction trs = new Transaction();
 		try {
 			trs.start();
-			
+
 			SessionHelper.manager.setAdministrator();
-			
+
 			EPMDocument epm = (EPMDocument) CommonUtil.getObject(oid);
 			Representable representable = PublishUtils.findRepresentable(epm);
 			Representation representation = PublishUtils.getRepresentation(representable, true, null, false);
@@ -2185,7 +2185,6 @@ public class StandardDrawingService extends StandardManager implements DrawingSe
 			String lifecycle = StringUtil.checkNull((String) map.get("lifecycle"));
 			String name = StringUtil.checkNull((String) map.get("name"));
 			String number = StringUtil.checkNull((String) map.get("number"));
-			boolean temprary = (boolean) map.get("temprary");
 
 			// 결재
 			ArrayList<Map<String, String>> approvalRows = (ArrayList<Map<String, String>>) map.get("approvalRows");
@@ -2265,18 +2264,13 @@ public class StandardDrawingService extends StandardManager implements DrawingSe
 			}
 			epm = (EPMDocument) PersistenceHelper.manager.save(epm);
 
-			if (temprary) {
-				State state = State.toState("TEMPRARY");
-				LifeCycleHelper.service.setLifeCycleState(epm, state);
-			}
-
 			// 첨부 파일 저장
 			saveAttach(epm, map);
 
 			ArrayList<Map<String, String>> rows91 = (ArrayList<Map<String, String>>) map.get("rows91");
 			// 관련품목
 			for (Map<String, String> row91 : rows91) {
-				String oid = row91.get("oid");
+				String oid = row91.get("part_oid");
 				WTPart part = (WTPart) CommonUtil.getObject(oid);
 				EPMDescribeLink describeLink = EPMDescribeLink.newEPMDescribeLink(part, epm);
 				PersistenceServerHelper.manager.insert(describeLink);

@@ -63,18 +63,6 @@ public class CrHelper {
 
 		QuerySpec query = new QuerySpec();
 		int idx = query.appendClassList(EChangeRequest.class, true);
-
-		// 상태 임시저장 제외
-		if (query.getConditionCount() > 0) {
-			query.appendAnd();
-		}
-
-		// 관리자가 아닐경우 결재선 지정은 제외한다
-		if (!CommonUtil.isAdmin()) {
-//			query.appendWhere(new SearchCondition(EChangeRequest.class, EChangeRequest.LIFE_CYCLE_STATE,
-//					SearchCondition.NOT_EQUAL, "LINE_REGISTER"), new int[] { idx });
-		}
-
 		// 제목
 		QuerySpecUtils.toLikeAnd(query, idx, EChangeRequest.class, EChangeRequest.EO_NAME, name);
 		// 번호

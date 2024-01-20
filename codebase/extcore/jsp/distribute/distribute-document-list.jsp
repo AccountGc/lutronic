@@ -119,7 +119,7 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 						for (Map<String, String> lifecycle : lifecycleList) {
 							String key = lifecycle.get("code");
 						%>
-						<option value="<%=key%>" <%if("APPROVED".equals(key)) { %> selected="selected" <%} %> ><%=lifecycle.get("name")%></option>
+						<option value="<%=key%>" <%if ("APPROVED".equals(key)) {%> selected="selected" <%}%>><%=lifecycle.get("name")%></option>
 						<%
 						}
 						%>
@@ -138,7 +138,7 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 					<input type="text" name="modifiedTo" id="modifiedTo" class="width-100">
 					<img src="/Windchill/extcore/images/delete.png" class="delete" title="삭제" onclick="clearFromTo('modifiedFrom', 'modifiedTo')">
 				</td>
-				<th>프로젝트코드</th>
+				<th>프로젝트 코드</th>
 				<td class="indent5">
 					<input type="text" name="model" id="model" class="width-200">
 					<input type="hidden" name="modelcode" id="modelcode">
@@ -377,8 +377,8 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 				const props = {
 					headerHeight : 30,
 					showRowNumColumn : false,
-// 					showRowCheckColumn : true,
-// 					rowNumHeaderText : "번호",
+					// 					showRowCheckColumn : true,
+					// 					rowNumHeaderText : "번호",
 					showAutoNoDataMessage : false,
 					selectionMode : "multipleCells",
 					hoverMode : "singleRow",

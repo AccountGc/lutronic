@@ -97,19 +97,7 @@ QuantityUnit[] unitList = (QuantityUnit[]) request.getAttribute("unitList");
 				</td>
 			</tr>
 			<tr>
-				<th>프로젝트코드</th>
-				<!-- 				<td class="indent5"> -->
-				<!-- 					<select name="model" id="model" class="width-200"> -->
-				<!-- 						<option value="">선택</option> -->
-				<%-- 						<% --%>
-				<!-- 				// for (NumberCode model : modelList) { -->
-				<%-- 						%> --%>
-				<%-- 						<option value="<%=model.getCode()%>"><%=model.getName()%></option> --%>
-				<%-- 						<% --%>
-				<!-- 				// } -->
-				<%-- 						%> --%>
-				<!-- 					</select> -->
-				<!-- 				</td> -->
+				<th>프로젝트 코드</th>
 				<td class="indent5">
 					<input type="text" name="model" id="model" class="width-200">
 					<input type="hidden" name="modelcode" id="modelcode">

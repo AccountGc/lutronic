@@ -14,7 +14,7 @@ ArrayList<NumberCode> productmethodList = (ArrayList<NumberCode>) request.getAtt
 ArrayList<NumberCode> finishList = (ArrayList<NumberCode>) request.getAttribute("finishList");
 QuantityUnit[] unitList = (QuantityUnit[]) request.getAttribute("unitList");
 %>
-<input type="hidden" name="oid" id="oid" value="<%= data.getOid() %>" />
+<input type="hidden" name="oid" id="oid" value="<%=data.getOid()%>" />
 <table class="button-table">
 	<tr>
 		<td class="left">
@@ -25,6 +25,7 @@ QuantityUnit[] unitList = (QuantityUnit[]) request.getAttribute("unitList");
 		</td>
 		<td class="right">
 			<input type="button" value="수정완료" title="수정완료" class="blue" onclick="update('false');">
+			<input type="button" value="뒤로" title="뒤로" class="red" onclick="history.go(-1);">
 			<input type="button" value="닫기" title="닫기" class="gray" onclick="self.close();">
 		</td>
 	</tr>
@@ -38,7 +39,7 @@ QuantityUnit[] unitList = (QuantityUnit[]) request.getAttribute("unitList");
 	<tr>
 		<th class="lb">품목번호</th>
 		<td class="indent5" colspan="3">
-			<%= data.getNumber() != null ? data.getNumber() : "" %>
+			<%=data.getNumber() != null ? data.getNumber() : ""%>
 		</td>
 	</tr>
 	<tr>
@@ -53,8 +54,8 @@ QuantityUnit[] unitList = (QuantityUnit[]) request.getAttribute("unitList");
 		<th rowspan="4" class="lb">품목명</th>
 		<th class="lb">대제목</th>
 		<td class="indent5">
-			<input id="partName1" name="partName1" class='partName width-300' type="text" value="<%= data.getPartName1() %>" >
-			<div id="partName1Search" style="display: none; border: 1px solid black ; position: absolute; background-color: white; width: 26%">
+			<input id="partName1" name="partName1" class='partName width-300' type="text" value="<%=data.getPartName1()%>">
+			<div id="partName1Search" style="display: none; border: 1px solid black; position: absolute; background-color: white; width: 26%">
 				<ul id="partName1UL" style="list-style-type: none; padding-left: 0px;">
 				</ul>
 			</div>
@@ -63,8 +64,8 @@ QuantityUnit[] unitList = (QuantityUnit[]) request.getAttribute("unitList");
 	<tr>
 		<th class="lb">중제목</th>
 		<td class="indent5">
-			<input id="partName2" name="partName2" class='partName width-300' type="text" value="<%= data.getPartName2() %>" >
-			<div id="partName2Search" style="display: none; border: 1px solid black ; position: absolute; background-color: white; width: 26%">
+			<input id="partName2" name="partName2" class='partName width-300' type="text" value="<%=data.getPartName2()%>">
+			<div id="partName2Search" style="display: none; border: 1px solid black; position: absolute; background-color: white; width: 26%">
 				<ul id="partName2UL" style="list-style-type: none; padding-left: 0px;">
 				</ul>
 			</div>
@@ -73,8 +74,8 @@ QuantityUnit[] unitList = (QuantityUnit[]) request.getAttribute("unitList");
 	<tr>
 		<th class="lb">소제목</th>
 		<td class="indent5">
-			<input id="partName3" name="partName3" class='partName width-300' type="text" value="<%= data.getPartName3() %>" >
-			<div id="partName3Search" style="display: none; border: 1px solid black ; position: absolute; background-color: white; width: 26%">
+			<input id="partName3" name="partName3" class='partName width-300' type="text" value="<%=data.getPartName3()%>">
+			<div id="partName3Search" style="display: none; border: 1px solid black; position: absolute; background-color: white; width: 26%">
 				<ul id="partName3UL" style="list-style-type: none; padding-left: 0px;">
 				</ul>
 			</div>
@@ -83,14 +84,14 @@ QuantityUnit[] unitList = (QuantityUnit[]) request.getAttribute("unitList");
 	<tr>
 		<th class="lb req">사용자 Key in</th>
 		<td class="indent5">
-			<input id="partName4" name="partName4" class='partName width-300' type="text" value="<%= data.getPartName4() %>" >
+			<input id="partName4" name="partName4" class='partName width-300' type="text" value="<%=data.getPartName4()%>">
 		</td>
 	</tr>
 	<tr>
-		<td class="tdblueM" id="auto" colspan="3" >
+		<td class="tdblueM" id="auto" colspan="3">
 			<div>
 				<span style="font-weight: bold; vertical-align: middle;" id="displayName">
-					<%= data != null ? data.getName() : "" %>
+					<%=data != null ? data.getName() : ""%>
 				</span>
 			</div>
 		</td>
@@ -100,12 +101,13 @@ QuantityUnit[] unitList = (QuantityUnit[]) request.getAttribute("unitList");
 	<tr>
 		<td class="left">
 			<div class="header">
-				<img src="/Windchill/extcore/images/header.png"> 품목 속성
+				<img src="/Windchill/extcore/images/header.png">
+				품목 속성
 			</div>
 		</td>
 	</tr>
 </table>
-		
+
 <table class="search-table">
 	<colgroup>
 		<col width="174">
@@ -114,54 +116,56 @@ QuantityUnit[] unitList = (QuantityUnit[]) request.getAttribute("unitList");
 		<col width="*">
 	</colgroup>
 	<tr>
-		<th class="req lb">프로젝트코드 <span style="color:red;">*</span></th>
+		<th class="req lb">프로젝트코드</th>
 		<td class="indent5">
-			<select name="model" id="model" class="width-200">
-				<option value="">선택</option>
-				<%
-				for (NumberCode model : modelList) {
-				%>
-				<option value="<%=model.getCode() %>" <% if(data.getModel().equals(model.getCode())){ %> selected <% } %>><%=model.getName()%></option>
-				<%
-				}
-				%>
-			</select>
+			<input type="text" name="model" id="model" class="width-300" value="<%=data.getModel()%> [<%=data.getModel_name()%>]">
+			<input type="hidden" name="modelcode" id="modelcode" value="<%=data.getModel()%>">
+			<img src="/Windchill/extcore/images/delete.png" class="delete" title="삭제" onclick="clearValue('model', 'code');">
 		</td>
-		<th class="req">제작방법 <span style="color:red;">*</span></th>
+		<th class="req">
+			제작방법
+			<span style="color: red;">*</span>
+		</th>
 		<td class="indent5">
 			<select name="productmethod" id="productmethod" class="width-200">
 				<option value="">선택</option>
 				<%
 				for (NumberCode productmethod : productmethodList) {
 				%>
-				<option value="<%=productmethod.getCode() %>" <% if(data.getProductmethod().equals(productmethod.getCode())){ %> selected <% } %>><%=productmethod.getName()%></option>
+				<option value="<%=productmethod.getCode()%>" <%if (data.getProductmethod().equals(productmethod.getCode())) {%> selected <%}%>><%=productmethod.getName()%></option>
 				<%
 				}
 				%>
 			</select>
 	</tr>
 	<tr>
-		<th class="req lb">부서 <span style="color:red;">*</span></th>
+		<th class="req lb">
+			부서
+			<span style="color: red;">*</span>
+		</th>
 		<td class="indent5">
 			<select name="deptcode" id="deptcode" class="width-200">
 				<option value="">선택</option>
 				<%
 				for (NumberCode deptcode : deptcodeList) {
 				%>
-				<option value="<%=deptcode.getCode() %>" <% if(data.getDeptcode().equals(deptcode.getCode())){ %> selected <% } %>><%=deptcode.getName()%></option>
+				<option value="<%=deptcode.getCode()%>" <%if (data.getDeptcode().equals(deptcode.getCode())) {%> selected <%}%>><%=deptcode.getName()%></option>
 				<%
 				}
 				%>
 			</select>
 		</td>
-		<th class="req">단위 <span style="color:red;">*</span></th>
+		<th class="req">
+			단위
+			<span style="color: red;">*</span>
+		</th>
 		<td class="indent5">
 			<select name="unit" id="unit" class="width-200">
 				<option value="">선택</option>
 				<%
 				for (QuantityUnit unit : unitList) {
 				%>
-				<option value="<%=unit.toString() %>" <% if(data.getUnit().equals(unit.toString())){ %> selected <% } %>><%=unit.getDisplay() %></option>
+				<option value="<%=unit.toString()%>" <%if (data.getUnit().equals(unit.toString())) {%> selected <%}%>><%=unit.getDisplay()%></option>
 				<%
 				}
 				%>
@@ -171,11 +175,13 @@ QuantityUnit[] unitList = (QuantityUnit[]) request.getAttribute("unitList");
 	<tr>
 		<th class="lb">무게(g)</th>
 		<td class="indent5">
-			<input type="text" name="weight" id="weight" class="width-200" value="<% if (data.getWeight() != null) { %><%= data.getWeight() %><% } %>">
+			<input type="text" name="weight" id="weight" class="width-200" value="<%if (data.getWeight() != null) {%><%=data.getWeight()%><%}%>">
 		</td>
 		<th>MANUFACTURER</th>
 		<td class="indent5">
-			<input type="text" name="manufacture" id="manufacture" class="width-200">
+			<input type="text" name="manufacture" id="manufacture" class="width-200" value="<%=data.getManufacture()%> [<%=data.getManufacture_name()%>]">
+			<input type="hidden" name="manufacturecode" id="manufacturecode" class="width-200" value="<%=data.getManufacture()%>">
+			<img src="/Windchill/extcore/images/delete.png" class="delete" title="삭제" onclick="clearValue('manufacture', 'code');">
 		</td>
 	</tr>
 	<tr>
@@ -186,7 +192,7 @@ QuantityUnit[] unitList = (QuantityUnit[]) request.getAttribute("unitList");
 				<%
 				for (NumberCode mat : matList) {
 				%>
-				<option value="<%=mat.getCode() %>" <% if(data.getMat() != null && data.getMat().equals(mat.getCode())){ %> selected <% } %>><%=mat.getName()%></option>
+				<option value="<%=mat.getCode()%>" <%if (data.getMat() != null && data.getMat().equals(mat.getCode())) {%> selected <%}%>><%=mat.getName()%></option>
 				<%
 				}
 				%>
@@ -199,7 +205,7 @@ QuantityUnit[] unitList = (QuantityUnit[]) request.getAttribute("unitList");
 				<%
 				for (NumberCode finish : finishList) {
 				%>
-				<option value="<%=finish.getCode() %>" <% if(data.getFinish() != null && data.getFinish().equals(finish.getCode())) { %> selected <% } %>><%=finish.getName()%></option>
+				<option value="<%=finish.getCode()%>" <%if (data.getFinish() != null && data.getFinish().equals(finish.getCode())) {%> selected <%}%>><%=finish.getName()%></option>
 				<%
 				}
 				%>
@@ -209,11 +215,11 @@ QuantityUnit[] unitList = (QuantityUnit[]) request.getAttribute("unitList");
 	<tr>
 		<th class="lb">OEM Info.</th>
 		<td class="indent5">
-			<input type="text" name="remarks" id="remarks" class="width-200" value="<% if (data.getRemark() != null) { %><%= data.getRemark() %><% } %>">
+			<input type="text" name="remarks" id="remarks" class="width-200" value="<%if (data.getRemark() != null) {%><%=data.getRemark()%><%}%>">
 		</td>
 		<th>사양</th>
 		<td class="indent5">
-			<input type="text" name="specification" id="specification" class="width-200" value="<% if (data.getSpecification() != null) { %><%= data.getSpecification() %><% } %>">
+			<input type="text" name="specification" id="specification" class="width-200" value="<%if (data.getSpecification() != null) {%><%=data.getSpecification()%><%}%>">
 		</td>
 	</tr>
 </table>
@@ -223,7 +229,8 @@ QuantityUnit[] unitList = (QuantityUnit[]) request.getAttribute("unitList");
 	<tr>
 		<td class="left">
 			<div class="header">
-				<img src="/Windchill/extcore/images/header.png"> 주 도면&nbsp;&nbsp;
+				<img src="/Windchill/extcore/images/header.png">
+				주 도면&nbsp;&nbsp;
 				<span class="red">(메카 : CAD파일), (광학/제어/파워/인증 : PDF파일)</span>
 			</div>
 		</td>
@@ -236,9 +243,9 @@ QuantityUnit[] unitList = (QuantityUnit[]) request.getAttribute("unitList");
 	</colgroup>
 	<tr>
 		<th>주 도면</th>
-		<td class="indent5" >
+		<td class="indent5">
 			<jsp:include page="/extcore/jsp/common/attach-primary-drawing.jsp">
-				<jsp:param value="<%= data.getOid() %>" name="oid" />
+				<jsp:param value="<%=data.getOid()%>" name="oid" />
 				<jsp:param value="modify" name="mode" />
 			</jsp:include>
 		</td>
@@ -247,7 +254,7 @@ QuantityUnit[] unitList = (QuantityUnit[]) request.getAttribute("unitList");
 
 <!-- 관련 문서 -->
 <jsp:include page="/extcore/jsp/document/include/document-include.jsp">
-	<jsp:param value="<%= data.getOid() %>" name="oid" />
+	<jsp:param value="<%=data.getOid()%>" name="oid" />
 	<jsp:param value="update" name="mode" />
 	<jsp:param value="true" name="multi" />
 	<jsp:param value="250" name="height" />
@@ -255,7 +262,7 @@ QuantityUnit[] unitList = (QuantityUnit[]) request.getAttribute("unitList");
 
 <!-- 관련 RoHS -->
 <jsp:include page="/extcore/jsp/rohs/include/rohs-include.jsp">
-	<jsp:param value="<%= data.getOid() %>" name="oid" />
+	<jsp:param value="<%=data.getOid()%>" name="oid" />
 	<jsp:param value="update" name="mode" />
 	<jsp:param value="true" name="multi" />
 	<jsp:param value="250" name="height" />
@@ -266,7 +273,8 @@ QuantityUnit[] unitList = (QuantityUnit[]) request.getAttribute("unitList");
 	<tr>
 		<td class="left">
 			<div class="header">
-				<img src="/Windchill/extcore/images/header.png"> 첨부파일
+				<img src="/Windchill/extcore/images/header.png">
+				첨부파일
 			</div>
 		</td>
 	</tr>
@@ -283,7 +291,7 @@ QuantityUnit[] unitList = (QuantityUnit[]) request.getAttribute("unitList");
 		<th class="lb">첨부파일</th>
 		<td class="indent5" colspan="3">
 			<jsp:include page="/extcore/jsp/common/attach-secondary.jsp">
-				<jsp:param value="<%= data.getOid() %>" name="oid" />
+				<jsp:param value="<%=data.getOid()%>" name="oid" />
 				<jsp:param value="modify" name="mode" />
 			</jsp:include>
 		</td>
@@ -314,39 +322,14 @@ document.addEventListener("DOMContentLoaded", function() {
 // 	AUIGrid.resize(myGridID8);
 	document.getElementById("partName1").focus();
 	selectbox("state");
-	selectbox("model");
+// 	selectbox("model");
 	selectbox("productmethod");
 	selectbox("deptcode");
 	selectbox("unit");
 	selectbox("mat");
 	selectbox("finish");
-	
-	axdom("#manufacture").bindSelector({
-		reserveKeys: {
-			options: "list",
-			optionValue: "oid",
-			optionText: "name"
-		},
-		optionPrintLength: "all",
-		onsearch: function(id, obj, callBack) {
-			const value = document.getElementById(id).value;
-			const params = new Object();
-			const url = getCallUrl("/code/finder");
-			params.value = value;
-			params.codeType = "MANUFACTURE";
-			params.obj = obj;
-			call(url, params, function(data) {
-				callBack({
-					options: data.list
-				})
-			})
-		},
-		onchange: function() {
-			const id = this.targetID;
-			const value = this.selectedOption.oid
-			document.getElementById(id + "Oid").value = value;
-		},
-	})	
+	finderCode("manufacture", "MANUFACTURE");
+	finderCode("model", "MODEL");
 });
 
 window.addEventListener("resize", function() {
@@ -527,16 +510,16 @@ $(function() {
 })
 
 // 수정 메서드
-function update(temp) {
+function update() {
 	const partName1 = document.getElementById("partName1").value;
 	const partName2 = document.getElementById("partName2").value;
 	const partName3 = document.getElementById("partName3").value;
 	const partName4 = document.getElementById("partName4").value;
-	const model = document.getElementById("model").value;
+	const model = document.getElementById("modelcode").value;
+	const manufacture = document.getElementById("manufacturecode").value;
 	const productmethod = document.getElementById("productmethod").value;
 	const deptcode = document.getElementById("deptcode").value;
 	const unit =  document.getElementById("unit").value;
-	const temprary = JSON.parse(temp);
 	
 	const primary = document.querySelector("input[name=primary]") == null ? "" : document.querySelector("input[name=primary]").value;
 	const secondary = toArray("secondarys");
@@ -548,17 +531,6 @@ function update(temp) {
 	// RoHs
 	const rows106 = AUIGrid.getGridDataWithState(myGridID106, "gridState");
 
-	if (temprary) {
-		if (!confirm("임시저장하시겠습니까??")) {
-			return false;
-		}
-		
-// 		if (addRows8.length > 0) {
-// 			alert("결재선 지정을 해지해주세요.")
-// 			return false;
-// 		}
-		
-	} else {
 		if(isEmpty(location)){
 			alert("품목구분을 입력하세요.");
 			return;					
@@ -587,7 +559,6 @@ function update(temp) {
 		if (!confirm("수정하시겠습니까?")) {
 			return false;
 		}
-	}
 	
 	const params ={
 			oid : toId("oid"),
@@ -595,15 +566,14 @@ function update(temp) {
 			partName2 : partName2,
 			partName3 : partName3,
 			partName4 : partName4,
-			model : model,
 			productmethod : productmethod,
+			model : model,
+			manufacture : manufacture,
 			deptcode : deptcode,
 			unit : unit,
-			temprary : temprary,
 			primary : primary,
 			secondary : secondary,
 			weight : toId("weight"),
-			manufacture : toId("manufacture"),
 			mat : toId("mat"),
 			finish : toId("finish"),
 			remarks : toId("remarks"),
@@ -614,7 +584,6 @@ function update(temp) {
 			rows106 : rows106,
 	};
 	
-// 	toRegister(params, addRows8);
 	
 	const url = getCallUrl("/part/update");
 	openLayer();

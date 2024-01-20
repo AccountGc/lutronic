@@ -129,29 +129,16 @@ public class EcoHelper {
 		QuerySpecUtils.toLikeAnd(query, idx, EChangeOrder.class, EChangeOrder.EO_NAME, name);
 		QuerySpecUtils.toLikeAnd(query, idx, EChangeOrder.class, EChangeOrder.EO_NUMBER, number);
 		QuerySpecUtils.toLikeAnd(query, idx, EChangeOrder.class, EChangeOrder.MODEL, model);
-		QuerySpecUtils.toCreatorQuery(query, idx, EChangeOrder.class, creatorOid);
-		QuerySpecUtils.toIn(query, idx, EChangeOrder.class, EChangeOrder.MODEL, model);
-
-		QuerySpecUtils.toTimeGreaterAndLess(query, idx, EChangeOrder.class, EChangeOrder.CREATE_TIMESTAMP, createdFrom,
-				createdTo);
-		if (approveFrom.length() > 0) {
-			if (query.getConditionCount() > 0) {
-				query.appendAnd();
-			}
-			query.appendWhere(new SearchCondition(EChangeOrder.class, EChangeOrder.EO_APPROVE_DATE,
-					SearchCondition.GREATER_THAN_OR_EQUAL, approveFrom), new int[] { idx });
-		}
-		if (approveTo.length() > 0) {
-			if (query.getConditionCount() > 0) {
-				query.appendAnd();
-			}
-			query.appendWhere(new SearchCondition(EChangeOrder.class, EChangeOrder.EO_APPROVE_DATE,
-					SearchCondition.LESS_THAN_OR_EQUAL, approveTo), new int[] { idx });
-		}
-		QuerySpecUtils.toState(query, idx, EChangeOrder.class, state);
-		QuerySpecUtils.toEquals(query, idx, EChangeOrder.class, EChangeOrder.EO_TYPE, "CHANGE");
+		QuerySpecUtils.toEqualsAnd(query, idx, EChangeOrder.class, EChangeOrder.EO_TYPE, "CHANGE");
 		QuerySpecUtils.toEqualsAnd(query, idx, EChangeOrder.class, EChangeOrder.LICENSING_CHANGE, licensing);
 		QuerySpecUtils.toEqualsAnd(query, idx, EChangeOrder.class, EChangeOrder.RISK_TYPE, riskType);
+		QuerySpecUtils.toState(query, idx, EChangeOrder.class, state);
+		QuerySpecUtils.toCreatorQuery(query, idx, EChangeOrder.class, creatorOid);
+		QuerySpecUtils.toLikeAnd(query, idx, EChangeOrder.class, EChangeOrder.MODEL, model);
+		QuerySpecUtils.toTimeGreaterAndLess(query, idx, EChangeOrder.class, EChangeOrder.CREATE_TIMESTAMP, createdFrom,
+				createdTo);
+		QuerySpecUtils.toTimeGreaterAndLess(query, idx, EChangeOrder.class, EChangeOrder.EO_APPROVE_DATE, approveFrom,
+				approveTo);
 
 		if (rows104.size() > 0) {
 			if (query.getConditionCount() > 0) {
