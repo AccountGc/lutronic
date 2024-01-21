@@ -589,7 +589,6 @@ public class QuerySpecUtils {
 		if (query.getConditionCount() > 0) {
 			query.appendAnd();
 		}
-		System.out.println("시작ㅁㄻㄴㄻㄴㄻ");
 		WTUser creator = (WTUser) CommonUtil.getObject(oid);
 		SearchCondition sc = new SearchCondition(clazz, "creator.key.id", "=",
 				creator.getPersistInfo().getObjectIdentifier().getId());

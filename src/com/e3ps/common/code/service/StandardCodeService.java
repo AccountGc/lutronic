@@ -26,6 +26,7 @@ import com.e3ps.change.EChangeOrder;
 import com.e3ps.change.EChangeRequest;
 import com.e3ps.common.code.NumberCode;
 import com.e3ps.common.code.dto.NumberCodeDTO;
+import com.e3ps.common.code.dto.NumberCodeData;
 import com.e3ps.common.message.Message;
 import com.e3ps.common.util.CommonUtil;
 import com.e3ps.common.util.StringUtil;
@@ -49,6 +50,21 @@ public class StandardCodeService extends StandardManager implements CodeService 
 	 */
 
 	@Override
+	public List<NumberCodeData> numberCodeList2(String codeType, String parentOid, boolean search) {
+		List<NumberCodeData> list = new ArrayList<NumberCodeData>();
+
+		QueryResult qr = numberCodeListResult(codeType, parentOid, search);
+		while (qr.hasMoreElements()) {
+			Object[] o = (Object[]) qr.nextElement();
+			NumberCode code = (NumberCode) o[0];
+			NumberCodeData data = new NumberCodeData(code);
+			list.add(data);
+		}
+
+		return list;
+	}
+
+	@Override
 	public List<NumberCodeDTO> numberCodeList(String codeType, String parentOid, boolean search) {
 		List<NumberCodeDTO> list = new ArrayList<NumberCodeDTO>();
 
@@ -56,7 +72,12 @@ public class StandardCodeService extends StandardManager implements CodeService 
 		while (qr.hasMoreElements()) {
 			Object[] o = (Object[]) qr.nextElement();
 			NumberCode code = (NumberCode) o[0];
-			NumberCodeDTO data = new NumberCodeDTO(code);
+			NumberCodeDTO data = null;
+			try {
+				data = new NumberCodeDTO(code);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
 			list.add(data);
 		}
 

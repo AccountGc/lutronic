@@ -26,19 +26,20 @@ Map<String, Integer> count = (Map<String, Integer>) request.getAttribute("count"
 <meta charset="UTF-8">
 <title></title>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+<link rel="stylesheet" href="/Windchill/extcore/css/theme.css">
 <style>
 .container {
 	position: relative;
 }
 
 .color-circle {
-	width: 130px;
-	height: 130px;
+	width: 70px;
+	height: 70px;
 	border-radius: 50%;
 	margin: 28px;
 	display: inline-block;
 	position: relative;
-	bottom: 30px;
+	top: 30px;
 }
 
 .color-circle a {
@@ -50,8 +51,8 @@ Map<String, Integer> count = (Map<String, Integer>) request.getAttribute("count"
 	top: 50%;
 	left: 50%;
 	transform: translate(-50%, -50%);
-	width: 60px; /* 아이콘의 크기 조절 */
-	height: 60px; /* 아이콘의 크기 조절 */
+	width: 30px; /* 아이콘의 크기 조절 */
+	height: 30px; /* 아이콘의 크기 조절 */
 	border-radius: 50%;
 	display: flex;
 	justify-content: center;
@@ -96,72 +97,69 @@ Map<String, Integer> count = (Map<String, Integer>) request.getAttribute("count"
 }
 
 .additional-circle {
-	width: 55px;
-	height: 55px;
+	width: 30px;
+	height: 30px;
 	border-radius: 50%;
 	border: 1px solid #dedede;
+	transform: translate(-50%, -50%);
 	margin: 10px;
 	display: inline-block;
 	position: relative;
 	background-color: white;
 	position: absolute;
-	top: 50%;
-	left: calc(100% + 20px); /* 원의 우측에 위치하도록 설정 */
 	transform: translate(-50%, -50%);
-	top: 10px;
-	margin: 10px;
-	display: inline-block;
-	position: relative;
-	background-color: white;
-	position: absolute;
-	top: 50%;
-	left: calc(100% + 20px); /* 원의 우측에 위치하도록 설정 */
-	transform: translate(-50%, -50%);
-	top: -5px;
-	left: 100px;
+	top: -3px;
+	left: 50px;
 }
 
 .span_text {
 	font-weight: bold;
-	font-size: 28px;
-	top: 8px;
+	font-size: 16px;
+	top: 2px;
+	/* 	left: 1px; */
 	position: relative;
 }
 
 .fa {
-	font-size: 60px; /* 아이콘 크기 조절 */
+	font-size: 30px; /* 아이콘 크기 조절 */
 }
 
 .circle-1 .circle-text {
 	color: gray;
 	font-weight: bold;
-	font-size: 24px;
+	font-size: 13px;
 	position: relative;
-	top: 140px;
+	top: 80px;
+	/* 	width: 100px; */
+	text-align: center;
 }
 
 .circle-2 .circle-text {
 	color: gray;
 	font-weight: bold;
-	font-size: 24px;
+	font-size: 13px;
 	position: relative;
-	top: 140px;
+	top: 80px;
 }
 
 .circle-3 .circle-text {
 	color: gray;
 	font-weight: bold;
-	font-size: 24px;
+	font-size: 13px;
 	position: relative;
-	top: 140px;
+	top: 80px;
 }
 
 .circle-4 .circle-text {
 	color: gray;
 	font-weight: bold;
-	font-size: 24px;
+	font-size: 13px;
 	position: relative;
-	top: 140px;
+	top: 80px;
+}
+
+div#main {
+	margin: 20px 20px 20px 20px;
 }
 </style>
 <%@include file="/extcore/jsp/common/css.jsp"%>
@@ -171,81 +169,89 @@ Map<String, Integer> count = (Map<String, Integer>) request.getAttribute("count"
 </head>
 <body>
 	<form>
-		<!-- 결재 및 공지사항 -->
-		<table style="height: 400px;">
-			<colgroup>
-				<col width="49%">
-				<col width="30px;">
-				<col width="49%">
-			</colgroup>
-			<tr>
-				<td valign="top">
-					<table>
-						<tr>
-							<td style="height: 330px; text-align: center;">
-								<div class="container">
-									<div class="color-circle circle-1">
-										<div class="additional-circle">
-											<span class="span_text">
-												<%=workData%>
-											</span>
+		<div id="main">
+			<div class="row g-3 mb-3">
+				<div class="col-md-12 col-xxl-6">
+					<div class="card h-md-100">
+						<div class="container">
+							<table>
+								<colgroup>
+									<col width="200px;">
+									<col width="200px;">
+									<col width="200px;">
+									<col width="200px;">
+								</colgroup>
+								<tr>
+									<td class="center">
+										<div class="color-circle circle-1">
+											<div class="additional-circle">
+												<span class="span_text">
+													<%=workData%>
+												</span>
+											</div>
+											<div class="white-icon">
+												<i class="fa fa-envelope"></i>
+											</div>
+											<div class="circle-text">
+												<a href="javascript:gotoUrl('/workData/list');">결재선지정</a>
+											</div>
 										</div>
-										<div class="white-icon">
-											<i class="fa fa-envelope"></i>
+									</td>
+									<td class="center">
+										<div class="color-circle circle-2">
+											<div class="additional-circle">
+												<span class="span_text">
+													<%=count.get("approval")%>
+												</span>
+											</div>
+											<div class="white-icon">
+												<i class="fa fa-handshake"></i>
+											</div>
+											<div class="circle-text">
+												<a href="javascript:gotoUrl('/workspace/approval');">결재함</a>
+											</div>
 										</div>
-										<div class="circle-text">
-											<a href="javascript:gotoUrl('/workData/list');">결재선지정</a>
+									</td>
+									<td class="center">
+										<div class="color-circle circle-3">
+											<div class="additional-circle">
+												<span class="span_text">
+													<%=count.get("agree")%>
+												</span>
+											</div>
+											<div class="white-icon">
+												<i class="fa fa-clock"></i>
+											</div>
+											<div class="circle-text">
+												<a href="javascript:gotoUrl('/workspace/agree);">합의함</a>
+											</div>
 										</div>
-									</div>
-									<div class="color-circle circle-2">
-										<div class="additional-circle">
-											<span class="span_text">
-												<%=count.get("approval")%>
-											</span>
+									</td>
+									<td class="center">
+										<div class="color-circle circle-4">
+											<div class="additional-circle">
+												<span class="span_text">
+													<%=eca%>
+												</span>
+											</div>
+											<div class="white-icon">
+												<i class="fa fa-book"></i>
+											</div>
+											<div class="circle-text">
+												<a href="javascript:gotoUrl('/eca/list');">ECA 활동함</a>
+											</div>
 										</div>
-										<div class="white-icon">
-											<i class="fa fa-handshake"></i>
-										</div>
-										<div class="circle-text">
-											<a href="javascript:gotoUrl('/workspace/approval');">결재함</a>
-										</div>
-									</div>
-									<div class="color-circle circle-3">
-										<div class="additional-circle">
-											<span class="span_text">
-												<%=count.get("agree")%>
-											</span>
-										</div>
-										<div class="white-icon">
-											<i class="fa fa-clock"></i>
-										</div>
-										<div class="circle-text">
-											<a href="javascript:gotoUrl('/workspace/agree);">합의함</a>
-										</div>
-									</div>
-									<div class="color-circle circle-4">
-										<div class="additional-circle">
-											<span class="span_text">
-												<%=eca%>
-											</span>
-										</div>
-										<div class="white-icon">
-											<i class="fa fa-book"></i>
-										</div>
-										<div class="circle-text">
-											<a href="javascript:gotoUrl('/eca/list');">ECA 활동함</a>
-										</div>
-									</div>
-								</div>
-							</td>
-						</tr>
-					</table>
-				</td>
-				<td valign="top">&nbsp;</td>
-				<td class="left" valign="top">
-					<table>
-						<tr>
-							<td style="border: 2px solid #86bff9; height: 190px;" valign="top">
+									</td>
+								</tr>
+							</table>
+						</div>
+					</div>
+				</div>
+				<!-- 공지사항 -->
+				<div class="col-md-12 col-xxl-6">
+					<div class="card h-md-100 ecommerce-card-min-width">
+						<div class="card-body d-flex flex-column justify-content-end">
+							<div class="row">
 								<table>
 									<colgroup>
 										<col width="70px;">
@@ -294,7 +300,26 @@ Map<String, Integer> count = (Map<String, Integer>) request.getAttribute("count"
 									}
 									%>
 								</table>
-							</td>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<!-- 결재 및 공지사항 -->
+		<table style="height: 400px;">
+			<colgroup>
+				<col width="49%">
+				<col width="30px;">
+				<col width="49%">
+			</colgroup>
+			<tr>
+				<td valign="top"></td>
+				<td valign="top">&nbsp;</td>
+				<td class="left" valign="top">
+					<table>
+						<tr>
+							<td style="border: 2px solid #86bff9; height: 190px;" valign="top"></td>
 						</tr>
 					</table>
 				</td>

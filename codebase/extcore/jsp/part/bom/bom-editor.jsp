@@ -10,6 +10,7 @@ WTPart root = (WTPart) request.getAttribute("root");
 <link href="/Windchill/extcore/component/contextmenu/dist/jquery.contextMenu.css" rel="stylesheet">
 <script src="/Windchill/extcore/component/fancytree/src/jquery-ui-dependencies/jquery.fancytree.ui-deps.js"></script>
 <script src="/Windchill/extcore/component/fancytree/src/jquery.fancytree.js"></script>
+<script src="/Windchill/extcore/component/fancytree/src/jquery.fancytree.clones.js"></script>
 <script src="/Windchill/extcore/component/fancytree/src/jquery.fancytree.dnd5.js"></script>
 <script src="/Windchill/extcore/component/fancytree/src/jquery.fancytree.filter.js"></script>
 <script src="/Windchill/extcore/component/fancytree/src/jquery.fancytree.table.js"></script>
@@ -174,7 +175,7 @@ WTPart root = (WTPart) request.getAttribute("root");
 	let CLIPBOARD = null;
 	document.addEventListener("DOMContentLoaded", function() {
 		$("#treetable").fancytree({
-			extensions : [ "dnd5", "filter", "table" ],
+			extensions : [ "dnd5", "filter", "table", "clones" ],
 			checkbox : true,
 			quicksearch : true,
 			debugLevel : 0,
@@ -184,12 +185,9 @@ WTPart root = (WTPart) request.getAttribute("root");
 				preventRecursion : true, // Prevent dropping nodes on own descendants
 				preventVoidMoves : true, // Prevent moving nodes 'before self', etc.
 				dragStart : function(node, data) {
-					return true;
+					return false;
 				},
 				dragEnter : function(node, data) {
-					if (node.data.state === "승인됨") {
-						return false;
-					}
 					const sameTree = (data.otherNode.tree === data.tree);
 					if (sameTree) {
 						return false;
@@ -215,11 +213,8 @@ WTPart root = (WTPart) request.getAttribute("root");
 
 					for (let i = 0; i < sourceNodes.length; i++) {
 						const nn = sourceNodes[i];
-						nn.copy = true;
-						nn.renderTitle();
 						nn.copyTo(node, data.hitMode);
 					}
-					logger(node);
 					drop(node, sourceNodes);
 				},
 			},
@@ -268,8 +263,11 @@ WTPart root = (WTPart) request.getAttribute("root");
 			renderColumns : function(event, data) {
 				const node = data.node;
 				const isCheckOut = node.data.isCheckOut;
-				if (isCheckOut) {
-					// 					node.tr.style.backgroundColor = "#FFCBCB";
+				const isNew = node.data.isNew;
+				logger(node);
+				logger(isNew);
+				if (isNew) {
+					node.tr.style.backgroundColor = "#FFCBCB";
 				} else {
 					node.tr.style.backgroundColor = "white";
 				}
@@ -634,7 +632,6 @@ WTPart root = (WTPart) request.getAttribute("root");
 			url = getCallUrl("/bom/removeMultiLink");
 			params.poid = poid;
 			params.arr = arr;
-			logger(params);
 			call(url, params, function(data) {
 				if (data.result) {
 					const resNode = data.resNode;
@@ -689,14 +686,13 @@ WTPart root = (WTPart) request.getAttribute("root");
 			poid : poid,
 			arr : arr
 		}
-		logger(params);
 		openLayer();
 		call(url, params, function(data) {
 			if (data.result) {
+				const isNew = data.isNew;
 				const resNode = data.resNode;
-				// 				resNode.icon = "/Windchill/extcore/images/icon/partcheckout.gif";
-				// 				resNode.renderTitle();
-				updateNode(node, resNode);
+				updateNodeNewMarker(node, resNode, data.refList);
+
 			}
 			closeLayer();
 		});
@@ -749,8 +745,9 @@ WTPart root = (WTPart) request.getAttribute("root");
 		openLayer();
 		call(url, params, function(data) {
 			if (data.result) {
+				const isNew = data.isNew;
 				const resNode = data.resNode;
-				updateNode(node, resNode);
+				updateNodeNewMarker(node, resNode, data.refList);
 			}
 			closeLayer();
 		})
@@ -792,8 +789,9 @@ WTPart root = (WTPart) request.getAttribute("root");
 		};
 		call(url, params, function(data) {
 			if (data.result) {
+				const isNew = data.isNew;
 				const resNode = data.resNode;
-				updateNode(node, resNode);
+				updateNodeNewMarker(node, resNode, data.refList);
 			}
 		})
 	}
@@ -826,6 +824,37 @@ WTPart root = (WTPart) request.getAttribute("root");
 		})
 	}
 
+	// 추가 하는순간...무조건 LAZY변경 및 신규 표기
+	function updateNodeNewMarker(node, resNode, refList) {
+		node.fromDict({
+			lazy : true,
+			id : resNode.oid,
+			icon : resNode.icon,
+			data : {
+				oid : resNode.oid,
+				version : resNode.version,
+				isCheckOut : resNode.isCheckOut
+			}
+		});
+		if (node.isLazy()) {
+			node.resetLazy();
+			node.setExpanded(true);
+		}
+		
+		setTimeout(function() {
+			const tree = $("#treetable").fancytree("getTree");
+			for (let i = 0; i < refList.length; i++) {
+				const refKey = refList[i];
+				const ns = tree.getNodesByRef(refKey);
+				for (let k = 0; k < ns.length; k++) {
+					const rNode = ns[k];
+					rNode.data.isNew = true;
+					rNode.renderTitle();
+				}
+			}
+		}, 500);
+	}
+
 	// 추가 하는순간...무조건 LAZY변경.
 	function updateNode(node, resNode) {
 		node.fromDict({
@@ -839,8 +868,8 @@ WTPart root = (WTPart) request.getAttribute("root");
 			}
 		});
 		if (node.isLazy()) {
-			node.load(true);
-			// 			node.setExpanded(true);
+			node.resetLazy();
+			node.setExpanded(true);
 		}
 	}
 
@@ -898,7 +927,6 @@ WTPart root = (WTPart) request.getAttribute("root");
 		for (let i = 0; i < level; i++) {
 			rootNode.visit(function(node) {
 				if (node.lazy) {
-					logger(node);
 					if (node.getLevel() <= level) {
 						node.load();
 						// 						node.setExpanded(true);

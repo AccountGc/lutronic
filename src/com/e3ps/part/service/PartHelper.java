@@ -180,6 +180,10 @@ public class PartHelper {
 		boolean latest = (boolean) params.get("latest");
 		String preOrder = (String) params.get("preOrder");
 		boolean complete = (boolean) params.get("complete");
+		
+		// 정렬
+				String sortKey = (String) params.get("sortKey");
+				String sortType = (String) params.get("sortType");
 
 		QuerySpec query = new QuerySpec();
 		int idx = query.addClassList(WTPart.class, true);

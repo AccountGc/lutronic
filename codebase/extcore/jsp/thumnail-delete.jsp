@@ -1,3 +1,4 @@
+<%@page import="wt.query.SearchCondition"%>
 <%@page import="com.e3ps.part.service.PartHelper"%>
 <%@page import="wt.part.WTPart"%>
 <%@page import="wt.representation.Representation"%>
@@ -10,6 +11,8 @@
 <%
 QuerySpec query = new QuerySpec();
 int idx = query.appendClassList(EPMDocument.class, true);
+SearchCondition sc = new SearchCondition(EPMDocument.class, EPMDocument.DOC_TYPE, "=", "CADDRAWING");
+query.appendWhere(sc, new int[] { idx });
 QueryResult qr = PersistenceHelper.manager.find(query);
 System.out.println("전체 개수 시작 = " + qr.size());
 int i = 0;
@@ -26,6 +29,7 @@ while (qr.hasMoreElements()) {
 	}
 
 	WTPart part = PartHelper.manager.getPart(epm);
+	System.out.println("part=" + part);
 	if (part != null) {
 		Representation _representation = PublishUtils.getRepresentation(part);
 

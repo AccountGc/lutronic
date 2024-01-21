@@ -89,6 +89,7 @@ import wt.content.ContentRoleType;
 import wt.content.ContentServerHelper;
 import wt.doc.WTDocument;
 import wt.enterprise.RevisionControlled;
+import wt.epm.E3PSRENameObject;
 import wt.epm.EPMDocument;
 import wt.epm.EPMDocumentMaster;
 import wt.epm.build.EPMBuildHistory;

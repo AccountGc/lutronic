@@ -27,6 +27,10 @@ public class NoticeHelper {
 		String name = (String) params.get("name");
 		String creatorOid = (String) params.get("creatorOid");
 
+		// 정렬
+		String sortKey = (String) params.get("sortKey");
+		String sortType = (String) params.get("sortType");
+
 		QuerySpec query = new QuerySpec();
 		int idx = query.addClassList(Notice.class, true);
 		QuerySpecUtils.toLikeAnd(query, idx, Notice.class, Notice.TITLE, name);
@@ -39,7 +43,8 @@ public class NoticeHelper {
 					CommonUtil.getOIDLongValue(creatorOid)), new int[] { idx });
 		}
 
-		QuerySpecUtils.toOrderBy(query, idx, Notice.class, Notice.CREATE_TIMESTAMP, true);
+		boolean sort = QuerySpecUtils.toSort(sortType);
+		QuerySpecUtils.toOrderBy(query, idx, Notice.class, Notice.CREATE_TIMESTAMP, sort);
 
 		PageQueryUtils pager = new PageQueryUtils(params, query);
 		PagingQueryResult result = pager.find();

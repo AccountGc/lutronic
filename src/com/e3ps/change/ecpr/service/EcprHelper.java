@@ -59,6 +59,10 @@ public class EcprHelper {
 //			String proposer = StringUtil.checkNull((String)params.get("proposer"));
 			String changeSection = StringUtil.checkNull((String) params.get("changeSection"));
 			String model = StringUtil.checkNull((String) params.get("modelcode"));
+			
+			// 정렬
+			String sortKey = (String) params.get("sortKey");
+			String sortType = (String) params.get("sortType");
 
 			QuerySpec query = new QuerySpec();
 			int idx = query.appendClassList(ECPRRequest.class, true);
@@ -127,7 +131,8 @@ public class EcprHelper {
 			// 제품명
 			QuerySpecUtils.toLikeAnd(query, idx, ECPRRequest.class, ECPRRequest.MODEL, model);
 
-			QuerySpecUtils.toOrderBy(query, idx, ECPRRequest.class, ECPRRequest.MODIFY_TIMESTAMP, true);
+			boolean sort = QuerySpecUtils.toSort(sortType);
+			QuerySpecUtils.toOrderBy(query, idx, ECPRRequest.class, ECPRRequest.MODIFY_TIMESTAMP, sort);
 
 			PageQueryUtils pager = new PageQueryUtils(params, query);
 			PagingQueryResult result = pager.find();

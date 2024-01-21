@@ -54,6 +54,10 @@ public class EcnHelper {
 		String creatorOid = (String) params.get("creatorOid");
 		String model = (String) params.get("model");
 		String state = (String) params.get("state");
+		
+		// 정렬
+				String sortKey = (String) params.get("sortKey");
+				String sortType = (String) params.get("sortType");
 
 		QuerySpec query = new QuerySpec();
 		int idx = query.appendClassList(EChangeNotice.class, true);
@@ -75,8 +79,8 @@ public class EcnHelper {
 			WTUser sessionUser = CommonUtil.sessionUser();
 			QuerySpecUtils.toEquals(query, idx, EChangeNotice.class, "workerReference.key.id", sessionUser);
 		}
-
-		QuerySpecUtils.toOrderBy(query, idx, EChangeNotice.class, EChangeNotice.MODIFY_TIMESTAMP, true);
+		boolean sort = QuerySpecUtils.toSort(sortType);
+		QuerySpecUtils.toOrderBy(query, idx, EChangeNotice.class, EChangeNotice.MODIFY_TIMESTAMP, sort);
 
 		System.out.println(query);
 		PageQueryUtils pager = new PageQueryUtils(params, query);

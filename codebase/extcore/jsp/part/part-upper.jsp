@@ -41,7 +41,7 @@ JSONArray upper = (JSONArray) request.getAttribute("upper");
 			}
 		},
 	}, {
-		headerText : "품목번호",
+		headerText : "품목명",
 		dataField : "name",
 		dataType : "string",
 		style : "aui-left"

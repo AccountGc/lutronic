@@ -145,9 +145,6 @@ public class DocumentHelper {
 		String sortKey = (String) params.get("sortKey");
 		String sortType = (String) params.get("sortType");
 
-		System.out.println("so=" + sortKey);
-		System.out.println("so1=" + sortType);
-
 		QuerySpec query = new QuerySpec();
 		int idx = query.appendClassList(WTDocument.class, true);
 		int idx_m = query.appendClassList(WTDocumentMaster.class, false);

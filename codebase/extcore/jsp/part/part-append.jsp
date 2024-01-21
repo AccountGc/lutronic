@@ -153,18 +153,10 @@ QuantityUnit[] unitList = (QuantityUnit[]) request.getAttribute("unitList");
 		<col width="*">
 	</colgroup>
 	<tr>
-		<th class="req lb">프로젝트코드</th>
+		<th class="req lb">프로젝트 코드</th>
 		<td class="indent5">
-			<select name="model" id="model" class="width-200">
-				<option value="">선택</option>
-				<%
-				for (NumberCode model : modelList) {
-				%>
-				<option value="<%=model.getCode()%>"><%=model.getName()%></option>
-				<%
-				}
-				%>
-			</select>
+			<input type="text" name="model" id="model" class="width-300">
+			<input type="hidden" name="modelcode" id="modelcode">
 		</td>
 		<th class="req">제작방법</th>
 		<td class="indent5">
@@ -215,16 +207,8 @@ QuantityUnit[] unitList = (QuantityUnit[]) request.getAttribute("unitList");
 		</td>
 		<th>MANUFACTURER</th>
 		<td class="indent5">
-			<select name="manufacture" id="manufacture" class="width-200">
-				<option value="">선택</option>
-				<%
-				for (NumberCode manufacture : manufactureList) {
-				%>
-				<option value="<%=manufacture.getCode()%>"><%=manufacture.getName()%></option>
-				<%
-				}
-				%>
-			</select>
+		<input type="text" name="manufacture" id="manufacture" class="width-200">
+					<input type="hidden" name="manufacturecode" id="manufacturecode">
 		</td>
 	</tr>
 	<tr>
@@ -325,9 +309,6 @@ QuantityUnit[] unitList = (QuantityUnit[]) request.getAttribute("unitList");
 	<jsp:param value="create" name="mode" />
 	<jsp:param value="insert90" name="method" />
 	<jsp:param value="true" name="multi" />
-	<jsp:param value="250" name="height" />
-	<jsp:param value="true" name="header" />
-
 </jsp:include>
 
 <!-- 관련 RoHS -->
@@ -358,7 +339,8 @@ QuantityUnit[] unitList = (QuantityUnit[]) request.getAttribute("unitList");
 				const partName3 = document.getElementById("partName3").value;
 				const partType3 = document.getElementById("partType3").value;
 				const partName4 = document.getElementById("partName4").value;
-				const model = document.getElementById("model").value;
+				const model = document.getElementById("modelcode").value;
+				const manufacture = document.getElementById("manufacturecode").value;
 				const productmethod = document.getElementById("productmethod").value;
 				const deptcode = document.getElementById("deptcode").value;
 				const unit =  document.getElementById("unit").value;
@@ -435,7 +417,7 @@ QuantityUnit[] unitList = (QuantityUnit[]) request.getAttribute("unitList");
 						seq : toId("seq"),
 						etc : toId("etc"),
 						weight : toId("weight"),
-						manufacture : toId("manufacture"),
+						manufacture : manufacture,
 						mat : toId("mat"),
 						finish : toId("finish"),
 						remarks : toId("remarks"),
@@ -471,13 +453,15 @@ QuantityUnit[] unitList = (QuantityUnit[]) request.getAttribute("unitList");
 				selectbox("partType2");
 				selectbox("partType3");
 				selectbox("state");
-				selectbox("model");
+// 				selectbox("model");
 				selectbox("productmethod");
 				selectbox("deptcode");
 				selectbox("unit");
 				selectbox("mat");
 				selectbox("finish");
-				selectbox("manufacture");
+// 				selectbox("manufacture");
+				finderCode("model", "MODEL");
+				finderCode("manufacture", "MANUFACTURE");
 				finderUser("creator");
 				twindate("created");
 				twindate("modified");

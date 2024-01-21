@@ -110,6 +110,10 @@ public class DrawingHelper {
 		String modifiedFrom = StringUtil.checkNull((String) params.get("modifiedFrom"));
 		String modifiedTo = StringUtil.checkNull((String) params.get("modifiedTo"));
 
+		// 정렬
+				String sortKey = (String) params.get("sortKey");
+				String sortType = (String) params.get("sortType");
+		
 		Folder folder = FolderTaskLogic.getFolder(location, WCUtil.getWTContainerRef());
 
 		if (query.getConditionCount() > 0) {
@@ -141,27 +145,6 @@ public class DrawingHelper {
 		}
 		query.appendCloseParen();
 
-//			String temp = "";
-//			Folder folder = null;
-//			if (location == null || location.length() == 0) {
-//				location = "/Default/PART_Drawing";
-//			}
-//			if(foid!=null && foid.length() > 0){
-//				folder = (Folder)rf.getReference(foid).getObject();
-//				location = FolderHelper.getFolderPath( folder );
-//				temp = folder.getName();
-//			}else{
-//				folder = FolderTaskLogic.getFolder(location, WCUtil.getWTContainerRef());
-//				foid="";
-//			}
-
-		// 상태 임시저장 제외
-		if (query.getConditionCount() > 0) {
-			query.appendAnd();
-		}
-		query.appendWhere(new SearchCondition(EPMDocument.class, EPMDocument.LIFE_CYCLE_STATE,
-				SearchCondition.NOT_EQUAL, "TEMPRARY"), new int[] { idx });
-
 		// Working Copy 제외
 		if (query.getConditionCount() > 0) {
 			query.appendAnd();
@@ -170,78 +153,10 @@ public class DrawingHelper {
 				new SearchCondition(EPMDocument.class, "checkoutInfo.state", SearchCondition.NOT_EQUAL, "wrk", false),
 				new int[] { idx });
 
-		// �����ȣ
-		if (number.length() > 0) {
-			if (query.getConditionCount() > 0) {
-				query.appendAnd();
-			}
-			query.appendWhere(new SearchCondition(EPMDocument.class, "master>number", SearchCondition.LIKE,
-					"%" + number + "%", false), new int[] { idx });
-		} else
-			number = "";
-
-		// �����
-		if (name.length() > 0) {
-			if (query.getConditionCount() > 0) {
-				query.appendAnd();
-			}
-			query.appendWhere(new SearchCondition(EPMDocument.class, "master>name", SearchCondition.LIKE,
-					"%" + name + "%", false), new int[] { idx });
-		} else
-			name = "";
-
-		// �ۼ���
-		if (creator.length() > 0) {
-			if (query.getConditionCount() > 0) {
-				query.appendAnd();
-			}
-			query.appendWhere(new SearchCondition(EPMDocument.class, "iterationInfo.creator.key.id", "=",
-					CommonUtil.getOIDLongValue(creator)), new int[] { idx });
-		} else
-			creator = "";
-
-		// ���°˻�
-		if (StringUtil.checkString(state)) {
-			if (query.getConditionCount() > 0) {
-				query.appendAnd();
-			}
-			query.appendWhere(new SearchCondition(EPMDocument.class, "state.state", SearchCondition.EQUAL, state),
-					new int[] { idx });
-		}
-
-		// �ۼ����� (predate)
-		if (StringUtil.checkString(predate)) {
-			if (query.getConditionCount() > 0) {
-				query.appendAnd();
-			}
-			query.appendWhere(new SearchCondition(EPMDocument.class, "thePersistInfo.createStamp",
-					SearchCondition.GREATER_THAN, DateUtil.convertStartDate(predate)), new int[] { idx });
-		}
-		// �ۼ����� (postdate)
-		if (StringUtil.checkString(postdate)) {
-			if (query.getConditionCount() > 0) {
-				query.appendAnd();
-			}
-			query.appendWhere(new SearchCondition(EPMDocument.class, "thePersistInfo.createStamp",
-					SearchCondition.LESS_THAN, DateUtil.convertEndDate(postdate)), new int[] { idx });
-		}
-
-		// ��������
-		if (predate_modify.length() > 0) {
-			if (query.getConditionCount() > 0) {
-				query.appendAnd();
-			}
-			query.appendWhere(new SearchCondition(EPMDocument.class, "thePersistInfo.modifyStamp",
-					SearchCondition.GREATER_THAN, DateUtil.convertStartDate(predate_modify)), new int[] { idx });
-		}
-		if (postdate_modify.length() > 0) {
-			if (query.getConditionCount() > 0) {
-				query.appendAnd();
-			}
-			query.appendWhere(new SearchCondition(EPMDocument.class, "thePersistInfo.modifyStamp",
-					SearchCondition.LESS_THAN, DateUtil.convertEndDate(postdate_modify)), new int[] { idx });
-		}
-
+		QuerySpecUtils.toLikeAnd(query, idx, EPMDocument.class, EPMDocument.NUMBER, number);
+		QuerySpecUtils.toLikeAnd(query, idx, EPMDocument.class, EPMDocument.NAME, name);
+		QuerySpecUtils.creatorQuery(query, idx, EPMDocument.class, creator);
+		QuerySpecUtils.toState(query, idx, EPMDocument.class, state);
 		QuerySpecUtils.toTimeGreaterAndLess(query, idx, EPMDocument.class, EPMDocument.CREATE_TIMESTAMP, createdFrom,
 				createdTo);
 		QuerySpecUtils.toTimeGreaterAndLess(query, idx, EPMDocument.class, EPMDocument.MODIFY_TIMESTAMP, modifiedFrom,

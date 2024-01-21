@@ -178,6 +178,31 @@ public class PartData {
 		setIBAPartName(part);
 	}
 
+	public String getPartName(WTPart part, int index) {
+		try {
+
+			if (index == 4) {
+				String partName1 = StringUtil.checkNull(IBAUtil.getAttrValue(part, "PARTNAME1"));
+				String partName2 = StringUtil.checkNull(IBAUtil.getAttrValue(part, "PARTNAME2"));
+				String partName3 = StringUtil.checkNull(IBAUtil.getAttrValue(part, "PARTNAME3"));
+				String partName4 = StringUtil.checkNull(IBAUtil.getAttrValue(part, "PARTNAME4"));
+				if (partName1.length() == 0 && partName2.length() == 0 && partName3.length() == 0
+						&& partName4.length() == 0) {
+					return this.name;
+				} else {
+					return partName4;
+				}
+			} else {
+				return StringUtil.checkNull(IBAUtil.getAttrValue(part, "PARTNAME" + index));
+			}
+
+		} catch (Exception e) {
+			e.printStackTrace();
+			return "";
+		}
+
+	}
+
 	private ArrayList<Object[]> descentLastPart(WTPart part, Baseline baseline, boolean isCheckDummy, State state)
 			throws Exception {
 		WTPartConfigSpec configSpec = WTPartConfigSpec

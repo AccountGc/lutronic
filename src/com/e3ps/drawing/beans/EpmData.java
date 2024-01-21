@@ -3,11 +3,8 @@ package com.e3ps.drawing.beans;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.e3ps.common.util.AUIGridUtil;
 import com.e3ps.common.util.CommonUtil;
-import com.e3ps.common.util.DateUtil;
 import com.e3ps.common.util.StringUtil;
-import com.e3ps.common.util.ThumbnailUtil;
 import com.e3ps.drawing.service.DrawingHelper;
 import com.e3ps.part.service.PartHelper;
 import com.ptc.wvs.server.util.PublishUtils;
@@ -17,7 +14,6 @@ import lombok.Setter;
 import wt.content.ApplicationData;
 import wt.content.ContentHelper;
 import wt.content.ContentRoleType;
-import wt.enterprise.BasicTemplateProcessor;
 import wt.epm.EPMDocument;
 import wt.epm.EPMDocumentMaster;
 import wt.fc.QueryResult;
@@ -191,7 +187,8 @@ public class EpmData {
 					ApplicationData data = (ApplicationData) qr.nextElement();
 					String ext = FileUtil.getExtension(data.getFileName());
 					if ("step".equalsIgnoreCase(ext) || "stp".equalsIgnoreCase(ext)) {
-						this.step.put("name", data.getFileName());
+						String name = data.getFileName().replace("step_", "").replace("_prt", "").replace("_asm", "");
+						this.step.put("name", name);
 						this.step.put("fileSizeKB", data.getFileSizeKB() + "KB");
 						this.step.put("url",
 								"/Windchill/plm/content/download?oid="

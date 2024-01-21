@@ -56,6 +56,10 @@ public class EcrmHelper {
 //		String proposer = (String) params.get("proposer");
 		String changeSection = (String) params.get("changeSection");
 		String model = (String) params.get("modelcode");
+		
+		// 정렬
+				String sortKey = (String) params.get("sortKey");
+				String sortType = (String) params.get("sortType");
 
 		QuerySpec query = new QuerySpec();
 		int idx = query.appendClassList(ECRMRequest.class, true);
@@ -124,7 +128,8 @@ public class EcrmHelper {
 		// 변경구분
 		QuerySpecUtils.toLikeAnd(query, idx, ECRMRequest.class, ECRMRequest.CHANGE_SECTION, changeSection);
 
-		QuerySpecUtils.toOrderBy(query, idx, ECRMRequest.class, ECRMRequest.MODIFY_TIMESTAMP, true);
+		boolean sort = QuerySpecUtils.toSort(sortType);
+		QuerySpecUtils.toOrderBy(query, idx, ECRMRequest.class, ECRMRequest.MODIFY_TIMESTAMP, sort);
 
 		PageQueryUtils pager = new PageQueryUtils(params, query);
 		PagingQueryResult result = pager.find();

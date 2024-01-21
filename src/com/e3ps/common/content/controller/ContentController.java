@@ -1,16 +1,12 @@
 package com.e3ps.common.content.controller;
 
 import java.io.ByteArrayOutputStream;
-import java.io.IOException;
 import java.io.InputStream;
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Vector;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
@@ -50,52 +46,10 @@ import wt.doc.WTDocument;
 import wt.epm.EPMDocument;
 import wt.fc.QueryResult;
 import wt.fc.ReferenceFactory;
-import wt.fv.uploadtocache.UploadToCacheHelper;
-import wt.org.WTUser;
-import wt.session.SessionHelper;
-import wt.util.WTException;
-import wt.util.WTProperties;
 
 @Controller
 @RequestMapping(value = "/content/**")
 public class ContentController extends BaseController {
-
-//	@Description(value = "AUI 그리드 마우스 우클린 다운로드")
-//	@GetMapping(value = "/download")
-//	public ResponseEntity<byte[]> download(@RequestParam String oid, @RequestParam String type) {
-//		// p 주
-//		// s 일반 첨부 = ZIP 파일 형태로
-//		// a 모든 첨부파일 = ZIP 파일형태로
-//		HttpHeaders headers = new HttpHeaders();
-//		byte[] bytes = null;
-//		try {
-//			ApplicationData data = (ApplicationData) CommonUtil.getObject(oid);
-//
-//			// 다운로드 이력 생성..
-//			DownloadHistoryHelper.service.create(oid);
-//
-//			InputStream is = ContentServerHelper.service.findLocalContentStream(data);
-//
-//			ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-//			byte[] buffer = new byte[1024];
-//			int length;
-//			while ((length = is.read(buffer)) != -1) {
-//				byteArrayOutputStream.write(buffer, 0, length);
-//			}
-//
-//			bytes = byteArrayOutputStream.toByteArray();
-//			String name = URLEncoder.encode(data.getFileName(), "UTF-8").replaceAll("\\+", "%20");
-//
-//			headers.setContentType(MediaType.APPLICATION_OCTET_STREAM);
-//			headers.setContentLength(bytes.length);
-//			headers.setContentDispositionFormData("attachment", name);
-//
-//		} catch (Exception e) {
-//			e.printStackTrace();
-//		}
-//
-//		return new ResponseEntity<>(bytes, headers, HttpStatus.OK);
-//	}
 
 	@Description(value = "파일 다운로드")
 	@GetMapping(value = "/download")
@@ -117,9 +71,14 @@ public class ContentController extends BaseController {
 					} else {
 						name = e.getCADName();
 					}
+					name = data.getFileName().replace("step_", "").replace("_prt", "").replace("_asm", "")
+							.replace("pdf_", "").replace("_drw", "");
 				} else {
 					name = URLEncoder.encode(data.getFileName(), "UTF-8").replaceAll("\\+", "%20");
 				}
+				
+//				File ff = new File("");
+				
 			} else {
 				name = URLEncoder.encode(data.getFileName(), "UTF-8").replaceAll("\\+", "%20");
 			}

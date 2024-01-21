@@ -219,7 +219,7 @@ public class StandardBomService extends StandardManager implements BomService {
 
 			WTPart parent = (WTPart) CommonUtil.getObject(poid);
 			for (String oid : list) {
-				if (poid.trim().equals(oid.trim())) {
+				if (poid.equals(oid)) {
 					throw new Exception("추가 하하려는 품목중에 상위 품목과 동일한 품목이 존재합니다.");
 				}
 			}
@@ -235,14 +235,17 @@ public class StandardBomService extends StandardManager implements BomService {
 
 			// 복사본에... 생성
 
+			ArrayList<String> refList = new ArrayList<String>();
 			for (String oid : list) {
 				WTPart child = (WTPart) CommonUtil.getObject(oid);
 				WTPartUsageLink usageLink = WTPartUsageLink.newWTPartUsageLink(workingCopy, child.getMaster());
 				usageLink.setQuantity(Quantity.newQuantity(1D, QuantityUnit.EA));
 				PersistenceHelper.manager.save(usageLink);
+				refList.add("_" + usageLink.getPersistInfo().getObjectIdentifier().getId());
 			}
 
 			JSONObject node = BomHelper.manager.getNode(workingCopy);
+			map.put("refList", refList);
 			map.put("resNode", node);
 
 			trs.commit();
@@ -278,14 +281,22 @@ public class StandardBomService extends StandardManager implements BomService {
 			}
 
 			// 복사본에... 생성
+			ArrayList<String> refList = new ArrayList<String>();
 			for (String oid : arr) {
+
+				if (poid.equals(oid)) {
+					throw new Exception("교체하려는 품목과 교체되는 대상 품목이 일치합니다.");
+				}
+
 				WTPart child = (WTPart) CommonUtil.getObject(oid);
 				WTPartUsageLink usageLink = WTPartUsageLink.newWTPartUsageLink(workingCopy, child.getMaster());
 				usageLink.setQuantity(Quantity.newQuantity(1D, QuantityUnit.EA));
 				PersistenceHelper.manager.save(usageLink);
+				refList.add("_" + usageLink.getPersistInfo().getObjectIdentifier().getId());
 			}
 
 			JSONObject node = BomHelper.manager.getNode(workingCopy);
+			map.put("refList", refList);
 			map.put("resNode", node);
 
 			trs.commit();
@@ -321,12 +332,15 @@ public class StandardBomService extends StandardManager implements BomService {
 			}
 
 			// 복사본에... 생성
+			ArrayList<String> refList = new ArrayList<String>();
 			WTPart child = (WTPart) CommonUtil.getObject(oid);
 			WTPartUsageLink usageLink = WTPartUsageLink.newWTPartUsageLink(workingCopy, child.getMaster());
 			usageLink.setQuantity(Quantity.newQuantity(1D, QuantityUnit.EA));
 			PersistenceHelper.manager.save(usageLink);
+			refList.add("_" + usageLink.getPersistInfo().getObjectIdentifier().getId());
 
 			JSONObject node = BomHelper.manager.getNode(workingCopy);
+			map.put("refList", refList);
 			map.put("resNode", node);
 
 			trs.commit();
@@ -494,7 +508,7 @@ public class StandardBomService extends StandardManager implements BomService {
 			CopyObjectInfo[] copyInfoArray = null;
 
 			originals[0] = part;
-			
+
 			// 체크
 //			QuerySpec query = new QuerySpec();
 //			int idx = query.appendClassList(WTPartMaster.class, true);
@@ -504,8 +518,7 @@ public class StandardBomService extends StandardManager implements BomService {
 //				map.put("exist", true);
 //				return map;
 //			}
-			
-			
+
 			copyInfoArray = EnterpriseHelper.service.newMultiObjectCopy(originals);
 			WTPart copy = (WTPart) copyInfoArray[0].getCopy();
 			copy.setName(part.getName());

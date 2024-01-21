@@ -39,6 +39,11 @@ public class AsmHelper {
 		String state = (String) params.get("state");
 		String createdFrom = (String) params.get("createdFrom");
 		String createdTo = (String) params.get("createdTo");
+
+		// 정렬
+		String sortKey = (String) params.get("sortKey");
+		String sortType = (String) params.get("sortType");
+
 		QuerySpec query = new QuerySpec();
 		int idx = query.appendClassList(AsmApproval.class, true);
 
@@ -51,7 +56,8 @@ public class AsmHelper {
 		QuerySpecUtils.toCreatorQuery(query, idx, AsmApproval.class, creatorOid);
 		QuerySpecUtils.toTimeGreaterAndLess(query, idx, AsmApproval.class, AsmApproval.CREATE_TIMESTAMP, createdFrom,
 				createdTo);
-		QuerySpecUtils.toOrderBy(query, idx, AsmApproval.class, AsmApproval.CREATE_TIMESTAMP, false);
+		boolean sort = QuerySpecUtils.toSort(sortType);
+		QuerySpecUtils.toOrderBy(query, idx, AsmApproval.class, AsmApproval.CREATE_TIMESTAMP, sort);
 
 		PageQueryUtils pager = new PageQueryUtils(params, query);
 		PagingQueryResult result = pager.find();

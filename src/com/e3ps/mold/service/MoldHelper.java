@@ -66,6 +66,10 @@ public class MoldHelper {
 		String searchType = StringUtil.checkNull((String) params.get("searchType"));
 		String moldNumber = StringUtil.checkNull((String) params.get("moldnumber"));
 
+		// 정렬
+		String sortKey = (String) params.get("sortKey");
+		String sortType = (String) params.get("sortType");
+
 		QuerySpec query = new QuerySpec();
 		int idx = query.appendClassList(WTDocument.class, true);
 		int idx_m = query.appendClassList(WTDocumentMaster.class, false);
@@ -268,11 +272,13 @@ public class MoldHelper {
 		}
 		query.appendCloseParen();
 
-		QuerySpecUtils.toOrderBy(query, idx, WTDocument.class, WTDocument.MODIFY_TIMESTAMP, true);
+		boolean sort = QuerySpecUtils.toSort(sortType);
+		QuerySpecUtils.toOrderBy(query, idx, WTDocument.class, WTDocument.MODIFY_TIMESTAMP, sort);
 
 		PageQueryUtils pager = new PageQueryUtils(params, query);
 		PagingQueryResult result = pager.find();
-		int rowNum = (pager.getCpage() - 1) * pager.getPsize() + 1;		while (result.hasMoreElements()) {
+		int rowNum = (pager.getCpage() - 1) * pager.getPsize() + 1;
+		while (result.hasMoreElements()) {
 			Object[] obj = (Object[]) result.nextElement();
 			WTDocument document = (WTDocument) obj[0];
 			MoldDTO data = new MoldDTO(document);

@@ -60,6 +60,10 @@ public class CrHelper {
 //		String proposer = (String) params.get("proposer");
 		String changeSection = (String) params.get("changeSection");
 		String model = (String) params.get("modelcode");
+		
+		// 정렬
+				String sortKey = (String) params.get("sortKey");
+				String sortType = (String) params.get("sortType");
 
 		QuerySpec query = new QuerySpec();
 		int idx = query.appendClassList(EChangeRequest.class, true);
@@ -118,7 +122,8 @@ public class CrHelper {
 		// 변경구분
 		QuerySpecUtils.toLikeAnd(query, idx, EChangeRequest.class, EChangeRequest.CHANGE_SECTION, changeSection);
 
-		QuerySpecUtils.toOrderBy(query, idx, EChangeRequest.class, EChangeRequest.MODIFY_TIMESTAMP, true);
+		boolean sort = QuerySpecUtils.toSort(sortType);
+		QuerySpecUtils.toOrderBy(query, idx, EChangeRequest.class, EChangeRequest.MODIFY_TIMESTAMP, sort);
 
 		PageQueryUtils pager = new PageQueryUtils(params, query);
 		PagingQueryResult result = pager.find();

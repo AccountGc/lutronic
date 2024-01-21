@@ -26,6 +26,7 @@ import com.e3ps.change.EChangeOrder;
 import com.e3ps.change.service.ECOHelper;
 import com.e3ps.common.beans.ResultData;
 import com.e3ps.common.code.dto.NumberCodeDTO;
+import com.e3ps.common.code.dto.NumberCodeData;
 import com.e3ps.common.code.service.CodeHelper;
 import com.e3ps.common.code.service.NumberCodeHelper;
 import com.e3ps.common.iba.IBAUtil;
@@ -88,6 +89,17 @@ public class CommonController extends BaseController {
 		}
 		return list;
 	}
+
+	@ResponseBody
+	@RequestMapping("/numberCodeList2")
+	public List<NumberCodeData> numberCodeList(HttpServletRequest request, HttpServletResponse response,
+			@RequestParam("codeType") String codeType, @RequestParam("parentOid") String parentOid,
+			@RequestParam("search") String isSearch) {
+		boolean search = ("true").equals(isSearch);
+		List<NumberCodeData> list = CodeHelper.service.numberCodeList2(codeType, parentOid, search);
+		return list;
+	}
+
 	/**
 	 * 
 	 * LUTRONIC 추가 시작

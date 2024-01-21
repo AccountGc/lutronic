@@ -80,6 +80,10 @@ public class EoHelper {
 		String approveTo = (String) params.get("approveTo");
 		String state = (String) params.get("state");
 		String model = (String) params.get("model");
+		
+		// 정렬
+				String sortKey = (String) params.get("sortKey");
+				String sortType = (String) params.get("sortType");
 
 		QuerySpec query = new QuerySpec();
 		int idx = query.appendClassList(EChangeOrder.class, true);
@@ -150,7 +154,8 @@ public class EoHelper {
 			query.appendCloseParen();
 		}
 
-		QuerySpecUtils.toOrderBy(query, idx, EChangeOrder.class, EChangeOrder.MODIFY_TIMESTAMP, true);
+		boolean sort = QuerySpecUtils.toSort(sortType);
+		QuerySpecUtils.toOrderBy(query, idx, EChangeOrder.class, EChangeOrder.MODIFY_TIMESTAMP, sort);
 
 		PageQueryUtils pager = new PageQueryUtils(params, query);
 		PagingQueryResult result = pager.find();

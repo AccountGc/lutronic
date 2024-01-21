@@ -10,6 +10,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import com.e3ps.common.code.NumberCode;
 import com.e3ps.common.code.dto.NumberCodeDTO;
+import com.e3ps.common.code.dto.NumberCodeData;
 
 import wt.fc.QueryResult;
 import wt.method.RemoteInterface;
@@ -23,7 +24,8 @@ public interface CodeService {
 	 * 
 	 * 
 	 */
-
+	List<NumberCodeData> numberCodeList2(String codeType, String parentOid, boolean search);
+	
 	List<NumberCodeDTO> numberCodeList(String codeType, String parentOid, boolean search);
 
 	List<NumberCodeDTO> autoSearchName(String CodeType, String name);

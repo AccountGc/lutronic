@@ -74,6 +74,10 @@ public class RohsHelper {
 			String state = StringUtil.checkNull((String) params.get("state"));
 			String manufacture = StringUtil.checkNull((String) params.get("manufacture"));
 
+			// 정렬
+			String sortKey = (String) params.get("sortKey");
+			String sortType = (String) params.get("sortType");
+
 			if (!StringUtil.checkString(islastversion)) {
 				islastversion = "true";
 			}
@@ -198,11 +202,13 @@ public class RohsHelper {
 				manufacture = "";
 			}
 
-			QuerySpecUtils.toOrderBy(query, idx, ROHSMaterial.class, ROHSMaterial.MODIFY_TIMESTAMP, true);
+			boolean sort = QuerySpecUtils.toSort(sortType);
+			QuerySpecUtils.toOrderBy(query, idx, ROHSMaterial.class, ROHSMaterial.MODIFY_TIMESTAMP, sort);
 
 			PageQueryUtils pager = new PageQueryUtils(params, query);
 			PagingQueryResult result = pager.find();
-			int rowNum = (pager.getCpage() - 1) * pager.getPsize() + 1;			while (result.hasMoreElements()) {
+			int rowNum = (pager.getCpage() - 1) * pager.getPsize() + 1;
+			while (result.hasMoreElements()) {
 				Object[] obj = (Object[]) result.nextElement();
 				RohsData data = new RohsData((ROHSMaterial) obj[0]);
 				data.setRowNum(rowNum++);

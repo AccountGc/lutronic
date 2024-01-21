@@ -24,15 +24,20 @@ import com.e3ps.common.code.NumberCode;
 import com.e3ps.common.code.service.NumberCodeHelper;
 import com.e3ps.common.iba.IBAUtils;
 import com.e3ps.common.util.CommonUtil;
+import com.e3ps.common.util.ContentUtils;
 import com.e3ps.common.util.PageQueryUtils;
 import com.e3ps.common.util.QuerySpecUtils;
 import com.e3ps.common.util.StringUtil;
 import com.e3ps.doc.service.DocumentHelper;
+import com.e3ps.org.Department;
+import com.e3ps.org.service.DepartmentHelper;
 import com.e3ps.part.service.PartHelper;
+import com.ptc.core.meta.type.mgmt.server.impl.WTTypeDefinition;
 
 import net.sf.json.JSONArray;
 import wt.doc.WTDocument;
 import wt.doc.WTDocumentMaster;
+import wt.doc.WTDocumentTypeInfo;
 import wt.epm.EPMDocument;
 import wt.epm.EPMDocumentMaster;
 import wt.epm.build.EPMBuildHistory;
@@ -192,6 +197,25 @@ public class ActivityHelper {
 	}
 
 	/**
+	 * ECO 및 EO 산출물 등록 활동에 포함된 문서
+	 */
+	public ArrayList<Map<String, Object>> getDocFromActivity(EChangeOrder e) throws Exception {
+		ArrayList<Map<String, Object>> list = new ArrayList<>();
+		QuerySpec qs = new QuerySpec(EChangeActivity.class);
+		QuerySpecUtils.toEqualsAnd(qs, 0, EChangeActivity.class, "eoReference.key.id", e);
+		QuerySpecUtils.toEqualsAnd(qs, 0, EChangeActivity.class, EChangeActivity.ACTIVE_TYPE, "DOCUMENT");
+		QueryResult result = PersistenceHelper.manager.find(qs);
+		while (result.hasMoreElements()) {
+			EChangeActivity eca = (EChangeActivity) result.nextElement();
+			Map<String, Object> map = new HashMap<>();
+			JSONArray data = ActivityHelper.manager.docList(eca);
+			map.put("data", data);
+			list.add(map);
+		}
+		return list;
+	}
+
+	/**
 	 * ECO 및 EO에 관련된 ECA 리스트
 	 */
 	public ArrayList<EChangeActivity> colletActivity(ECOChange eo) throws Exception {
@@ -311,8 +335,20 @@ public class ActivityHelper {
 			map.put("link", link.getPersistInfo().getObjectIdentifier().getStringValue());
 			map.put("oid", doc.getPersistInfo().getObjectIdentifier().getStringValue());
 			map.put("name", doc.getName());
+			// 과거 데이터 분리를 해야 할거 같은데...
 //			map.put("number", doc.getNumber());
-			map.put("number", IBAUtils.getStringValue(doc, "INTERALNUMBER"));
+
+			WTDocumentTypeInfo info = doc.getTypeInfoWTDocument();
+			if (info != null) {
+				String rht1 = info.getPtc_rht_1();
+				if (StringUtil.checkString(rht1)) {
+					map.put("number", doc.getNumber());
+				} else {
+					String s = IBAUtils.getStringValue(doc, "INTERALNUMBER");
+					map.put("number", StringUtil.checkString(s) ? s : doc.getNumber());
+				}
+			}
+
 			map.put("version", doc.getVersionIdentifier().getSeries().getValue() + "."
 					+ doc.getIterationIdentifier().getSeries().getValue());
 			map.put("creator", doc.getCreatorFullName());

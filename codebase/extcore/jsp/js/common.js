@@ -27,7 +27,7 @@ var getURLString = function() {
 *                      NumberCode Parent oid 리스트 가져오기
 ****************************************************************/
 function common_numberCodeList(type, parentOid, search) {
-	var url	= getURLString("common", "numberCodeList", "do");
+	var url	= getCallUrl("/common/numberCodeList2");
 	return $.ajax({
 		type:"POST",
 		url: url,

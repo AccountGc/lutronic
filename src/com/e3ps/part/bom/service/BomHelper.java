@@ -93,6 +93,7 @@ public class BomHelper {
 	public JSONArray loadEditor(WTPart root, boolean skip) throws Exception {
 		JSONArray list = new JSONArray();
 		JSONObject rootNode = new JSONObject();
+		rootNode.put("refKey", "_0");
 		rootNode.put("oid", root.getPersistInfo().getObjectIdentifier().getStringValue());
 		rootNode.put("thum", ThumbnailUtil.thumbnailSmall(root));
 //		rootNode.put("thum", "1");
@@ -146,6 +147,7 @@ public class BomHelper {
 			}
 
 			JSONObject node = new JSONObject();
+			node.put("refKey", "_" + link.getPersistInfo().getObjectIdentifier().getId());
 			node.put("oid", p.getPersistInfo().getObjectIdentifier().getStringValue());
 			node.put("poid", root.getPersistInfo().getObjectIdentifier().getStringValue());
 //			node.put("thum", "12");
@@ -1338,6 +1340,7 @@ public class BomHelper {
 			}
 
 			JSONObject node = new JSONObject();
+			node.put("refKey", "_" + link.getPersistInfo().getObjectIdentifier().getId());
 			node.put("oid", p.getPersistInfo().getObjectIdentifier().getStringValue());
 			node.put("level", level);
 			node.put("poid", parent.getPersistInfo().getObjectIdentifier().getStringValue());

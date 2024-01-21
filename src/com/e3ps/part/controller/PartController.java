@@ -33,7 +33,6 @@ import com.e3ps.common.service.CommonHelper;
 import com.e3ps.common.util.CommonUtil;
 import com.e3ps.common.util.StringUtil;
 import com.e3ps.controller.BaseController;
-import com.e3ps.drawing.service.DrawingHelper;
 import com.e3ps.part.dto.PartDTO;
 import com.e3ps.part.dto.PartData;
 import com.e3ps.part.service.BomSearchHelper;
@@ -83,10 +82,23 @@ public class PartController extends BaseController {
 
 	@Description(value = "새 채번 페이지")
 	@GetMapping(value = "/order")
-	public ModelAndView order(@RequestParam String oid) {
+	public ModelAndView order(@RequestParam String oid) throws Exception {
 		ModelAndView model = new ModelAndView();
+		List<NumberCodeDTO> partType = CodeHelper.service.topCodeToList("PARTTYPE");
+		List<Map<String, Object>> list = null;
+		try {
+			list = BomSearchHelper.service.updateAUIPartChangeListGrid(oid, false);
+		} catch (Exception e) {
+			e.printStackTrace();
+			list = new ArrayList<Map<String, Object>>();
+		}
+
 		model.addObject("oid", oid);
-		model.setViewName("popup:/part/part-order");
+		model.addObject("list", list);
+		model.addObject("size", list.size());
+		model.addObject("partType", partType);
+
+		model.setViewName("/extcore/jsp/part/part-order.jsp");
 		return model;
 	}
 
@@ -608,10 +620,9 @@ public class PartController extends BaseController {
 
 	@ResponseBody
 	@RequestMapping("/updateAUIPartChangeSearchAction")
-	public List<Map<String, Object>> updateAUIPartChangeSearchAction(HttpServletRequest request,
-			HttpServletResponse response) {
-		String oid = request.getParameter("oid");
-		String checkDummy = request.getParameter("checkDummy");
+	public List<Map<String, Object>> updateAUIPartChangeSearchAction(@RequestBody Map<String, Object> params) {
+		String oid = (String) params.get("oid");
+		String checkDummy = (String) params.get("checkDummy");
 		boolean isCheckDummy = "true".equals(checkDummy) ? true : false;
 		List<Map<String, Object>> list = null;
 		// System.out.println("updateAUIPackagePartAction oid =" + oid);
@@ -2101,5 +2112,4 @@ public class PartController extends BaseController {
 		model.setViewName("popup:/part/part-viewHistory");
 		return model;
 	}
-
 }

@@ -293,13 +293,20 @@ boolean isAdmin = (boolean) request.getAttribute("isAdmin");
 	}
 
 	function excel() {
+
+		if (!confirm("설계변경 통보서를 다운받습니다.")) {
+			return false;
+		}
+
 		const oid = document.getElementById("oid").value;
 		const url = getCallUrl("/eco/excel?oid=" + oid);
+		openLayer();
 		call(url, null, function(data) {
-			logger(data);
 			if (data.result) {
-
+				const n = data.name;
+				document.location.href = '/Windchill/extcore/jsp/common/content/FileDownload.jsp?fileName=' + n + '&originFileName=' + n;
 			}
+			closeLayer();
 		}, "GET");
 	}
 
