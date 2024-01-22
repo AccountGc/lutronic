@@ -46,6 +46,7 @@ import wt.doc.WTDocument;
 import wt.epm.EPMDocument;
 import wt.fc.QueryResult;
 import wt.fc.ReferenceFactory;
+import wt.util.FileUtil;
 
 @Controller
 @RequestMapping(value = "/content/**")
@@ -71,8 +72,9 @@ public class ContentController extends BaseController {
 					} else {
 						name = e.getCADName();
 					}
-					name = name.replace("step_", "").replace("_prt", "").replace("_asm", "").replace("pdf_", "")
-							.replace("_drw", "") + "_" + e.getName();
+					String ext = FileUtil.getExtension(name);
+					name = name.replace("." + ext, "").replace("step_", "").replace("_prt", "").replace("_asm", "")
+							.replace("pdf_", "").replace("_drw", "") + "_" + e.getName() + "." + ext;
 				} else {
 					name = URLEncoder.encode(data.getFileName(), "UTF-8").replaceAll("\\+", "%20");
 				}

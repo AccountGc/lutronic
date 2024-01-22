@@ -151,7 +151,8 @@ public class EpmData {
 					ApplicationData data = (ApplicationData) result.nextElement();
 					String ext = FileUtil.getExtension(data.getFileName());
 					if ("dxf".equalsIgnoreCase(ext)) {
-						String name = data.getFileName().replace("_drw", "") + "_" + epm.getName();
+						String name = data.getFileName().replace("." + ext, "").replace("_drw", "") + "_"
+								+ epm.getName() + "." + ext;
 						this.dxf.put("name", name);
 						this.dxf.put("fileSizeKB", data.getFileSizeKB() + "KB");
 						this.dxf.put("url",
@@ -167,7 +168,8 @@ public class EpmData {
 					ApplicationData data = (ApplicationData) result.nextElement();
 					String ext = FileUtil.getExtension(data.getFileName());
 					if ("pdf".equalsIgnoreCase(ext)) {
-						String name = data.getFileName().replace("pdf_", "").replace("_drw", "") + "_" + epm.getName();
+						String name = data.getFileName().replace("." + ext, "").replace("pdf_", "").replace("_drw", "")
+								+ "_" + epm.getName() + "." + ext;
 						this.pdf.put("name", name);
 						this.pdf.put("fileSizeKB", data.getFileSizeKB() + "KB");
 //						this.pdf.put("url", ContentHelper.getDownloadURL(representation, data, false, name).toString());
@@ -188,8 +190,8 @@ public class EpmData {
 					ApplicationData data = (ApplicationData) qr.nextElement();
 					String ext = FileUtil.getExtension(data.getFileName());
 					if ("step".equalsIgnoreCase(ext) || "stp".equalsIgnoreCase(ext)) {
-						String name = data.getFileName().replace("step_", "").replace("_prt", "").replace("_asm", "")
-								+ "_" + epm.getName();
+						String name = data.getFileName().replace("." + ext, "").replace("step_", "").replace("_prt", "")
+								.replace("_asm", "") + "_" + epm.getName() + "." + ext;
 						this.step.put("name", name);
 						this.step.put("fileSizeKB", data.getFileSizeKB() + "KB");
 						this.step.put("url",
