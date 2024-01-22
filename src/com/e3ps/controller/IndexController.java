@@ -20,6 +20,8 @@ import org.springframework.web.servlet.ModelAndView;
 import com.e3ps.change.activity.service.ActivityHelper;
 import com.e3ps.change.cr.service.CrHelper;
 import com.e3ps.change.eco.service.EcoHelper;
+import com.e3ps.change.ecpr.service.EcprHelper;
+import com.e3ps.change.ecrm.service.EcrmHelper;
 import com.e3ps.common.history.service.LoginHistoryHelper;
 import com.e3ps.common.util.CommonUtil;
 import com.e3ps.common.util.StringUtil;
@@ -29,6 +31,9 @@ import com.e3ps.org.dto.PeopleDTO;
 import com.e3ps.org.service.DepartmentHelper;
 import com.e3ps.workspace.service.WorkDataHelper;
 import com.e3ps.workspace.service.WorkspaceHelper;
+
+import wt.fc.QueryResult;
+import wt.org.WTUser;
 
 @Controller
 public class IndexController extends BaseController {
@@ -77,11 +82,24 @@ public class IndexController extends BaseController {
 		if (!StringUtil.checkString(start)) {
 			start = "2016";
 		}
+		WTUser user = CommonUtil.sessionUser();
+		String oid = user.getPersistInfo().getObjectIdentifier().getStringValue();
 		Map<String, ArrayList<Map<String, Integer>>> dataMap = EcoHelper.manager.getChart(start);
 		Map<String, Integer> drill = CrHelper.manager.getDrill();
 		int workData = WorkDataHelper.manager.count();
 		int eca = ActivityHelper.manager.count();
 		Map<String, Integer> count = WorkspaceHelper.manager.count();
+
+		QueryResult crQr = CrHelper.manager.getMyCr(oid);
+		QueryResult ecprQr = EcprHelper.manager.getMyEcpr(oid);
+		QueryResult ecrmQr = EcrmHelper.manager.getMyEcrm(oid);
+		QueryResult ecoQr = EcoHelper.manager.getMyEco(oid);
+
+		model.addObject("crQr", crQr);
+		model.addObject("ecprQr", ecprQr);
+		model.addObject("ecrmQr", ecrmQr);
+		model.addObject("ecoQr", ecoQr);
+
 		model.addObject("count", count);
 		model.addObject("workData", workData);
 		model.addObject("eca", eca);

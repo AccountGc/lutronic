@@ -28,8 +28,11 @@ import com.ibm.icu.text.DecimalFormat;
 import net.sf.json.JSONArray;
 import wt.doc.WTDocument;
 import wt.fc.PagingQueryResult;
+import wt.fc.PagingSession;
+import wt.fc.PagingSessionHelper;
 import wt.fc.PersistenceHelper;
 import wt.fc.QueryResult;
+import wt.org.WTUser;
 import wt.query.QueryException;
 import wt.query.QuerySpec;
 import wt.query.SearchCondition;
@@ -60,10 +63,10 @@ public class CrHelper {
 //		String proposer = (String) params.get("proposer");
 		String changeSection = (String) params.get("changeSection");
 		String model = (String) params.get("modelcode");
-		
+
 		// 정렬
-				String sortKey = (String) params.get("sortKey");
-				String sortType = (String) params.get("sortType");
+		String sortKey = (String) params.get("sortKey");
+		String sortType = (String) params.get("sortType");
 
 		QuerySpec query = new QuerySpec();
 		int idx = query.appendClassList(EChangeRequest.class, true);
@@ -372,5 +375,17 @@ public class CrHelper {
 			}
 		}
 		return result;
+	}
+
+	/**
+	 * 내가 작성하고 승인됨 아닌 CR
+	 */
+	public QueryResult getMyCr(String oid) throws Exception {
+		QuerySpec query = new QuerySpec();
+		int idx = query.appendClassList(EChangeRequest.class, true);
+		QuerySpecUtils.toCreatorQuery(query, idx, EChangeRequest.class, oid);
+		QuerySpecUtils.toNotEqualsAnd(query, idx, EChangeRequest.class, "state.state", "APPROVED");
+		QuerySpecUtils.toOrderBy(query, idx, EChangeRequest.class, EChangeRequest.CREATE_TIMESTAMP, true);
+		return PagingSessionHelper.openPagingSession(0, 5, query);
 	}
 }

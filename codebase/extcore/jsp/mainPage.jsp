@@ -1,3 +1,7 @@
+<%@page import="com.e3ps.change.ECRMRequest"%>
+<%@page import="com.e3ps.change.ECPRRequest"%>
+<%@page import="com.e3ps.change.EChangeOrder"%>
+<%@page import="com.e3ps.change.EChangeRequest"%>
 <%@page import="java.util.Iterator"%>
 <%@page import="java.util.ArrayList"%>
 <%@page import="java.util.Map"%>
@@ -19,6 +23,12 @@ ArrayList<Map<String, Integer>> complete = (ArrayList<Map<String, Integer>>) dat
 ArrayList<Map<String, Integer>> progress = (ArrayList<Map<String, Integer>>) dataMap.get("progress");
 Map<String, Integer> drill = (Map<String, Integer>) request.getAttribute("drill");
 Map<String, Integer> count = (Map<String, Integer>) request.getAttribute("count");
+
+// 설변들
+QueryResult crQr = (QueryResult) request.getAttribute("crQr");
+QueryResult ecoQr = (QueryResult) request.getAttribute("ecoQr");
+QueryResult ecprQr = (QueryResult) request.getAttribute("ecprQr");
+QueryResult ecrmQr = (QueryResult) request.getAttribute("ecrmQr");
 %>
 <!DOCTYPE html>
 <html>
@@ -249,7 +259,7 @@ div#main {
 				</div>
 				<!-- 공지사항 -->
 				<div class="col-md-12 col-xxl-6">
-					<div class="card h-md-100 ecommerce-card-min-width">
+					<div class="card h-md-100">
 						<div class="card-body d-flex flex-column justify-content-end">
 							<div class="row">
 								<table>
@@ -305,47 +315,247 @@ div#main {
 					</div>
 				</div>
 			</div>
+
+			<div class="row g-3 mb-3">
+				<!-- CR -->
+				<div class="col-md-12 col-xxl-6">
+					<div class="card h-md-100">
+						<div class="card-body d-flex flex-column justify-content-end">
+							<div class="row">
+								<table style="height: 193px;">
+									<colgroup>
+										<col width="120px;">
+										<col width="*">
+										<col width="100px;">
+										<col width="120px;">
+									</colgroup>
+									<tr valign="top">
+										<th style="text-align: center; padding: 5px;">
+											CR 번호
+											<div style="border-top: 1px solid black; margin-top: 6px;"></div>
+										</th>
+										<th style="text-align: center; padding: 5px;">
+											제목
+											<div style="border-top: 1px solid black; margin-top: 6px;"></div>
+										</th>
+										<th style="text-align: center; padding: 5px;">
+											상태
+											<div style="border-top: 1px solid black; margin-top: 6px;"></div>
+										</th>
+										<th style="text-align: center; padding: 5px;">
+											등록일
+											<div style="border-top: 1px solid black; margin-top: 6px;"></div>
+										</th>
+									</tr>
+									<%
+									while (crQr.hasMoreElements()) {
+										Object[] obj = (Object[]) crQr.nextElement();
+										EChangeRequest cr = (EChangeRequest) obj[0];
+										String oid = cr.getPersistInfo().getObjectIdentifier().getStringValue();
+									%>
+									<tr>
+										<td style="text-align: center; padding: 5px;">
+											<a href="javascript:view('<%=oid%>');"><%=cr.getEoNumber()%></a>
+										</td>
+										<td style="text-align: left; text-indent: 10px; padding: 5px;">
+											<a href="javascript:view('<%=oid%>');"><%=cr.getEoName()%></a>
+										</td>
+										<td style="text-align: center; padding: 5px;"><%=cr.getLifeCycleState().getDisplay()%></td>
+										<td style="text-align: center; padding: 5px;"><%=cr.getCreateTimestamp().toString().substring(0, 10)%></td>
+									</tr>
+									<%
+									}
+									%>
+								</table>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="col-md-12 col-xxl-6">
+					<!-- ECO -->
+					<div class="card h-md-100">
+						<div class="card-body d-flex flex-column justify-content-end">
+							<div class="row">
+								<table style="height: 193px;">
+									<colgroup>
+										<col width="120px;">
+										<col width="*">
+										<col width="100px;">
+										<col width="120px;">
+									</colgroup>
+									<tr valign="top">
+										<th style="text-align: center; padding: 5px;">
+											ECO 번호
+											<div style="border-top: 1px solid black; margin-top: 6px;"></div>
+										</th>
+										<th style="text-align: center; padding: 5px;">
+											제목
+											<div style="border-top: 1px solid black; margin-top: 6px;"></div>
+										</th>
+										<th style="text-align: center; padding: 5px;">
+											상태
+											<div style="border-top: 1px solid black; margin-top: 6px;"></div>
+										</th>
+										<th style="text-align: center; padding: 5px;">
+											등록일
+											<div style="border-top: 1px solid black; margin-top: 6px;"></div>
+										</th>
+									</tr>
+									<%
+									while (ecoQr.hasMoreElements()) {
+										Object[] obj = (Object[]) ecoQr.nextElement();
+										EChangeOrder eco = (EChangeOrder) obj[0];
+										String oid = eco.getPersistInfo().getObjectIdentifier().getStringValue();
+									%>
+									<tr>
+										<td style="text-align: center; padding: 5px;">
+											<a href="javascript:view('<%=oid%>');"><%=eco.getEoNumber()%></a>
+										</td>
+										<td style="text-align: left; text-indent: 10px; padding: 5px;">
+											<a href="javascript:view('<%=oid%>');"><%=eco.getEoName()%></a>
+										</td>
+										<td style="text-align: center; padding: 5px;"><%=eco.getLifeCycleState().getDisplay()%></td>
+										<td style="text-align: center; padding: 5px;"><%=eco.getCreateTimestamp().toString().substring(0, 10)%></td>
+									</tr>
+									<%
+									}
+									%>
+								</table>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<div class="row g-3 mb-3">
+				<!-- ECPR -->
+				<div class="col-md-12 col-xxl-6">
+					<div class="card h-md-100">
+						<div class="card-body d-flex flex-column justify-content-end">
+							<div class="row">
+								<table style="height: 193px;">
+									<colgroup>
+										<col width="200px;">
+										<col width="*">
+										<col width="100px;">
+										<col width="120px;">
+									</colgroup>
+									<tr valign="top">
+										<th style="text-align: center; padding: 5px;">
+											ECPR 번호
+											<div style="border-top: 1px solid black; margin-top: 6px;"></div>
+										</th>
+										<th style="text-align: center; padding: 5px;">
+											제목
+											<div style="border-top: 1px solid black; margin-top: 6px;"></div>
+										</th>
+										<th style="text-align: center; padding: 5px;">
+											상태
+											<div style="border-top: 1px solid black; margin-top: 6px;"></div>
+										</th>
+										<th style="text-align: center; padding: 5px;">
+											등록일
+											<div style="border-top: 1px solid black; margin-top: 6px;"></div>
+										</th>
+									</tr>
+									<%
+									while (ecprQr.hasMoreElements()) {
+										Object[] obj = (Object[]) ecprQr.nextElement();
+										ECPRRequest ecpr = (ECPRRequest) obj[0];
+										String oid = ecpr.getPersistInfo().getObjectIdentifier().getStringValue();
+									%>
+									<tr>
+										<td style="text-align: center; padding: 5px;">
+											<a href="javascript:view('<%=oid%>');"><%=ecpr.getEoNumber()%></a>
+										</td>
+										<td style="text-align: left; text-indent: 10px; padding: 5px;">
+											<a href="javascript:view('<%=oid%>');"><%=ecpr.getEoName()%></a>
+										</td>
+										<td style="text-align: center; padding: 5px;"><%=ecpr.getLifeCycleState().getDisplay()%></td>
+										<td style="text-align: center; padding: 5px;"><%=ecpr.getCreateTimestamp().toString().substring(0, 10)%></td>
+									</tr>
+									<%
+									}
+									%>
+								</table>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="col-md-12 col-xxl-6">
+					<!-- ECO -->
+					<div class="card h-md-100">
+						<div class="card-body d-flex flex-column justify-content-end">
+							<div class="row">
+								<table style="height: 193px;">
+									<colgroup>
+										<col width="200px;">
+										<col width="*">
+										<col width="100px;">
+										<col width="120px;">
+									</colgroup>
+									<tr valign="top">
+										<th style="text-align: center; padding: 5px;">
+											ECRM 번호
+											<div style="border-top: 1px solid black; margin-top: 6px;"></div>
+										</th>
+										<th style="text-align: center; padding: 5px;">
+											제목
+											<div style="border-top: 1px solid black; margin-top: 6px;"></div>
+										</th>
+										<th style="text-align: center; padding: 5px;">
+											상태
+											<div style="border-top: 1px solid black; margin-top: 6px;"></div>
+										</th>
+										<th style="text-align: center; padding: 5px;">
+											등록일
+											<div style="border-top: 1px solid black; margin-top: 6px;"></div>
+										</th>
+									</tr>
+									<%
+									while (ecrmQr.hasMoreElements()) {
+										Object[] obj = (Object[]) ecrmQr.nextElement();
+										ECRMRequest ecrm = (ECRMRequest) obj[0];
+										String oid = ecrm.getPersistInfo().getObjectIdentifier().getStringValue();
+									%>
+									<tr>
+										<td style="text-align: center; padding: 5px;">
+											<a href="javascript:view('<%=oid%>');"><%=ecrm.getEoNumber()%></a>
+										</td>
+										<td style="text-align: left; text-indent: 10px; padding: 5px;">
+											<a href="javascript:view('<%=oid%>');"><%=ecrm.getEoName()%></a>
+										</td>
+										<td style="text-align: center; padding: 5px;"><%=ecrm.getLifeCycleState().getDisplay()%></td>
+										<td style="text-align: center; padding: 5px;"><%=ecrm.getCreateTimestamp().toString().substring(0, 10)%></td>
+									</tr>
+									<%
+									}
+									%>
+								</table>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+
+
+
+			<!-- 차트 -->
+			<div class="row g-3 mb-3">
+				<div class="col-md-12 col-xxl-6">
+					<div class="row">
+						<div id="chart1"></div>
+					</div>
+				</div>
+				<div class="col-md-12 col-xxl-6">
+					<div class="row">
+						<div id="chart"></div>
+					</div>
+				</div>
+			</div>
 		</div>
-		<!-- 결재 및 공지사항 -->
-		<table style="height: 400px;">
-			<colgroup>
-				<col width="49%">
-				<col width="30px;">
-				<col width="49%">
-			</colgroup>
-			<tr>
-				<td valign="top"></td>
-				<td valign="top">&nbsp;</td>
-				<td class="left" valign="top">
-					<table>
-						<tr>
-							<td style="border: 2px solid #86bff9; height: 190px;" valign="top"></td>
-						</tr>
-					</table>
-				</td>
-			</tr>
-		</table>
-
-		<br>
-		<table class="button-table">
-			<tr>
-				<td>
-					<input type="button" value="차트 보기" title="차트 보기" class="gray" onclick="openChart(this);">
-				</td>
-			</tr>
-		</table>
-
-		<!-- 차트 -->
-		<table id="chart_table" style="display: none;">
-			<colgroup>
-				<col width="50%">
-				<col width="50%">
-			</colgroup>
-			<tr>
-				<td>
-					<div id="container1"></div>
-					<script type="text/javascript">
-					Highcharts.chart('container1', {
+		<script type="text/javascript">
+					Highcharts.chart('chart1', {
 					    chart: {
 					        type: 'column'
 					    },
@@ -393,240 +603,11 @@ while (it.hasNext()) {
 					            ]
 					        }
 					    ],
-					    drilldown: {
-					        breadcrumbs: {
-					            position: {
-					                align: 'right'
-					            }
-					        },
-					        series: [
-					            {
-					                name: 'Chrome',
-					                id: 'Chrome',
-					                data: [
-					                    [
-					                        'v65.0',
-					                        0.1
-					                    ],
-					                    [
-					                        'v64.0',
-					                        1.3
-					                    ],
-					                    [
-					                        'v63.0',
-					                        53.02
-					                    ],
-					                    [
-					                        'v62.0',
-					                        1.4
-					                    ],
-					                    [
-					                        'v61.0',
-					                        0.88
-					                    ],
-					                    [
-					                        'v60.0',
-					                        0.56
-					                    ],
-					                    [
-					                        'v59.0',
-					                        0.45
-					                    ],
-					                    [
-					                        'v58.0',
-					                        0.49
-					                    ],
-					                    [
-					                        'v57.0',
-					                        0.32
-					                    ],
-					                    [
-					                        'v56.0',
-					                        0.29
-					                    ],
-					                    [
-					                        'v55.0',
-					                        0.79
-					                    ],
-					                    [
-					                        'v54.0',
-					                        0.18
-					                    ],
-					                    [
-					                        'v51.0',
-					                        0.13
-					                    ],
-					                    [
-					                        'v49.0',
-					                        2.16
-					                    ],
-					                    [
-					                        'v48.0',
-					                        0.13
-					                    ],
-					                    [
-					                        'v47.0',
-					                        0.11
-					                    ],
-					                    [
-					                        'v43.0',
-					                        0.17
-					                    ],
-					                    [
-					                        'v29.0',
-					                        0.26
-					                    ]
-					                ]
-					            },
-					            {
-					                name: 'Firefox',
-					                id: 'Firefox',
-					                data: [
-					                    [
-					                        'v58.0',
-					                        1.02
-					                    ],
-					                    [
-					                        'v57.0',
-					                        7.36
-					                    ],
-					                    [
-					                        'v56.0',
-					                        0.35
-					                    ],
-					                    [
-					                        'v55.0',
-					                        0.11
-					                    ],
-					                    [
-					                        'v54.0',
-					                        0.1
-					                    ],
-					                    [
-					                        'v52.0',
-					                        0.95
-					                    ],
-					                    [
-					                        'v51.0',
-					                        0.15
-					                    ],
-					                    [
-					                        'v50.0',
-					                        0.1
-					                    ],
-					                    [
-					                        'v48.0',
-					                        0.31
-					                    ],
-					                    [
-					                        'v47.0',
-					                        0.12
-					                    ]
-					                ]
-					            },
-					            {
-					                name: 'Internet Explorer',
-					                id: 'Internet Explorer',
-					                data: [
-					                    [
-					                        'v11.0',
-					                        6.2
-					                    ],
-					                    [
-					                        'v10.0',
-					                        0.29
-					                    ],
-					                    [
-					                        'v9.0',
-					                        0.27
-					                    ],
-					                    [
-					                        'v8.0',
-					                        0.47
-					                    ]
-					                ]
-					            },
-					            {
-					                name: 'Safari',
-					                id: 'Safari',
-					                data: [
-					                    [
-					                        'v11.0',
-					                        3.39
-					                    ],
-					                    [
-					                        'v10.1',
-					                        0.96
-					                    ],
-					                    [
-					                        'v10.0',
-					                        0.36
-					                    ],
-					                    [
-					                        'v9.1',
-					                        0.54
-					                    ],
-					                    [
-					                        'v9.0',
-					                        0.13
-					                    ],
-					                    [
-					                        'v5.1',
-					                        0.2
-					                    ]
-					                ]
-					            },
-					            {
-					                name: 'Edge',
-					                id: 'Edge',
-					                data: [
-					                    [
-					                        'v16',
-					                        2.6
-					                    ],
-					                    [
-					                        'v15',
-					                        0.92
-					                    ],
-					                    [
-					                        'v14',
-					                        0.4
-					                    ],
-					                    [
-					                        'v13',
-					                        0.1
-					                    ]
-					                ]
-					            },
-					            {
-					                name: 'Opera',
-					                id: 'Opera',
-					                data: [
-					                    [
-					                        'v50.0',
-					                        0.96
-					                    ],
-					                    [
-					                        'v49.0',
-					                        0.82
-					                    ],
-					                    [
-					                        'v12.1',
-					                        0.14
-					                    ]
-					                ]
-					            }
-					        ]
-					    }
 					});
 
 					</script>
-				</td>
-
-				<td>
-					<div id="container"></div>
-					<script type="text/javascript">
-						Highcharts.chart('container', {
+		<script type="text/javascript">
+						Highcharts.chart('chart', {
 							chart : {
 								type : 'column'
 							},
@@ -674,10 +655,6 @@ while (it.hasNext()) {
 							} ]
 						});
 					</script>
-				</td>
-			</tr>
-		</table>
-
 
 		<script type="text/javascript">
 			function view(oid) {

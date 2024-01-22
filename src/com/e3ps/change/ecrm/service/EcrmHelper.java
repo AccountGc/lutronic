@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.e3ps.change.ECPRRequest;
 import com.e3ps.change.ECRMRequest;
 import com.e3ps.change.EChangeOrder;
 import com.e3ps.change.EChangeRequest;
@@ -26,6 +27,7 @@ import com.ibm.icu.text.DecimalFormat;
 import net.sf.json.JSONArray;
 import wt.doc.WTDocument;
 import wt.fc.PagingQueryResult;
+import wt.fc.PagingSessionHelper;
 import wt.fc.PersistenceHelper;
 import wt.fc.QueryResult;
 import wt.query.QuerySpec;
@@ -56,10 +58,10 @@ public class EcrmHelper {
 //		String proposer = (String) params.get("proposer");
 		String changeSection = (String) params.get("changeSection");
 		String model = (String) params.get("modelcode");
-		
+
 		// 정렬
-				String sortKey = (String) params.get("sortKey");
-				String sortType = (String) params.get("sortType");
+		String sortKey = (String) params.get("sortKey");
+		String sortType = (String) params.get("sortType");
 
 		QuerySpec query = new QuerySpec();
 		int idx = query.appendClassList(ECRMRequest.class, true);
@@ -261,5 +263,17 @@ public class EcrmHelper {
 			}
 		}
 		return list;
+	}
+
+	/**
+	 * 내가 작성하고 승인되지 않은 ECRM
+	 */
+	public QueryResult getMyEcrm(String oid) throws Exception {
+		QuerySpec query = new QuerySpec();
+		int idx = query.appendClassList(ECRMRequest.class, true);
+		QuerySpecUtils.toCreatorQuery(query, idx, ECRMRequest.class, oid);
+		QuerySpecUtils.toNotEqualsAnd(query, idx, ECRMRequest.class, "state.state", "APPROVED");
+		QuerySpecUtils.toOrderBy(query, idx, ECRMRequest.class, ECRMRequest.CREATE_TIMESTAMP, true);
+		return PagingSessionHelper.openPagingSession(0, 5, query);
 	}
 }

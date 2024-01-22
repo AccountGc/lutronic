@@ -84,6 +84,7 @@ import wt.content.ContentItem;
 import wt.content.ContentRoleType;
 import wt.epm.EPMDocument;
 import wt.fc.PagingQueryResult;
+import wt.fc.PagingSessionHelper;
 import wt.fc.PersistenceHelper;
 import wt.fc.QueryResult;
 import wt.lifecycle.LifeCycleHelper;
@@ -1721,5 +1722,18 @@ public class EcoHelper {
 			}
 		}
 		return list;
+	}
+
+	/**
+	 * 내가 작성하고 승인되지 않은 ECO
+	 */
+	public QueryResult getMyEco(String oid) throws Exception {
+		QuerySpec query = new QuerySpec();
+		int idx = query.appendClassList(EChangeOrder.class, true);
+		QuerySpecUtils.toCreatorQuery(query, idx, EChangeOrder.class, oid);
+		QuerySpecUtils.toEqualsAnd(query, idx, EChangeOrder.class, EChangeOrder.EO_TYPE, "CHANGE");
+		QuerySpecUtils.toNotEqualsAnd(query, idx, EChangeOrder.class, "state.state", "APPROVED");
+		QuerySpecUtils.toOrderBy(query, idx, EChangeOrder.class, EChangeOrder.CREATE_TIMESTAMP, true);
+		return PagingSessionHelper.openPagingSession(0, 5, query);
 	}
 }

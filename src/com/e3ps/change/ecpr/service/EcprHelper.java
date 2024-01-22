@@ -28,6 +28,7 @@ import com.ibm.icu.text.DecimalFormat;
 import net.sf.json.JSONArray;
 import wt.doc.WTDocument;
 import wt.fc.PagingQueryResult;
+import wt.fc.PagingSessionHelper;
 import wt.fc.PersistenceHelper;
 import wt.fc.QueryResult;
 import wt.query.QuerySpec;
@@ -59,7 +60,7 @@ public class EcprHelper {
 //			String proposer = StringUtil.checkNull((String)params.get("proposer"));
 			String changeSection = StringUtil.checkNull((String) params.get("changeSection"));
 			String model = StringUtil.checkNull((String) params.get("modelcode"));
-			
+
 			// 정렬
 			String sortKey = (String) params.get("sortKey");
 			String sortType = (String) params.get("sortType");
@@ -327,5 +328,17 @@ public class EcprHelper {
 			rtn = number + "001";
 		}
 		return rtn;
+	}
+
+	/**
+	 * 내가 작성하고 승인됨 아닌 ECPR
+	 */
+	public QueryResult getMyEcpr(String oid) throws Exception {
+		QuerySpec query = new QuerySpec();
+		int idx = query.appendClassList(ECPRRequest.class, true);
+		QuerySpecUtils.toCreatorQuery(query, idx, ECPRRequest.class, oid);
+		QuerySpecUtils.toNotEqualsAnd(query, idx, ECPRRequest.class, "state.state", "APPROVED");
+		QuerySpecUtils.toOrderBy(query, idx, ECPRRequest.class, ECPRRequest.CREATE_TIMESTAMP, true);
+		return PagingSessionHelper.openPagingSession(0, 5, query);
 	}
 }
