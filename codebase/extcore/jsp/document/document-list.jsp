@@ -13,7 +13,6 @@
 ArrayList<NumberCode> preserationList = (ArrayList<NumberCode>) request.getAttribute("preserationList");
 ArrayList<NumberCode> deptcodeList = (ArrayList<NumberCode>) request.getAttribute("deptcodeList");
 List<Map<String, String>> lifecycleList = (List<Map<String, String>>) request.getAttribute("lifecycleList");
-ArrayList<Map<String, String>> classTypes1 = (ArrayList<Map<String, String>>) request.getAttribute("classTypes1");
 WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 %>
 <!DOCTYPE html>
@@ -68,36 +67,6 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 				<th>문서명</th>
 				<td class="indent5">
 					<input type="text" name="name" id="name" class="width-300">
-				</td>
-			</tr>
-			<tr>
-				<th class="lb req">대분류</th>
-				<td class="indent5">
-					<select name="classType1" id="classType1" class="width-200" onchange="first(this);">
-						<option value="">선택</option>
-						<%
-						for (Map<String, String> map : classTypes1) {
-							String value = map.get("value");
-							String name = map.get("name");
-							String clazz = map.get("clazz");
-						%>
-						<option value="<%=value%>" data-clazz="<%=clazz%>"><%=name%></option>
-						<%
-						}
-						%>
-					</select>
-				</td>
-				<th>중분류</th>
-				<td class="indent5">
-					<select name="classType2" id="classType2" class="width-300" onchange="second(this);">
-						<option value="">선택</option>
-					</select>
-				</td>
-				<th>소분류</th>
-				<td class="indent5">
-					<select name="classType3" id="classType3" class="width-300">
-						<option value="">선택</option>
-					</select>
 				</td>
 			</tr>
 			<tr>
@@ -197,10 +166,6 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 						%>
 					</select>
 				</td>
-				<!-- 				<th>내용</th> -->
-				<!-- 				<td class="indent5"> -->
-				<!-- 					<input type="text" name="description" id="description" class="width-300"> -->
-				<!-- 				</td> -->
 			</tr>
 		</table>
 		<table class="button-table">
@@ -211,7 +176,7 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 					<img src="/Windchill/extcore/images/redo.gif" title="테이블 초기화" onclick="resetColumnLayout('document-list');">
 				</td>
 				<td class="right">
-					<select name="_psize" id="_psize">
+					<select name="_psize" id="_psize" onchange="loadGridData();">
 						<option value="10">10</option>
 						<option value="20" selected="selected">20</option>
 						<option value="30">30</option>
@@ -219,7 +184,6 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 						<option value="100">100</option>
 					</select>
 					<input type="button" value="검색" title="검색" onclick="loadGridData();">
-					<!-- 					<input type="button" value="일괄 다운로드" title="일괄 다운로드" onclick="download();"> -->
 				</td>
 			</tr>
 		</table>
@@ -241,7 +205,7 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 				</td>
 				<td valign="top">&nbsp;</td>
 				<td valign="top">
-					<div id="grid_wrap" style="height: 500px; border-top: 1px solid #3180c3;"></div>
+					<div id="grid_wrap" style="height: 530px; border-top: 1px solid #3180c3;"></div>
 					<div id="grid_paging" class="aui-grid-paging-panel my-grid-paging-panel"></div>
 					<%@include file="/extcore/jsp/common/aui-context.jsp"%>
 				</td>
@@ -605,7 +569,7 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 
 				let params = new Object();
 				const url = getCallUrl("/doc/list");
-				const field = [ "sortKey", "sortType", "location", "classType1", "classType2", "classType3", "name", "number", "state", "creatorOid", "createdFrom", "createdTo", "modifiedFrom", "modifiedTo", "preseration", "modelcode", "deptcode", "writer", "description" ];
+				const field = [ "sortKey", "sortType", "location", "name", "number", "state", "creatorOid", "createdFrom", "createdTo", "modifiedFrom", "modifiedTo", "preseration", "modelcode", "deptcode", "writer", "description" ];
 				params = toField(params, field);
 				const latest = document.querySelector("input[name=latest]:checked").value;
 				params.latest = JSON.parse(latest);
@@ -702,9 +666,6 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 				selectbox("preseration");
 				selectbox("deptcode");
 				// 				finderUser("writer");
-				selectbox("classType1");
-				selectbox("classType2");
-				selectbox("classType3");
 				finderCode("model", "MODEL");
 				$("#_psize").bindSelectSetValue("20");
 			});

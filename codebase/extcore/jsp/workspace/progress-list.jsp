@@ -106,6 +106,11 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 						}
 					},
 				}, {
+					dataField : "state",
+					headerText : "상태",
+					dataType : "string",
+					width : 100,
+				}, {
 					dataField : "point",
 					headerText : "진행단계",
 					dataType : "string",

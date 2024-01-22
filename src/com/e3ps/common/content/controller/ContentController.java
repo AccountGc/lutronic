@@ -71,10 +71,14 @@ public class ContentController extends BaseController {
 						name = URLEncoder.encode(data.getFileName(), "UTF-8").replaceAll("\\+", "%20");
 					} else {
 						name = e.getCADName();
+						String ext = FileUtil.getExtension(name);
+						if ("stp".equalsIgnoreCase(ext) || "pdf".equalsIgnoreCase(ext) || "step".equalsIgnoreCase(ext)
+								|| "dxf".equalsIgnoreCase(ext)) {
+							name = name.replace("." + ext, "").replace("step_", "").replace("_prt", "")
+									.replace("_asm", "").replace("pdf_", "").replace("_drw", "") + "_" + e.getName()
+									+ "." + ext;
+						}
 					}
-					String ext = FileUtil.getExtension(name);
-					name = name.replace("." + ext, "").replace("step_", "").replace("_prt", "").replace("_asm", "")
-							.replace("pdf_", "").replace("_drw", "") + "_" + e.getName() + "." + ext;
 				} else {
 					name = URLEncoder.encode(data.getFileName(), "UTF-8").replaceAll("\\+", "%20");
 				}

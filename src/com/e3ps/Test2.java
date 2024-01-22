@@ -16,13 +16,17 @@ import wt.fc.PersistenceHelper;
 import wt.fc.QueryResult;
 import wt.method.RemoteMethodServer;
 import wt.part.WTPart;
+import wt.util.FileUtil;
 
 public class Test2 {
 
 	public static void main(String[] args) throws Exception {
 
-		String s = "8010309400";
-		System.out.print(s.startsWith("8"));
-		System.exit(0);
+		String s = "ASDASD";
+		String name = "pdf_dafadf_drw.dxf";
+		String ext = FileUtil.getExtension(name);
+		name = name.replace("." + ext, "").replace("step_", "").replace("_prt", "").replace("_asm", "")
+				.replace("pdf_", "").replace("_drw", "") + "_" + s + "." + ext;
+		System.out.println(name);
 	}
 }

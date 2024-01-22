@@ -1,19 +1,10 @@
 /*!
-
-* AUIGrid 3.0.13 License
-
-* License Type :  Enterprise Dev License
-
-* Authorized Domain(or IP) : plmdev.lutronic.com
-
-* Expiration Date :  2025-01-31
-
-* www.auisoft.net
-
-*/
-
-/* eslint-disable */
-
-var AUIGridLicense = "eyJjdCI6ImNSRGMyV0lTNDhCaXpQYkVrUWkrRDI0czFtYjNUcFNsbG1iVVJ5Q3VyMVVDTjZ4XC9oejlRR1wvSDl0ZUNHcmhBeFQ4WFVMMlZhckhKWkFERXZ2Qm1XS1B0YXM0bHVaYnVWTlpaYUNlSTRhN2x6VmdKazJ2Rk1KOE4zUHpOczk2Tk8iLCJpdiI6IjdlNjdmMTRjMmEyNDc4NWIwYWRmOWQwNjA4N2YyYmMwIiwicyI6ImFiODM3OGI3ZDhhNGRmMWUifQ==";
-
+ * AUIGrid 3.0.13 License
+ * License Type : Evaluation(Trial) Version
+ * Authorized Domain(or IP) : localhost,127.0.0.1,plmdev.lutronic.com
+ * Expiration Date : 2024-02-21
+ * www.auisoft.net
+ */
+ /* eslint-disable */
+var AUIGridLicense = "eyJjdCI6IjBKbzF4a1lTV09mVTdPQW0zUTd4VXFJc3pjMnNhdzJRN2kyaWpSSjlsRmVsY2tOVUpXelY5QnZuRWM1TlFCcDg2MkhmU1UxWUY2RjRJNHJReWxFcDhyYlZQdjJ3UDZza05JM0xBc0s1TGx3VWcxV2Q3REZneXY0c3N1N2l1Y1BqIiwiaXYiOiIwMThiMDVjNzhiNGNiODAxMWJlMGYyYWZmZmM1ZTg1NCIsInMiOiIyYzE3YTNlYWNhYTA5ZjZkIn0=";
 if (typeof window !== "undefined") window.AUIGridLicense = AUIGridLicense;
