@@ -71,17 +71,16 @@ public class ContentController extends BaseController {
 					} else {
 						name = e.getCADName();
 					}
-					name = data.getFileName().replace("step_", "").replace("_prt", "").replace("_asm", "")
-							.replace("pdf_", "").replace("_drw", "");
 				} else {
 					name = URLEncoder.encode(data.getFileName(), "UTF-8").replaceAll("\\+", "%20");
 				}
-				
-//				File ff = new File("");
-				
 			} else {
 				name = URLEncoder.encode(data.getFileName(), "UTF-8").replaceAll("\\+", "%20");
 			}
+			
+			// 이름 치환
+			name = name.replace("step_", "").replace("_prt", "").replace("_asm", "")
+					.replace("pdf_", "").replace("_drw", "");
 
 			// 다운로드 이력 생성..
 			DownloadHistoryHelper.service.create(oid);

@@ -180,7 +180,7 @@ public class EcoHelper {
 			query.appendCloseParen();
 		}
 
-		QuerySpecUtils.toOrderBy(query, idx, EChangeOrder.class, EChangeOrder.EO_APPROVE_DATE, false);
+		QuerySpecUtils.toOrderBy(query, idx, EChangeOrder.class, EChangeOrder.EO_APPROVE_DATE, true);
 		boolean sort = QuerySpecUtils.toSort(sortType);
 		QuerySpecUtils.toOrderBy(query, idx, EChangeOrder.class, EChangeOrder.MODIFY_TIMESTAMP, sort);
 
