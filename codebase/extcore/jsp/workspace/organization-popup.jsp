@@ -85,6 +85,7 @@ boolean isMulti = Boolean.parseBoolean(multi);
 </table>
 <script type="text/javascript">
 	let myGridID;
+	const list = [];
 	function _layout() {
 		return [ {
 			dataField : "rowNum",
@@ -111,6 +112,60 @@ boolean isMulti = Boolean.parseBoolean(multi);
 			headerText : "부서",
 			dataType : "string",
 			width : 150,
+			renderer : {
+				type : "IconRenderer",
+				iconWidth : 16,
+				iconHeight : 16,
+				iconPosition : "aisleRight",
+				iconTableRef : {
+					"default" : "/Windchill/extcore/component/AUIGrid/images/list-icon.png"
+				},
+				onClick : function(event) {
+					AUIGrid.openInputer(event.pid);
+				}
+			},
+			editRenderer : {
+				type : "ComboBoxRenderer",
+				list : list,
+				matchFromFirst : false,
+				autoCompleteMode : true, // 자동완성 모드 설정
+				autoEasyMode : true, // 자동완성 모드일 때 자동 선택할지 여부 (기본값 : false)
+				showEditorBtnOver : true, // 마우스 오버 시 에디터버턴 보이기
+				keyField : "oid",
+				valueField : "name",
+				validator : function(oldValue, newValue, item, dataField, fromClipboard, which) {
+					let isValid = false;
+					if (!fromClipboard) {
+						for (let i = 0, len = list.length; i < len; i++) {
+							if (list[i]["name"] == newValue) {
+								isValid = true;
+								break;
+							}
+						}
+					} else {
+						for (let i = 0, len = list.length; i < len; i++) {
+							if (list[i]["oid"] == newValue) {
+								isValid = true;
+								break;
+							}
+						}
+					}
+					return {
+						"validate" : isValid,
+						"message" : "리스트에 있는 값만 선택(입력) 가능합니다."
+					};
+				}
+			},
+			labelFunction : function(rowIndex, columnIndex, value, headerText, item) {
+				let retStr = "";
+				for (let i = 0, len = list.length; i < len; i++) {
+					if (list[i]["oid"] == value) {
+						retStr = list[i]["name"];
+						break;
+					}
+				}
+				return retStr == "" ? value : retStr;
+			},
 		}, {
 			dataField : "duty",
 			headerText : "직위",
