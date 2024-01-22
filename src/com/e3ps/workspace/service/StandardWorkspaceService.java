@@ -1054,12 +1054,15 @@ public class StandardWorkspaceService extends StandardManager implements Workspa
 			// 안남기면 모두 삭제한다..
 			if (_remove) {
 				ApprovalMaster m = WorkspaceHelper.manager.getMaster(per);
-				ArrayList<ApprovalLine> list = WorkspaceHelper.manager.getAllLines(m);
 
-				for (ApprovalLine line : list) {
-					PersistenceHelper.manager.delete(line);
+				if (m != null) {
+					ArrayList<ApprovalLine> list = WorkspaceHelper.manager.getAllLines(m);
+
+					for (ApprovalLine line : list) {
+						PersistenceHelper.manager.delete(line);
+					}
+					PersistenceHelper.manager.delete(m);
 				}
-				PersistenceHelper.manager.delete(m);
 
 				QueryResult qr = PersistenceHelper.manager.navigate((WTObject) per, "user", MailWTobjectLink.class,
 						false);

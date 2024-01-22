@@ -17,7 +17,7 @@ String title = (String) request.getAttribute("title");
 		</td>
 		<td class="right">
 			<%
-			if (isAdmin) {
+			if (dto.is_delete()) {
 			%>
 			<input type="button" value="삭제" title="삭제" class="red" onclick="_delete();">
 			<%
@@ -161,7 +161,7 @@ String title = (String) request.getAttribute("title");
 				self.close();
 			}
 			closeLayer();
-		}, "GET");
+		}, "DELETE");
 	}
 
 	document.addEventListener("DOMContentLoaded", function() {

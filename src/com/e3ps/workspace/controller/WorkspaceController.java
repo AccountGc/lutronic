@@ -382,14 +382,14 @@ public class WorkspaceController extends BaseController {
 	public ModelAndView masterView(@RequestParam String oid, @RequestParam String columnType) throws Exception {
 		ModelAndView model = new ModelAndView();
 		ApprovalMaster master = (ApprovalMaster) CommonUtil.getObject(oid);
-		ApprovalLineDTO dto = null;
-		if (columnType.equals("COLUMN_PROGRESS")) { // 진행
-			dto = WorkspaceHelper.manager.ingLine(master);
-		} else if (columnType.equals("COLUMN_COMPLETE")) { // 완료
-			dto = WorkspaceHelper.manager.completeLine(master);
-		} else if (columnType.equals("COLUMN_REJECT")) { // 반려
-			dto = WorkspaceHelper.manager.rejectLine(master);
-		}
+		ApprovalLineDTO dto = new ApprovalLineDTO(master);
+//		if (columnType.equals("COLUMN_PROGRESS")) { // 진행
+//			dto = WorkspaceHelper.manager.ingLine(master);
+//		} else if (columnType.equals("COLUMN_COMPLETE")) { // 완료
+//			dto = WorkspaceHelper.manager.completeLine(master);
+//		} else if (columnType.equals("COLUMN_REJECT")) { // 반려
+//			dto = WorkspaceHelper.manager.rejectLine(master);
+//		}
 		System.out.println("dto=" + dto);
 		model.addObject("dto", dto);
 		model.addObject("oid", oid);

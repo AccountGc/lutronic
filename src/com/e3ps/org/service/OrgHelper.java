@@ -379,4 +379,15 @@ public class OrgHelper {
 		}
 		return null;
 	}
+
+	/**
+	 * 생성된 유저가 있는지 체크
+	 */
+	public boolean isUser(String id) throws Exception {
+		QuerySpec query = new QuerySpec();
+		int idx = query.appendClassList(People.class, true);
+		QuerySpecUtils.toEquals(query, idx, People.class, People.ID, id);
+		QueryResult qr = PersistenceHelper.manager.find(query);
+		return qr.size() > 0;
+	}
 }

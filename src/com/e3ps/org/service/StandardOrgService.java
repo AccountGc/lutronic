@@ -95,7 +95,8 @@ public class StandardOrgService extends StandardManager implements OrgService {
 				String id = u.getId();
 				WTUser user = OrganizationServicesMgr.getUser(id);
 				if (user == null) {
-					// PersistenceHelper.manager.delete(u);
+					// 연결 안된 사용자 삭제.
+					PersistenceHelper.manager.delete(u);
 				}
 			}
 
@@ -113,6 +114,15 @@ public class StandardOrgService extends StandardManager implements OrgService {
 
 				People user = null;
 				if (!_qr.hasMoreElements()) {
+
+					boolean isUser = OrgHelper.manager.isUser(wtuser.getName());
+					if (isUser) {
+						System.out.println("기존에 이미 등록된 사용자 = " + wtuser.getName() + " [" + wtuser.getFullName() + "]");
+						continue;
+					}
+
+					// 기존에 생성된 유저 있는지 생성
+
 					user = People.newPeople();
 					user.setDepartment(department);
 					user.setUser(wtuser);

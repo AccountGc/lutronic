@@ -112,6 +112,7 @@ public class StandardAsmService extends StandardManager implements AsmService {
 		try {
 			trs.start();
 
+			System.out.println("oid=" + oid);
 			AsmApproval asm = (AsmApproval) CommonUtil.getObject(oid);
 
 			WorkData wd = WorkDataHelper.manager.getWorkData(asm);

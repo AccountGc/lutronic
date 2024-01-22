@@ -17,7 +17,6 @@ List<Map<String, String>> lifecycleList = (List<Map<String, String>>) request.ge
 String method = (String) request.getAttribute("method");
 boolean multi = (boolean) request.getAttribute("multi");
 String state = (String) request.getAttribute("state");
-ArrayList<Map<String, String>> classTypes1 = (ArrayList<Map<String, String>>) request.getAttribute("classTypes1");
 %>
 <style type="text/css">
 .approved {
@@ -78,36 +77,6 @@ ArrayList<Map<String, String>> classTypes1 = (ArrayList<Map<String, String>>) re
 		</td>
 	</tr>
 	<tr>
-		<th class="lb req">대분류</th>
-		<td class="indent5">
-			<select name="classType1" id="classType1" class="width-200" onchange="first(this);">
-				<option value="">선택</option>
-				<%
-				for (Map<String, String> map : classTypes1) {
-					String value = map.get("value");
-					String name = map.get("name");
-					String clazz = map.get("clazz");
-				%>
-				<option value="<%=value%>" data-clazz="<%=clazz%>"><%=name%></option>
-				<%
-				}
-				%>
-			</select>
-		</td>
-		<th>중분류</th>
-		<td class="indent5">
-			<select name="classType2" id="classType2" class="width-300" onchange="second(this);">
-				<option value="">선택</option>
-			</select>
-		</td>
-		<th>소분류</th>
-		<td class="indent5">
-			<select name="classType3" id="classType3" class="width-300">
-				<option value="">선택</option>
-			</select>
-		</td>
-	</tr>
-	<tr>
 		<th>등록자</th>
 		<td class="indent5">
 			<input type="text" name="creator" id="creator" data-multi="false" class="width-200">
@@ -150,9 +119,7 @@ ArrayList<Map<String, String>> classTypes1 = (ArrayList<Map<String, String>>) re
 	<tr>
 		<th>작성자</th>
 		<td class="indent5">
-			<input type="text" name="writer" id="writer" data-multi="false" class="width-200">
-			<input type="hidden" name="writerOid" id="writerOid">
-			<img src="/Windchill/extcore/images/delete.png" class="delete" title="삭제" onclick="clearUser('writer')">
+			<input type="text" name="writer" id="writer" class="width-200">
 		</td>
 		<th>수정일</th>
 		<td class="indent5">
@@ -256,7 +223,7 @@ ArrayList<Map<String, String>> classTypes1 = (ArrayList<Map<String, String>>) re
 		</td>
 		<td valign="top">&nbsp;</td>
 		<td valign="top">
-			<div id="grid_wrap" style="height: 360px; border-top: 1px solid #3180c3;"></div>
+			<div id="grid_wrap" style="height: 390px; border-top: 1px solid #3180c3;"></div>
 			<div id="grid_paging" class="aui-grid-paging-panel my-grid-paging-panel"></div>
 			<%@include file="/extcore/jsp/common/aui-context.jsp"%>
 		</td>
@@ -512,14 +479,10 @@ document.addEventListener("DOMContentLoaded", function() {
 	selectbox("documentType");
 	selectbox("preseration");
 	selectbox("deptcode");
-	finderUser("writer");
 	<%if (StringUtil.checkString(state)) {%>
 	$("#state").bindSelectSetValue("<%=state%>");
 	$("#state").bindSelectDisabled(true);
 	<%}%>
-	selectbox("classType1");
-	selectbox("classType2");
-	selectbox("classType3");	
 	finderCode("model", "MODEL");
 	$("#_psize").bindSelectSetValue("20");
 ;});
