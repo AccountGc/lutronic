@@ -10,15 +10,21 @@ import com.e3ps.common.util.DateUtil;
 import com.e3ps.common.util.SequenceDao;
 import com.e3ps.common.util.WCUtil;
 import com.e3ps.workspace.AppPerLink;
+import com.e3ps.workspace.ApprovalLine;
+import com.e3ps.workspace.ApprovalMaster;
 import com.e3ps.workspace.AsmApproval;
+import com.e3ps.workspace.WorkData;
 
 import wt.clients.folder.FolderTaskLogic;
 import wt.doc.WTDocument;
+import wt.fc.Persistable;
 import wt.fc.PersistenceHelper;
+import wt.fc.QueryResult;
 import wt.folder.Folder;
 import wt.folder.FolderEntry;
 import wt.folder.FolderHelper;
 import wt.lifecycle.LifeCycleHelper;
+import wt.lifecycle.LifeCycleManaged;
 import wt.lifecycle.State;
 import wt.pom.Transaction;
 import wt.services.StandardManager;
@@ -97,6 +103,51 @@ public class StandardAsmService extends StandardManager implements AsmService {
 			if (trs != null) {
 				trs.rollback();
 			}
+		}
+	}
+
+	@Override
+	public void delete(String oid) throws Exception {
+		Transaction trs = new Transaction();
+		try {
+			trs.start();
+
+			AsmApproval asm = (AsmApproval) CommonUtil.getObject(oid);
+
+			WorkData wd = WorkDataHelper.manager.getWorkData(asm);
+			if (wd != null) {
+				PersistenceHelper.manager.delete(wd);
+			}
+
+			QueryResult qr = PersistenceHelper.manager.navigate(asm, "persistable", AppPerLink.class);
+			while (qr.hasMoreElements()) {
+				Persistable per = (Persistable) qr.nextElement();
+				if (per instanceof LifeCycleManaged) {
+					LifeCycleManaged lcm = (LifeCycleManaged) per;
+					LifeCycleHelper.service.setLifeCycleState(lcm, State.toState("BATCHAPPROVAL"));
+				}
+			}
+
+			ApprovalMaster mm = WorkspaceHelper.manager.getMaster(asm);
+			if (mm != null) {
+				ArrayList<ApprovalLine> lines = WorkspaceHelper.manager.getAllLines(mm);
+				for (ApprovalLine line : lines) {
+					PersistenceHelper.manager.delete(line);
+				}
+				PersistenceHelper.manager.delete(mm);
+			}
+
+			PersistenceHelper.manager.delete(asm);
+
+			trs.commit();
+			trs = null;
+		} catch (Exception e) {
+			e.printStackTrace();
+			trs.rollback();
+			throw e;
+		} finally {
+			if (trs != null)
+				trs.rollback();
 		}
 	}
 }

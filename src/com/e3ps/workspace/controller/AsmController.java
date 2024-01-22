@@ -6,6 +6,7 @@ import java.util.Map;
 
 import org.springframework.context.annotation.Description;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -16,11 +17,18 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.e3ps.common.util.CommonUtil;
 import com.e3ps.controller.BaseController;
+import com.e3ps.doc.DocumentCRLink;
+import com.e3ps.doc.DocumentECOLink;
+import com.e3ps.doc.DocumentECPRLink;
+import com.e3ps.doc.DocumentEOLink;
 import com.e3ps.doc.dto.DocumentDTO;
 import com.e3ps.doc.etc.service.EtcHelper;
+import com.e3ps.doc.service.DocumentHelper;
 import com.e3ps.workspace.dto.AsmDTO;
 import com.e3ps.workspace.service.AsmHelper;
 import com.ptc.windchill.uwgm.proesrv.createesrdoc.AsmDocUtility;
+
+import wt.part.WTPartDescribeLink;
 
 @Controller
 @RequestMapping(value = "/asm/**")
@@ -160,5 +168,22 @@ public class AsmController extends BaseController {
 		model.addObject("location", location);
 		model.addObject("type", type);
 		return model;
+	}
+	
+	@Description(value = "일괄결재 삭제 함수")
+	@ResponseBody
+	@DeleteMapping(value = "/delete")
+	public Map<String, Object> delete(@RequestParam String oid) throws Exception {
+		Map<String, Object> result = new HashMap<String, Object>();
+		try {
+			AsmHelper.service.delete(oid);
+			result.put("msg", DELETE_MSG);
+			result.put("result", SUCCESS);
+		} catch (Exception e) {
+			e.printStackTrace();
+			result.put("result", FAIL);
+			result.put("msg", e.toString());
+		}
+		return result;
 	}
 }

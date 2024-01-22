@@ -12,4 +12,9 @@ public interface AsmService {
 	 */
 	public abstract void register(Map<String, Object> params) throws Exception;
 
+	/**
+	 * 일괄결재 삭제
+	 */
+	public abstract void delete(String oid) throws Exception;
+
 }
