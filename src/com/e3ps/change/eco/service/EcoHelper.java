@@ -179,6 +179,8 @@ public class EcoHelper {
 			}
 			query.appendCloseParen();
 		}
+
+		QuerySpecUtils.toOrderBy(query, idx, EChangeOrder.class, EChangeOrder.EO_APPROVE_DATE, false);
 		boolean sort = QuerySpecUtils.toSort(sortType);
 		QuerySpecUtils.toOrderBy(query, idx, EChangeOrder.class, EChangeOrder.MODIFY_TIMESTAMP, sort);
 
@@ -942,7 +944,6 @@ public class EcoHelper {
 				}
 
 				boolean isPast = eLink.getPast();
-		
 
 				String preNumber = "";
 				String preName = "";

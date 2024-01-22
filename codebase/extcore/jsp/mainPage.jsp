@@ -330,7 +330,7 @@ div.ellipsis {
 					<div class="card h-md-100">
 						<div class="card-body d-flex flex-column justify-content-end">
 							<div class="row">
-								<table style="height: 193px;">
+								<table style="height: 193px; min-height: 193px;">
 									<colgroup>
 										<col width="120px;">
 										<col width="*">
@@ -388,7 +388,7 @@ div.ellipsis {
 					<div class="card h-md-100">
 						<div class="card-body d-flex flex-column justify-content-end">
 							<div class="row">
-								<table style="height: 193px;">
+								<table style="height: 193px; min-height: 193px;">
 									<colgroup>
 										<col width="120px;">
 										<col width="*">
@@ -449,7 +449,7 @@ div.ellipsis {
 					<div class="card h-md-100">
 						<div class="card-body d-flex flex-column justify-content-end">
 							<div class="row">
-								<table style="height: 193px;">
+								<table style="height: 193px; min-height: 193px;">
 									<colgroup>
 										<col width="200px;">
 										<col width="*">
@@ -507,7 +507,7 @@ div.ellipsis {
 					<div class="card h-md-100">
 						<div class="card-body d-flex flex-column justify-content-end">
 							<div class="row">
-								<table style="height: 193px;">
+								<table style="height: 193px; min-height: 193px;">
 									<colgroup>
 										<col width="200px;">
 										<col width="*">
