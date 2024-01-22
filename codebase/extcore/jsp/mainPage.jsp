@@ -171,6 +171,14 @@ QueryResult ecrmQr = (QueryResult) request.getAttribute("ecrmQr");
 div#main {
 	margin: 20px 20px 20px 20px;
 }
+
+div.ellipsis {
+	max-width: 400px;
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	overflow: hidden;
+}
 </style>
 <%@include file="/extcore/jsp/common/css.jsp"%>
 <%@include file="/extcore/jsp/common/script.jsp"%>
@@ -357,8 +365,12 @@ div#main {
 										<td style="text-align: center; padding: 5px;">
 											<a href="javascript:view('<%=oid%>');"><%=cr.getEoNumber()%></a>
 										</td>
-										<td style="text-align: left; text-indent: 10px; padding: 5px;">
-											<a href="javascript:view('<%=oid%>');"><%=cr.getEoName()%></a>
+										<td style="text-align: left; text-indent: 10px; padding: 5px;" title="<%=cr.getEoName()%>">
+											<div class="ellipsis">
+												<a href="javascript:view('<%=oid%>');">
+													<%=cr.getEoName()%>
+												</a>
+											</div>
 										</td>
 										<td style="text-align: center; padding: 5px;"><%=cr.getLifeCycleState().getDisplay()%></td>
 										<td style="text-align: center; padding: 5px;"><%=cr.getCreateTimestamp().toString().substring(0, 10)%></td>
@@ -411,8 +423,12 @@ div#main {
 										<td style="text-align: center; padding: 5px;">
 											<a href="javascript:view('<%=oid%>');"><%=eco.getEoNumber()%></a>
 										</td>
-										<td style="text-align: left; text-indent: 10px; padding: 5px;">
-											<a href="javascript:view('<%=oid%>');"><%=eco.getEoName()%></a>
+										<td style="text-align: left; text-indent: 10px; padding: 5px;" title="<%=eco.getEoName()%>">
+											<div class="ellipsis">
+												<a href="javascript:view('<%=oid%>');">
+													<%=eco.getEoName()%>
+												</a>
+											</div>
 										</td>
 										<td style="text-align: center; padding: 5px;"><%=eco.getLifeCycleState().getDisplay()%></td>
 										<td style="text-align: center; padding: 5px;"><%=eco.getCreateTimestamp().toString().substring(0, 10)%></td>
@@ -468,8 +484,12 @@ div#main {
 										<td style="text-align: center; padding: 5px;">
 											<a href="javascript:view('<%=oid%>');"><%=ecpr.getEoNumber()%></a>
 										</td>
-										<td style="text-align: left; text-indent: 10px; padding: 5px;">
-											<a href="javascript:view('<%=oid%>');"><%=ecpr.getEoName()%></a>
+										<td style="text-align: left; text-indent: 10px; padding: 5px;" title="<%=ecpr.getEoName()%>">
+											<div class="ellipsis">
+												<a href="javascript:view('<%=oid%>');">
+													<%=ecpr.getEoName()%>
+												</a>
+											</div>
 										</td>
 										<td style="text-align: center; padding: 5px;"><%=ecpr.getLifeCycleState().getDisplay()%></td>
 										<td style="text-align: center; padding: 5px;"><%=ecpr.getCreateTimestamp().toString().substring(0, 10)%></td>
@@ -522,8 +542,12 @@ div#main {
 										<td style="text-align: center; padding: 5px;">
 											<a href="javascript:view('<%=oid%>');"><%=ecrm.getEoNumber()%></a>
 										</td>
-										<td style="text-align: left; text-indent: 10px; padding: 5px;">
-											<a href="javascript:view('<%=oid%>');"><%=ecrm.getEoName()%></a>
+										<td style="text-align: left; text-indent: 10px; padding: 5px;" title="<%=ecrm.getEoName()%>">
+											<div class="ellipsis">
+												<a href="javascript:view('<%=oid%>');">
+													<%=ecrm.getEoName()%>
+												</a>
+											</div>
 										</td>
 										<td style="text-align: center; padding: 5px;"><%=ecrm.getLifeCycleState().getDisplay()%></td>
 										<td style="text-align: center; padding: 5px;"><%=ecrm.getCreateTimestamp().toString().substring(0, 10)%></td>

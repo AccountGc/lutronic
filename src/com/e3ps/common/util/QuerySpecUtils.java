@@ -40,7 +40,7 @@ public class QuerySpecUtils {
 		} else if ("-1".equals(sortType)) {
 			return true;
 		}
-		return false;
+		return true;
 	}
 
 	/**

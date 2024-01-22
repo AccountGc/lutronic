@@ -183,7 +183,6 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 				logger(params);
 				parent.openLayer();
 				call(url, params, function(data) {
-					logger(data);
 					AUIGrid.removeAjaxLoader(myGridID);
 					if (data.result) {
 						totalPage = Math.ceil(data.total / data.pageSize);

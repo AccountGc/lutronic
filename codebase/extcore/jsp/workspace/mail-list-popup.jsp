@@ -54,7 +54,7 @@
 		</td>
 	</tr>
 </table>
-<div id="grid_wrap" style="height: 285px; border-top: 1px solid #3180c3;"></div>
+<div id="grid_wrap" style="height: 415px; border-top: 1px solid #3180c3;"></div>
 <div id="grid_paging" class="aui-grid-paging-panel my-grid-paging-panel"></div>
 <%@include file="/extcore/jsp/common/aui-context.jsp"%>
 <script type="text/javascript">
@@ -120,7 +120,11 @@
 		}
 	}
 
-	function loadGridData() {
+	function loadGridData(movePage) {
+		if(movePage === undefined) {
+			document.getElementById("sessionid").value = 0;
+			document.getElementById("curPage").value = 1;
+		}
 		let params = new Object();
 		const field = [ "name", "email" ];
 		const enable = true;
@@ -133,8 +137,7 @@
 			AUIGrid.removeAjaxLoader(myGridID);
 			if (data.result) {
 				totalPage = Math.ceil(data.total / data.pageSize);
-				document.getElementById("sessionid").value = data.sessionid;
-				createPagingNavigator(data.total, data.curPage);
+				createPagingNavigator(data.total, data.curPage, data.sessionid);
 				AUIGrid.setGridData(myGridID, data.list);
 			} else {
 				alert(data.msg);

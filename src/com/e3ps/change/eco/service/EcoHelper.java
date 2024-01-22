@@ -942,8 +942,7 @@ public class EcoHelper {
 				}
 
 				boolean isPast = eLink.getPast();
-				boolean isLeft = eLink.getLeftPart();
-				boolean isRight = eLink.getRightPart();
+		
 
 				String preNumber = "";
 				String preName = "";
@@ -951,6 +950,8 @@ public class EcoHelper {
 				String nextName = "";
 
 				if (!isPast) {
+					boolean isLeft = eLink.getLeftPart();
+					boolean isRight = eLink.getRightPart();
 					// 신규 ECO
 					// 신규 작성 데이터는 무조건 히스토리가 이제는 존재
 					// 왼쪽으로 들어가는건 다음거를 구한다
