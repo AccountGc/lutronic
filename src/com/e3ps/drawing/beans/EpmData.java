@@ -151,7 +151,7 @@ public class EpmData {
 					ApplicationData data = (ApplicationData) result.nextElement();
 					String ext = FileUtil.getExtension(data.getFileName());
 					if ("dxf".equalsIgnoreCase(ext)) {
-						String name = data.getFileName().replace("_drw", "");
+						String name = data.getFileName().replace("_drw", "") + "_" + epm.getName();
 						this.dxf.put("name", name);
 						this.dxf.put("fileSizeKB", data.getFileSizeKB() + "KB");
 						this.dxf.put("url",
@@ -167,7 +167,7 @@ public class EpmData {
 					ApplicationData data = (ApplicationData) result.nextElement();
 					String ext = FileUtil.getExtension(data.getFileName());
 					if ("pdf".equalsIgnoreCase(ext)) {
-						String name = data.getFileName().replace("pdf_", "").replace("_drw", "");
+						String name = data.getFileName().replace("pdf_", "").replace("_drw", "") + "_" + epm.getName();
 						this.pdf.put("name", name);
 						this.pdf.put("fileSizeKB", data.getFileSizeKB() + "KB");
 //						this.pdf.put("url", ContentHelper.getDownloadURL(representation, data, false, name).toString());
@@ -182,12 +182,14 @@ public class EpmData {
 			Representation _representation = PublishUtils.getRepresentation(epm);
 			if (_representation != null) {
 				// step
-				QueryResult qr = ContentHelper.service.getContentsByRole(_representation, ContentRoleType.ADDITIONAL_FILES);
+				QueryResult qr = ContentHelper.service.getContentsByRole(_representation,
+						ContentRoleType.ADDITIONAL_FILES);
 				while (qr.hasMoreElements()) {
 					ApplicationData data = (ApplicationData) qr.nextElement();
 					String ext = FileUtil.getExtension(data.getFileName());
 					if ("step".equalsIgnoreCase(ext) || "stp".equalsIgnoreCase(ext)) {
-						String name = data.getFileName().replace("step_", "").replace("_prt", "").replace("_asm", "");
+						String name = data.getFileName().replace("step_", "").replace("_prt", "").replace("_asm", "")
+								+ "_" + epm.getName();
 						this.step.put("name", name);
 						this.step.put("fileSizeKB", data.getFileSizeKB() + "KB");
 						this.step.put("url",
