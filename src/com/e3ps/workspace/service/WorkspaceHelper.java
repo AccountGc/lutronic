@@ -613,7 +613,7 @@ public class WorkspaceHelper {
 		QuerySpecUtils.toEqualsAnd(query, idx, ApprovalLine.class, "masterReference.key.id", master);
 		QuerySpecUtils.toEqualsAnd(query, idx, ApprovalLine.class, ApprovalLine.ROLE, WORKING_APPROVAL);
 		QuerySpecUtils.toEqualsAnd(query, idx, ApprovalLine.class, ApprovalLine.TYPE, APPROVAL_LINE);
-		QuerySpecUtils.toOrderBy(query, idx, ApprovalLine.class, ApprovalLine.SORT, false);
+		QuerySpecUtils.toOrderBy(query, idx, ApprovalLine.class, ApprovalLine.SORT, true);
 		QueryResult result = PersistenceHelper.manager.find(query);
 		while (result.hasMoreElements()) {
 			Object[] obj = (Object[]) result.nextElement();
