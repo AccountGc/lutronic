@@ -968,4 +968,60 @@ public class SAPHelper {
 			sendList(p, list);
 		}
 	}
+	
+	/**
+	 * 전송 제외 처리 체크
+	 */
+	public boolean isPass(SAPSendBomDTO dto) throws Exception {
+
+		if (SAPHelper.manager.skipEight(dto.getChildPartNumber())) {
+			return true;
+		}
+
+		if (SAPHelper.manager.skipLength(dto.getChildPartNumber())) {
+			return true;
+		}
+
+		if (SAPHelper.manager.skipEight(dto.getParentPartNumber())) {
+			return true;
+		}
+
+		if (SAPHelper.manager.skipLength(dto.getParentPartNumber())) {
+			return true;
+		}
+
+		if (SAPHelper.manager.skipEight(dto.getChildPartNumber())) {
+			return true;
+		}
+
+		if (SAPHelper.manager.skipLength(dto.getChildPartNumber())) {
+			return true;
+		}
+
+		if (SAPHelper.manager.skipEight(dto.getParentPartNumber())) {
+			return true;
+		}
+
+		if (SAPHelper.manager.skipLength(dto.getParentPartNumber())) {
+			return true;
+		}
+
+		// 신규
+		if (SAPHelper.manager.skipEight(dto.getNewChildPartNumber())) {
+			return true;
+		}
+
+		if (SAPHelper.manager.skipLength(dto.getNewChildPartNumber())) {
+			return true;
+		}
+
+		if (SAPHelper.manager.skipEight(dto.getNewParentPartNumber())) {
+			return true;
+		}
+
+		if (SAPHelper.manager.skipLength(dto.getNewParentPartNumber())) {
+			return true;
+		}
+		return false;
+	}
 }
