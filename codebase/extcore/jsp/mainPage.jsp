@@ -241,7 +241,7 @@ div.ellipsis {
 												<i class="fa fa-clock"></i>
 											</div>
 											<div class="circle-text">
-												<a href="javascript:gotoUrl('/workspace/agree);">합의함</a>
+												<a href="javascript:gotoUrl('/workspace/agree');">합의함</a>
 											</div>
 										</div>
 									</td>
@@ -256,7 +256,7 @@ div.ellipsis {
 												<i class="fa fa-book"></i>
 											</div>
 											<div class="circle-text">
-												<a href="javascript:gotoUrl('/eca/list');">ECA 활동함</a>
+												<a href="javascript:gotoUrl('/activity/eca');">ECA 활동함</a>
 											</div>
 										</div>
 									</td>

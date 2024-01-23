@@ -613,7 +613,7 @@ public class WorkspaceHelper {
 		QuerySpecUtils.toEqualsAnd(query, idx, ApprovalLine.class, "masterReference.key.id", master);
 		QuerySpecUtils.toEqualsAnd(query, idx, ApprovalLine.class, ApprovalLine.ROLE, WORKING_APPROVAL);
 		QuerySpecUtils.toEqualsAnd(query, idx, ApprovalLine.class, ApprovalLine.TYPE, APPROVAL_LINE);
-		QuerySpecUtils.toOrderBy(query, idx, ApprovalLine.class, ApprovalLine.START_TIME, false);
+		QuerySpecUtils.toOrderBy(query, idx, ApprovalLine.class, ApprovalLine.SORT, false);
 		QueryResult result = PersistenceHelper.manager.find(query);
 		while (result.hasMoreElements()) {
 			Object[] obj = (Object[]) result.nextElement();
@@ -1093,13 +1093,15 @@ public class WorkspaceHelper {
 				Map<String, Object> map = new HashMap<>();
 				WTPrincipalReference ref = line.getOwnership().getOwner();
 				WTUser user = (WTUser) ref.getObject();
-				PeopleDTO dto = new PeopleDTO(user);
-				map.put("name", line.getName());
-				map.put("type", line.getType());
-				map.put("id", dto.getId());
-				map.put("duty", dto.getDuty());
-				map.put("email", dto.getEmail());
-				map.put("department_name", dto.getDepartment_name());
+				if (user != null) {
+					PeopleDTO dto = new PeopleDTO(user);
+					map.put("name", line.getName());
+					map.put("type", line.getType());
+					map.put("id", dto.getId());
+					map.put("duty", dto.getDuty());
+					map.put("email", dto.getEmail());
+					map.put("department_name", dto.getDepartment_name());
+				}
 				list.add(map);
 			}
 
@@ -1109,14 +1111,16 @@ public class WorkspaceHelper {
 				Map<String, Object> map = new HashMap<>();
 				WTPrincipalReference ref = line.getOwnership().getOwner();
 				WTUser user = (WTUser) ref.getObject();
-				PeopleDTO dto = new PeopleDTO(user);
-				map.put("sort", sort);
-				map.put("name", line.getName());
-				map.put("type", line.getType());
-				map.put("id", dto.getId());
-				map.put("duty", dto.getDuty());
-				map.put("email", dto.getEmail());
-				map.put("department_name", dto.getDepartment_name());
+				if (user != null) {
+					PeopleDTO dto = new PeopleDTO(user);
+					map.put("sort", sort);
+					map.put("name", line.getName());
+					map.put("type", line.getType());
+					map.put("id", dto.getId());
+					map.put("duty", dto.getDuty());
+					map.put("email", dto.getEmail());
+					map.put("department_name", dto.getDepartment_name());
+				}
 				list.add(map);
 				sort++;
 			}
@@ -1126,13 +1130,15 @@ public class WorkspaceHelper {
 				Map<String, Object> map = new HashMap<>();
 				WTPrincipalReference ref = line.getOwnership().getOwner();
 				WTUser user = (WTUser) ref.getObject();
-				PeopleDTO dto = new PeopleDTO(user);
-				map.put("name", line.getName());
-				map.put("type", line.getType());
-				map.put("id", dto.getId());
-				map.put("duty", dto.getDuty());
-				map.put("email", dto.getEmail());
-				map.put("department_name", dto.getDepartment_name());
+				if (user != null) {
+					PeopleDTO dto = new PeopleDTO(user);
+					map.put("name", line.getName());
+					map.put("type", line.getType());
+					map.put("id", dto.getId());
+					map.put("duty", dto.getDuty());
+					map.put("email", dto.getEmail());
+					map.put("department_name", dto.getDepartment_name());
+				}
 				list.add(map);
 			}
 		}
