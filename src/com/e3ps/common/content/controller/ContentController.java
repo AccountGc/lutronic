@@ -47,6 +47,7 @@ import wt.epm.EPMDocument;
 import wt.fc.QueryResult;
 import wt.fc.ReferenceFactory;
 import wt.util.FileUtil;
+import wt.viewmarkup.DerivedImage;
 
 @Controller
 @RequestMapping(value = "/content/**")
@@ -63,29 +64,26 @@ public class ContentController extends BaseController {
 			String name = null;
 
 			ContentHolder h = null;
-			System.out.println("h=" + holder);
 			if (StringUtil.checkString(holder)) {
 				h = (ContentHolder) CommonUtil.getObject(holder);
-				if (h instanceof EPMDocument) {
-					EPMDocument e = (EPMDocument) h;
 
-					// 변환 파일 이름 변경
+				if (h instanceof DerivedImage) {
+					DerivedImage d = (DerivedImage) h;
 					String ss = data.getFileName();
 					String ext = FileUtil.getExtension(ss);
-
-					System.out.println("ss=" + ss);
-					System.out.println("ext=" + ext);
 
 					if ("stp".equalsIgnoreCase(ext) || "pdf".equalsIgnoreCase(ext) || "step".equalsIgnoreCase(ext)
 							|| "dxf".equalsIgnoreCase(ext)) {
 						name = ss.replace("." + ext, "").replace("step_", "").replace("_prt", "").replace("_asm", "")
-								.replace("pdf_", "").replace("_drw", "") + "_" + e.getName() + "." + ext;
+								.replace("pdf_", "").replace("_drw", "") + "_" + d.getCADFormName() + "." + ext;
+					}
+				} else if (h instanceof EPMDocument) {
+					EPMDocument e = (EPMDocument) h;
+
+					if (e.getAuthoringApplication().toString().equals("OTHER")) {
+						name = URLEncoder.encode(data.getFileName(), "UTF-8").replaceAll("\\+", "%20");
 					} else {
-						if (e.getAuthoringApplication().toString().equals("OTHER")) {
-							name = URLEncoder.encode(data.getFileName(), "UTF-8").replaceAll("\\+", "%20");
-						} else {
-							name = e.getCADName();
-						}
+						name = e.getCADName();
 					}
 				} else {
 					name = URLEncoder.encode(data.getFileName(), "UTF-8").replaceAll("\\+", "%20");

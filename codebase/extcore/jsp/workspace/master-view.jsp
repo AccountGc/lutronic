@@ -71,11 +71,14 @@ ApprovalLineDTO dto = (ApprovalLineDTO) request.getAttribute("dto");
 		toFocus("description");
 		createAUIGrid10000(columns10000);
 		AUIGrid.resize(myGridID10000);
+		createAUIGrid10001(columns10001);
+		AUIGrid.resize(myGridID10001);
 		finderUser("reassignUser");
 		autoTextarea();
 	})
 
 	window.addEventListener("resize", function() {
 		AUIGrid.resize(myGridID10000);
+		AUIGrid.resize(myGridID10001);
 	});
 </script>
