@@ -62,7 +62,6 @@ boolean update = "update".equals(mode);
 			dataField : "name",
 			headerText : "이름",
 			dataType : "string",
-			style : "aui-left"
 // 			width : 130
 		}, {
 			dataField : "id",
@@ -98,6 +97,7 @@ boolean update = "update".equals(mode);
 				enableRowCheckShiftKey : true,
 				enableSorting : false,
 				autoGridHeight : true,
+				softRemoveRowMode : false,
 			}
 			myGridID8 = AUIGrid.create("#grid8", columnLayout, props);
 			AUIGrid.setGridData(myGridID8, <%=WorkspaceHelper.manager.loadLines(oid)%>);

@@ -1093,10 +1093,10 @@ public class WorkspaceHelper {
 				Map<String, Object> map = new HashMap<>();
 				WTPrincipalReference ref = line.getOwnership().getOwner();
 				WTUser user = (WTUser) ref.getObject();
-				map.put("name", line.getName());
 				map.put("type", line.getType());
 				if (user != null) {
 					PeopleDTO dto = new PeopleDTO(user);
+					map.put("name", dto.getName());
 					map.put("id", dto.getId());
 					map.put("duty", dto.getDuty());
 					map.put("email", dto.getEmail());
@@ -1112,10 +1112,10 @@ public class WorkspaceHelper {
 				WTPrincipalReference ref = line.getOwnership().getOwner();
 				WTUser user = (WTUser) ref.getObject();
 				map.put("sort", sort);
-				map.put("name", line.getName());
 				map.put("type", line.getType());
 				if (user != null) {
 					PeopleDTO dto = new PeopleDTO(user);
+					map.put("name", dto.getName());
 					map.put("id", dto.getId());
 					map.put("duty", dto.getDuty());
 					map.put("email", dto.getEmail());
@@ -1130,10 +1130,10 @@ public class WorkspaceHelper {
 				Map<String, Object> map = new HashMap<>();
 				WTPrincipalReference ref = line.getOwnership().getOwner();
 				WTUser user = (WTUser) ref.getObject();
-				map.put("name", line.getName());
 				map.put("type", line.getType());
 				if (user != null) {
 					PeopleDTO dto = new PeopleDTO(user);
+					map.put("name", dto.getName());
 					map.put("id", dto.getId());
 					map.put("duty", dto.getDuty());
 					map.put("email", dto.getEmail());

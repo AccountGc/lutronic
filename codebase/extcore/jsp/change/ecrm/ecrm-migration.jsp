@@ -77,7 +77,7 @@ while (result.hasMoreElements()) {
 	ecrm.setModel(IBAUtil.getStringValue(doc, "MODEL"));
 	ecrm.setIsNew(false);
 	ecrm.setEoCommentA(doc.getDescription());
-	ecrm.setPeriod("P004");
+	ecrm.setPeriod("PR004");
 
 	String deptcode_code = IBAUtil.getStringValue(doc, "DEPTCODE");
 	String deptcode_name = keyToValue(deptcode_code, "DEPTCODE");

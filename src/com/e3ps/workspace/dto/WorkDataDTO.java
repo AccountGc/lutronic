@@ -79,7 +79,7 @@ public class WorkDataDTO {
 				setViewUrl(this.context + "/doc/view?oid=" + getPoid());
 			}
 			setState(doc.getLifeCycleState().getDisplay());
-			setCreator(doc.getCreatorName());
+			setCreator(doc.getCreatorFullName());
 			setCreatedDate_txt(doc.getCreateTimestamp().toString().substring(0, 10));
 		} else if (per instanceof EChangeRequest) {
 			EChangeRequest ecr = (EChangeRequest) per;
@@ -87,7 +87,7 @@ public class WorkDataDTO {
 			setName(ecr.getEoName());
 			setPersistType("CR");
 			setState(ecr.getLifeCycleState().getDisplay());
-			setCreator(ecr.getCreatorName());
+			setCreator(ecr.getCreatorFullName());
 			setCreatedDate_txt(ecr.getCreateTimestamp().toString().substring(0, 10));
 			setViewUrl(this.context + "/cr/view?oid=" + getPoid());
 		} else if (per instanceof EChangeOrder) {
@@ -103,24 +103,15 @@ public class WorkDataDTO {
 			setNumber(eco.getEoNumber());
 			setName(eco.getEoName());
 			setState(eco.getLifeCycleState().getDisplay());
-			setCreator(eco.getCreatorName());
+			setCreator(eco.getCreatorFullName());
 			setCreatedDate_txt(eco.getCreateTimestamp().toString().substring(0, 10));
-//		} else if (per instanceof ROHSMaterial) {
-//			ROHSMaterial rohs = (ROHSMaterial) per;
-//			setNumber(rohs.getNumber());
-//			setName(rohs.getName());
-//			setPersistType("ROHS");
-//			setState(rohs.getLifeCycleState().getDisplay());
-//			setCreator(rohs.getCreatorName());
-//			setCreatedDate_txt(rohs.getCreateTimestamp().toString().substring(0, 10));
-//			setViewUrl(this.context + "/rohs/view?oid=" + getPoid());
 		} else if (per instanceof AsmApproval) {
 			AsmApproval asm = (AsmApproval) per;
 			setNumber(asm.getNumber());
 			setName(asm.getName());
 			setPersistType("일괄결재");
 			setState(asm.getLifeCycleState().getDisplay());
-			setCreator(asm.getCreatorName());
+			setCreator(asm.getCreatorFullName());
 			setCreatedDate_txt(asm.getCreateTimestamp().toString().substring(0, 10));
 			setViewUrl(this.context + "/asm/view?oid=" + getPoid());
 		} else if (per instanceof ECPRRequest) {
@@ -129,7 +120,7 @@ public class WorkDataDTO {
 			setName(ecpr.getEoName());
 			setPersistType("ECPR");
 			setState(ecpr.getLifeCycleState().getDisplay());
-			setCreator(ecpr.getCreatorName());
+			setCreator(ecpr.getCreatorFullName());
 			setCreatedDate_txt(ecpr.getCreateTimestamp().toString().substring(0, 10));
 			setViewUrl(this.context + "/ecpr/view?oid=" + getPoid());
 		} else if (per instanceof ECRMRequest) {
@@ -138,7 +129,7 @@ public class WorkDataDTO {
 			setName(ecrm.getEoName());
 			setPersistType("ECRM");
 			setState(ecrm.getLifeCycleState().getDisplay());
-			setCreator(ecrm.getCreatorName());
+			setCreator(ecrm.getCreatorFullName());
 			setCreatedDate_txt(ecrm.getCreateTimestamp().toString().substring(0, 10));
 			setViewUrl(this.context + "/ecrm/view?oid=" + getPoid());
 		}

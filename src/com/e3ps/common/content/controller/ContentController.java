@@ -67,16 +67,19 @@ public class ContentController extends BaseController {
 				h = (ContentHolder) CommonUtil.getObject(holder);
 				if (h instanceof EPMDocument) {
 					EPMDocument e = (EPMDocument) h;
-					if (e.getAuthoringApplication().toString().equals("OTHER")) {
-						name = URLEncoder.encode(data.getFileName(), "UTF-8").replaceAll("\\+", "%20");
+
+					// 변환 파일 이름 변경
+					String ss = data.getFileName();
+					String ext = FileUtil.getExtension(ss);
+					if ("stp".equalsIgnoreCase(ext) || "pdf".equalsIgnoreCase(ext) || "step".equalsIgnoreCase(ext)
+							|| "dxf".equalsIgnoreCase(ext)) {
+						name = ss.replace("." + ext, "").replace("step_", "").replace("_prt", "").replace("_asm", "")
+								.replace("pdf_", "").replace("_drw", "") + "_" + e.getName() + "." + ext;
 					} else {
-						name = e.getCADName();
-						String ext = FileUtil.getExtension(name);
-						if ("stp".equalsIgnoreCase(ext) || "pdf".equalsIgnoreCase(ext) || "step".equalsIgnoreCase(ext)
-								|| "dxf".equalsIgnoreCase(ext)) {
-							name = name.replace("." + ext, "").replace("step_", "").replace("_prt", "")
-									.replace("_asm", "").replace("pdf_", "").replace("_drw", "") + "_" + e.getName()
-									+ "." + ext;
+						if (e.getAuthoringApplication().toString().equals("OTHER")) {
+							name = URLEncoder.encode(data.getFileName(), "UTF-8").replaceAll("\\+", "%20");
+						} else {
+							name = e.getCADName();
 						}
 					}
 				} else {

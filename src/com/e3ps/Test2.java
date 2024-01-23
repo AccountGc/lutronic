@@ -22,11 +22,15 @@ public class Test2 {
 
 	public static void main(String[] args) throws Exception {
 
-		String s = "ASDASD";
-		String name = "pdf_dafadf_drw.dxf";
-		String ext = FileUtil.getExtension(name);
-		name = name.replace("." + ext, "").replace("step_", "").replace("_prt", "").replace("_asm", "")
-				.replace("pdf_", "").replace("_drw", "") + "_" + s + "." + ext;
-		System.out.println(name);
+		ArrayList<String> list = new ArrayList();
+		list.add("NP21");
+		String s = "NP21";
+
+		if (!list.contains(s)) {
+			list.add(s);
+		}
+
+		System.out.println(list);
+
 	}
 }

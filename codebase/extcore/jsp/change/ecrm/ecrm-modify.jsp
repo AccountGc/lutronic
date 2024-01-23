@@ -40,7 +40,7 @@ iframe {
 	<tr>
 		<th class="req lb">ECRM 제목</th>
 		<td class="indent5">
-			<input type="text" name="name" id="name" class="width-300" value="<%=dto.getName()%>">
+			<input type="text" name="name" id="name" class="width-400" value="<%=dto.getName()%>">
 		</td>
 		<th class="req">보존년한</th>
 		<td class="indent5">

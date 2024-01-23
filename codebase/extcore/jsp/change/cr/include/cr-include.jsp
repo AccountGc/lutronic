@@ -43,14 +43,14 @@ if (header) {
 			<%
 			}
 			%>
-			<div id="grid101" style="height: 50px; border-top: 1px solid #3180c3; margin: 5px;"></div>
+			<div id="grid101" style="height: 30px; border-top: 1px solid #3180c3; margin: 5px;"></div>
 		</td>
 	</tr>
 </table>
 <%
 } else {
 %>
-<div id="grid101" style="height: 50px; border-top: 1px solid #3180c3; margin: 5px;"></div>
+<div id="grid101" style="height: 30px; border-top: 1px solid #3180c3; margin: 5px;"></div>
 <%
 }
 %>

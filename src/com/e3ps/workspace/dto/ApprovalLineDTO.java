@@ -62,7 +62,7 @@ public class ApprovalLineDTO {
 		setOid(line.getPersistInfo().getObjectIdentifier().getStringValue());
 		setPoid(per.getPersistInfo().getObjectIdentifier().getStringValue());
 		setName(line.getName());
-		setCreator(master.getOwnership().getOwner().getFullName());
+		setCreator(line.getOwnership().getOwner().getFullName());
 		setReceiveTime(line.getCreateTimestamp().toString().substring(0, 16));
 		setState(line.getState());
 		setType(line.getType());

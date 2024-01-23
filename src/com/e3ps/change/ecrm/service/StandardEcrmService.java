@@ -65,6 +65,7 @@ public class StandardEcrmService extends StandardManager implements EcrmService 
 	public void create(EcrmDTO dto) throws Exception {
 		String name = dto.getName();
 		String contents = dto.getContents();
+		String period = dto.getPeriod_code();
 		ArrayList<String> sections = dto.getSections(); // 변경 구분
 		ArrayList<Map<String, String>> rows300 = dto.getRows300(); // 모델
 		Transaction trs = new Transaction();
@@ -109,6 +110,7 @@ public class StandardEcrmService extends StandardManager implements EcrmService 
 			ECRMRequest ecrm = ECRMRequest.newECRMRequest();
 			ecrm.setEoName(name);
 			ecrm.setEoNumber(number);
+			ecrm.setPeriod(period);
 			
 			Timestamp today = new Timestamp(currentDate.getTime());
 			ecrm.setCreateDate(today.toString().substring(0, 10));

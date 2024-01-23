@@ -1080,18 +1080,14 @@ public class StandardWorkspaceService extends StandardManager implements Workspa
 					WorkData d = (WorkData) qr.nextElement();
 					PersistenceHelper.manager.delete(d);
 				}
-				// 상태값 작업중으로 변경
-//				if (per instanceof LifeCycleManaged) {
-//					LifeCycleManaged lcm = (LifeCycleManaged) per;
-//					LifeCycleHelper.service.setLifeCycleState(lcm, State.toState("LINE_REGISTER"));
-//				}
+				// 바로 다시 결재선 지정 모드..
 				WorkDataHelper.service.create(per);
 			} else {
 				QueryResult qr = PersistenceHelper.manager.navigate(per, "workData", PerWorkDataLink.class);
 				WorkData d = null;
 				if (qr.hasMoreElements()) {
 					d = (WorkData) qr.nextElement();
-					d.setProcess(false);
+					d.setProcess(false); // 결재선 지정 상태로 돌린다.
 					PersistenceHelper.manager.modify(d);
 				}
 
@@ -1138,25 +1134,28 @@ public class StandardWorkspaceService extends StandardManager implements Workspa
 			ApprovalMaster m = data.getAppMaster();
 			ArrayList<ApprovalLine> list = WorkspaceHelper.manager.getAllLines(m);
 			for (ApprovalLine line : list) {
-				line.setDescription(null);
-				line.setStartTime(null);
-				line.setCompleteTime(null);
-				line.setReads(false);
-				String t = line.getType();
-				// 기안
-				if (t.equals(WorkspaceHelper.SUBMIT_LINE)) {
-					line.setState(WorkspaceHelper.STATE_SUBMIT_READY);
-					// 합의
-				} else if (t.equals(WorkspaceHelper.AGREE_LINE)) {
-					line.setState(WorkspaceHelper.STATE_AGREE_READY);
-					// 결재
-				} else if (t.equals(WorkspaceHelper.APPROVAL_LINE)) {
-					// 수신
-					line.setState(WorkspaceHelper.STATE_APPROVAL_READY);
-				} else if (t.equals(WorkspaceHelper.RECEIVE_LINE)) {
-					line.setState(WorkspaceHelper.STATE_RECEIVE_READY);
+				// 완료가 된 결재는 제외 시킨다.
+				if (line.getCompleteTime() == null) {
+					line.setDescription(null);
+					line.setStartTime(null);
+					line.setCompleteTime(null);
+					line.setReads(false);
+					String t = line.getType();
+					// 기안
+					if (t.equals(WorkspaceHelper.SUBMIT_LINE)) {
+						line.setState(WorkspaceHelper.STATE_SUBMIT_READY);
+						// 합의
+					} else if (t.equals(WorkspaceHelper.AGREE_LINE)) {
+						line.setState(WorkspaceHelper.STATE_AGREE_READY);
+						// 결재
+					} else if (t.equals(WorkspaceHelper.APPROVAL_LINE)) {
+						// 수신
+						line.setState(WorkspaceHelper.STATE_APPROVAL_READY);
+					} else if (t.equals(WorkspaceHelper.RECEIVE_LINE)) {
+						line.setState(WorkspaceHelper.STATE_RECEIVE_READY);
+					}
+					PersistenceHelper.manager.modify(line);
 				}
-				PersistenceHelper.manager.modify(line);
 			}
 
 			trs.commit();

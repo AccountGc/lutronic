@@ -110,14 +110,14 @@ public class StandardWorkDataService extends StandardManager implements WorkData
 				WorkspaceHelper.service.register(data, data.getPer(), description, agreeRows, approvalRows,
 						receiveRows);
 			} else {
-				// 모든 결재선을 지우고 다시 만든다????
+				// 상태값 및 날짜 변경들..
 				ArrayList<ApprovalLine> list = WorkspaceHelper.manager.getAllLines(appMaster);
 				for (ApprovalLine line : list) {
 					PersistenceHelper.manager.delete(line);
 				}
 				PersistenceHelper.manager.delete(appMaster);
-				WorkspaceHelper.service.register(data, data.getPer(), description, agreeRows, approvalRows,
-						receiveRows);
+//				WorkspaceHelper.service.register(data, data.getPer(), description, agreeRows, approvalRows,
+//						receiveRows);
 			}
 
 			trs.commit();

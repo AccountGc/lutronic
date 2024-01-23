@@ -802,6 +802,7 @@ public class StandardActivityService extends StandardManager implements Activity
 			}
 
 			String model = "";
+			ArrayList<String> modelList = new ArrayList<>();
 			for (LinkedHashMap<String, Object> map : addRows) {
 				String part_oid = (String) map.get("part_oid");
 				WTPart part = (WTPart) CommonUtil.getObject(part_oid);
@@ -853,7 +854,6 @@ public class StandardActivityService extends StandardManager implements Activity
 
 				System.out.println("end=" + end.size());
 
-				ArrayList<String> modelList = new ArrayList<>();
 				for (int i = 0; i < end.size(); i++) {
 					Map<String, String> m = (Map<String, String>) end.get(i);
 					String s = m.get("oid");

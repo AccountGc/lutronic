@@ -33,6 +33,9 @@ String oid = (String) request.getAttribute("oid");
 			<input type="button" value="삭제" title="삭제" onclick="_delete();" style="position: relative; top: 1.5px;" class="red">
 			<div id="grid5000" style="height: 786px; border-top: 1px solid #3180c3; margin-top: 5px;"></div>
 			<script type="text/javascript">
+				const receives = window.receives;
+				const approvals = window.approvals;
+				const agrees = window.agrees;
 				let myGridID5000;
 				const columns5000 = [ {
 					dataField : "name",
@@ -467,7 +470,6 @@ String oid = (String) request.getAttribute("oid");
 						<div id="grid2000" style="height: 233px; border-top: 1px solid #3180c3;"></div>
 						<script type="text/javascript">
 							let myGridID2000;
-							const agrees = window.agrees;
 							const columns2000 = [ {
 								dataField : "name",
 								headerText : "이름",
@@ -529,7 +531,6 @@ String oid = (String) request.getAttribute("oid");
 								// 									}
 								// 									return copy;
 								// 								});
-								logger(agrees);
 								AUIGrid.setGridData(myGridID2000, agrees);
 							}
 						</script>
@@ -554,7 +555,6 @@ String oid = (String) request.getAttribute("oid");
 						<div id="grid3000" style="height: 233px; border-top: 1px solid #3180c3;"></div>
 						<script type="text/javascript">
 							let myGridID3000;
-							const approvals = window.approvals;
 							const columns3000 = [ {
 								dataField : "name",
 								headerText : "이름",
@@ -641,7 +641,6 @@ String oid = (String) request.getAttribute("oid");
 						<div id="grid4000" style="height: 233px; border-top: 1px solid #3180c3;"></div>
 						<script type="text/javascript">
 							let myGridID4000;
-							const receives = window.receives;
 							const columns4000 = [ {
 								dataField : "name",
 								headerText : "이름",
@@ -979,7 +978,11 @@ function moveRow() {
 		AUIGrid.resize(myGridID5000);
 		load1000(oid);
 		loadLine();
-		loadFavorite();
+		
+		logger(receives);
+		if(receives === undefined && approvals === undefined && agrees === undefined) {
+			loadFavorite();
+		}
 	});
 
 	window.addEventListener("resize", function() {

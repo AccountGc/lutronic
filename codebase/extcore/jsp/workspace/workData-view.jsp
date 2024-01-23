@@ -139,7 +139,9 @@ boolean validate = dto.isValidate();
 			const oid = document.getElementById("oid").value;
 			const description = document.getElementById("description").value;
 			// 			const addRows8 = AUIGrid.getAddedRowItems(myGridID8);
-			const addRows8 = AUIGrid.getGridData(myGridID8);
+// 			const addRows8 = AUIGrid.getGridData(myGridID8);
+			const addRows8 = AUIGrid.getGridDataWithState(myGridID8, "gridState");
+			
 			if (addRows8.length === 0) {
 				alert("결재선을 지정하세요.");
 				addRows8();
@@ -154,7 +156,9 @@ boolean validate = dto.isValidate();
 				external : external,
 				description : description
 			};
+			logger(addRows8);
 			toRegister(params, addRows8); // 결재선 세팅
+			logger(params);
 			if (!confirm("기안 하시겠습니까?")) {
 				return false;
 			}
