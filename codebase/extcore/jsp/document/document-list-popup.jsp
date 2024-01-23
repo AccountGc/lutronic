@@ -29,7 +29,9 @@ String state = (String) request.getAttribute("state");
 <input type="hidden" name="oid" id="oid">
 <input type="hidden" name="sortKey" id="sortKey">
 <input type="hidden" name="sortType" id="sortType">
-		
+<input type="hidden" name="sortKey" id="sortKey">
+<input type="hidden" name="sortType" id="sortType">
+
 <table class="button-table">
 	<tr>
 		<td class="left">
@@ -193,7 +195,7 @@ String state = (String) request.getAttribute("state");
 	<tr>
 		<td class="left"></td>
 		<td class="right">
-			<select name="_psize" id="_psize">
+			<select name="_psize" id="_psize" onchange="loadGridData();">
 				<option value="10">10</option>
 				<option value="20" selected="selected">20</option>
 				<option value="30">30</option>

@@ -16,6 +16,8 @@
 		<input type="hidden" name="lastNum" id="lastNum">
 		<input type="hidden" name="curPage" id="curPage">
 		<input type="hidden" name="oid" id="oid">
+		<input type="hidden" name="sortKey" id="sortKey">
+		<input type="hidden" name="sortType" id="sortType">
 
 		<table class="search-table">
 			<colgroup>
@@ -39,7 +41,7 @@
 		<table class="button-table">
 			<tr>
 				<td class="right">
-					<select name="_psize" id="_psize">
+					<select name="_psize" id="_psize" onchange="loadGridData();">
 						<option value="30">30</option>
 						<option value="50">50</option>
 						<option value="100">100</option>
@@ -133,8 +135,29 @@
 				AUIGrid.bind(myGridID, "hScrollChange", function(event) {
 					hideContextMenu();
 				});
+				AUIGrid.bind(myGridID, "sorting", auiSortingHandler);
 			}
 
+			let sortCache = [];
+			let compField;
+			function auiSortingHandler(event) {
+				const sortingFields = event.sortingFields;
+				if (sortingFields.length > 0) {
+					const key = sortingFields[0].dataField;
+					if (compField !== key) {
+						compField = key;
+						const sortType = sortingFields[0].sortType; // 오름차순 1 내림 -1
+						sortCache[0] = {
+							dataField : key,
+							sortType : sortType
+						};
+						document.getElementById("sortKey").value = key;
+						document.getElementById("sortType").value = sortType;
+						loadGridData();
+					}
+				}
+			}
+			
 			function loadGridData() {
 				 				let params = new Object();
 				 				const url = getCallUrl("/part/list");
@@ -151,6 +174,10 @@
 										document.getElementById("curPage").value = data.curPage;
 // 										document.getElementById("lastNum").value = data.list.length;
 										AUIGrid.setGridData(myGridID, data.list);
+										if (movePage === undefined) {
+											AUIGrid.setSorting(myGridID, sortCache);
+											compField = null;
+										}
 									} else {
 										alert(data.msg);
 									}

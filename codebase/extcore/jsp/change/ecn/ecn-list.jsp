@@ -27,6 +27,8 @@ boolean isEdit = (boolean) request.getAttribute("isEdit");
 		<input type="hidden" name="sessionid" id="sessionid">
 		<input type="hidden" name="curPage" id="curPage">
 		<input type="hidden" name="sessionName" id="sessionName" value="<%=user.getFullName()%>">
+		<input type="hidden" name="sortKey" id="sortKey">
+		<input type="hidden" name="sortType" id="sortType">
 
 		<table class="button-table">
 			<tr>
@@ -102,7 +104,7 @@ boolean isEdit = (boolean) request.getAttribute("isEdit");
 					<img src="/Windchill/extcore/images/redo.gif" title="테이블 초기화" onclick="resetColumnLayout('ecn-list');">
 				</td>
 				<td class="right">
-					<select name="_psize" id="_psize">
+					<select name="_psize" id="_psize" onchange="loadGridData();">
 						<option value="10">10</option>
 						<option value="20" selected="selected">20</option>
 						<option value="30">30</option>
@@ -138,7 +140,7 @@ boolean isEdit = (boolean) request.getAttribute("isEdit");
 					filter : {
 						inline : false
 					},
-				},{
+				}, {
 					dataField : "ecoNumber",
 					headerText : "ECO 번호",
 					dataType : "string",
@@ -168,22 +170,22 @@ boolean isEdit = (boolean) request.getAttribute("isEdit");
 							const url = getCallUrl("/ecn/view?oid=" + oid);
 							_popup(url, 1600, 500, "n");
 						}
-					},					
+					},
 				}, {
 					dataField : "partNumber",
 					headerText : "제품번호",
 					dataType : "string",
 					width : 150,
 					editable : false,
-// 					renderer : {
-// 						type : "LinkRenderer",
-// 						baseUrl : "javascript",
-// 						jsCallback : function(rowIndex, columnIndex, value, item) {
-// 							const oid = item.oid;
-// 							const url = getCallUrl("/part/view?oid=" + oid);
-// 							_popup(url, 1600, 500, "n");
-// 						}
-// 					},
+				// 					renderer : {
+				// 						type : "LinkRenderer",
+				// 						baseUrl : "javascript",
+				// 						jsCallback : function(rowIndex, columnIndex, value, item) {
+				// 							const oid = item.oid;
+				// 							const url = getCallUrl("/part/view?oid=" + oid);
+				// 							_popup(url, 1600, 500, "n");
+				// 						}
+				// 					},
 				}, {
 					dataField : "partName",
 					headerText : "제품명",
@@ -296,6 +298,27 @@ boolean isEdit = (boolean) request.getAttribute("isEdit");
 				AUIGrid.bind(myGridID, "hScrollChange", function(event) {
 					hideContextMenu();
 				});
+				AUIGrid.bind(myGridID, "sorting", auiSortingHandler);
+			}
+
+			let sortCache = [];
+			let compField;
+			function auiSortingHandler(event) {
+				const sortingFields = event.sortingFields;
+				if (sortingFields.length > 0) {
+					const key = sortingFields[0].dataField;
+					if (compField !== key) {
+						compField = key;
+						const sortType = sortingFields[0].sortType; // 오름차순 1 내림 -1
+						sortCache[0] = {
+							dataField : key,
+							sortType : sortType
+						};
+						document.getElementById("sortKey").value = key;
+						document.getElementById("sortType").value = sortType;
+						loadGridData();
+					}
+				}
 			}
 
 			function auiCellEditBeginHandler(event) {
@@ -329,6 +352,10 @@ boolean isEdit = (boolean) request.getAttribute("isEdit");
 						totalPage = Math.ceil(data.total / data.pageSize);
 						createPagingNavigator(data.total, data.curPage, data.sessionid);
 						AUIGrid.setGridData(myGridID, data.list);
+						if (movePage === undefined) {
+							AUIGrid.setSorting(myGridID, sortCache);
+							compField = null;
+						}
 					} else {
 						alert(data.msg);
 					}

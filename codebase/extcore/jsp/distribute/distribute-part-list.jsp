@@ -34,6 +34,8 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 		<input type="hidden" name="curPage" id="curPage">
 		<input type="hidden" name="sessionName" id="sessionName" value="<%=user.getFullName()%>">
 		<input type="hidden" name="oid" id="oid">
+		<input type="hidden" name="sortKey" id="sortKey">
+		<input type="hidden" name="sortType" id="sortType">
 		<table class="button-table">
 			<tr>
 				<td class="left">
@@ -281,7 +283,7 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 						</div>
 					</div>
 					&nbsp;
-					<select name="_psize" id="_psize">
+					<select name="_psize" id="_psize" onchange="loadGridData();">
 						<option value="10">10</option>
 						<option value="20" selected="selected">20</option>
 						<option value="30">30</option>
@@ -289,7 +291,7 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 						<option value="100">100</option>
 					</select>
 					<input type="button" value="▼펼치기" title="▼펼치기" class="red" onclick="spread(this);">
-					<input type="button" value="검색" title="검색" onclick="loadGridData();">
+					<input type="button" value="검색" title="검색" onclick="();">
 				</td>
 			</tr>
 		</table>
@@ -466,8 +468,29 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 				AUIGrid.bind(myGridID, "hScrollChange", function(event) {
 					hideContextMenu();
 				});
+				AUIGrid.bind(myGridID, "sorting", auiSortingHandler);
 			}
 
+			let sortCache = [];
+			let compField;
+			function auiSortingHandler(event) {
+				const sortingFields = event.sortingFields;
+				if (sortingFields.length > 0) {
+					const key = sortingFields[0].dataField;
+					if (compField !== key) {
+						compField = key;
+						const sortType = sortingFields[0].sortType; // 오름차순 1 내림 -1
+						sortCache[0] = {
+							dataField : key,
+							sortType : sortType
+						};
+						document.getElementById("sortKey").value = key;
+						document.getElementById("sortType").value = sortType;
+						loadGridData();
+					}
+				}
+			}
+			
 			function loadGridData(movePage) {
 				if (movePage === undefined) {
 					document.getElementById("sessionid").value = 0;
@@ -496,6 +519,10 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 						totalPage = Math.ceil(data.total / data.pageSize);
 						createPagingNavigator(data.total, data.curPage, data.sessionid);
 						AUIGrid.setGridData(myGridID, data.list);
+						if (movePage === undefined) {
+							AUIGrid.setSorting(myGridID, sortCache);
+							compField = null;
+						}
 					} else {
 						alert(data.msg);
 					}

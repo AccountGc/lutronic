@@ -10,6 +10,8 @@ boolean isMulti = Boolean.parseBoolean(multi);
 %>
 <input type="hidden" name="sessionid" id="sessionid">
 <input type="hidden" name="curPage" id="curPage">
+<input type="hidden" name="sortKey" id="sortKey">
+<input type="hidden" name="sortType" id="sortType">
 
 <table class="button-table">
 	<tr>
@@ -50,7 +52,7 @@ boolean isMulti = Boolean.parseBoolean(multi);
 <table class="button-table">
 	<tr>
 		<td class="right">
-			<select name="_psize" id="_psize">
+			<select name="_psize" id="_psize" onchange="loadGridData();">
 				<option value="30">30</option>
 				<option value="50">50</option>
 				<option value="100">100</option>
@@ -210,6 +212,27 @@ boolean isMulti = Boolean.parseBoolean(multi);
 			hideContextMenu();
 		});
 		AUIGrid.bind(myGridID, "cellClick", auiCellClick);
+		AUIGrid.bind(myGridID, "sorting", auiSortingHandler);
+	}
+	
+	let sortCache = [];
+	let compField;
+	function auiSortingHandler(event) {
+		const sortingFields = event.sortingFields;
+		if (sortingFields.length > 0) {
+			const key = sortingFields[0].dataField;
+			if (compField !== key) {
+				compField = key;
+				const sortType = sortingFields[0].sortType; // 오름차순 1 내림 -1
+				sortCache[0] = {
+					dataField : key,
+					sortType : sortType
+				};
+				document.getElementById("sortKey").value = key;
+				document.getElementById("sortType").value = sortType;
+				loadGridData();
+			}
+		}
 	}
 	
 	function auiCellClick(event) {
@@ -252,6 +275,10 @@ boolean isMulti = Boolean.parseBoolean(multi);
 				document.getElementById("sessionid").value = data.sessionid;
 				createPagingNavigator(data.total, data.curPage);
 				AUIGrid.setGridData(myGridID, data.list);
+				if (movePage === undefined) {
+					AUIGrid.setSorting(myGridID, sortCache);
+					compField = null;
+				}
 			} else {
 				alert(data.msg);
 			}

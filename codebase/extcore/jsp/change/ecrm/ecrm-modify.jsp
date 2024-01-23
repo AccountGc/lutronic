@@ -50,7 +50,7 @@ iframe {
 				for (NumberCode preseration : preserationList) {
 					String key = preseration.getCode();
 				%>
-				<option value="<%=key%>" <%if (c.equals(key)) {%> selected="selected" <%}%>><%=preseration.getName()%></option>
+				<option value="<%=key%>" <%if(c.equals(key)) { %> selected="selected" <%} %>><%=preseration.getName()%></option>
 				<%
 				}
 				%>
@@ -191,7 +191,7 @@ iframe {
 		}
 
 		const params = {
-			oid : oid.value,
+			oid : oid,
 			name : name.value,
 			period_code : period,
 			contents : content,

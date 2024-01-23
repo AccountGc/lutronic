@@ -22,6 +22,7 @@ public class MailUserDTO {
 	private String name;
 	private String email;
 	private boolean enable;
+	private int rowNum;
 
 	/**
 	 * 변수

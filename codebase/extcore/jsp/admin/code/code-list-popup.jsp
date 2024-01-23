@@ -13,6 +13,8 @@ boolean multi = (boolean) request.getAttribute("multi");
 String codeType = (String) request.getAttribute("codeType");
 %>
 <input type="hidden" name="codeType" id="codeType" value="<%=codeType%>">
+<input type="hidden" name="sortKey" id="sortKey">
+<input type="hidden" name="sortType" id="sortType">
 <table class="search-table">
 	<colgroup>
 		<col width="130">
@@ -35,33 +37,33 @@ String codeType = (String) request.getAttribute("codeType");
 		<td class="indent5" colspan="3">
 			<input type="text" name="description" id="description" class="width-200">
 		</td>
-<!-- 		<th>활성화</th> -->
-<!-- 		<td> -->
-<!-- 			&nbsp; -->
-<!-- 			<div class="pretty p-switch"> -->
-<!-- 				<input type="radio" name="enabled" value="true" checked="checked"> -->
-<!-- 				<div class="state p-success"> -->
-<!-- 					<label> -->
-<!-- 						<b>ON</b> -->
-<!-- 					</label> -->
-<!-- 				</div> -->
-<!-- 			</div> -->
-<!-- 			&nbsp; -->
-<!-- 			<div class="pretty p-switch"> -->
-<!-- 				<input type="radio" name="enabled" value="false"> -->
-<!-- 				<div class="state p-success"> -->
-<!-- 					<label> -->
-<!-- 						<b>OFF</b> -->
-<!-- 					</label> -->
-<!-- 				</div> -->
-<!-- 			</div> -->
-<!-- 		</td> -->
+		<!-- 		<th>활성화</th> -->
+		<!-- 		<td> -->
+		<!-- 			&nbsp; -->
+		<!-- 			<div class="pretty p-switch"> -->
+		<!-- 				<input type="radio" name="enabled" value="true" checked="checked"> -->
+		<!-- 				<div class="state p-success"> -->
+		<!-- 					<label> -->
+		<!-- 						<b>ON</b> -->
+		<!-- 					</label> -->
+		<!-- 				</div> -->
+		<!-- 			</div> -->
+		<!-- 			&nbsp; -->
+		<!-- 			<div class="pretty p-switch"> -->
+		<!-- 				<input type="radio" name="enabled" value="false"> -->
+		<!-- 				<div class="state p-success"> -->
+		<!-- 					<label> -->
+		<!-- 						<b>OFF</b> -->
+		<!-- 					</label> -->
+		<!-- 				</div> -->
+		<!-- 			</div> -->
+		<!-- 		</td> -->
 	</tr>
 </table>
 <table class="button-table">
 	<tr>
 		<td class="right">
-			<select name="_psize" id="_psize">
+			<select name="_psize" id="_psize" onchange="loadGridData();">
 				<option value="30">30</option>
 				<option value="50">50</option>
 				<option value="100">100</option>
@@ -156,7 +158,7 @@ String codeType = (String) request.getAttribute("codeType");
 			// 엑스트라 체크박스 체크 추가
 			AUIGrid.setCheckedRowsByIds(event.pid, rowId);
 		}
-		<%}else{%>
+		<%} else {%>
 		if (AUIGrid.isCheckedRowById(event.pid, item._$uid)) {
 			AUIGrid.addUncheckedRowsByIds(event.pid,item._$uid);
 		} else {

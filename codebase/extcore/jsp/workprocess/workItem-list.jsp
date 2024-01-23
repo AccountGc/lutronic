@@ -19,6 +19,8 @@
 		<input type="hidden" name="lastNum" id="lastNum">
 		<input type="hidden" name="curPage" id="curPage">
 		<input type="hidden" name="oid" id="oid">
+		<input type="hidden" name="sortKey" id="sortKey">
+		<input type="hidden" name="sortType" id="sortType">
 
 		<table class="search-table">
 			<colgroup>

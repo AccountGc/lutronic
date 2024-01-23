@@ -8,6 +8,8 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <input type="hidden" name="sessionid" id="sessionid">
 <input type="hidden" name="curPage" id="curPage">
+<input type="hidden" name="sortKey" id="sortKey">
+<input type="hidden" name="sortType" id="sortType">
 
 <table class="button-table">
 	<tr>
@@ -41,7 +43,7 @@
 <table class="button-table">
 	<tr>
 		<td class="right">
-			<select name="_psize" id="_psize">
+			<select name="_psize" id="_psize" onchange="loadGridData();">
 				<option value="30">30</option>
 				<option value="50">50</option>
 				<option value="100">100</option>
@@ -68,7 +70,7 @@
 			filter : {
 				inline : false
 			},
-		},{
+		}, {
 			dataField : "name",
 			headerText : "이름",
 			dataType : "string",
@@ -108,20 +110,42 @@
 			hideContextMenu();
 		});
 		AUIGrid.bind(myGridID, "cellClick", auiCellClick);
+		AUIGrid.bind(myGridID, "sorting", auiSortingHandler);
 	}
 	
+	let sortCache = [];
+	let compField;
+	function auiSortingHandler(event) {
+		const sortingFields = event.sortingFields;
+		if (sortingFields.length > 0) {
+			const key = sortingFields[0].dataField;
+			if (compField !== key) {
+				compField = key;
+				const sortType = sortingFields[0].sortType; // 오름차순 1 내림 -1
+				sortCache[0] = {
+					dataField : key,
+					sortType : sortType
+				};
+				document.getElementById("sortKey").value = key;
+				document.getElementById("sortType").value = sortType;
+				loadGridData();
+			}
+		}
+	}
+
+
 	function auiCellClick(event) {
 		const item = event.item;
-		
+
 		if (AUIGrid.isCheckedRowById(event.pid, item._$uid)) {
-			AUIGrid.addUncheckedRowsByIds(event.pid,item._$uid);
+			AUIGrid.addUncheckedRowsByIds(event.pid, item._$uid);
 		} else {
 			AUIGrid.addCheckedRowsByIds(event.pid, item._$uid);
 		}
 	}
 
 	function loadGridData(movePage) {
-		if(movePage === undefined) {
+		if (movePage === undefined) {
 			document.getElementById("sessionid").value = 0;
 			document.getElementById("curPage").value = 1;
 		}
@@ -139,6 +163,10 @@
 				totalPage = Math.ceil(data.total / data.pageSize);
 				createPagingNavigator(data.total, data.curPage, data.sessionid);
 				AUIGrid.setGridData(myGridID, data.list);
+				if (movePage === undefined) {
+					AUIGrid.setSorting(myGridID, sortCache);
+					compField = null;
+				}
 			} else {
 				alert(data.msg);
 			}
@@ -184,5 +212,4 @@
 			trigger(close, msg);
 		})
 	}
-
 </script>
