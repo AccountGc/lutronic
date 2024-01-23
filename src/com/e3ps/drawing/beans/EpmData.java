@@ -157,7 +157,7 @@ public class EpmData {
 						this.dxf.put("fileSizeKB", data.getFileSizeKB() + "KB");
 						this.dxf.put("url",
 								"/Windchill/plm/content/download?oid="
-										+ data.getPersistInfo().getObjectIdentifier().getStringValue() + "&hoid="
+										+ data.getPersistInfo().getObjectIdentifier().getStringValue() + "&holder="
 										+ representation.getPersistInfo().getObjectIdentifier().getStringValue());
 					}
 				}
@@ -175,7 +175,7 @@ public class EpmData {
 //						this.pdf.put("url", ContentHelper.getDownloadURL(representation, data, false, name).toString());
 						this.pdf.put("url",
 								"/Windchill/plm/content/download?oid="
-										+ data.getPersistInfo().getObjectIdentifier().getStringValue() + "&hoid="
+										+ data.getPersistInfo().getObjectIdentifier().getStringValue() + "&holder="
 										+ representation.getPersistInfo().getObjectIdentifier().getStringValue());
 					}
 				}
@@ -196,7 +196,7 @@ public class EpmData {
 						this.step.put("fileSizeKB", data.getFileSizeKB() + "KB");
 						this.step.put("url",
 								"/Windchill/plm/content/download?oid="
-										+ data.getPersistInfo().getObjectIdentifier().getStringValue() + "&hoid="
+										+ data.getPersistInfo().getObjectIdentifier().getStringValue() + "&holder="
 										+ _representation.getPersistInfo().getObjectIdentifier().getStringValue());
 					}
 				}
