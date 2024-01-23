@@ -630,7 +630,7 @@ public class StandardActivityService extends StandardManager implements Activity
 			EChangeActivity eca = (EChangeActivity) CommonUtil.getObject(oid);
 			EChangeOrder eco = (EChangeOrder) eca.getEo();
 			String message = "[" + eco.getEoNumber() + "]를 통해서 수정되었습니다.";
-			for (Map<String, Object> map : data) {
+//			for (Map<String, Object> map : data) {
 			for (int i = 0; i < arrs.size(); i++) {
 				String part_oid = (String) arrs.get(i);
 				String link_oid = (String) links.get(i);
@@ -860,6 +860,18 @@ public class StandardActivityService extends StandardManager implements Activity
 					WTPart endPart = (WTPart) CommonUtil.getObject(s);
 					WTPartMaster mm = (WTPartMaster) endPart.getMaster();
 
+					String value = IBAUtil.getStringValue(endPart, "MODEL");
+					System.out.println("i=" + i + ", model = " + value);
+					if (end.size() - 1 == i) {
+						if (!modelList.contains(value)) {
+							model += value;
+						}
+					} else {
+						if (!modelList.contains(value)) {
+							model += value + ",";
+						}
+					}
+
 					QuerySpec query = new QuerySpec();
 					int idx = query.appendClassList(EOCompletePartLink.class, true);
 					QuerySpecUtils.toEqualsAnd(query, idx, EOCompletePartLink.class, "roleAObjectRef.key.id", mm);
@@ -873,23 +885,23 @@ public class StandardActivityService extends StandardManager implements Activity
 					}
 
 					// endPart 쭉 돌아서 프로젝트 모델 값 입력
-					ArrayList<WTPart> ll = PartHelper.manager.descendants(endPart);
+//					ArrayList<WTPart> ll = PartHelper.manager.descendants(endPart);
 
-					System.out.println("ll=" + ll.size());
-					for (int k = 0; k < ll.size(); k++) {
-						WTPart pp = (WTPart) ll.get(k);
-						String value = IBAUtil.getStringValue(pp, "MODEL");
-						System.out.println("k=" + k + ", model = " + value);
-						if (ll.size() - 1 == k) {
-							if (!modelList.contains(value)) {
-								model += value;
-							}
-						} else {
-							if (!modelList.contains(value)) {
-								model += value + ",";
-							}
-						}
-					}
+//					System.out.println("ll=" + ll.size());
+//					for (int k = 0; k < ll.size(); k++) {
+//						WTPart pp = (WTPart) ll.get(k);
+//						String value = IBAUtil.getStringValue(pp, "MODEL");
+//						System.out.println("k=" + k + ", model = " + value);
+//						if (ll.size() - 1 == k) {
+//							if (!modelList.contains(value)) {
+//								model += value;
+//							}
+//						} else {
+//							if (!modelList.contains(value)) {
+//								model += value + ",";
+//							}
+//						}
+//					}
 				}
 			}
 			// EO
