@@ -109,6 +109,9 @@ public class StandardWorkspaceService extends StandardManager implements Workspa
 		}
 		master = (ApprovalMaster) PersistenceHelper.manager.save(master);
 
+		master = (ApprovalMaster) PersistenceHelper.manager.refresh(master);
+		data = (WorkData) PersistenceHelper.manager.refresh(data);
+
 		// 마스터 세팅
 		data.setAppMaster(master);
 		PersistenceHelper.manager.modify(data);
