@@ -1092,11 +1092,11 @@ public class WorkspaceHelper {
 			for (ApprovalLine line : agreeLines) {
 				Map<String, Object> map = new HashMap<>();
 				WTPrincipalReference ref = line.getOwnership().getOwner();
-				if (ref != null) {
-					WTUser user = (WTUser) ref.getObject();
+				WTUser user = (WTUser) ref.getObject();
+				map.put("name", line.getName());
+				map.put("type", line.getType());
+				if (user != null) {
 					PeopleDTO dto = new PeopleDTO(user);
-					map.put("name", line.getName());
-					map.put("type", line.getType());
 					map.put("id", dto.getId());
 					map.put("duty", dto.getDuty());
 					map.put("email", dto.getEmail());
@@ -1110,12 +1110,12 @@ public class WorkspaceHelper {
 			for (ApprovalLine line : approvalLines) {
 				Map<String, Object> map = new HashMap<>();
 				WTPrincipalReference ref = line.getOwnership().getOwner();
-				if (ref != null) {
-					WTUser user = (WTUser) ref.getObject();
+				WTUser user = (WTUser) ref.getObject();
+				map.put("sort", sort);
+				map.put("name", line.getName());
+				map.put("type", line.getType());
+				if (user != null) {
 					PeopleDTO dto = new PeopleDTO(user);
-					map.put("sort", sort);
-					map.put("name", line.getName());
-					map.put("type", line.getType());
 					map.put("id", dto.getId());
 					map.put("duty", dto.getDuty());
 					map.put("email", dto.getEmail());
@@ -1129,11 +1129,11 @@ public class WorkspaceHelper {
 			for (ApprovalLine line : receiveLines) {
 				Map<String, Object> map = new HashMap<>();
 				WTPrincipalReference ref = line.getOwnership().getOwner();
-				if (ref != null) {
-					WTUser user = (WTUser) ref.getObject();
+				WTUser user = (WTUser) ref.getObject();
+				map.put("name", line.getName());
+				map.put("type", line.getType());
+				if (user != null) {
 					PeopleDTO dto = new PeopleDTO(user);
-					map.put("name", line.getName());
-					map.put("type", line.getType());
 					map.put("id", dto.getId());
 					map.put("duty", dto.getDuty());
 					map.put("email", dto.getEmail());
