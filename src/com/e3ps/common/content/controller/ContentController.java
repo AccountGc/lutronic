@@ -63,6 +63,7 @@ public class ContentController extends BaseController {
 			String name = null;
 
 			ContentHolder h = null;
+			System.out.println("h=" + holder);
 			if (StringUtil.checkString(holder)) {
 				h = (ContentHolder) CommonUtil.getObject(holder);
 				if (h instanceof EPMDocument) {
@@ -71,6 +72,10 @@ public class ContentController extends BaseController {
 					// 변환 파일 이름 변경
 					String ss = data.getFileName();
 					String ext = FileUtil.getExtension(ss);
+
+					System.out.println("ss=" + ss);
+					System.out.println("ext=" + ext);
+
 					if ("stp".equalsIgnoreCase(ext) || "pdf".equalsIgnoreCase(ext) || "step".equalsIgnoreCase(ext)
 							|| "dxf".equalsIgnoreCase(ext)) {
 						name = ss.replace("." + ext, "").replace("step_", "").replace("_prt", "").replace("_asm", "")
