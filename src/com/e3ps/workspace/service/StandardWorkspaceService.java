@@ -155,7 +155,7 @@ public class StandardWorkspaceService extends StandardManager implements Workspa
 				PersistenceHelper.manager.save(agreeLine);
 
 				// 모든 합의자에게 메일 전송
-				MailUtils.manager.sendWorkDataMail((LifeCycleManaged) per, "합의", "합의함");
+//				MailUtils.manager.sendWorkDataMail((LifeCycleManaged) per, "합의", "합의함");
 			}
 		}
 
@@ -487,7 +487,7 @@ public class StandardWorkspaceService extends StandardManager implements Workspa
 				afterApprovalAction(per, tapOid);
 
 				// 결재가 끝낫을시 메일 전송한다. 수신인과 외부메일로 들어가 있는사람
-				MailUtils.manager.sendReceiveMail(per, ll);
+//				MailUtils.manager.sendReceiveMail(per, ll);
 
 				WorkspaceHelper.manager.sendExternalMail(per);
 
@@ -908,7 +908,7 @@ public class StandardWorkspaceService extends StandardManager implements Workspa
 						approvalLine.setState(WorkspaceHelper.STATE_APPROVAL_APPROVING);
 						approvalLine.setStartTime(completeTime);
 						approvalLine = (ApprovalLine) PersistenceHelper.manager.modify(approvalLine);
-						MailUtils.manager.sendWorkDataMail((LifeCycleManaged) master.getPersist(), "결재", "결재함");
+//						MailUtils.manager.sendWorkDataMail((LifeCycleManaged) master.getPersist(), "결재", "결재함");
 					}
 				}
 				master.setState(WorkspaceHelper.STATE_MASTER_APPROVAL_APPROVING);
