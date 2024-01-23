@@ -69,13 +69,15 @@ public class ContentController extends BaseController {
 
 				if (h instanceof DerivedImage) {
 					DerivedImage d = (DerivedImage) h;
+					EPMDocument e = (EPMDocument) d.getDerivedFromReference().getObject();
+
 					String ss = data.getFileName();
 					String ext = FileUtil.getExtension(ss);
 
 					if ("stp".equalsIgnoreCase(ext) || "pdf".equalsIgnoreCase(ext) || "step".equalsIgnoreCase(ext)
 							|| "dxf".equalsIgnoreCase(ext)) {
 						name = ss.replace("." + ext, "").replace("step_", "").replace("_prt", "").replace("_asm", "")
-								.replace("pdf_", "").replace("_drw", "") + "_" + d.getCADFormName() + "." + ext;
+								.replace("pdf_", "").replace("_drw", "") + "_" + e.getName() + "." + ext;
 					}
 				} else if (h instanceof EPMDocument) {
 					EPMDocument e = (EPMDocument) h;
