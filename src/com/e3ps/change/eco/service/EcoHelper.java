@@ -1497,6 +1497,11 @@ public class EcoHelper {
 
 			for (SAPSendBomDTO dto : sendList) {
 
+				boolean isPass = isPass(dto);
+				if (isPass) {
+					continue;
+				}
+
 				System.out.println("전송타입 = " + dto.getSendType() + " || 이전부모품번 = " + dto.getParentPartNumber() + ", "
 						+ " 이전자식품번 =  " + dto.getChildPartNumber() + ", 신규부모품번 = " + dto.getNewParentPartNumber()
 						+ ", 신규자식품번 = " + dto.getNewChildPartNumber());
@@ -1553,6 +1558,62 @@ public class EcoHelper {
 		}
 		rs.put("rtnList", rtnList);
 		return rs;
+	}
+
+	/**
+	 * 전송 제외 처리 체크
+	 */
+	private boolean isPass(SAPSendBomDTO dto) throws Exception {
+
+		if (SAPHelper.manager.skipEight(dto.getChildPartNumber())) {
+			return true;
+		}
+
+		if (SAPHelper.manager.skipLength(dto.getChildPartNumber())) {
+			return true;
+		}
+
+		if (SAPHelper.manager.skipEight(dto.getParentPartNumber())) {
+			return true;
+		}
+
+		if (SAPHelper.manager.skipLength(dto.getParentPartNumber())) {
+			return true;
+		}
+
+		if (SAPHelper.manager.skipEight(dto.getChildPartNumber())) {
+			return true;
+		}
+
+		if (SAPHelper.manager.skipLength(dto.getChildPartNumber())) {
+			return true;
+		}
+
+		if (SAPHelper.manager.skipEight(dto.getParentPartNumber())) {
+			return true;
+		}
+
+		if (SAPHelper.manager.skipLength(dto.getParentPartNumber())) {
+			return true;
+		}
+
+		// 신규
+		if (SAPHelper.manager.skipEight(dto.getNewChildPartNumber())) {
+			return true;
+		}
+
+		if (SAPHelper.manager.skipLength(dto.getNewChildPartNumber())) {
+			return true;
+		}
+
+		if (SAPHelper.manager.skipEight(dto.getNewParentPartNumber())) {
+			return true;
+		}
+
+		if (SAPHelper.manager.skipLength(dto.getNewParentPartNumber())) {
+			return true;
+		}
+		return false;
 	}
 
 	/**

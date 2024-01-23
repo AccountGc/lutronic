@@ -126,6 +126,7 @@ public class StandardOrgService extends StandardManager implements OrgService {
 					user = People.newPeople();
 					user.setDepartment(department);
 					user.setUser(wtuser);
+					user.setPdfAuth(false);
 					user.setName(wtuser.getFullName());
 					user.setId(wtuser.getName());
 					user.setEmail(wtuser.getEMail() != null ? wtuser.getEMail() : "");

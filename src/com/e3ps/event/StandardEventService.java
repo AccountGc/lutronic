@@ -48,6 +48,7 @@ public class StandardEventService extends StandardManager implements EventServic
 			People people = People.newPeople();
 			people.setDepartment(department);
 			people.setUser(wtUser);
+			people.setPdfAuth(false);
 			people.setName(wtUser.getFullName());
 			people.setId(wtUser.getName());
 			people.setEmail(wtUser.getEMail() != null ? wtUser.getEMail() : "");
@@ -75,6 +76,7 @@ public class StandardEventService extends StandardManager implements EventServic
 			if (result.hasMoreElements()) {
 				People people = (People) result.nextElement();
 				people.setUser(wtUser);
+				people.setPdfAuth(false);
 				people.setName(wtUser.getFullName());
 				people.setId(wtUser.getName());
 				people.setEmail(wtUser.getEMail() != null ? wtUser.getEMail() : "");

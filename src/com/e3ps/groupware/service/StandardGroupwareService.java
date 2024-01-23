@@ -1525,8 +1525,8 @@ public class StandardGroupwareService extends StandardManager implements Groupwa
 
 			if (result.hasMoreElements()) {
 				People people = (People) result.nextElement();
-				Timestamp today = new Timestamp(new Date().getTime());
-				people.setPwChangeDate(today);
+//				Timestamp today = new Timestamp(new Date().getTime());
+//				people.setPwChangeDate(today);
 				PersistenceHelper.manager.modify(people);
 			}
 
