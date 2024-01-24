@@ -46,7 +46,9 @@ public class StandardWorkDataService extends StandardManager implements WorkData
 			if (per instanceof EChangeOrder) {
 				// 설변일 경우..
 				EChangeOrder e = (EChangeOrder) per;
-				data.setOwnership(e.getOwnership());
+
+				Ownership owner = Ownership.newOwnership(e.getCreator());
+				data.setOwnership(owner);
 			} else {
 				data.setOwnership(ownership);
 			}

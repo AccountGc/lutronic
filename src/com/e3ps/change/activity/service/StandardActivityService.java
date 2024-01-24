@@ -453,27 +453,18 @@ public class StandardActivityService extends StandardManager implements Activity
 			ArrayList<WTPart> clist = new ArrayList<WTPart>();
 			ArrayList<String> mlist = new ArrayList<String>();
 			System.out.println("list=" + list.size());
-			for (WTPart p : list) {
-//				String number = p.getNumber();
-				// 완제품
-//				String firstNumber = number.substring(0, 1);
-//				String endNumber = number.substring(5, 8);// number.substring(5,number.length());
-//				if (firstNumber.equals("1") && !endNumber.endsWith("000")) { // 6,7,8이 000인경우
-//					if (!clist.contains(p)) {
-//						clist.add(p);
+//			for (WTPart p : list) {
+//
+//				if (!PartHelper.isCollectNumber(p.getNumber())) {
+//					if (PartHelper.isTopNumber(p.getNumber())) {
+//						if (!clist.contains(p)) {
+//							clist.add(p);
+//						}
 //					}
 //				}
-
-				if (!PartHelper.isCollectNumber(p.getNumber())) {
-					if (PartHelper.isTopNumber(p.getNumber())) {
-						if (!clist.contains(p)) {
-							clist.add(p);
-						}
-					}
-				}
-
-				putModel(model, p, mlist);
-			}
+//
+//				putModel(model, p, mlist);
+//			}
 
 			for (WTPart pp : clist) {
 				// 중복 처리
