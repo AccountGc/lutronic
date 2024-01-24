@@ -152,7 +152,6 @@ iframe {
 			<jsp:param value="create" name="mode" />
 			<jsp:param value="true" name="multi" />
 			<jsp:param value="true" name="header" />
-			<jsp:param value="true" name="req" />
 		</jsp:include>
 
 		<!-- 	관련 CR -->
@@ -161,6 +160,7 @@ iframe {
 			<jsp:param value="create" name="mode" />
 			<jsp:param value="true" name="multi" />
 			<jsp:param value="true" name="header" />
+			<jsp:param value="true" name="req" />
 		</jsp:include>
 
 		<table class="button-table">

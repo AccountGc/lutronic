@@ -108,12 +108,12 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 					dataField : "persistType",
 					headerText : "객체유형",
 					dataType : "string",
-					width : 150,
+					width : 100,
 				}, {
 					dataField : "number",
 					headerText : "번호",
 					dataType : "string",
-					width : 150,
+					width : 200,
 					renderer : {
 						type : "LinkRenderer",
 						baseUrl : "javascript",
@@ -139,7 +139,7 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 					dataField : "state",
 					headerText : "상태",
 					dataType : "string",
-					width : 80,
+					width : 100,
 				}, {
 					dataField : "creator",
 					headerText : "작성자",

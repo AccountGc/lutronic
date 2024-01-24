@@ -1,3 +1,4 @@
+<%@page import="com.e3ps.common.util.StringUtil"%>
 <%@page import="wt.content.ContentRoleType"%>
 <%@page import="wt.content.ContentHelper"%>
 <%@page import="wt.fc.QueryResult"%>
@@ -180,10 +181,10 @@ iframe {
 			}
 			%>
 			<%
-			if (dto.getContent() != null) {
+			if (!dto.is_empty()) {
 			%>
 			<tr>
-				<th class="lb">내용</th>
+				<th class="lb">내용<%=dto.getContent() %></th>
 				<td colspan="7" class="indent7 pb8">
 					<textarea name="contents" id="contents" rows="7" style="display: none;"><%=dto.getContent() != null ? dto.getContent() : ""%></textarea>
 					<script type="text/javascript">

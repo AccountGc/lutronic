@@ -130,7 +130,6 @@ iframe {
 	<jsp:param value="update" name="mode" />
 	<jsp:param value="true" name="multi" />
 	<jsp:param value="true" name="header" />
-	<jsp:param value="true" name="req" />
 </jsp:include>
 
 <!-- 	관련 CR -->
@@ -139,6 +138,7 @@ iframe {
 	<jsp:param value="update" name="mode" />
 	<jsp:param value="true" name="multi" />
 	<jsp:param value="true" name="header" />
+	<jsp:param value="true" name="req" />
 </jsp:include>
 
 <table class="button-table">
@@ -152,7 +152,7 @@ iframe {
 
 <script type="text/javascript">
 	function modify() {
-		const oid = document.getElementById("oid");
+		const oid = document.getElementById("oid").value;
 		const name = document.getElementById("name");
 		const period = document.getElementById("period").value;
 		// 관련문서
@@ -196,7 +196,7 @@ iframe {
 		}
 
 		const params = {
-			oid : oid.value,
+			oid : oid,
 			name : name.value,
 			period_code : period,
 			contents : content,

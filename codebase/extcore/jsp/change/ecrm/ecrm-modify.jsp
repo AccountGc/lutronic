@@ -153,7 +153,7 @@ iframe {
 
 <script type="text/javascript">
 	function modify() {
-		const oid = document.getElementById("oid");
+		const oid = document.getElementById("oid").value;
 		const name = document.getElementById("name");
 		const period = document.getElementById("period").value;
 		// 관련문서

@@ -85,6 +85,8 @@ public class DocumentDTO {
 	// 댓글
 	private ArrayList<CommentsDTO> comments = new ArrayList<CommentsDTO>();
 
+	private boolean _empty = false;
+
 	// auth
 	private boolean _delete = false;
 	private boolean _modify = false;
@@ -143,7 +145,20 @@ public class DocumentDTO {
 		setClassTypeInfo(doc);
 		setNameInfo(doc);
 		setAuth(doc);
+		setEmpty(doc);
+	}
 
+	private void setEmpty(WTDocument doc) throws Exception {
+		String content = getContent();
+		if (!StringUtil.checkString(content)) {
+			set_empty(true);
+		}
+
+		String compStrt = "<p style=\"font-family: 굴림; font-size: 10pt; line-height: 1.2; margin-top: 0px; margin-bottom: 0px;\">&nbsp;</p>";
+		if (content.equals(compStrt)) {
+			System.out.println("여기나오나?");
+			set_empty(true);
+		}
 	}
 
 	/**
@@ -365,4 +380,5 @@ public class DocumentDTO {
 			PersistenceHelper.manager.delete(sv);
 		}
 	}
+
 }
