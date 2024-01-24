@@ -281,7 +281,8 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 			editable : false,
 			treeColumnIndex : 3,
 			enableFilter : true,
-			flat2tree : true,
+// 			flat2tree : true,
+			forceTreeView : true,
 			enableSorting : false,
 			fixedColumnCount : 4,
 			treeLazyMode : true,
@@ -319,6 +320,20 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 			}, ];
 			return menu;
 		});
+		AUIGrid.bind(myGridID, "cellClick", auiCellClickHandler);
+	}
+	
+	function auiCellClickHandler(event) {
+		const dataField = event.dataField;
+// 		const oid = event.item.oid;
+// 		logger(event);
+// 		if(event.treeIcon) {
+// 			return false;
+// 		}
+// 		if("number" === dataField) {
+// 			const url = getCallUrl("/part/view?oid=" + oid);
+// 			_popup(url, 1600, 800, "n");
+// 		}
 	}
 
 	function auiContextHandler(event) {

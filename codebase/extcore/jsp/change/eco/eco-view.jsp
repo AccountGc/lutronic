@@ -51,7 +51,7 @@ boolean isAdmin = (boolean) request.getAttribute("isAdmin");
 			// 			}
 			%>
 			<%
-			if (dto.is_modify() || isAdmin) {
+			if (dto.is_modify()) {
 			%>
 			<input type="button" value="수정" title="수정" class="blue" onclick="modify();">
 			<%
@@ -126,7 +126,7 @@ boolean isAdmin = (boolean) request.getAttribute("isAdmin");
 			</tr>
 			<tr>
 				<th class="lb">프로젝트 코드 [명]</th>
-				<td class="indent5" colspan="3"><%=dto.getModel_name()%></td>
+				<td class="indent5" colspan="3"><%=dto.getModel_name() != null ? dto.getModel_name() : ""%></td>
 			</tr>
 			<tr>
 				<th class="lb">변경사항</th>
@@ -303,6 +303,9 @@ boolean isAdmin = (boolean) request.getAttribute("isAdmin");
 			if (data.result) {
 				if (data.isValidate) {
 					alert("SAP 전송 검증이 성공하였습니다.");
+// 					const url = getCallUrl("/eco/resultPage");
+// 					let p = _popup(url, 1100, 550, "n");
+// 					p.rtnList = data.rtnList;
 				} else {
 					const url = getCallUrl("/eco/resultPage");
 					let p = _popup(url, 1100, 550, "n");
