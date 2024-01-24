@@ -100,7 +100,7 @@ if (contentMap != null) {
 			</div>
 			&nbsp;
 			<div class="pretty p-switch">
-				<input type="radio" name="licensing" value="0" <%if ("0".equals(dto.getLicensing())) {%> checked="checked" <%}%>>
+				<input type="radio" name="licensing" value="LI002" <%if ("LI002".equals(dto.getLicensing())) {%> checked="checked" <%}%>>
 				<div class="state p-success">
 					<label>
 						<b>불필요</b>
@@ -109,7 +109,7 @@ if (contentMap != null) {
 			</div>
 			&nbsp;
 			<div class="pretty p-switch">
-				<input type="radio" name="licensing" value="1" <%if ("1".equals(dto.getLicensing())) {%> checked="checked" <%}%>>
+				<input type="radio" name="licensing" value="LI001" <%if ("LI001".equals(dto.getLicensing())) {%> checked="checked" <%}%>>
 				<div class="state p-success">
 					<label>
 						<b>필요</b>

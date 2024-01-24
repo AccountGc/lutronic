@@ -175,6 +175,17 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 		headerText : "도면번호",
 		dataType : "string",
 		width : 140,
+// 		renderer : {
+// 			type : "LinkRenderer",
+// 			baseUrl : "javascript",
+// 			jsCallback : function(rowIndex, columnIndex, value, item) {
+// 				const oid = item.dwg_oid;
+// 				if(oid !== "") {
+// 					const url = getCallUrl("/drawing/view?oid=" + oid);
+// 					_popup(url, 1600, 800, "n");
+// 				}
+// 			}
+// 		},
 		styleFunction : function(rowIndex, columnIndex, value, headerText, item, dataField) {
 			if (value == "AP") {
 				return "ap";
@@ -190,7 +201,16 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 		headerText : "품목명",
 		dataType : "string",
 		style : "aui-left",
-		width : 300
+		width : 300,
+		renderer : {
+			type : "LinkRenderer",
+			baseUrl : "javascript",
+			jsCallback : function(rowIndex, columnIndex, value, item) {
+				const oid = item.oid;
+				const url = getCallUrl("/part/view?oid=" + oid);
+				_popup(url, 1600, 800, "n");
+			}
+		},
 	}, {
 		dataField : "version",
 		headerText : "REV",
@@ -643,7 +663,7 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 			AUIGrid.setGridData(myGridID, tree);
 			AUIGrid.expandAll(myGridID);
 		}, 1000);
-		
+
 		setTimeout(function() {
 			const sessionName = document.getElementById("sessionName").value;
 			const number = document.getElementById("number").value;

@@ -17,6 +17,18 @@ boolean isAdmin = (boolean) request.getAttribute("isAdmin");
 		</td>
 		<td class="right">
 			<%
+			if (isAdmin) {
+			%>
+			<select name="state" id="state" class="width-100" onchange="lcm(this);">
+				<option value="">선택</option>
+				<option value="LINE_REGISTER">결재선 지정</option>
+				<option value="INWORK">작업 중</option>
+				<option value="APPROVED">승인됨</option>
+			</select>
+			<%
+			}
+			%>
+			<%
 			if (dto.is_withdraw()) {
 			%>
 			<input type="button" value="회수(결재선 유지)" title="회수(결재선 유지)" class="gray" onclick="withdraw('false');">
@@ -39,7 +51,7 @@ boolean isAdmin = (boolean) request.getAttribute("isAdmin");
 			// 			}
 			%>
 			<%
-			if (dto.is_modify()) {
+			if (dto.is_modify() || isAdmin) {
 			%>
 			<input type="button" value="수정" title="수정" class="blue" onclick="modify();">
 			<%
@@ -259,6 +271,7 @@ boolean isAdmin = (boolean) request.getAttribute("isAdmin");
 		createAUIGrid700(columns700);
 		AUIGrid.resize(myGridID700);
 		autoTextarea();
+		selectbox("state");
 	});
 
 	window.addEventListener("resize", function() {

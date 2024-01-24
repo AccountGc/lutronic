@@ -286,6 +286,7 @@ iframe {
 		AUIGrid.resize(myGridID90);
 		AUIGrid.resize(myGridID101);
 		AUIGrid.resize(myGridID105);
+		selectbox("state");
 	});
 
 	window.addEventListener("resize", function() {
