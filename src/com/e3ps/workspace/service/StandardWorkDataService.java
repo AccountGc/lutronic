@@ -99,7 +99,7 @@ public class StandardWorkDataService extends StandardManager implements WorkData
 
 			// 기존 연결된 .. 결재랑 외부 메일 있는지 확인한다
 			// 외부 메일 연결
-			MailUserHelper.service.saveLink(data, data.getPer(), external);
+//			MailUserHelper.service.saveLink(data, data.getPer(), external);
 
 			// 결재 필수..
 			// 결재라인 + 워크데이터 연결

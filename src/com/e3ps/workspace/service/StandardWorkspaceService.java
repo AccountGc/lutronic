@@ -16,11 +16,11 @@ import com.e3ps.change.eo.service.EoHelper;
 import com.e3ps.change.util.EChangeUtils;
 import com.e3ps.common.mail.MailHtmlContentTemplate;
 import com.e3ps.common.mail.MailUtil;
-import com.e3ps.common.mail.MailUtils;
 import com.e3ps.common.util.CommonUtil;
 import com.e3ps.common.util.QuerySpecUtils;
 import com.e3ps.common.util.StringUtil;
 import com.e3ps.doc.service.DocumentHelper;
+import com.e3ps.org.MailUser;
 import com.e3ps.org.MailWTobjectLink;
 import com.e3ps.rohs.ROHSMaterial;
 import com.e3ps.workspace.AppPerLink;
@@ -30,6 +30,7 @@ import com.e3ps.workspace.ApprovalUserLine;
 import com.e3ps.workspace.AsmApproval;
 import com.e3ps.workspace.PerWorkDataLink;
 import com.e3ps.workspace.WorkData;
+import com.e3ps.workspace.WorkDataMailUserLink;
 
 import wt.doc.WTDocument;
 import wt.fc.Persistable;
@@ -1223,4 +1224,73 @@ public class StandardWorkspaceService extends StandardManager implements Workspa
 
 	}
 
+	@Override
+	public void mailSave(Map<String, Object> params) throws Exception {
+		ArrayList<String> data = (ArrayList<String>) params.get("data");
+		String oid = (String) params.get("oid");
+		Transaction trs = new Transaction();
+		try {
+			trs.start();
+
+			WorkData wd = (WorkData) CommonUtil.getObject(oid);
+
+			QueryResult qr = PersistenceHelper.manager.navigate(wd, "mailUser", WorkDataMailUserLink.class, false);
+			while (qr.hasMoreElements()) {
+				WorkDataMailUserLink link = (WorkDataMailUserLink) qr.nextElement();
+				PersistenceHelper.manager.delete(link);
+			}
+
+			for (String s : data) {
+				MailUser user = (MailUser) CommonUtil.getObject(s);
+				MailWTobjectLink link = MailWTobjectLink.newMailWTobjectLink((WTObject) wd.getPer(), user);
+				PersistenceHelper.manager.save(link);
+				// 메일유저 이력 연결
+				WorkDataMailUserLink mLink = WorkDataMailUserLink.newWorkDataMailUserLink(wd, user);
+				PersistenceHelper.manager.save(mLink);
+			}
+
+			trs.commit();
+			trs = null;
+		} catch (Exception e) {
+			e.printStackTrace();
+			trs.rollback();
+			throw e;
+		} finally {
+			if (trs != null)
+				trs.rollback();
+		}
+	}
+
+	@Override
+	public void removeMail(Map<String, Object> params) throws Exception {
+		ArrayList<String> data = (ArrayList<String>) params.get("data");
+		String oid = (String) params.get("oid");
+		Transaction trs = new Transaction();
+		try {
+			trs.start();
+
+			WorkData wd = (WorkData) CommonUtil.getObject(oid);
+			Persistable per = wd.getPer();
+			QueryResult qr = PersistenceHelper.manager.navigate((WTObject) per, "user", MailWTobjectLink.class, false);
+			while (qr.hasMoreElements()) {
+				MailWTobjectLink link = (MailWTobjectLink) qr.nextElement();
+				PersistenceHelper.manager.delete(link);
+			}
+
+			for (String s : data) {
+				WorkDataMailUserLink link = (WorkDataMailUserLink) CommonUtil.getObject(s);
+				PersistenceHelper.manager.delete(link);
+			}
+
+			trs.commit();
+			trs = null;
+		} catch (Exception e) {
+			e.printStackTrace();
+			trs.rollback();
+			throw e;
+		} finally {
+			if (trs != null)
+				trs.rollback();
+		}
+	}
 }

@@ -122,9 +122,19 @@ public interface WorkspaceService {
 	 * 마스터 포함 모든 결재선 삭제
 	 */
 	public abstract void deleteAllLines(Persistable per) throws Exception;
-	
+
 	/**
 	 * 마스터로 모든 결재 라인 삭제
 	 */
 	public abstract void deleteAllLines(ApprovalMaster m) throws Exception;
+
+	/**
+	 * 외부 메일 저장 결재선 지정시
+	 */
+	public abstract void mailSave(Map<String, Object> params) throws Exception;
+
+	/**
+	 * 외부 메일 삭제 결재선 지정시
+	 */
+	public abstract void removeMail(Map<String, Object> params)throws Exception;
 }

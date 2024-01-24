@@ -29,6 +29,38 @@ import com.e3ps.workspace.service.WorkspaceHelper;
 @RequestMapping(value = "/workspace/**")
 public class WorkspaceController extends BaseController {
 
+	@Description(value = "외부 메일 삭제")
+	@ResponseBody
+	@PostMapping(value = "/removeMail")
+	public Map<String, Object> removeMail(@RequestBody Map<String, Object> params) throws Exception {
+		Map<String, Object> result = new HashMap<String, Object>();
+		try {
+			WorkspaceHelper.service.removeMail(params);
+			result.put("result", SUCCESS);
+		} catch (Exception e) {
+			e.printStackTrace();
+			result.put("result", FAIL);
+			result.put("msg", e.toString());
+		}
+		return result;
+	}
+	
+	@Description(value = "외부 메일 저장")
+	@ResponseBody
+	@PostMapping(value = "/mailSave")
+	public Map<String, Object> mailSave(@RequestBody Map<String, Object> params) throws Exception {
+		Map<String, Object> result = new HashMap<String, Object>();
+		try {
+			WorkspaceHelper.service.mailSave(params);
+			result.put("result", SUCCESS);
+		} catch (Exception e) {
+			e.printStackTrace();
+			result.put("result", FAIL);
+			result.put("msg", e.toString());
+		}
+		return result;
+	}
+
 	@Description(value = "합의함 리스트 페이지")
 	@GetMapping(value = "/agree")
 	public ModelAndView agree() throws Exception {

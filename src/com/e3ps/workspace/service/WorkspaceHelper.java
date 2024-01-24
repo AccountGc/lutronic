@@ -915,10 +915,12 @@ public class WorkspaceHelper {
 		Persistable per = CommonUtil.getObject(oid);
 		if (per instanceof WorkData) {
 			WorkData data = (WorkData) per;
-			QueryResult qr = PersistenceHelper.manager.navigate(data, "mailUser", WorkDataMailUserLink.class);
+			QueryResult qr = PersistenceHelper.manager.navigate(data, "mailUser", WorkDataMailUserLink.class, false);
 			while (qr.hasMoreElements()) {
-				MailUser user = (MailUser) qr.nextElement();
+				WorkDataMailUserLink link = (WorkDataMailUserLink) qr.nextElement();
+				MailUser user = link.getMailUser();
 				Map<String, String> map = new HashMap<String, String>();
+				map.put("link", link.getPersistInfo().getObjectIdentifier().getStringValue());
 				map.put("oid", user.getPersistInfo().getObjectIdentifier().getStringValue());
 				map.put("name", user.getName());
 				map.put("email", user.getEmail());
@@ -928,6 +930,7 @@ public class WorkspaceHelper {
 			ArrayList<MailWTobjectLink> data = MailUserHelper.manager.navigate(oid);
 			for (MailWTobjectLink link : data) {
 				Map<String, String> map = new HashMap<String, String>();
+				map.put("link", link.getPersistInfo().getObjectIdentifier().getStringValue());
 				map.put("oid", link.getUser().getPersistInfo().getObjectIdentifier().getStringValue());
 				map.put("name", link.getUser().getName());
 				map.put("email", link.getUser().getEmail());

@@ -207,9 +207,9 @@ iframe {
 					return;
 				}
 
-				if (rows105.length === 0) {
-					alert("ECO는 반드시 하나 이상 선택해야합니다.");
-					popup105();
+				if (rows101.length === 0) {
+					alert("CR은 반드시 하나 이상 선택해야합니다.");
+					popup101();
 					return false;
 				}
 

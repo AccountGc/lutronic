@@ -52,6 +52,10 @@ boolean update = "update".equals(mode);
 			AUIGrid.setGridData(myGridID9, <%=WorkspaceHelper.manager.getExternalMail(oid)%>);
 			<%}%>
 		}
+		
+		function load() {
+			document.location.reload();
+		}
 
 		function popup9() {
 			const url = getCallUrl("/workspace/mail");
@@ -60,11 +64,32 @@ boolean update = "update".equals(mode);
 
 		function deleteRow9() {
 			const checked = AUIGrid.getCheckedRowItems(myGridID9);
-			if (checkedItems.length === 0) {
+			if (checked.length === 0) {
 				alert("삭제할 행을 선택하세요.");
 				return false;
 			}
-			AUIGrid.removeCheckedRows(myGridID9);
+			
+			const data = new Array();
+			checked.forEach(function(dd) {
+				const item = dd.item;
+				data.push(item.link);
+			})
+			const params = {
+				data : data,
+				oid : "<%=oid%>"
+			};
+			const url = getCallUrl("/workspace/removeMail");
+			parent.openLayer();
+			call(url, params, function(data) {
+				if(data.result) {
+					load();
+				} else {
+					alert(data.msg);
+				}
+				parent.closeLayer();
+			})
+			
+// 			AUIGrid.removeCheckedRows(myGridID9);
 		}
 
 		function insert9(arr, callBack) {
@@ -84,11 +109,31 @@ boolean update = "update".equals(mode);
 			if(!checker) {
 				callBack(true, false, name +  " 사용자는 이미 추가 되어있습니다.");
 			} else {
+				// 저장하는거로?
+				const data = new Array();
 				arr.forEach(function(dd) {
-					const rowIndex = dd.rowIndex;
 					const item = dd.item;
-					AUIGrid.addRow(myGridID9, item, rowIndex);
+					data.push(item.oid);
 				})
+				const url = getCallUrl("/workspace/mailSave");
+				const params = {
+					data : data,
+					oid : "<%=oid%>"
+				};
+				parent.openLayer();
+				call(url, params, function(data) {
+					if(data.result) {
+						load();
+					} else {
+						alert(data.msg);
+					}
+					parent.closeLayer();
+				})
+// 				arr.forEach(function(dd) {
+// 					const rowIndex = dd.rowIndex;
+// 					const item = dd.item;
+// 					AUIGrid.addRow(myGridID9, item, rowIndex);
+// 				})
 			}
 		}
 	</script>
