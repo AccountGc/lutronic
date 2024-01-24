@@ -174,7 +174,7 @@ public class EcoHelper {
 
 		QuerySpecUtils.toOrderBy(query, idx, EChangeOrder.class, EChangeOrder.EO_APPROVE_DATE, true);
 		boolean sort = QuerySpecUtils.toSort(sortType);
-		QuerySpecUtils.toOrderBy(query, idx, EChangeOrder.class, EChangeOrder.MODIFY_TIMESTAMP, sort);
+		QuerySpecUtils.toOrderBy(query, idx, EChangeOrder.class, toSortKey(sortKey), sort);
 
 		PageQueryUtils pager = new PageQueryUtils(params, query);
 		PagingQueryResult result = pager.find();
@@ -192,6 +192,29 @@ public class EcoHelper {
 		map.put("sessionid", pager.getSessionId());
 		map.put("curPage", pager.getCpage());
 		return map;
+	}
+
+	private String toSortKey(String sortKey) throws Exception{
+		if("number".equals(sortKey)) {
+			return EChangeOrder.EO_NUMBER;
+		} else if("name".equals(sortKey)) {
+			return EChangeOrder.EO_NAME;
+		} else if("model".equals(sortKey)) {
+			return EChangeOrder.MODEL;
+		} else if("licensing_name".equals(sortKey)) {
+			return EChangeOrder.LICENSING_CHANGE;
+		} else if("riskType_name".equals(sortKey)) {
+			return EChangeOrder.RISK_TYPE;
+		} else if("state".equals(sortKey)) {
+			return EChangeOrder.LIFE_CYCLE_STATE;
+		} else if("creator".equals(sortKey)) {
+			return EChangeOrder.CREATOR_FULL_NAME;
+		} else if("createdDate".equals(sortKey)) {
+			return EChangeOrder.CREATE_TIMESTAMP;
+		} else if("approveDate".equals(sortKey)) {
+			return EChangeOrder.EO_APPROVE_DATE;
+		}
+		return EChangeOrder.CREATE_TIMESTAMP;
 	}
 
 	/**

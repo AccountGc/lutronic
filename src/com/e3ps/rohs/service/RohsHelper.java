@@ -26,6 +26,7 @@ import com.e3ps.rohs.RepresentToLink;
 import com.e3ps.rohs.dto.RoHSHolderData;
 import com.e3ps.rohs.dto.RohsData;
 import com.e3ps.rohs.util.RohsPartComparator;
+import com.e3ps.workspace.ApprovalLine;
 
 import net.sf.json.JSONArray;
 import wt.content.ApplicationData;
@@ -203,7 +204,7 @@ public class RohsHelper {
 			}
 
 			boolean sort = QuerySpecUtils.toSort(sortType);
-			QuerySpecUtils.toOrderBy(query, idx, ROHSMaterial.class, ROHSMaterial.MODIFY_TIMESTAMP, sort);
+			QuerySpecUtils.toOrderBy(query, idx, ROHSMaterial.class, toSortKey(sortKey), sort);
 
 			PageQueryUtils pager = new PageQueryUtils(params, query);
 			PagingQueryResult result = pager.find();
@@ -227,6 +228,23 @@ public class RohsHelper {
 		}
 		return map;
 
+	}
+
+	private String toSortKey(String sortKey) throws Exception{
+		if("number".equals(sortKey)) {
+			return ROHSMaterial.NUMBER;
+		} else if("name".equals(sortKey)) {
+			return ROHSMaterial.NAME;
+		} else if("stateDisplay".equals(sortKey)) {
+			return ROHSMaterial.LIFE_CYCLE_STATE;
+		} else if("creator".equals(sortKey)) {
+			return ROHSMaterial.CREATOR_FULL_NAME;
+		} else if("createDate".equals(sortKey)) {
+			return ROHSMaterial.CREATE_TIMESTAMP;
+		} else if("modifyDate".equals(sortKey)) {
+			return ROHSMaterial.MODIFY_TIMESTAMP;
+		}
+		return ROHSMaterial.CREATE_TIMESTAMP;
 	}
 
 	public JSONArray include_RohsView(String oid, String module, String roleType) throws Exception {
@@ -262,7 +280,9 @@ public class RohsHelper {
 		String publicationFrom = StringUtil.checkNull((String) params.get("publicationFrom"));
 		String publicationTo = StringUtil.checkNull((String) params.get("publicationTo"));
 		String fileName = StringUtil.checkNull((String) params.get("fileName"));
-
+		String sortKey = (String) params.get("sortKey");
+		String sortType = (String) params.get("sortType");
+		
 		QuerySpec query = new QuerySpec();
 		int idx = query.addClassList(ROHSContHolder.class, true);
 		int idx2 = query.addClassList(ROHSMaterial.class, false);
@@ -294,9 +314,13 @@ public class RohsHelper {
 					SearchCondition.LESS_THAN_OR_EQUAL, publicationTo), new int[] { idx });
 		}
 		QuerySpecUtils.toOrderBy(query, idx, ROHSContHolder.class, ROHSContHolder.ROHS_REFERENCE + ".key.id", false);
+		
+		boolean sort = QuerySpecUtils.toSort(sortType);
+		QuerySpecUtils.toOrderBy(query, idx, ROHSContHolder.class, toSortKey(sortKey), sort);
 
 		PageQueryUtils pager = new PageQueryUtils(params, query);
 		PagingQueryResult result = pager.find();
+		int rowNum = (pager.getCpage() - 1) * pager.getPsize() + 1;
 		while (result.hasMoreElements()) {
 			Object[] obj = (Object[]) result.nextElement();
 			ROHSContHolder holder = (ROHSContHolder) obj[0];
@@ -304,6 +328,7 @@ public class RohsHelper {
 			RohsData rData = new RohsData(data.getRohs());
 			rData.setFileName(data.getFileName());
 			list.add(rData);
+			rData.setRowNum(rowNum++);
 		}
 		map.put("list", list);
 		map.put("topListCount", pager.getTotal());

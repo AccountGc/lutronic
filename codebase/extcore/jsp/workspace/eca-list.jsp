@@ -96,6 +96,7 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 					filter : {
 						inline : false
 					},
+					sortable : false
 				},{
 					dataField : "activityName",
 					headerText : "활동구분",
@@ -116,6 +117,7 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 					headerText : "구분",
 					dataType : "string",
 					width : 80,
+					sortable : false
 				}, {
 					dataField : "number",
 					headerText : "EO/ECO 번호",

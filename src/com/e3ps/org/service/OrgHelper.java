@@ -19,6 +19,7 @@ import com.e3ps.org.People;
 import com.e3ps.org.Signature;
 import com.e3ps.org.WTUserPeopleLink;
 import com.e3ps.org.dto.PeopleDTO;
+import com.e3ps.rohs.ROHSContHolder;
 
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
@@ -244,6 +245,8 @@ public class OrgHelper {
 		String userId = (String) params.get("userId");
 		String oid = (String) params.get("oid"); // 부서 OID
 		boolean isFire = (boolean) params.get("isFire");
+		String sortKey = (String) params.get("sortKey");
+		String sortType = (String) params.get("sortType");
 
 		Department department = null;
 		if (StringUtil.checkString(oid)) {
@@ -278,6 +281,8 @@ public class OrgHelper {
 		query.appendCloseParen();
 
 		QuerySpecUtils.toOrderBy(query, idx, People.class, People.NAME, false);
+		boolean sort = QuerySpecUtils.toSort(sortType);
+		QuerySpecUtils.toOrderBy(query, idx, People.class, toSortKey(sortKey), sort);
 
 		PageQueryUtils pager = new PageQueryUtils(params, query);
 		PagingQueryResult result = pager.find();
@@ -297,6 +302,25 @@ public class OrgHelper {
 		map.put("sessionid", pager.getSessionId());
 		map.put("curPage", pager.getCpage());
 		return map;
+	}
+
+	private String toSortKey(String sortKey) throws Exception{
+		if("id".equals(sortKey)) {
+			return People.ID;
+		} else if("name".equals(sortKey)) {
+			return People.NAME;
+		} else if("auth".equals(sortKey)) {
+			return People.AUTH;
+		} else if("department_oid".equals(sortKey)) {
+			return People.DEPARTMENT;
+		} else if("duty".equals(sortKey)) {
+			return People.DUTY;
+		} else if("email".equals(sortKey)) {
+			return People.EMAIL;
+		} else if("isFire".equals(sortKey)) {
+			return People.IS_DISABLE;
+		}
+		return People.CREATE_TIMESTAMP;
 	}
 
 	/**

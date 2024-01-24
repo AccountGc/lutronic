@@ -126,7 +126,7 @@ public class CrHelper {
 		QuerySpecUtils.toLikeAnd(query, idx, EChangeRequest.class, EChangeRequest.CHANGE_SECTION, changeSection);
 
 		boolean sort = QuerySpecUtils.toSort(sortType);
-		QuerySpecUtils.toOrderBy(query, idx, EChangeRequest.class, EChangeRequest.MODIFY_TIMESTAMP, sort);
+		QuerySpecUtils.toOrderBy(query, idx, EChangeRequest.class, toSortKey(sortKey), sort);
 
 		PageQueryUtils pager = new PageQueryUtils(params, query);
 		PagingQueryResult result = pager.find();
@@ -144,6 +144,32 @@ public class CrHelper {
 		map.put("sessionid", pager.getSessionId());
 		map.put("curPage", pager.getCpage());
 		return map;
+	}
+
+	private String toSortKey(String sortKey) throws Exception{
+		if ("number".equals(sortKey) {
+			return EChangeRequest.EO_NUMBER;
+		} else if("name".equals(sortKey)) {
+			return EChangeRequest.EO_NAME;
+		} else if("changeSection".equals(sortKey)) {
+			return EChangeRequest.CHANGE_SECTION;
+		} else if("createDepart".equals(sortKey)) {
+			return EChangeRequest.CREATE_DEPART;
+		} else if("writer".equals(sortKey)) {
+			return EChangeRequest.WRITER;
+		} else if("writeDate".equals(sortKey)) {
+			return EChangeRequest.CREATE_DATE;
+		} else if("state".equals(sortKey)) {
+			return EChangeRequest.LIFE_CYCLE_STATE;
+		} else if("creator".equals(sortKey)) {
+			return EChangeRequest.CREATOR_FULL_NAME;
+		} else if("createdDate".equals(sortKey)) {
+			return EChangeRequest.CREATE_TIMESTAMP;
+		} else if("approveDate".equals(sortKey)) {
+			return EChangeRequest.APPROVE_DATE;
+		}
+		
+		return EChangeRequest.CREATE_TIMESTAMP;
 	}
 
 	/**

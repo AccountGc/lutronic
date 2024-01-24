@@ -152,6 +152,7 @@ List<Map<String, String>> lifecycleList = (List<Map<String, String>>) request.ge
 					filter : {
 						inline : false
 					},
+					sortable : false
 				}, {
 					dataField : "number",
 					headerText : "물질번호",
@@ -171,6 +172,7 @@ List<Map<String, String>> lifecycleList = (List<Map<String, String>>) request.ge
 					headerText : "협력업체",
 					dataType : "string",
 					width : 150,
+					sortable : false
 				}, {
 					dataField : "name",
 					headerText : "물질명",
@@ -190,6 +192,7 @@ List<Map<String, String>> lifecycleList = (List<Map<String, String>>) request.ge
 					headerText : "REV",
 					dataType : "string",
 					width : 100,
+					sortable : false
 				}, {
 					dataField : "stateDisplay",
 					headerText : "상태",
@@ -398,7 +401,7 @@ List<Map<String, String>> lifecycleList = (List<Map<String, String>>) request.ge
 				}
 				let params = new Object();
 				const url = getCallUrl("/rohs/list");
-				const field = [ "rohsName", "rohsNumber", "description", "state", "creatorOid", "createdFrom", "createdTo", "modifiedFrom", "modifiedTo", "manufacture" ];
+				const field = [ "sortKey", "sortType", "rohsName", "rohsNumber", "description", "state", "creatorOid", "createdFrom", "createdTo", "modifiedFrom", "modifiedTo", "manufacture" ];
 				params = toField(params, field);
 				AUIGrid.showAjaxLoader(myGridID);
 				parent.openLayer();

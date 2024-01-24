@@ -140,6 +140,7 @@ boolean isEdit = (boolean) request.getAttribute("isEdit");
 					filter : {
 						inline : false
 					},
+					sortable : false
 				}, {
 					dataField : "ecoNumber",
 					headerText : "ECO 번호",
@@ -342,7 +343,7 @@ boolean isEdit = (boolean) request.getAttribute("isEdit");
 				}
 				let params = new Object();
 				const url = getCallUrl("/ecn/list");
-				const field = [ "name", "number", "state", "creatorOid", "createdFrom", "createdTo", "modelcode" ];
+				const field = [ "sortKey", "sortType", "name", "number", "state", "creatorOid", "createdFrom", "createdTo", "modelcode" ];
 				params = toField(params, field);
 				AUIGrid.showAjaxLoader(myGridID);
 				parent.openLayer();

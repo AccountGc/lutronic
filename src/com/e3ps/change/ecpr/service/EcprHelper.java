@@ -133,7 +133,7 @@ public class EcprHelper {
 			QuerySpecUtils.toLikeAnd(query, idx, ECPRRequest.class, ECPRRequest.MODEL, model);
 
 			boolean sort = QuerySpecUtils.toSort(sortType);
-			QuerySpecUtils.toOrderBy(query, idx, ECPRRequest.class, ECPRRequest.MODIFY_TIMESTAMP, sort);
+			QuerySpecUtils.toOrderBy(query, idx, ECPRRequest.class, toSortKey(sortKey), sort);
 
 			PageQueryUtils pager = new PageQueryUtils(params, query);
 			PagingQueryResult result = pager.find();
@@ -155,6 +155,31 @@ public class EcprHelper {
 		}
 
 		return map;
+	}
+
+	private String toSortKey(String sortKey) throws Exception{
+		if("number".equals(sortKey)) {
+			return ECPRRequest.EO_NUMBER;
+		} else if("name".equals(sortKey)) {
+			return ECPRRequest.EO_NAME;
+		} else if("period".equals(sortKey)) {
+			return ECPRRequest.PERIOD;
+		} else if("createDepart".equals(sortKey)) {
+			return ECPRRequest.CREATE_DEPART;
+		} else if("writer".equals(sortKey)) {
+			return ECPRRequest.WRITER;
+		} else if("writeDate".equals(sortKey)) {
+			return ECPRRequest.CREATE_DATE;
+		} else if("state".equals(sortKey)) {
+			return ECPRRequest.LIFE_CYCLE_STATE;
+		} else if("creator".equals(sortKey)) {
+			return ECPRRequest.CREATOR_FULL_NAME;
+		} else if("createdDate_txt".equals(sortKey)) {
+			return ECPRRequest.CREATE_TIMESTAMP;
+		} else if("approveDate".equals(sortKey)) {
+			return ECPRRequest.APPROVE_DATE;
+		}
+		return ECPRRequest.CREATE_TIMESTAMP;
 	}
 
 	/**

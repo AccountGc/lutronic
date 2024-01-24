@@ -72,6 +72,7 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 					filter : {
 						inline : false
 					},
+					sortable : false
 				},{
 					dataField : "level",
 					headerText : "LEVEL",
@@ -119,6 +120,7 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 							}
 						}
 					},
+					sortable : false
 				}, {
 					dataField : "rohsNumber",
 					headerText : "물질번호",
@@ -151,7 +153,6 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 				const props = {
 					headerHeight : 30,
 					showRowNumColumn : false,
-					rowNumHeaderText : "번호",
 					showAutoNoDataMessage : false,
 					selectionMode : "multipleCells",
 					hoverMode : "singleRow",

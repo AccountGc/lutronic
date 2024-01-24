@@ -149,6 +149,7 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 					filter : {
 						inline : false
 					},
+					sortable : false
 				}, {
 					dataField : "number",
 					headerText : "EO 번호",
@@ -186,6 +187,7 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 					renderer : {
 						type : "TemplateRenderer"
 					},
+					sortable : false
 				}, {
 					dataField : "state",
 					headerText : "상태",
@@ -388,7 +390,7 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 				}
 				let params = new Object();
 				const url = getCallUrl("/eo/list");
-				const field = [ "name", "number", "createdFrom", "createdTo", "creatorOid", "state", "licensing", "modelcode", "sortCheck", "sortValue", "riskType", "approveFrom", "approveTo" ];
+				const field = [ "sortKey", "sortType", "name", "number", "createdFrom", "createdTo", "creatorOid", "state", "licensing", "modelcode", "sortCheck", "sortValue", "riskType", "approveFrom", "approveTo" ];
 				const rows104 = AUIGrid.getGridDataWithState(myGridID104, "gridState");
 				params.rows104 = rows104;
 				params.eoType = $('input[name=eoType]:checked').val();

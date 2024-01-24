@@ -334,6 +334,7 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 					filter : {
 						inline : false
 					},
+					sortable : false
 				}, {
 					dataField : "thumb",
 					headerText : "뷰",
@@ -347,6 +348,7 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 					filter : {
 						inline : false
 					},
+					sortable : false
 				}, {
 					dataField : "icon",
 					headerText : "",
@@ -394,7 +396,8 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 					headerText : "품목분류",
 					dataType : "string",
 					width : 250,
-					style : "aui-left"
+					style : "aui-left",
+					sortable : false
 				}, {
 					dataField : "version",
 					headerText : "REV",
@@ -403,11 +406,13 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 					renderer : {
 						type : "TemplateRenderer"
 					},
+					sortable : false
 				}, {
 					dataField : "remarks",
 					headerText : "OEM Info.",
 					dataType : "string",
 					width : 100,
+					sortable : false
 				}, {
 					dataField : "state",
 					headerText : "상태",
@@ -628,7 +633,7 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 					document.getElementById("curPage").value = 1;
 				}
 				let params = new Object();
-				const field = [ "location", "partNumber", "partName", "createdFrom", "createdTo", "modifiedFrom", "modifiedTo", "state", "modelcode", "productmethod", "deptcode", "unit", "weight", "mat", "finish", "remarks", "ecoNo", "eoNo", "creatorOid", "specification" ];
+				const field = [ "sortKey", "sortType", "location", "partNumber", "partName", "createdFrom", "createdTo", "modifiedFrom", "modifiedTo", "state", "modelcode", "productmethod", "deptcode", "unit", "weight", "mat", "finish", "remarks", "ecoNo", "eoNo", "creatorOid", "specification" ];
 				const url = getCallUrl("/part/list");
 				const latest = document.querySelector("input[name=latest]:checked").value;
 				const complete = document.querySelector("input[name=comp]:checked");

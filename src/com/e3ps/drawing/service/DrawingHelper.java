@@ -61,6 +61,7 @@ import wt.query.SearchCondition;
 import wt.representation.Representation;
 import wt.services.ServiceFactory;
 import wt.util.FileUtil;
+import wt.util.WTAttributeNameIfc;
 import wt.util.WTProperties;
 import wt.vc.VersionControlHelper;
 import wt.vc.config.ConfigHelper;
@@ -111,9 +112,9 @@ public class DrawingHelper {
 		String modifiedTo = StringUtil.checkNull((String) params.get("modifiedTo"));
 
 		// 정렬
-				String sortKey = (String) params.get("sortKey");
-				String sortType = (String) params.get("sortType");
-		
+		String sortKey = (String) params.get("sortKey");
+		String sortType = (String) params.get("sortType");
+
 		Folder folder = FolderTaskLogic.getFolder(location, WCUtil.getWTContainerRef());
 
 		if (query.getConditionCount() > 0) {
@@ -439,7 +440,7 @@ public class DrawingHelper {
 
 //			QueryResult result = PersistenceHelper.manager.find(query);
 		boolean sort = QuerySpecUtils.toSort(sortType);
-		QuerySpecUtils.toOrderBy(query, idx, EPMDocument.class, EPMDocument.MODIFY_TIMESTAMP, sort);
+		QuerySpecUtils.toOrderBy(query, idx, EPMDocument.class, toSortKey(sortKey), sort);
 
 		PageQueryUtils pager = new PageQueryUtils(params, query);
 		PagingQueryResult result = pager.find();
@@ -459,6 +460,25 @@ public class DrawingHelper {
 		map.put("curPage", pager.getCpage());
 
 		return map;
+	}
+
+	private String toSortKey(String sortKey) throws Exception {
+		if("name".equals(sortKey)) {
+			return EPMDocument.NAME;
+		} else if("cadType".equals(sortKey)) {
+			return EPMDocument.DOC_TYPE;
+		} else if("number".equals(sortKey)) {
+			return EPMDocument.NUMBER;
+		} else if("state".equals(sortKey)) {
+			return EPMDocument.LIFE_CYCLE_STATE;
+		} else if("creator".equals(sortKey)) {
+			return (EPMDocument.CREATOR + "." + WTAttributeNameIfc.REF_OBJECT_ID);
+		} else if("createdDate".equals(sortKey)) {
+			return EPMDocument.CREATE_TIMESTAMP;
+		} else if("modifiedDate".equals(sortKey)) {
+			return EPMDocument.MODIFY_TIMESTAMP;
+		}
+		return EPMDocument.CREATE_TIMESTAMP;
 	}
 
 	public JSONArray include_Reference(String oid, String moduleType) throws Exception {

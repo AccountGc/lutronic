@@ -273,7 +273,7 @@ public class MoldHelper {
 		query.appendCloseParen();
 
 		boolean sort = QuerySpecUtils.toSort(sortType);
-		QuerySpecUtils.toOrderBy(query, idx, WTDocument.class, WTDocument.MODIFY_TIMESTAMP, sort);
+		QuerySpecUtils.toOrderBy(query, idx, WTDocument.class, toSortKey(sortKey), sort);
 
 		PageQueryUtils pager = new PageQueryUtils(params, query);
 		PagingQueryResult result = pager.find();
@@ -294,6 +294,25 @@ public class MoldHelper {
 		map.put("curPage", pager.getCpage());
 
 		return map;
+	}
+
+	private String toSortKey(String sortKey) throws Exception{
+		if("number".equals(sortKey)) {
+			return WTDocument.NUMBER;
+		} else if("name".equals(sortKey)) {
+			return WTDocument.NAME;
+		} else if("version".equals(sortKey)) {
+			return WTDocument.VERSION_IDENTIFIER;
+		} else if("stateDisplay".equals(sortKey)) {
+			return WTDocument.LIFE_CYCLE_STATE;
+		} else if("creator".equals(sortKey)) {
+			return WTDocument.CREATOR_FULL_NAME;
+		} else if("createDate".equals(sortKey)) {
+			return WTDocument.CREATE_TIMESTAMP;
+		} else if("modifyDate".equals(sortKey)) {
+			return WTDocument.MODIFY_TIMESTAMP;
+		}
+		return WTDocument.MODIFY_TIMESTAMP;
 	}
 
 	public List<MoldDTO> getDocumentListToLinkRoleName(WTDocument document, String roleName) throws Exception {

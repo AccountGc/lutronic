@@ -106,6 +106,7 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 					filter : {
 						inline : false
 					},
+					sortable : false
 				}, {
 					dataField : "manufactureDisplay",
 					headerText : "업체명",
@@ -144,7 +145,6 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 				const props = {
 					headerHeight : 30,
 					showRowNumColumn : false,
-					rowNumHeaderText : "번호",
 					showAutoNoDataMessage : false,
 					selectionMode : "multipleCells",
 					hoverMode : "singleRow",
@@ -197,7 +197,7 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 				}
 				let params = new Object();
 				const url = getCallUrl("/rohs/file");
-				const field = [ "fileType", "publicationFrom", "publicationTo", "fileName" ];
+				const field = [ "sortKey", "sortType", "fileType", "publicationFrom", "publicationTo", "fileName" ];
 				params = toField(params, field);
 				AUIGrid.showAjaxLoader(myGridID);
 				parent.openLayer();

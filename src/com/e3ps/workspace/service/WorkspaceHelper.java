@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.amazonaws.services.workspaces.model.Workspace;
 import com.e3ps.change.ECOChange;
 import com.e3ps.common.mail.MailUtils;
 import com.e3ps.common.util.CommonUtil;
@@ -23,6 +24,7 @@ import com.e3ps.workspace.AsmApproval;
 import com.e3ps.workspace.PersistMasterLink;
 import com.e3ps.workspace.WorkData;
 import com.e3ps.workspace.WorkDataMailUserLink;
+import com.e3ps.workspace._ApprovalMaster;
 import com.e3ps.workspace.column.ApprovalLineColumn;
 import com.e3ps.workspace.dto.ApprovalLineDTO;
 
@@ -110,7 +112,10 @@ public class WorkspaceHelper {
 		String name = (String) params.get("name");
 		String receiveFrom = (String) params.get("receiveFrom");
 		String receiveTo = (String) params.get("receiveTo");
-
+		// 정렬
+		String sortKey = (String) params.get("sortKey");
+		String sortType = (String) params.get("sortType");
+		
 		QuerySpec query = new QuerySpec();
 		int idx = query.appendClassList(ApprovalMaster.class, true);
 
@@ -127,6 +132,9 @@ public class WorkspaceHelper {
 		QuerySpecUtils.toLikeAnd(query, idx, ApprovalMaster.class, ApprovalMaster.NAME, name);
 		QuerySpecUtils.toOrderBy(query, idx, ApprovalMaster.class, ApprovalMaster.START_TIME, true);
 
+		boolean sort = QuerySpecUtils.toSort(sortType);
+		QuerySpecUtils.toOrderBy(query, idx, ApprovalMaster.class, toSortkey(sortKey), sort);
+		
 		PageQueryUtils pager = new PageQueryUtils(params, query);
 		PagingQueryResult result = pager.find();
 		int rowNum = (pager.getCpage() - 1) * pager.getPsize() + 1;
@@ -151,6 +159,21 @@ public class WorkspaceHelper {
 		return map;
 	}
 
+	private String toSortkey(String sortKey) throws Exception {
+		if("name".equals(sortKey)) {
+			return ApprovalMaster.NAME;
+//		} else if ("submiter".equals(sortKey)) {
+//			return ApprovalMaster.OWNERSHIP;
+		} else if ("state".equals(sortKey)) {
+			return ApprovalMaster.STATE;
+		} else if ("completeTime".equals(sortKey)) {
+			return ApprovalMaster.COMPLETE_TIME;
+		} else if ("createdDate".equals(sortKey)) {
+			return ApprovalMaster.CREATE_TIMESTAMP;
+		} 
+		return ApprovalMaster.CREATE_TIMESTAMP;
+	}
+
 	/**
 	 * 결재함
 	 */
@@ -161,6 +184,8 @@ public class WorkspaceHelper {
 		String receiveFrom = (String) params.get("receiveFrom");
 		String receiveTo = (String) params.get("receiveTo");
 		String approvalTitle = (String) params.get("approvalTitle");
+		String sortKey = (String) params.get("sortKey");
+		String sortType = (String) params.get("sortType");
 
 		QuerySpec query = new QuerySpec();
 		int idx = query.appendClassList(ApprovalLine.class, true);
@@ -187,6 +212,8 @@ public class WorkspaceHelper {
 		QuerySpecUtils.toLikeAnd(query, idx, ApprovalLine.class, ApprovalLine.NAME, approvalTitle);
 		QuerySpecUtils.toOrderBy(query, idx, ApprovalLine.class, ApprovalLine.START_TIME, true);
 
+		boolean sort = QuerySpecUtils.toSort(sortType);
+		QuerySpecUtils.toOrderBy(query, idx, ApprovalLine.class, toSortKey(sortKey), sort);
 		PageQueryUtils pager = new PageQueryUtils(params, query);
 		PagingQueryResult result = pager.find();
 		int rowNum = (pager.getCpage() - 1) * pager.getPsize() + 1;
@@ -211,6 +238,17 @@ public class WorkspaceHelper {
 		map.put("sessionid", pager.getSessionId());
 		map.put("curPage", pager.getCpage());
 		return map;
+	}
+
+	private String toSortKey(String sortKey) throws Exception{
+		if("name".equals(sortKey)) {
+			return ApprovalLine.NAME;
+		} else if("reads".equals(sortKey)) {
+			return ApprovalLine.READS;
+		} else if("receiveTime".equals(sortKey)) {
+			return ApprovalLine.START_TIME;
+		}
+		return ApprovalLine.CREATE_TIMESTAMP;
 	}
 
 	/**

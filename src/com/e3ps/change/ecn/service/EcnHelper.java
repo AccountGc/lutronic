@@ -80,7 +80,7 @@ public class EcnHelper {
 			QuerySpecUtils.toEquals(query, idx, EChangeNotice.class, "workerReference.key.id", sessionUser);
 		}
 		boolean sort = QuerySpecUtils.toSort(sortType);
-		QuerySpecUtils.toOrderBy(query, idx, EChangeNotice.class, EChangeNotice.MODIFY_TIMESTAMP, sort);
+		QuerySpecUtils.toOrderBy(query, idx, EChangeNotice.class, toSortKey(sortKey), sort);
 
 		System.out.println(query);
 		PageQueryUtils pager = new PageQueryUtils(params, query);
@@ -99,6 +99,27 @@ public class EcnHelper {
 		map.put("sessionid", pager.getSessionId());
 		map.put("curPage", pager.getCpage());
 		return map;
+	}
+
+	private String toSortKey(String sortKey) throws Exception{
+		if("ecoNumber".equals(sortKey)) {
+			return EChangeNotice.EO_NUMBER;
+		} else if("number".equals(sortKey)) {
+			return EChangeNotice.EO_NUMBER;
+		} else if("partNumber".equals(sortKey)) {
+			return EChangeNotice.PART_NUMBER;
+		} else if("partName".equals(sortKey)) {
+			return EChangeNotice.PART_NAME;
+		} else if("progress".equals(sortKey)) {
+			return EChangeNotice.PROGRESS;
+		} else if("worker_oid".equals(sortKey)) {
+			return EChangeNotice.WORKER;
+		} else if("creator".equals(sortKey)) {
+			return EChangeNotice.CREATOR_FULL_NAME;
+		} else if("createdDate".equals(sortKey)) {
+			return EChangeNotice.CREATE_TIMESTAMP;
+		}
+		return EChangeNotice.CREATE_TIMESTAMP;
 	}
 
 	/**
