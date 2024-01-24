@@ -71,7 +71,7 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 					<input type="button" value="저장" title="저장" class="gray" onclick="save();">
 				</td>
 				<td class="right">
-					<select name="_psize" id="_psize" onchange="loadGridData();">
+					<select name="_psize" id="_psize">
 						<option value="10">10</option>
 						<option value="20" selected="selected">20</option>
 						<option value="30">30</option>
@@ -160,7 +160,7 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 				myGridID = AUIGrid.create("#grid_wrap", columnLayout, props);
 			}
 
-			function loadGridData(movePage) {
+			function loadGridData() {
 				const name = document.getElementById("name").value;
 				const clazz = document.getElementById("clazz").value;
 				const description = document.getElementById("description").value;

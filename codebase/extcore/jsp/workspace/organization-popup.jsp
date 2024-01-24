@@ -258,8 +258,11 @@ boolean isMulti = Boolean.parseBoolean(multi);
 		<%}%>
 	}
 
-	function loadGridData() {
-		$("input[name=sessionid").val(0);
+	function loadGridData(movePage) {
+		if (movePage === undefined) {
+			document.getElementById("sessionid").value = 0;
+			document.getElementById("curPage").value = 1;
+		}
 		let params = new Object();
 		const url = getCallUrl("/org/organization");
 		const field = [ "name", "userId", "oid" ];
