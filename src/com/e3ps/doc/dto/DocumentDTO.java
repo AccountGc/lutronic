@@ -155,8 +155,12 @@ public class DocumentDTO {
 		}
 
 		String compStrt = "<p style=\"font-family: 굴림; font-size: 10pt; line-height: 1.2; margin-top: 0px; margin-bottom: 0px;\">&nbsp;</p>";
-		if (content.equals(compStrt)) {
-			System.out.println("여기나오나?");
+		if (StringUtil.checkString(content)) {
+			if (content.equals(compStrt)) {
+				System.out.println("여기나오나?");
+				set_empty(true);
+			}
+		} else {
 			set_empty(true);
 		}
 	}

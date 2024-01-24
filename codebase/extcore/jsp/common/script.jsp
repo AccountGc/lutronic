@@ -12,4 +12,4 @@
 <!-- 공통 js -->
 <script type="text/javascript" src="/Windchill/extcore/jsp/js/common.js?v=231"></script>
 <!-- dext5 Editor -->
-<script type="text/javascript" src="/Windchill/extcore/dext5editor/js/dext5editor.js"></script>
+<script type="text/javascript" src="/Windchill/extcore/dext5editor/js/dext5editor.js?v=12335"></script>
