@@ -15,6 +15,8 @@ import com.ptc.windchill.cadx.remove.removeResource;
 import wt.fc.PersistenceHelper;
 import wt.fc.QueryResult;
 import wt.method.RemoteMethodServer;
+import wt.org.OrganizationServicesHelper;
+import wt.org.WTUser;
 import wt.part.WTPart;
 import wt.util.FileUtil;
 
@@ -22,15 +24,9 @@ public class Test2 {
 
 	public static void main(String[] args) throws Exception {
 
-		ArrayList<String> list = new ArrayList();
-		list.add("NP21");
-		String s = "NP21";
 
-		if (!list.contains(s)) {
-			list.add(s);
-		}
-
-		System.out.println(list);
+		WTUser u = OrganizationServicesHelper.manager.getAuthenticatedUser("cdpark");
+		System.out.println(u);
 
 	}
 }

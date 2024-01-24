@@ -295,7 +295,7 @@ public class DocumentDTO {
 		}
 
 		// 승인중일 경우 회수 가능
-		if (check(doc, "APPROVING") && isLatest()) {
+		if ((check(doc, "APPROVING") && isLatest()) && (isAdmin || isCreator)) {
 			set_withdraw(true);
 		}
 

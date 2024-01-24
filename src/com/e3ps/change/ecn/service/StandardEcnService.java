@@ -193,7 +193,7 @@ public class StandardEcnService extends StandardManager implements EcnService {
 			
 
 			// 메일 전송 ECN 담당자 지정을 위한 (RA팀 팀장님으로 강제 전송)
-			MailUtils.manager.sendEcnWorkUser();
+			MailUtils.manager.sendEcnWorkUser(eco);
 
 			trs.commit();
 			trs = null;

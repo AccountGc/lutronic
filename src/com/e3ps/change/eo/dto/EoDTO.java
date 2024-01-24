@@ -34,6 +34,7 @@ public class EoDTO {
 
 	// auth
 	private boolean _delete = false;
+	private boolean _withdraw = false;
 	private boolean _modify = false;
 	private boolean _validate = false;
 
@@ -116,6 +117,11 @@ public class EoDTO {
 	private void setAuth(EChangeOrder eo) throws Exception {
 		boolean isAdmin = CommonUtil.isAdmin();
 		boolean isCreator = CommonUtil.isCreator(eo);
+		
+		if (check(eo, "APPROVING") && (isAdmin || isCreator)) {
+			set_withdraw(true);
+		}
+		
 		if (check(eo, "INWORK") || check(eo, "LINE_REGISTER") || check(eo, "ACTIVITY") || check(eo, "RETURN")) {
 			set_modify(true);
 		}

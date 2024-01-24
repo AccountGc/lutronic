@@ -456,3 +456,29 @@ function clearValue(tag, valueType) {
 	document.getElementById(tag).value = "";
 	document.getElementById(tag + valueType).value = "";
 }
+
+function withdraw(remove) {
+	if (JSON.parse(remove)) {
+		if (!confirm("결재선을 초기화 상태로 결재회수를 합니다.\n진행하시겠습니까?")) {
+			return false;
+		}
+	} else {
+		alert("개발중");
+		return false;
+		if (!confirm("기존 지정한 결재선 유지한 상태로 결재회수를 합니다.\n진행하시겠습니까?")) {
+			return false;
+		}
+	}
+
+	const oid = document.getElementById("oid").value;
+	const url = getCallUrl("/workspace/withdraw?oid=" + oid + "&remove=" + remove);
+	openLayer();
+	call(url, null, function(data) {
+		alert(data.msg);
+		if (data.result) {
+			opener.loadGridData();
+			self.close();
+		}
+		closeLayer();
+	}, "GET");
+}

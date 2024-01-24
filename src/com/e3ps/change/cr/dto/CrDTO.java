@@ -53,6 +53,7 @@ public class CrDTO {
 	private String period_code;
 	// auth
 	private boolean _delete = false;
+	private boolean _withdraw = false;
 	private boolean _modify = false;
 	private boolean _print = false;
 
@@ -129,6 +130,11 @@ public class CrDTO {
 	private void setAuth(EChangeRequest cr) throws Exception {
 		boolean isAdmin = CommonUtil.isAdmin();
 		boolean isCreator = CommonUtil.isCreator(cr);
+
+		if (check(cr, "APPROVING") && (isAdmin || isCreator)) {
+			set_withdraw(true);
+		}
+
 		if (check(cr, "APPROVED") && is_isNew()) {
 			set_print(true);
 		}

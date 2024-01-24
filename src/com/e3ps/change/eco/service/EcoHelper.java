@@ -13,14 +13,9 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.poi.ss.usermodel.BorderStyle;
-import org.apache.poi.ss.usermodel.ClientAnchor;
-import org.apache.poi.ss.usermodel.CreationHelper;
-import org.apache.poi.ss.usermodel.Drawing;
 import org.apache.poi.ss.usermodel.HorizontalAlignment;
 import org.apache.poi.ss.usermodel.IndexedColors;
 import org.apache.poi.ss.usermodel.VerticalAlignment;
-import org.apache.poi.ss.usermodel.Workbook;
-import org.apache.poi.util.IOUtils;
 import org.apache.poi.xssf.usermodel.XSSFCell;
 import org.apache.poi.xssf.usermodel.XSSFCellStyle;
 import org.apache.poi.xssf.usermodel.XSSFFont;
@@ -54,16 +49,13 @@ import com.e3ps.common.code.service.NumberCodeHelper;
 import com.e3ps.common.iba.IBAUtils;
 import com.e3ps.common.util.AUIGridUtil;
 import com.e3ps.common.util.CommonUtil;
-import com.e3ps.common.util.DateUtil;
 import com.e3ps.common.util.POIUtil;
 import com.e3ps.common.util.PageQueryUtils;
 import com.e3ps.common.util.QuerySpecUtils;
 import com.e3ps.common.util.StringUtil;
-import com.e3ps.groupware.service.GroupwareHelper;
 import com.e3ps.org.dto.PeopleDTO;
-import com.e3ps.org.service.OrgHelper;
 import com.e3ps.part.service.PartHelper;
-import com.e3ps.sap.conn.SAPDev600Connection;
+import com.e3ps.sap.conn.SAPConnection;
 import com.e3ps.sap.dto.SAPSendBomDTO;
 import com.e3ps.sap.service.SAPHelper;
 import com.e3ps.workspace.ApprovalLine;
@@ -1358,7 +1350,7 @@ public class EcoHelper {
 	 */
 	private Map<String, Object> validateSendEcoBom(EChangeOrder eco) throws Exception {
 		Map<String, Object> rs = new HashMap<>();
-		JCoDestination destination = JCoDestinationManager.getDestination(SAPDev600Connection.DESTINATION_NAME);
+		JCoDestination destination = JCoDestinationManager.getDestination(SAPConnection.DESTINATION_NAME);
 		JCoFunction function = destination.getRepository().getFunction("ZPPIF_PDM_002");
 		if (function == null) {
 			throw new RuntimeException("STFC_CONNECTION not found in SAP.");
@@ -1545,6 +1537,13 @@ public class EcoHelper {
 			rtnMap.put("IDNRK_NEW", IDNRK_NEW);
 			rtnMap.put("ZIFSTA", ZIFSTA);
 			rtnMap.put("ZIFMSG", ZIFMSG);
+
+			if (StringUtil.checkString((String) ZIFMSG)) {
+				rtnMap.put("ERROR", "실패");
+			} else {
+				rtnMap.put("ERROR", "성공");
+			}
+
 			rtnList.add(rtnMap);
 
 		}

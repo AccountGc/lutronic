@@ -55,11 +55,10 @@ public class EcrmDTO {
 	// auth
 	private boolean _modify = false;
 	private boolean _delete = false;
+	private boolean _withdraw = false;
 	private boolean _print = false;
-	
+
 	private boolean _isNew = false;
-	
-	
 
 	// 변수용
 	private ArrayList<String> sections = new ArrayList<String>(); // 변경 구분
@@ -124,6 +123,11 @@ public class EcrmDTO {
 	private void setAuth(ECRMRequest ecrm) throws Exception {
 		boolean isAdmin = CommonUtil.isAdmin();
 		boolean isCreator = CommonUtil.isCreator(ecrm);
+
+		if (check(ecrm, "APPROVING") && (isAdmin || isCreator)) {
+			set_withdraw(true);
+		}
+
 		if (check(ecrm, "APPROVED") && is_isNew()) {
 			set_print(true);
 		}

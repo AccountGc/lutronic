@@ -24,8 +24,6 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 	<form>
 		<input type="hidden" name="classType" id="classType">
 		<input type="hidden" name="sessionName" id="sessionName" value="<%=user.getFullName()%>">
-		<input type="hidden" name="sortKey" id="sortKey">
-		<input type="hidden" name="sortType" id="sortType">
 
 		<table class="button-table">
 			<tr>
@@ -104,14 +102,6 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 			let myGridID;
 			function _layout() {
 				return [ {
-					dataField : "rowNum",
-					headerText : "번호",
-					width : 40,
-					dataType : "numeric",
-					filter : {
-						inline : false
-					},
-				}, {
 					dataField : "name",
 					headerText : "이름",
 					dataType : "string",
@@ -151,7 +141,7 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 				const props = {
 					rowIdField : "oid",
 					headerHeight : 30,
-					showRowNumColumn : false,
+					showRowNumColumn : true,
 					showRowCheckColumn : true,
 					rowNumHeaderText : "번호",
 					showAutoNoDataMessage : false,
@@ -168,27 +158,6 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 					editable : true,
 				};
 				myGridID = AUIGrid.create("#grid_wrap", columnLayout, props);
-				AUIGrid.bind(myGridID, "sorting", auiSortingHandler);
-			}
-
-			let sortCache = [];
-			let compField;
-			function auiSortingHandler(event) {
-				const sortingFields = event.sortingFields;
-				if (sortingFields.length > 0) {
-					const key = sortingFields[0].dataField;
-					if (compField !== key) {
-						compField = key;
-						const sortType = sortingFields[0].sortType; // 오름차순 1 내림 -1
-						sortCache[0] = {
-							dataField : key,
-							sortType : sortType
-						};
-						document.getElementById("sortKey").value = key;
-						document.getElementById("sortType").value = sortType;
-						loadGridData();
-					}
-				}
 			}
 
 			function loadGridData(movePage) {
@@ -207,11 +176,7 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 				call(url, params, function(data) {
 					if (data.result) {
 						AUIGrid.setGridData(myGridID, data.list);
-						// 						AUIGrid.showItemsOnDepth(myGridID, 1);
-						if (movePage === undefined) {
-							AUIGrid.setSorting(myGridID, sortCache);
-							compField = null;
-						}
+						AUIGrid.showItemsOnDepth(myGridID, 1);
 					} else {
 						alert(data.msg);
 					}

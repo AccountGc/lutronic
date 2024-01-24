@@ -47,6 +47,7 @@ public class EcoDTO {
 	// auth
 	private boolean _modify = false;
 	private boolean _delete = false;
+	private boolean _withdraw = false;
 	private boolean _validate = false;
 	private boolean _excel = false;
 
@@ -142,6 +143,11 @@ public class EcoDTO {
 	private void setAuth(EChangeOrder eco) throws Exception {
 		boolean isAdmin = CommonUtil.isAdmin();
 		boolean isCreator = CommonUtil.isCreator(eco);
+		
+		if (check(eco, "APPROVING") && (isAdmin || isCreator)) {
+			set_withdraw(true);
+		}
+		
 		if ((check(eco, "INWORK") || check(eco, "LINE_REGISTER") || (check(eco, "ACTIVITY")) || check(eco, "RETURN"))) {
 			set_modify(true);
 		}

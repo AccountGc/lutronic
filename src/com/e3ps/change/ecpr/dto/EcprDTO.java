@@ -47,6 +47,7 @@ public class EcprDTO {
 	// auth
 	private boolean _modify = false;
 	private boolean _delete = false;
+	private boolean _withdraw = false;
 	private boolean _print = false;
 
 	// 변수용
@@ -110,6 +111,11 @@ public class EcprDTO {
 	private void setAuth(ECPRRequest ecpr) throws Exception {
 		boolean isAdmin = CommonUtil.isAdmin();
 		boolean isCreator = CommonUtil.isCreator(ecpr);
+
+		if (check(ecpr, "APPROVING") && (isAdmin || isCreator)) {
+			set_withdraw(true);
+		}
+
 		if (check(ecpr, "APPROVED") && is_isNew()) {
 			set_print(true);
 		}

@@ -25,6 +25,26 @@ iframe {
 		</td>
 		<td class="right">
 			<%
+			if (dto.is_withdraw()) {
+			%>
+			<input type="button" value="회수(결재선 유지)" title="회수(결재선 유지)" class="gray" onclick="withdraw('false');">
+			<input type="button" value="회수(결재선 삭제)" title="회수(결재선 삭제)" class="blue" onclick="withdraw('true');">
+			<%
+			}
+			%>
+			<%
+			if (isAdmin) {
+			%>
+			<select name="state" id="state" class="width-100" onchange="lcm(this);">
+				<option value="">선택</option>
+				<option value="LINE_REGISTER">결재선 지정</option>
+				<option value="INWORK">작업 중</option>
+				<option value="APPROVED">승인됨</option>
+			</select>
+			<%
+			}
+			%>
+			<%
 			if (dto.is_print()) {
 			%>
 			<input type="button" value="인쇄" title="인쇄" class="gray" onclick="print();">

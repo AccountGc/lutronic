@@ -23,6 +23,14 @@ iframe {
 		</td>
 		<td class="right">
 			<%
+			if (dto.is_withdraw()) {
+			%>
+			<input type="button" value="회수(결재선 유지)" title="회수(결재선 유지)" class="gray" onclick="withdraw('false');">
+			<input type="button" value="회수(결재선 삭제)" title="회수(결재선 삭제)" class="blue" onclick="withdraw('true');">
+			<%
+			}
+			%>
+			<%
 			if (isAdmin) {
 			%>
 			<select name="state" id="state" class="width-100" onchange="lcm(this);">
@@ -116,7 +124,7 @@ iframe {
 					<%
 					String[] ss = new String[]{"영업/마케팅", "원가 절감", "기능/성능 변경", "공정 변경", "자재 변경", "허가/규제 변경", "품질 개선", "라벨링", "기타"};
 					for (String s : ss) {
-						if(dto.getChangeSection() != null) {
+						if (dto.getChangeSection() != null) {
 							int include = dto.getChangeSection().indexOf(s);
 					%>
 					<div class="pretty p-switch">
@@ -129,7 +137,7 @@ iframe {
 					</div>
 					&nbsp;
 					<%
-						}
+					}
 					}
 					%>
 				</td>

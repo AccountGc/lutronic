@@ -24,6 +24,14 @@ iframe {
 		</td>
 		<td class="right">
 			<%
+			if (dto.is_withdraw()) {
+			%>
+			<input type="button" value="회수(결재선 유지)" title="회수(결재선 유지)" class="gray" onclick="withdraw('false');">
+			<input type="button" value="회수(결재선 삭제)" title="회수(결재선 삭제)" class="blue" onclick="withdraw('true');">
+			<%
+			}
+			%>
+			<%
 			if (dto.is_print()) {
 			%>
 			<input type="button" value="인쇄" title="인쇄" class="gray" onclick="print();">
@@ -166,7 +174,7 @@ iframe {
 			</tr>
 			<%
 			}
-			%>			
+			%>
 			<tr>
 				<th class="lb">주 첨부파일</th>
 				<td colspan="5" class="indent5">
@@ -284,7 +292,7 @@ iframe {
 		AUIGrid.resize(myGridID10000);
 		AUIGrid.resize(myGridID10001);
 	});
-	
+
 	function print() {
 		const oid = document.getElementById("oid").value;
 		const url = getCallUrl("/ecpr/print?oid=" + oid);

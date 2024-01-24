@@ -7,6 +7,7 @@ import java.util.Hashtable;
 import com.e3ps.change.ECOChange;
 import com.e3ps.change.ECPRRequest;
 import com.e3ps.change.ECRMRequest;
+import com.e3ps.change.EChangeNotice;
 import com.e3ps.change.EChangeOrder;
 import com.e3ps.change.EChangeRequest;
 import com.e3ps.common.util.StringUtil;
@@ -18,6 +19,7 @@ import com.e3ps.workspace.AsmApproval;
 import wt.doc.WTDocument;
 import wt.fc.Persistable;
 import wt.lifecycle.LifeCycleManaged;
+import wt.org.OrganizationServicesHelper;
 import wt.org.WTUser;
 import wt.part.WTPart;
 import wt.session.SessionHelper;
@@ -178,6 +180,12 @@ public class MailUtils {
 			description = asm.getDescription();
 			type = "일괄결재";
 			viewString = asm.getNumber() + "-[" + asm.getName() + "]";
+		} else if (lcm instanceof EChangeNotice) {
+			EChangeNotice ecn = (EChangeNotice) lcm;
+			creatorName = ecn.getCreatorFullName();
+			description = ecn.getEoCommentA();
+			type = "ECN";
+			viewString = ecn.getEoNumber() + "-[" + ecn.getEoName() + "]";
 		}
 		hash.put("viewString", viewString);
 		hash.put("gubun", type);
@@ -330,7 +338,36 @@ public class MailUtils {
 	/**
 	 * ECN 담당자 지정 요청 메일
 	 */
-	public void sendEcnWorkUser() throws Exception {
-		
+	public void sendEcnWorkUser(EChangeOrder eco) throws Exception {
+		Hashtable<String, Object> hash = new Hashtable<>();
+		WTUser fromUser = (WTUser) SessionHelper.manager.getAdministrator();
+		String subject = "ECN 담당자 지정 요청 알림 메일입니다.";
+
+		HashMap<String, String> to = new HashMap<>();
+//		WTUser toUser = (WTUser) SessionHelper.manager.getPrincipal();
+		WTUser toUser = OrganizationServicesHelper.manager.getAuthenticatedUser("cdpark");
+		if (!StringUtil.checkString(toUser.getEMail())) {
+			throw new Exception("받는 사람 = " + toUser.getFullName() + " 이메일 주소가 없습니다.");
+		}
+
+		to.put(toUser.getEMail(), toUser.getFullName());
+
+		Hashtable<String, String> data = new Hashtable<>();
+		data.put("viewString", "ECN 담당자 지정");
+		data.put("gubun", "ECN");
+		data.put("creatorName", eco.getCreatorFullName()); // eco 등록자로 한다.
+		data.put("description", eco.getEoNumber() + " SAP 전송이 완료되었습니다.<br>담당자를 지정해주세요.");
+		data.put("workName", "ECN 담당자 지정");
+		data.put("Location", "ECN");
+
+		MailHtmlContentTemplate mhct = MailHtmlContentTemplate.getInstance();
+		String mcontent = mhct.htmlContent(data, "ecn_notice.html");
+
+		hash.put("FROM", fromUser);
+		hash.put("TO", to);
+		hash.put("SUBJECT", subject);
+		hash.put("CONTENT", mcontent);
+
+		sendMail(hash);
 	}
 }

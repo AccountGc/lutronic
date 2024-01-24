@@ -366,7 +366,7 @@ function loadForm(classType2) {
 }
 
 // 중분류 값 삭제
-function clearSecond() {
+function clearSecondValue() {
 	const classType1 = document.getElementById("classType1").value;
 	document.getElementById("classType2").value = "";
 	removeClazz();
