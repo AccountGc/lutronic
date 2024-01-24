@@ -44,7 +44,7 @@ public class NoticeHelper {
 		}
 
 		boolean sort = QuerySpecUtils.toSort(sortType);
-		QuerySpecUtils.toOrderBy(query, idx, Notice.class, Notice.CREATE_TIMESTAMP, sort);
+		QuerySpecUtils.toOrderBy(query, idx, Notice.class, toSortKey(sortKey), sort);
 
 		PageQueryUtils pager = new PageQueryUtils(params, query);
 		PagingQueryResult result = pager.find();
@@ -64,5 +64,12 @@ public class NoticeHelper {
 		map.put("sessionid", pager.getSessionId());
 		map.put("curPage", pager.getCpage());
 		return map;
+	}
+
+	private String toSortKey(String sortKey) throws Exception {
+		if ("title".equals(sortKey)) {
+			return Notice.TITLE;
+		}
+		return Notice.CREATE_TIMESTAMP;
 	}
 }

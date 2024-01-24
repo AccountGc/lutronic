@@ -99,6 +99,7 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 					filter : {
 						inline : false
 					},
+					sortable : false
 				}, {
 					dataField : "title",
 					headerText : "제목",
@@ -181,7 +182,7 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 				});
 				AUIGrid.bind(myGridID, "sorting", auiSortingHandler);
 			}
-			
+
 			let sortCache = [];
 			let compField;
 			function auiSortingHandler(event) {
