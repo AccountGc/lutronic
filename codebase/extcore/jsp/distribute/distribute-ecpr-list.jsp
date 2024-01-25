@@ -185,6 +185,7 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 					filter : {
 						inline : false
 					},
+					sortable : false
 				}, {
 					dataField : "number",
 					headerText : "ECPR 번호",
@@ -218,7 +219,8 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 					headerText : "변경구분",
 					dataType : "string",
 					style : "aui-left",
-					width : 250
+					width : 250,
+					sortable : false
 				}, {
 					dataField : "period",
 					headerText : "보존년한",

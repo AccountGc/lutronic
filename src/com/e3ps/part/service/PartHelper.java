@@ -69,6 +69,7 @@ import wt.query.ClassAttribute;
 import wt.query.QuerySpec;
 import wt.query.SearchCondition;
 import wt.services.ServiceFactory;
+import wt.util.WTAttributeNameIfc;
 import wt.vc.VersionControlHelper;
 import wt.vc.baseline.Baseline;
 import wt.vc.baseline.BaselineMember;
@@ -317,6 +318,9 @@ public class PartHelper {
 
 		QuerySpecUtils.toOrderBy(query, idx, WTPart.class, WTPart.MODIFY_TIMESTAMP, true);
 
+		boolean sort = QuerySpecUtils.toSort(sortType);
+		QuerySpecUtils.toOrderBy(query, idx, WTPart.class, toSortKey(sortKey), sort);
+				
 		PageQueryUtils pager = new PageQueryUtils(params, query);
 		PagingQueryResult result = pager.find();
 		int rowNum = (pager.getCpage() - 1) * pager.getPsize() + 1;
@@ -350,6 +354,23 @@ public class PartHelper {
 		map.put("sessionid", pager.getSessionId());
 		map.put("curPage", pager.getCpage());
 		return map;
+	}
+
+	private String toSortKey(String sortKey) throws Exception{
+		if("number".equals(sortKey)) {
+			return WTPart.NUMBER;
+		} else if("name".equals(sortKey)) {
+			return WTPart.NAME;
+		} else if ("state".equals(sortKey)) {
+			return WTPart.LIFE_CYCLE_STATE;
+		} else if("creator".equals(sortKey)) {
+			return (WTPart.CREATOR + "." + WTAttributeNameIfc.REF_OBJECT_ID);
+		} else if("createdDate".equals(sortKey)) {
+			return WTPart.CREATE_TIMESTAMP;
+		} else if ("modifiedDate".equals(sortKey)) {
+			return WTPart.MODIFY_TIMESTAMP;
+		}
+		return WTPart.CREATE_TIMESTAMP;
 	}
 
 	public static long getECODATESeqDefinitionId() {

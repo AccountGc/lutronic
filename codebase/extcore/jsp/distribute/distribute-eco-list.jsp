@@ -224,6 +224,7 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 					filter : {
 						inline : false
 					},
+					sortable : false
 				}, {
 					dataField : "number",
 					headerText : "ECO번호",
@@ -266,6 +267,7 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 					headerText : "ECO 타입",
 					dataType : "string",
 					width : 80,
+					sortable : false
 				}, {
 					dataField : "licensing_name",
 					headerText : "인허가변경",

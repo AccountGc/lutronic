@@ -176,6 +176,7 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 					filter : {
 						inline : false
 					},
+					sortable : false
 				},{
 					dataField : "number",
 					headerText : "EO 번호",
@@ -213,11 +214,12 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 					renderer : {
 						type : "TemplateRenderer"
 					},
-				}, {
-					dataField : "eoType",
-					headerText : "구분",
-					dataType : "string",
-					width : 80,
+					sortable : false
+// 				}, {
+// 					dataField : "eoType",
+// 					headerText : "구분",
+// 					dataType : "string",
+// 					width : 80,
 				}, {
 					dataField : "state",
 					headerText : "상태",

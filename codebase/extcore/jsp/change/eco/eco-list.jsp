@@ -224,6 +224,7 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 					filter : {
 						inline : false
 					},
+					sortable : false
 				}, {
 					dataField : "number",
 					headerText : "ECO 번호",
@@ -266,6 +267,7 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 					headerText : "ECO 타입",
 					dataType : "string",
 					width : 80,
+					sortable : false
 				}, {
 					dataField : "licensing_name",
 					headerText : "인허가변경",
@@ -477,7 +479,7 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 				}
 				let params = new Object();
 				const url = getCallUrl("/eco/list");
-				const field = [ "name", "number", "modelcode", "creatorOid", "createdFrom", "createdTo", "approveFrom", "approveTo", "state" ];
+				const field = [ "sortKey", "sortType", "name", "number", "modelcode", "creatorOid", "createdFrom", "createdTo", "approveFrom", "approveTo", "state" ];
 				const rows104 = AUIGrid.getGridDataWithState(myGridID104, "gridState");
 				params.rows104 = rows104;
 				params.licensing = $('input[name=licensing]:checked').val();

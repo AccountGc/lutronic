@@ -309,6 +309,15 @@ boolean complete = (boolean) request.getAttribute("complete");
 <script type="text/javascript">
 let myGridID;
 const columns = [ {
+	dataField : "rowNum",
+	headerText : "번호",
+	width : 40,
+	dataType : "numeric",
+	filter : {
+		inline : false
+	},
+	sortable : false
+},{
 	dataField : "icon",
 	headerText : "",
 	dataType : "string",
@@ -337,7 +346,8 @@ const columns = [ {
 	headerText : "품목분류",
 	dataType : "string",
 	width : 250,
-	style : "aui-left"
+	style : "aui-left",
+	sortable : false
 }, {
 	dataField : "version",
 	headerText : "REV",
@@ -346,11 +356,13 @@ const columns = [ {
 	renderer : {
 		type : "TemplateRenderer"
 	},
+	sortable : false
 }, {
 	dataField : "remarks",
 	headerText : "OEM Info.",
 	dataType : "string",
 	width : 100,
+	sortable : false
 }, {
 	dataField : "state",
 	headerText : "상태",
@@ -382,7 +394,7 @@ const columns = [ {
 function createAUIGrid(columnLayout) {
 	const props = {
 		headerHeight : 30,
-		showRowNumColumn : true,
+		showRowNumColumn : false,
 		showRowCheckColumn : true,
 		showAutoNoDataMessage : false,
 		selectionMode : "multipleCells",

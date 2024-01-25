@@ -32,6 +32,7 @@ import com.e3ps.doc.service.DocumentHelper;
 import com.e3ps.org.Department;
 import com.e3ps.org.service.DepartmentHelper;
 import com.e3ps.part.service.PartHelper;
+import com.e3ps.workspace.AsmApproval;
 import com.ptc.core.meta.type.mgmt.server.impl.WTTypeDefinition;
 
 import net.sf.json.JSONArray;
@@ -263,7 +264,9 @@ public class ActivityHelper {
 		String submiterOid = (String) params.get("submiterOid");
 		String receiveFrom = (String) params.get("receiveFrom");
 		String receiveTo = (String) params.get("receiveTo");
-
+		// 정렬
+		String sortKey = (String) params.get("sortKey");
+		String sortType = (String) params.get("sortType");
 		QuerySpec query = new QuerySpec();
 		int idx_eca = query.appendClassList(EChangeActivity.class, true);
 		int idx_eco = query.appendClassList(EChangeOrder.class, false);
@@ -282,6 +285,9 @@ public class ActivityHelper {
 		QuerySpecUtils.toTimeGreaterAndLess(query, idx_eca, EChangeActivity.class, EChangeActivity.CREATE_TIMESTAMP,
 				receiveFrom, receiveTo);
 		QuerySpecUtils.toOrderBy(query, idx_eca, EChangeActivity.class, EChangeActivity.CREATE_TIMESTAMP, true);
+		
+		boolean sort = QuerySpecUtils.toSort(sortType);
+		QuerySpecUtils.toOrderBy(query, idx_eca, EChangeActivity.class, toSortKey(sortKey), sort);
 		PageQueryUtils pager = new PageQueryUtils(params, query);
 		PagingQueryResult result = pager.find();
 		int rowNum = (pager.getCpage() - 1) * pager.getPsize() + 1;
@@ -312,6 +318,13 @@ public class ActivityHelper {
 		map.put("sessionid", pager.getSessionId());
 		map.put("curPage", pager.getCpage());
 		return map;
+	}
+
+	private String toSortKey(String sortKey) throws Exception{
+		if("activityName".equals(sortKey)) {
+			return EChangeActivity.ACTIVE_TYPE;
+		}
+		return EChangeActivity.CREATE_TIMESTAMP;
 	}
 
 	/**

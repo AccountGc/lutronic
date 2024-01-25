@@ -305,6 +305,7 @@ QuantityUnit[] unitList = (QuantityUnit[]) request.getAttribute("unitList");
 					filter : {
 						inline : false
 					},
+					sortable : false
 				}, {
 					dataField : "thumb",
 					headerText : "뷰",
@@ -318,6 +319,7 @@ QuantityUnit[] unitList = (QuantityUnit[]) request.getAttribute("unitList");
 					filter : {
 						inline : false
 					},
+					sortable : false
 				}, {
 					dataField : "icon",
 					headerText : "",
@@ -369,6 +371,7 @@ QuantityUnit[] unitList = (QuantityUnit[]) request.getAttribute("unitList");
 					headerText : "도면분류",
 					dataType : "string",
 					width : 120,
+					sortable : false
 				}, {
 					dataField : "version",
 					headerText : "REV",
@@ -377,6 +380,7 @@ QuantityUnit[] unitList = (QuantityUnit[]) request.getAttribute("unitList");
 					renderer : {
 						type : "TemplateRenderer"
 					},
+					sortable : false
 				}, {
 					dataField : "state",
 					headerText : "상태",
@@ -548,7 +552,7 @@ QuantityUnit[] unitList = (QuantityUnit[]) request.getAttribute("unitList");
 				}
 				let params = new Object();
 				const url = getCallUrl("/drawing/list");
-				const field = [ "location", "cadDivision", "cadType", "number", "name", "createdFrom", "createdTo", "modifiedFrom", "modifiedTo", "creatorOid", "state", "modelcode", "productmethod", "deptcode", "unit", "weight1", "weight2", "manufacture", "mat", "finish", "remarks", "specification" ];
+				const field = [ "sortKey", "sortType", "location", "cadDivision", "cadType", "number", "name", "createdFrom", "createdTo", "modifiedFrom", "modifiedTo", "creatorOid", "state", "modelcode", "productmethod", "deptcode", "unit", "weight1", "weight2", "manufacture", "mat", "finish", "remarks", "specification" ];
 				const latest = document.querySelector("input[name=latest]:checked").value;
 				params = toField(params, field);
 				params.latest = JSON.parse(latest);

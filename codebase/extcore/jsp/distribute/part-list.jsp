@@ -322,6 +322,7 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 					filter : {
 						inline : false
 					},
+					sortable : false
 				},{
 					dataField : "thumb",
 					headerText : "뷰",
@@ -335,6 +336,7 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 					filter : {
 						inline : false
 					},
+					sortable : false
 				}, {
 					dataField : "icon",
 					headerText : "",
@@ -382,7 +384,8 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 					headerText : "품목분류",
 					dataType : "string",
 					width : 180,
-					style : "aui-left"
+					style : "aui-left",
+					sortable : false
 				}, {
 					dataField : "version",
 					headerText : "REV",
@@ -391,11 +394,13 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 					renderer : {
 						type : "TemplateRenderer"
 					},
+					sortable : false
 				}, {
 					dataField : "remarks",
 					headerText : "OEM Info.",
 					dataType : "string",
 					width : 100,
+					sortable : false
 				}, {
 					dataField : "state",
 					headerText : "상태",

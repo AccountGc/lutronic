@@ -146,6 +146,7 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 					filter : {
 						inline : false
 					},
+					sortable : false
 				}, {
 					dataField : "id",
 					headerText : "아이디",

@@ -140,6 +140,7 @@ boolean isAdmin = (boolean) request.getAttribute("isAdmin");
 					filter : {
 						inline : false
 					},
+					sortable : false
 				}, {
 					dataField : "number",
 					headerText : "<%=title%> 일괄결재번호",
@@ -173,7 +174,8 @@ boolean isAdmin = (boolean) request.getAttribute("isAdmin");
 					headerText : "설명",
 					dataType : "string",
 					style : "aui-left",
-					width : 350
+					width : 350,
+					sortable : false
 				}, {
 					dataField : "state",
 					headerText : "상태",
@@ -367,7 +369,7 @@ boolean isAdmin = (boolean) request.getAttribute("isAdmin");
 					document.getElementById("curPage").value = 1;
 				}
 				let params = new Object();
-				const field = [ "name", "number", "createdFrom", "createdTo", "creatorOid", "state" ];
+				const field = [ "sortKey", "sortType", "name", "number", "createdFrom", "createdTo", "creatorOid", "state" ];
 				params = toField(params, field);
 				const number = toId("number");
 				const numberType = toId("numberType");

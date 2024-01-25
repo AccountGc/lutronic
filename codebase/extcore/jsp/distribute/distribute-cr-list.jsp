@@ -177,6 +177,7 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 					filter : {
 						inline : false
 					},
+					sortable : false
 				}, {
 					dataField : "number",
 					headerText : "CR 번호",
@@ -215,6 +216,7 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 					renderer : {
 						type : "TemplateRenderer"
 					},
+					sortable : false
 				}, {
 					dataField : "changeSection",
 					headerText : "변경사유",

@@ -147,6 +147,7 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 					headerText : "첨부파일",
 					dataType : "string",
 					width : 100,
+					sortable : false,
 					renderer : {
 						type : "TemplateRenderer"
 					},

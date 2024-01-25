@@ -187,6 +187,7 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 					filter : {
 						inline : false
 					},
+					sortable : false
 				},{
 					dataField : "number",
 					headerText : "ECPR 번호",
@@ -220,7 +221,8 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 					headerText : "변경구분",
 					dataType : "string",
 					style : "aui-left",
-					width : 250
+					width : 250,
+					sortable : false
 				}, {
 					dataField : "period",
 					headerText : "보존년한",
@@ -463,7 +465,7 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 				}
 				let params = new Object();
 				const url = getCallUrl("/ecpr/list");
-				const field = [ "name", "number", "createdFrom", "createdTo", "creatorOid", "state", "writedFrom", "writedTo", "approveFrom", "approveTo", "createDepart", "writer", "modelcode", "changeSection" ];
+				const field = [ "sortKey", "sortType", "name", "number", "createdFrom", "createdTo", "creatorOid", "state", "writedFrom", "writedTo", "approveFrom", "approveTo", "createDepart", "writer", "modelcode", "changeSection" ];
 				params = toField(params, field);
 				AUIGrid.showAjaxLoader(myGridID);
 				parent.openLayer();

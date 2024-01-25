@@ -57,7 +57,7 @@ public class AsmHelper {
 		QuerySpecUtils.toTimeGreaterAndLess(query, idx, AsmApproval.class, AsmApproval.CREATE_TIMESTAMP, createdFrom,
 				createdTo);
 		boolean sort = QuerySpecUtils.toSort(sortType);
-		QuerySpecUtils.toOrderBy(query, idx, AsmApproval.class, AsmApproval.CREATE_TIMESTAMP, sort);
+		QuerySpecUtils.toOrderBy(query, idx, AsmApproval.class, toSortKey(sortKey), sort);
 
 		PageQueryUtils pager = new PageQueryUtils(params, query);
 		PagingQueryResult result = pager.find();
@@ -84,6 +84,21 @@ public class AsmHelper {
 		map.put("sessionid", pager.getSessionId());
 		map.put("curPage", pager.getCpage());
 		return map;
+	}
+
+	private String toSortKey(String sortKey) throws Exception{
+		if("number".equals(sortKey)) {
+			return AsmApproval.NUMBER;
+		} else if("name".equals(sortKey)) {
+			return AsmApproval.NAME;
+		} else if("state".equals(sortKey)) {
+			return AsmApproval.LIFE_CYCLE_STATE;
+		} else if("creator".equals(sortKey)) {
+			return AsmApproval.CREATOR_FULL_NAME;
+		} else if("createdDate_txt".equals(sortKey)) {
+			return AsmApproval.CREATE_TIMESTAMP;
+		}
+		return AsmApproval.CREATE_TIMESTAMP;
 	}
 
 	/**

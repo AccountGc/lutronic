@@ -252,6 +252,7 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 					filter : {
 						inline : false
 					},
+					sortable : false
 				}, {
 					dataField : "name",
 					headerText : "문서명",
@@ -290,28 +291,30 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 					renderer : {
 						type : "TemplateRenderer"
 					},
+					sortable : false
 				}, {
 					dataField : "location",
 					headerText : "문서분류",
 					dataType : "string",
 					style : "aui-left",
 					width : 250,
+					sortable : false
 				}, {
-					dataField : "classType1_name",
-					headerText : "대분류",
-					dataType : "string",
-					width : 100,
-				}, {
-					dataField : "classType2_name",
-					headerText : "중분류",
-					dataType : "string",
-					width : 200,
-				}, {
-					dataField : "classType3_name",
-					headerText : "소분류",
-					dataType : "string",
-					width : 100,
-				}, {
+// 					dataField : "classType1_name",
+// 					headerText : "대분류",
+// 					dataType : "string",
+// 					width : 100,
+// 				}, {
+// 					dataField : "classType2_name",
+// 					headerText : "중분류",
+// 					dataType : "string",
+// 					width : 200,
+// 				}, {
+// 					dataField : "classType3_name",
+// 					headerText : "소분류",
+// 					dataType : "string",
+// 					width : 100,
+// 				}, {
 					dataField : "version",
 					headerText : "REV",
 					dataType : "string",
@@ -319,6 +322,7 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 					renderer : {
 						type : "TemplateRenderer"
 					},
+					sortable : false
 				}, {
 					dataField : "state",
 					headerText : "상태",
@@ -335,6 +339,7 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 					headerText : "작성자",
 					dataType : "string",
 					width : 100,
+					sortable : false
 				}, {
 					dataField : "creator",
 					headerText : "등록자",
@@ -350,28 +355,28 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 					headerText : "수정일",
 					dataType : "date",
 					width : 100,
-				}, {
-					dataField : "primary",
-					headerText : "주 첨부파일",
-					dataType : "string",
-					width : 80,
-					renderer : {
-						type : "TemplateRenderer"
-					},
-					filter : {
-						inline : false
-					},
-				}, {
-					dataField : "secondary",
-					headerText : "첨부파일",
-					dataType : "string",
-					width : 100,
-					renderer : {
-						type : "TemplateRenderer"
-					},
-					filter : {
-						inline : false
-					},
+// 				}, {
+// 					dataField : "primary",
+// 					headerText : "주 첨부파일",
+// 					dataType : "string",
+// 					width : 80,
+// 					renderer : {
+// 						type : "TemplateRenderer"
+// 					},
+// 					filter : {
+// 						inline : false
+// 					},
+// 				}, {
+// 					dataField : "secondary",
+// 					headerText : "첨부파일",
+// 					dataType : "string",
+// 					width : 100,
+// 					renderer : {
+// 						type : "TemplateRenderer"
+// 					},
+// 					filter : {
+// 						inline : false
+// 					},
 				} ]
 			}
 
@@ -461,7 +466,7 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 
 				let params = new Object();
 				const url = getCallUrl("/doc/list");
-				const field = [ "location", "classType1", "classType2", "classType3", "name", "number", "state", "creatorOid", "createdFrom", "createdTo", "modifiedFrom", "modifiedTo", "preseration", "modelcode", "deptcode", "writer", "description" ];
+				const field = [ "sortKey", "sortType", "location", "name", "number", "state", "creatorOid", "createdFrom", "createdTo", "modifiedFrom", "modifiedTo", "preseration", "modelcode", "deptcode", "writer", "description" ];
 				document.getElementById("sessionid").value = 0;
 				params = toField(params, field);
 				params.latest = false;
