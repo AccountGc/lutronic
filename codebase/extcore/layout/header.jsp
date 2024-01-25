@@ -336,7 +336,7 @@ int eca = (int) request.getAttribute("eca");
 			</li>
 			<%
 			}
-			if (isPathological || isAdmin) {
+			if (isPathological) {
 			%>
 			<li>
 				<a href="css_animation.html">
@@ -361,7 +361,7 @@ int eca = (int) request.getAttribute("eca");
 			</li>
 			<%
 			}
-			if (isClinical || isAdmin) {
+			if (isClinical) {
 			%>
 			<li>
 				<a href="css_animation.html">
@@ -388,7 +388,7 @@ int eca = (int) request.getAttribute("eca");
 			}
 			%>
 			<%
-			if (isCosmetic || isAdmin) {
+			if (isCosmetic {
 			%>
 			<li>
 				<a href="css_animation.html">
