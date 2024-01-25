@@ -112,5 +112,15 @@
    <!-- Worker -->
    <Property name="worker.exe.whitelist.prefixes" overridable="true"
              targetFile="codebase/WEB-INF/conf/wvs.properties"
-             value="C:\|D:\|E:\|T:\|X:\|U:\|V:\|/|nohup /"/>                      	         	                  
+             value="C:\|D:\|E:\|T:\|X:\|U:\|V:\|/|nohup /"/>
+             
+   <!-- DB Max Connection -->
+   <Property name="wt.pom.maxDbConnections" overridable="true"
+             targetFile="db/db.properties"
+             value="200"/> 
+             
+   <!-- DB Cache Size -->
+   <Property name=" wt.pom.statementCacheSize" overridable="true"
+             targetFile="db/db.properties"
+             value="200"/>              
 </Configuration>
