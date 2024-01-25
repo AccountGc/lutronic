@@ -388,7 +388,7 @@ int eca = (int) request.getAttribute("eca");
 			}
 			%>
 			<%
-			if (isCosmetic {
+			if (isCosmetic) {
 			%>
 			<li>
 				<a href="css_animation.html">
