@@ -13,7 +13,6 @@ import javax.servlet.http.HttpServletResponse;
 
 import com.aspose.cells.FileFormatType;
 import com.aspose.cells.Workbook;
-import com.e3ps.admin.form.FormTemplate;
 import com.e3ps.change.DocumentActivityLink;
 import com.e3ps.change.ECPRRequest;
 import com.e3ps.change.EChangeActivity;
@@ -34,7 +33,6 @@ import com.e3ps.doc.DocumentECPRLink;
 import com.e3ps.doc.DocumentEOLink;
 import com.e3ps.doc.DocumentToDocumentLink;
 import com.e3ps.doc.dto.DocumentDTO;
-import com.e3ps.doc.etc.service.EtcHelper;
 import com.e3ps.org.dto.PeopleDTO;
 import com.e3ps.workspace.AppPerLink;
 import com.e3ps.workspace.AsmApproval;
@@ -43,7 +41,6 @@ import com.e3ps.workspace.service.WorkDataHelper;
 import com.e3ps.workspace.service.WorkspaceHelper;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.ptc.windchill.enterprise.wvs.common.utils.CommonClientHelper;
 
 import wt.clients.folder.FolderTaskLogic;
 import wt.clients.vc.CheckInOutTaskLogic;
@@ -416,7 +413,7 @@ public class StandardDocumentService extends StandardManager implements Document
 //			writer = Long.toString(CommonUtil.getOIDLongValue(dto.getWriter_oid()));
 //		}
 
-		dto.setIBAValue(doc, user.getFullName(), "DSGN");
+//		dto.setIBAValue(doc, user.getFullName(), "DSGN");
 		// 결재 유형
 		String approvalType_code = dto.getLifecycle().equals("LC_Default") ? "DEFAUT" : "BATCH";
 		dto.setIBAValue(doc, approvalType_code, "APPROVALTYPE");
@@ -828,6 +825,30 @@ public class StandardDocumentService extends StandardManager implements Document
 					DocumentHelper.manager.mergePdf(doc);
 				}
 			}
+			trs.commit();
+			trs = null;
+		} catch (Exception e) {
+			e.printStackTrace();
+			trs.rollback();
+			throw e;
+		} finally {
+			if (trs != null)
+				trs.rollback();
+		}
+	}
+
+	@Override
+	public void publish(String oid) throws Exception {
+		Transaction trs = new Transaction();
+		try {
+			trs.start();
+
+			WTDocument doc = (WTDocument) CommonUtil.getObject(oid);
+
+			
+			
+			
+			
 			trs.commit();
 			trs = null;
 		} catch (Exception e) {

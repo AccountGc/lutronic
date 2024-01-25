@@ -94,6 +94,7 @@ public class DocumentDTO {
 	private boolean _withdraw = false;
 	private boolean _print = false;
 	private boolean _force = false;
+	private boolean _publish = false;
 
 	// 변수용
 	private String iterationNote;
@@ -296,6 +297,10 @@ public class DocumentDTO {
 						set_print(true);
 					}
 				}
+			}
+
+			if ("DEV".equals(s) || "INSTRUCTION".equals(s)) {
+				set_publish(true);
 			}
 		}
 

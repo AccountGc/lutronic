@@ -56,4 +56,9 @@ public interface DocumentService {
 	 */
 	public abstract void createCover(WTDocument doc) throws Exception;
 
+	/**
+	 * 개발문서 및 지침서
+	 */
+	public abstract void publish(String oid) throws Exception;
+
 }

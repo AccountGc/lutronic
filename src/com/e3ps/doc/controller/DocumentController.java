@@ -464,4 +464,21 @@ public class DocumentController extends BaseController {
 		model.setViewName("popup:/document/document-print");
 		return model;
 	}
+
+	@Description(value = "개발문서 & 지침서 재변환")
+	@ResponseBody
+	@GetMapping(value = "/publish")
+	public Map<String, Object> publish(@RequestParam String oid) throws Exception {
+		Map<String, Object> result = new HashMap<String, Object>();
+		try {
+			DocumentHelper.service.publish(oid);
+			result.put("result", SUCCESS);
+		} catch (Exception e) {
+			e.printStackTrace();
+			result.put("result", FAIL);
+			result.put("msg", e.toString());
+		}
+		return result;
+	}
+
 }

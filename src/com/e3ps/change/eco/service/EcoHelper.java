@@ -53,6 +53,8 @@ import com.e3ps.common.util.POIUtil;
 import com.e3ps.common.util.PageQueryUtils;
 import com.e3ps.common.util.QuerySpecUtils;
 import com.e3ps.common.util.StringUtil;
+import com.e3ps.doc.DocumentECOLink;
+import com.e3ps.doc.column.DocumentColumn;
 import com.e3ps.org.dto.PeopleDTO;
 import com.e3ps.part.service.PartHelper;
 import com.e3ps.sap.conn.SAPConnection;
@@ -74,6 +76,7 @@ import wt.content.ApplicationData;
 import wt.content.ContentHelper;
 import wt.content.ContentItem;
 import wt.content.ContentRoleType;
+import wt.doc.WTDocument;
 import wt.epm.EPMDocument;
 import wt.fc.PagingQueryResult;
 import wt.fc.PagingSessionHelper;
@@ -288,8 +291,24 @@ public class EcoHelper {
 			return JSONArray.fromObject(referenceEcrm(eco, list));
 		} else if ("ecn".equals(type)) {
 			return JSONArray.fromObject(referenceEcn(eco, list));
+		} else if ("doc".equals(type)) {
+			return JSONArray.fromObject(referenceDoc(eco, list));
 		}
 		return JSONArray.fromObject(list);
+	}
+
+	/**
+	 * ECO 관련문서
+	 */
+	private Object referenceDoc(EChangeOrder eco, ArrayList<Map<String, Object>> list) throws Exception {
+		QueryResult result = PersistenceHelper.manager.navigate(eco, "document", DocumentECOLink.class);
+		while (result.hasMoreElements()) {
+			WTDocument d = (WTDocument) result.nextElement();
+			DocumentColumn dto = new DocumentColumn(d);
+			Map<String, Object> map = AUIGridUtil.dtoToMap(dto);
+			list.add(map);
+		}
+		return list;
 	}
 
 	/**

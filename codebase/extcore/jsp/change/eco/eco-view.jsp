@@ -169,6 +169,12 @@ boolean isAdmin = (boolean) request.getAttribute("isAdmin");
 				</td>
 			</tr>
 		</table>
+		<!-- 	관련 문서 -->
+		<jsp:include page="/extcore/jsp/document/include/document-include.jsp">
+			<jsp:param value="<%=dto.getOid()%>" name="oid" />
+			<jsp:param value="update" name="mode" />
+			<jsp:param value="true" name="multi" />
+		</jsp:include>
 		<jsp:include page="/extcore/jsp/change/activity/include/activity-view.jsp">
 			<jsp:param value="<%=dto.getOid()%>" name="oid" />
 		</jsp:include>
@@ -230,6 +236,12 @@ boolean isAdmin = (boolean) request.getAttribute("isAdmin");
 					} else {
 						createAUIGrid111(columns111);
 					}
+					const isCreated90 = AUIGrid.isCreated(myGridID90); // 다운로드이력
+					if (isCreated90) {
+						AUIGrid.resize(myGridID90);
+					} else {
+						createAUIGrid90(columns90);
+					}
 					break;
 				case "tabs-2":
 					const isCreated500 = AUIGrid.isCreated(myGridID500); // 다운로드이력
@@ -269,13 +281,16 @@ boolean isAdmin = (boolean) request.getAttribute("isAdmin");
 			}
 		});
 		createAUIGrid700(columns700);
+		createAUIGrid90(columns90);
 		AUIGrid.resize(myGridID700);
+		AUIGrid.resize(myGridID90);
 		autoTextarea();
 		selectbox("state");
 	});
 
 	window.addEventListener("resize", function() {
 		AUIGrid.resize(myGridID101);
+		AUIGrid.resize(myGridID90);
 		AUIGrid.resize(myGridID1010);
 		AUIGrid.resize(myGridID700);
 		AUIGrid.resize(myGridID500);
@@ -303,9 +318,9 @@ boolean isAdmin = (boolean) request.getAttribute("isAdmin");
 			if (data.result) {
 				if (data.isValidate) {
 					alert("SAP 전송 검증이 성공하였습니다.");
-// 					const url = getCallUrl("/eco/resultPage");
-// 					let p = _popup(url, 1100, 550, "n");
-// 					p.rtnList = data.rtnList;
+					// 					const url = getCallUrl("/eco/resultPage");
+					// 					let p = _popup(url, 1100, 550, "n");
+					// 					p.rtnList = data.rtnList;
 				} else {
 					const url = getCallUrl("/eco/resultPage");
 					let p = _popup(url, 1100, 550, "n");

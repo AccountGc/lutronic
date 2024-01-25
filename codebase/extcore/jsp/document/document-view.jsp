@@ -36,12 +36,19 @@ iframe {
 		</td>
 		<td class="right">
 			<%
-				if(dto.is_withdraw()) {
+			if (dto.is_publish()) {
+			%>
+			<input type="button" value="재변환" title="재변환" class="gray" onclick="publish();">
+			<%
+			}
+			%>
+			<%
+			if (dto.is_withdraw()) {
 			%>
 			<input type="button" value="회수(결재선 유지)" title="회수(결재선 유지)" class="gray" onclick="withdraw('false');">
 			<input type="button" value="회수(결재선 삭제)" title="회수(결재선 삭제)" class="blue" onclick="withdraw('true');">
 			<%
-				}
+			}
 			%>
 			<%
 			if (isAdmin && dto.isLatest()) {
@@ -162,7 +169,13 @@ iframe {
 			</tr>
 			<tr>
 				<th class="lb">프로젝트 코드 [명]</th>
-				<td class="indent5"><%=dto.getModel_code()%> [<font color="red"><b><%=dto.getModel_name() %></b></font>]</td>
+				<td class="indent5"><%=dto.getModel_code()%>
+					[
+					<font color="red">
+						<b><%=dto.getModel_name()%></b>
+					</font>
+					]
+				</td>
 				<th>보존년한</th>
 				<td class="indent5"><%=dto.getPreseration_name()%></td>
 				<th>부서</th>
@@ -184,7 +197,11 @@ iframe {
 			if (!dto.is_empty()) {
 			%>
 			<tr>
-				<th class="lb">내용<%=dto.getContent() %></th>
+				<th class="lb">
+					내용<%
+				//=dto.getContent()
+				%>
+				</th>
 				<td colspan="7" class="indent7 pb8">
 					<textarea name="contents" id="contents" rows="7" style="display: none;"><%=dto.getContent() != null ? dto.getContent() : ""%></textarea>
 					<script type="text/javascript">
@@ -409,6 +426,22 @@ iframe {
 		const oid = document.getElementById("oid").value;
 		const url = getCallUrl("/doc/latest?oid=" + oid);
 		document.location.href = url;
+	}
+
+	function publish() {
+		if (!confirm("개발문서 또는 지침서를 재변환 합니다.")) {
+			return false;
+		}
+		const oid = document.getElementById("oid").value;
+		const url = getCallUrl("/doc/publish?oid=" + oid);
+		openLayer();
+		call(url, null, function(data) {
+			alert(data.msg);
+			if (data.result) {
+				document.location.reload();
+			}
+			closeLayer();
+		}, "GET")
 	}
 
 	document.addEventListener("DOMContentLoaded", function() {
