@@ -197,24 +197,24 @@ public class EcoHelper {
 		return map;
 	}
 
-	private String toSortKey(String sortKey) throws Exception{
-		if("number".equals(sortKey)) {
+	private String toSortKey(String sortKey) throws Exception {
+		if ("number".equals(sortKey)) {
 			return EChangeOrder.EO_NUMBER;
-		} else if("name".equals(sortKey)) {
+		} else if ("name".equals(sortKey)) {
 			return EChangeOrder.EO_NAME;
-		} else if("model".equals(sortKey)) {
+		} else if ("model".equals(sortKey)) {
 			return EChangeOrder.MODEL;
-		} else if("licensing_name".equals(sortKey)) {
+		} else if ("licensing_name".equals(sortKey)) {
 			return EChangeOrder.LICENSING_CHANGE;
-		} else if("riskType_name".equals(sortKey)) {
+		} else if ("riskType_name".equals(sortKey)) {
 			return EChangeOrder.RISK_TYPE;
-		} else if("state".equals(sortKey)) {
+		} else if ("state".equals(sortKey)) {
 			return EChangeOrder.LIFE_CYCLE_STATE;
-		} else if("creator".equals(sortKey)) {
+		} else if ("creator".equals(sortKey)) {
 			return EChangeOrder.CREATOR_FULL_NAME;
-		} else if("createdDate".equals(sortKey)) {
+		} else if ("createdDate".equals(sortKey)) {
 			return EChangeOrder.CREATE_TIMESTAMP;
-		} else if("approveDate".equals(sortKey)) {
+		} else if ("approveDate".equals(sortKey)) {
 			return EChangeOrder.EO_APPROVE_DATE;
 		}
 		return EChangeOrder.CREATE_TIMESTAMP;
@@ -381,11 +381,13 @@ public class EcoHelper {
 	 */
 	private ArrayList<Map<String, Object>> referenceComplete(EChangeOrder eco, ArrayList<Map<String, Object>> list)
 			throws Exception {
-		QueryResult result = PersistenceHelper.manager.navigate(eco, "completePart", EOCompletePartLink.class);
+		QueryResult result = PersistenceHelper.manager.navigate(eco, "completePart", EOCompletePartLink.class, false);
 		while (result.hasMoreElements()) {
-			WTPartMaster master = (WTPartMaster) result.nextElement();
+			EOCompletePartLink link = (EOCompletePartLink) result.nextElement();
+			WTPartMaster master = link.getCompletePart();
 			WTPart part = PartHelper.manager.getLatest(master);
 			Map<String, Object> map = new HashMap<>();
+			map.put("link", link.getPersistInfo().getObjectIdentifier().getStringValue());
 			map.put("oid", part.getPersistInfo().getObjectIdentifier().getStringValue());
 			map.put("number", part.getNumber());
 			map.put("name", part.getName());

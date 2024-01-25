@@ -12,6 +12,7 @@ List<Map<String, String>> lifecycleList = (List<Map<String, String>>) request.ge
 WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 JSONArray list = (JSONArray) request.getAttribute("list");
 boolean isEdit = (boolean) request.getAttribute("isEdit");
+boolean isAdmin = (boolean) request.getAttribute("isAdmin");
 %>
 <!DOCTYPE html>
 <html>
@@ -132,7 +133,19 @@ boolean isEdit = (boolean) request.getAttribute("isEdit");
 		<%=list%>
 			;
 			function _layout() {
-				return [ {
+				return [ 
+				<%
+					if(isAdmin) {
+				%>
+				{
+					dataField : "oid",
+					dataType : "string",
+					width : 100,
+				}
+				<%
+					}
+				%>
+				{
 					dataField : "rowNum",
 					headerText : "번호",
 					width : 40,
@@ -238,10 +251,19 @@ boolean isEdit = (boolean) request.getAttribute("isEdit");
 						valueField : "value",
 						validator : function(oldValue, newValue, item, dataField, fromClipboard, which) {
 							let isValid = false;
-							for (let i = 0, len = list.length; i < len; i++) {
-								if (list[i]["value"] == newValue) {
-									isValid = true;
-									break;
+							if (!fromClipboard) {
+								for (let i = 0, len = list.length; i < len; i++) {
+									if (list[i]["value"] == newValue) {
+										isValid = true;
+										break;
+									}
+								}
+							} else {
+								for (let i = 0, len = list.length; i < len; i++) {
+									if (list[i]["key"] == newValue) {
+										isValid = true;
+										break;
+									}
 								}
 							}
 							return {

@@ -10,6 +10,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%
 String oid = request.getParameter("oid");
+boolean isAdmin = CommonUtil.isAdmin();
 %>
 <style type="text/css">
 .preMerge {
@@ -38,7 +39,20 @@ String oid = request.getParameter("oid");
 <div id="grid500" style="height: 240px; border-top: 1px solid #3180c3; margin: 5px;"></div>
 <script type="text/javascript">
 	let myGridID500;
-	const columns500 = [ {
+	const columns500 = [
+	<%
+		if(isAdmin) {
+	%>
+		{
+			dataField : "link",
+			dataType : "string",
+			width : 100,
+		},
+	<%
+		}
+	%>
+		
+	{
 		dataField : "number",
 		headerText : "품목번호",
 		dataType : "string",

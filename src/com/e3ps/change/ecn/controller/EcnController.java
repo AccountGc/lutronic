@@ -52,6 +52,7 @@ public class EcnController extends BaseController {
 		if ("cdpark".equals(user.getName()) || isAdmin) {
 			isEdit = true;
 		}
+		model.addObject("isAdmin", isAdmin);
 		model.addObject("isEdit", isEdit);
 		model.addObject("list", list);
 		model.addObject("modelList", modelList);
