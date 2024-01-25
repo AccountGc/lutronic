@@ -24,9 +24,10 @@ public class Test2 {
 
 	public static void main(String[] args) throws Exception {
 
+		String s = "/Default/PART_Drawing";
+		int l = "/Default/PART_Drawing".indexOf(s);
 
-		WTUser u = OrganizationServicesHelper.manager.getAuthenticatedUser("cdpark");
-		System.out.println(u);
+		System.out.println(l);
 
 	}
 }
