@@ -141,7 +141,7 @@ boolean isAdmin = (boolean) request.getAttribute("isAdmin");
 					dataField : "oid",
 					dataType : "string",
 					width : 100,
-				}
+				},
 				<%
 					}
 				%>
