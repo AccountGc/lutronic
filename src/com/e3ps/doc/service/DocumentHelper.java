@@ -193,9 +193,9 @@ public class DocumentHelper {
 		QuerySpecUtils.toIBAEqualsAnd(query, WTDocument.class, idx, "DSGN", writer);
 
 		Folder folder = FolderTaskLogic.getFolder(location, WCUtil.getWTContainerRef());
-		if (query.getConditionCount() > 0) {
-			query.appendAnd();
-		}
+//		if (query.getConditionCount() > 0) {
+//			query.appendAnd();
+//		}
 
 //		int f_idx = query.appendClassList(IteratedFolderMemberLink.class, false);
 //		ClassAttribute fca = new ClassAttribute(IteratedFolderMemberLink.class, "roleBObjectRef.key.branchId");
