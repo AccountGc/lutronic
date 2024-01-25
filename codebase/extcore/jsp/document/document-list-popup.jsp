@@ -438,7 +438,7 @@ function loadGridData(movePage) {
 	}
 	let params = new Object();
 	const url = getCallUrl("/doc/list");
-	const field = [ "location", "name", "number", "state", "creatorOid", "createdFrom", "createdTo", "modifiedFrom", "modifiedTo", "documentType", "preseration", "modelcode", "deptcode", "interalnumber", "writerOid", "description" ];
+	const field = [ "sortKey", "sortType", "location", "name", "number", "state", "creatorOid", "createdFrom", "createdTo", "modifiedFrom", "modifiedTo", "preseration", "modelcode", "deptcode", "writer", "description" ];
 	const latest = document.querySelector("input[name=latest]:checked").value;
 	params = toField(params, field);
 	params.latest = JSON.parse(latest);

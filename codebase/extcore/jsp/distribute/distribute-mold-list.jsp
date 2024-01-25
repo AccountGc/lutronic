@@ -204,6 +204,7 @@ WTUser user = (WTUser) request.getAttribute("sessionUser");
 					filter : {
 						inline : false
 					},
+					sortable : false
 				}, {
 					dataField : "number",
 					headerText : "금형번호",
