@@ -434,7 +434,7 @@ public class PartController extends BaseController {
 	@Description(value = "품목 수정")
 	@ResponseBody
 	@PostMapping(value = "/update")
-	public Map<String, Object> updatePartAction(@RequestBody Map<String, Object> params) throws Exception {
+	public Map<String, Object> update(@RequestBody Map<String, Object> params) throws Exception {
 		Map<String, Object> result = PartHelper.service.updatePartAction(params);
 		if ((boolean) result.get("result")) {
 			result.put("oid", result.get("oid"));

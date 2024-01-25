@@ -182,7 +182,7 @@ boolean isAdmin = (boolean) request.getAttribute("isAdmin");
 						jsCallback : function(rowIndex, columnIndex, value, item) {
 							const oid = item.oid;
 							const url = getCallUrl("/ecn/view?oid=" + oid);
-							_popup(url, 1600, 500, "n");
+							_popup(url, 1600, 800, "n");
 						}
 					},
 				}, {

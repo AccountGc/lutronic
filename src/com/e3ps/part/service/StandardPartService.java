@@ -562,10 +562,11 @@ public class StandardPartService extends StandardManager implements PartService 
 				part = (WTPart) PersistenceHelper.manager.refresh(part);
 
 				// 제품분류에 따라 폴더설정
-				String fid = StringUtil.checkNull((String) params.get("fid")); // 분류체계
+				String fid = StringUtil.checkNull((String) params.get("location")); // 분류체계
 
 				if (fid.length() > 0) {
-					Folder folder = (Folder) CommonUtil.getObject(fid);
+//					Folder folder = (Folder) CommonUtil.getObject(fid);
+					Folder folder = FolderTaskLogic.getFolder(fid, WCUtil.getWTContainerRef());
 					part = (WTPart) FolderHelper.service.changeFolder((FolderEntry) part, folder);
 				}
 

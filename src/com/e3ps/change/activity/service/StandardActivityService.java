@@ -855,10 +855,12 @@ public class StandardActivityService extends StandardManager implements Activity
 					System.out.println("i=" + i + ", model = " + value);
 					if (end.size() - 1 == i) {
 						if (!modelList.contains(value)) {
+							modelList.add(value);
 							model += value;
 						}
 					} else {
 						if (!modelList.contains(value)) {
+							modelList.add(value);
 							model += value + ",";
 						}
 					}
