@@ -90,15 +90,15 @@ public class IndexController extends BaseController {
 		int eca = ActivityHelper.manager.count();
 		Map<String, Integer> count = WorkspaceHelper.manager.count();
 
-		QueryResult crQr = CrHelper.manager.getMyCr(oid);
-		QueryResult ecprQr = EcprHelper.manager.getMyEcpr(oid);
-		QueryResult ecrmQr = EcrmHelper.manager.getMyEcrm(oid);
-		QueryResult ecoQr = EcoHelper.manager.getMyEco(oid);
+//		QueryResult crQr = CrHelper.manager.getMyCr(oid);
+//		QueryResult ecprQr = EcprHelper.manager.getMyEcpr(oid);
+//		QueryResult ecrmQr = EcrmHelper.manager.getMyEcrm(oid);
+//		QueryResult ecoQr = EcoHelper.manager.getMyEco(oid);
 
-		model.addObject("crQr", crQr);
-		model.addObject("ecprQr", ecprQr);
-		model.addObject("ecrmQr", ecrmQr);
-		model.addObject("ecoQr", ecoQr);
+//		model.addObject("crQr", crQr);
+//		model.addObject("ecprQr", ecprQr);
+//		model.addObject("ecrmQr", ecrmQr);
+//		model.addObject("ecoQr", ecoQr);
 
 		model.addObject("count", count);
 		model.addObject("workData", workData);

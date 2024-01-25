@@ -161,6 +161,21 @@ public class StandardAsmService extends StandardManager implements AsmService {
 			trs.start();
 
 			AsmApproval asm = (AsmApproval) CommonUtil.getObject(oid);
+
+			WorkData wd = WorkDataHelper.manager.getWorkData(asm);
+			if (wd != null) {
+				PersistenceHelper.manager.delete(wd);
+			}
+
+			ApprovalMaster mm = WorkspaceHelper.manager.getMaster(asm);
+			if (mm != null) {
+				ArrayList<ApprovalLine> lines = WorkspaceHelper.manager.getAllLines(mm);
+				for (ApprovalLine line : lines) {
+					PersistenceHelper.manager.delete(line);
+				}
+				PersistenceHelper.manager.delete(mm);
+			}
+
 			asm.setName(name);
 			asm.setDescription(description);
 			asm = (AsmApproval) PersistenceHelper.manager.modify(asm);
@@ -181,6 +196,9 @@ public class StandardAsmService extends StandardManager implements AsmService {
 				LifeCycleHelper.service.setLifeCycleState(doc, State.toState(asm.getLifeCycleState().toString()));
 				PersistenceHelper.manager.save(link);
 			}
+
+			// 결제선 지정 만들기
+			WorkDataHelper.service.create(asm);
 
 			trs.commit();
 			trs = null;

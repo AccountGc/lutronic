@@ -22,7 +22,8 @@ String title = (String) request.getAttribute("title");
 				<td class="left">
 					<div class="header">
 						<img src="/Windchill/extcore/images/header.png">
-						<%=title %> 일괄 결재
+						<%=title%>
+						일괄 결재
 					</div>
 				</td>
 			</tr>
@@ -41,7 +42,9 @@ String title = (String) request.getAttribute("title");
 			<tr>
 				<th class="lb">일괄 결재 설명</th>
 				<td class="indent5">
-					<textarea name="description" id="description" rows="6"></textarea>
+					<div class="textarea-auto">
+						<textarea name="description" id="description" rows="6"></textarea>
+					</div>
 				</td>
 			</tr>
 		</table>
@@ -69,10 +72,10 @@ String title = (String) request.getAttribute("title");
 		<script type="text/javascript">
 			let myGridID;
 			const columns = [ {
-				dataField : "interalnumber",
+				dataField : "number",
 				dataType : "string",
 				width : 120,
-				headerText : "내부문서번호",
+				headerText : "문서번호",
 			}, {
 				dataField : "number",
 				dataType : "string",
@@ -194,6 +197,7 @@ String title = (String) request.getAttribute("title");
 				toFocus("appName");
 				createAUIGrid(columns);
 				AUIGrid.resize(myGridID);
+				autoTextarea();
 			});
 
 			window.addEventListener("resize", function() {

@@ -3,9 +3,9 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%
 AsmDTO dto = (AsmDTO) request.getAttribute("dto");
-String location = (String)request.getAttribute("location");
+String location = (String) request.getAttribute("location");
 %>
-<input type="hidden" name="oid" id="oid" value="<%=dto.getOid() %>">
+<input type="hidden" name="oid" id="oid" value="<%=dto.getOid()%>">
 <input type="hidden" name="location" id="location" value="<%=location%>">
 <table class="button-table">
 	<tr>
@@ -129,6 +129,7 @@ String location = (String)request.getAttribute("location");
 
 		if (list.length === 0) {
 			alert("일괄결재 대상을 선택하세요.");
+			popup();
 			return false;
 		}
 
@@ -136,8 +137,10 @@ String location = (String)request.getAttribute("location");
 			return false;
 		}
 
+		const oid = document.getElementById("oid").value;
 		const params = {
-			appName : appName.value,
+			oid : oid,
+			name : appName.value,
 			description : description.value,
 			list : list,
 		}

@@ -40,7 +40,9 @@ String location = (String) request.getAttribute("location");
 			<tr>
 				<th class="lb">일괄 결재 설명</th>
 				<td class="indent5">
+					<div class="textarea-auto">
 					<textarea name="description" id="description" rows="6"></textarea>
+					</div>
 				</td>
 			</tr>
 		</table>
@@ -132,6 +134,7 @@ String location = (String) request.getAttribute("location");
 
 				if (list.length === 0) {
 					alert("일괄결재 대상을 선택하세요.");
+					popup();
 					return false;
 				}
 
@@ -203,6 +206,7 @@ String location = (String) request.getAttribute("location");
 				toFocus("appName");
 				createAUIGrid(columns);
 				AUIGrid.resize(myGridID);
+				autoTextarea();
 			});
 
 			window.addEventListener("resize", function() {
