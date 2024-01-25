@@ -271,45 +271,66 @@ public class PartHelper {
 		}
 
 		Folder folder = FolderTaskLogic.getFolder(location, WCUtil.getWTContainerRef());
-
-		if (!"/Default/PART_Drawing".equals(location)) {
-			if (query.getConditionCount() > 0) {
-				query.appendAnd();
-			}
-
-			int folder_idx = query.addClassList(IteratedFolderMemberLink.class, false);
-			SearchCondition sc1 = new SearchCondition(
-					new ClassAttribute(IteratedFolderMemberLink.class, "roleBObjectRef.key.branchId"),
-					SearchCondition.EQUAL, new ClassAttribute(WTPart.class, "iterationInfo.branchId"));
-			sc1.setFromIndicies(new int[] { folder_idx, idx }, 0);
-			sc1.setOuterJoin(0);
-			query.appendWhere(sc1, new int[] { folder_idx, idx });
-
+		int isQuery = PART_ROOT.indexOf(location);
+		if (query.getConditionCount() > 0) {
 			query.appendAnd();
-			ArrayList folders = CommonFolderHelper.service.getFolderTree(folder);
-			query.appendOpenParen();
-			query.appendWhere(new SearchCondition(IteratedFolderMemberLink.class, "roleAObjectRef.key.id",
-					SearchCondition.EQUAL, folder.getPersistInfo().getObjectIdentifier().getId()),
-					new int[] { folder_idx });
-
-			for (int fi = 0; fi < folders.size(); fi++) {
-				String[] s = (String[]) folders.get(fi);
-				Folder sf = (Folder) rf.getReference(s[2]).getObject();
-				query.appendOr();
-				query.appendWhere(
-						new SearchCondition(IteratedFolderMemberLink.class, "roleAObjectRef.key.id",
-								SearchCondition.EQUAL, sf.getPersistInfo().getObjectIdentifier().getId()),
-						new int[] { folder_idx });
-			}
-			query.appendCloseParen();
-		} else {
-			if (query.getConditionCount() > 0) {
-				query.appendAnd();
-			}
-			query.appendWhere(
-					new SearchCondition(WTPart.class, "master>number", SearchCondition.NOT_LIKE, "%DEL%", false),
-					new int[] { idx });
 		}
+
+		if (isQuery < 0) {
+			int f_idx = query.appendClassList(IteratedFolderMemberLink.class, false);
+			ClassAttribute fca = new ClassAttribute(IteratedFolderMemberLink.class, "roleBObjectRef.key.branchId");
+			SearchCondition fsc = new SearchCondition(fca, "=",
+					new ClassAttribute(WTPart.class, "iterationInfo.branchId"));
+			fsc.setFromIndicies(new int[] { f_idx, idx }, 0);
+			fsc.setOuterJoin(0);
+			query.appendWhere(fsc, new int[] { f_idx, idx });
+			query.appendAnd();
+
+			long fid = folder.getPersistInfo().getObjectIdentifier().getId();
+			query.appendWhere(new SearchCondition(IteratedFolderMemberLink.class, "roleAObjectRef.key.id", "=", fid),
+					new int[] { f_idx });
+		}
+		
+		
+
+//		if (!"/Default/PART_Drawing".equals(location)) {
+//			if (query.getConditionCount() > 0) {
+//				query.appendAnd();
+//			}
+//
+//			int folder_idx = query.addClassList(IteratedFolderMemberLink.class, false);
+//			SearchCondition sc1 = new SearchCondition(
+//					new ClassAttribute(IteratedFolderMemberLink.class, "roleBObjectRef.key.branchId"),
+//					SearchCondition.EQUAL, new ClassAttribute(WTPart.class, "iterationInfo.branchId"));
+//			sc1.setFromIndicies(new int[] { folder_idx, idx }, 0);
+//			sc1.setOuterJoin(0);
+//			query.appendWhere(sc1, new int[] { folder_idx, idx });
+//
+//			query.appendAnd();
+//			ArrayList folders = CommonFolderHelper.service.getFolderTree(folder);
+//			query.appendOpenParen();
+//			query.appendWhere(new SearchCondition(IteratedFolderMemberLink.class, "roleAObjectRef.key.id",
+//					SearchCondition.EQUAL, folder.getPersistInfo().getObjectIdentifier().getId()),
+//					new int[] { folder_idx });
+//
+//			for (int fi = 0; fi < folders.size(); fi++) {
+//				String[] s = (String[]) folders.get(fi);
+//				Folder sf = (Folder) rf.getReference(s[2]).getObject();
+//				query.appendOr();
+//				query.appendWhere(
+//						new SearchCondition(IteratedFolderMemberLink.class, "roleAObjectRef.key.id",
+//								SearchCondition.EQUAL, sf.getPersistInfo().getObjectIdentifier().getId()),
+//						new int[] { folder_idx });
+//			}
+//			query.appendCloseParen();
+//		} else {
+//			if (query.getConditionCount() > 0) {
+//				query.appendAnd();
+//			}
+//			query.appendWhere(
+//					new SearchCondition(WTPart.class, "master>number", SearchCondition.NOT_LIKE, "%DEL%", false),
+//					new int[] { idx });
+//		}
 
 		// 최신 이터레이션.
 		if (latest) {

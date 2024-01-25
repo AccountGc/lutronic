@@ -193,19 +193,26 @@ public class DocumentHelper {
 		QuerySpecUtils.toIBAEqualsAnd(query, WTDocument.class, idx, "DSGN", writer);
 
 		Folder folder = FolderTaskLogic.getFolder(location, WCUtil.getWTContainerRef());
-//		if (query.getConditionCount() > 0) {
-//			query.appendAnd();
-//		}
+		int isQuery = DOCUMENT_ROOT.indexOf(location);
+		if (query.getConditionCount() > 0) {
+			query.appendAnd();
+		}
 
-//		int f_idx = query.appendClassList(IteratedFolderMemberLink.class, false);
-//		ClassAttribute fca = new ClassAttribute(IteratedFolderMemberLink.class, "roleBObjectRef.key.branchId");
-//		SearchCondition fsc = new SearchCondition(fca, "=",
-//				new ClassAttribute(WTDocument.class, "iterationInfo.branchId"));
-//		fsc.setFromIndicies(new int[] { f_idx, idx }, 0);
-//		fsc.setOuterJoin(0);
-//		query.appendWhere(fsc, new int[] { f_idx, idx });
-//		query.appendAnd();
-//
+		if (isQuery < 0) {
+			int f_idx = query.appendClassList(IteratedFolderMemberLink.class, false);
+			ClassAttribute fca = new ClassAttribute(IteratedFolderMemberLink.class, "roleBObjectRef.key.branchId");
+			SearchCondition fsc = new SearchCondition(fca, "=",
+					new ClassAttribute(WTDocument.class, "iterationInfo.branchId"));
+			fsc.setFromIndicies(new int[] { f_idx, idx }, 0);
+			fsc.setOuterJoin(0);
+			query.appendWhere(fsc, new int[] { f_idx, idx });
+			query.appendAnd();
+
+			long fid = folder.getPersistInfo().getObjectIdentifier().getId();
+			query.appendWhere(new SearchCondition(IteratedFolderMemberLink.class, "roleAObjectRef.key.id", "=", fid),
+					new int[] { f_idx });
+		}
+
 //		query.appendOpenParen();
 //		long fid = folder.getPersistInfo().getObjectIdentifier().getId();
 //		query.appendWhere(new SearchCondition(IteratedFolderMemberLink.class, "roleAObjectRef.key.id", "=", fid),

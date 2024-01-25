@@ -116,35 +116,25 @@ public class DrawingHelper {
 		String sortType = (String) params.get("sortType");
 
 		Folder folder = FolderTaskLogic.getFolder(location, WCUtil.getWTContainerRef());
-
+		int isQuery = PART_ROOT.indexOf(location);
 		if (query.getConditionCount() > 0) {
 			query.appendAnd();
 		}
 
-		int folder_idx = query.addClassList(IteratedFolderMemberLink.class, false);
-		SearchCondition sc1 = new SearchCondition(
-				new ClassAttribute(IteratedFolderMemberLink.class, "roleBObjectRef.key.branchId"),
-				SearchCondition.EQUAL, new ClassAttribute(EPMDocument.class, "iterationInfo.branchId"));
-		sc1.setFromIndicies(new int[] { folder_idx, idx }, 0);
-		sc1.setOuterJoin(0);
-		query.appendWhere(sc1, new int[] { folder_idx, idx });
+		if (isQuery < 0) {
+			int f_idx = query.appendClassList(IteratedFolderMemberLink.class, false);
+			ClassAttribute fca = new ClassAttribute(IteratedFolderMemberLink.class, "roleBObjectRef.key.branchId");
+			SearchCondition fsc = new SearchCondition(fca, "=",
+					new ClassAttribute(EPMDocument.class, "iterationInfo.branchId"));
+			fsc.setFromIndicies(new int[] { f_idx, idx }, 0);
+			fsc.setOuterJoin(0);
+			query.appendWhere(fsc, new int[] { f_idx, idx });
+			query.appendAnd();
 
-		query.appendAnd();
-		ArrayList folders = CommonFolderHelper.service.getFolderTree(folder);
-		query.appendOpenParen();
-		query.appendWhere(new SearchCondition(IteratedFolderMemberLink.class, "roleAObjectRef.key.id",
-				SearchCondition.EQUAL, folder.getPersistInfo().getObjectIdentifier().getId()),
-				new int[] { folder_idx });
-
-		for (int fi = 0; fi < folders.size(); fi++) {
-			String[] s = (String[]) folders.get(fi);
-			Folder sf = (Folder) rf.getReference(s[2]).getObject();
-			query.appendOr();
-			query.appendWhere(new SearchCondition(IteratedFolderMemberLink.class, "roleAObjectRef.key.id",
-					SearchCondition.EQUAL, sf.getPersistInfo().getObjectIdentifier().getId()),
-					new int[] { folder_idx });
+			long fid = folder.getPersistInfo().getObjectIdentifier().getId();
+			query.appendWhere(new SearchCondition(IteratedFolderMemberLink.class, "roleAObjectRef.key.id", "=", fid),
+					new int[] { f_idx });
 		}
-		query.appendCloseParen();
 
 		// Working Copy 제외
 		if (query.getConditionCount() > 0) {
@@ -463,19 +453,19 @@ public class DrawingHelper {
 	}
 
 	private String toSortKey(String sortKey) throws Exception {
-		if("name".equals(sortKey)) {
+		if ("name".equals(sortKey)) {
 			return EPMDocument.NAME;
-		} else if("cadType".equals(sortKey)) {
+		} else if ("cadType".equals(sortKey)) {
 			return EPMDocument.DOC_TYPE;
-		} else if("number".equals(sortKey)) {
+		} else if ("number".equals(sortKey)) {
 			return EPMDocument.NUMBER;
-		} else if("state".equals(sortKey)) {
+		} else if ("state".equals(sortKey)) {
 			return EPMDocument.LIFE_CYCLE_STATE;
-		} else if("creator".equals(sortKey)) {
+		} else if ("creator".equals(sortKey)) {
 			return (EPMDocument.CREATOR + "." + WTAttributeNameIfc.REF_OBJECT_ID);
-		} else if("createdDate".equals(sortKey)) {
+		} else if ("createdDate".equals(sortKey)) {
 			return EPMDocument.CREATE_TIMESTAMP;
-		} else if("modifiedDate".equals(sortKey)) {
+		} else if ("modifiedDate".equals(sortKey)) {
 			return EPMDocument.MODIFY_TIMESTAMP;
 		}
 		return EPMDocument.CREATE_TIMESTAMP;
