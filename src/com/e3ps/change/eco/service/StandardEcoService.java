@@ -55,6 +55,7 @@ import wt.pom.Transaction;
 import wt.query.QuerySpec;
 import wt.query.SearchCondition;
 import wt.services.StandardManager;
+import wt.session.SessionContext;
 import wt.session.SessionHelper;
 import wt.util.WTException;
 import wt.vc.VersionControlHelper;
@@ -516,9 +517,14 @@ public class StandardEcoService extends StandardManager implements EcoService {
 
 	@Override
 	public void ecoPartApproved(EChangeOrder eco) throws Exception {
+
+		SessionContext prev = SessionContext.newContext();
+
 		Transaction trs = new Transaction();
 		try {
 			trs.start();
+
+			SessionHelper.manager.setAdministrator();
 
 			State approved = State.toState("APPROVED");
 			QueryResult qr = PersistenceHelper.manager.navigate(eco, "part", EcoPartLink.class, false);
@@ -577,6 +583,7 @@ public class StandardEcoService extends StandardManager implements EcoService {
 		} finally {
 			if (trs != null)
 				trs.rollback();
+			SessionContext.setContext(prev);
 		}
 	}
 
