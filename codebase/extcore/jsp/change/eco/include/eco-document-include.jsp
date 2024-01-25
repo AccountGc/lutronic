@@ -27,6 +27,7 @@ boolean header = Boolean.parseBoolean(request.getParameter("header"));
 			<%
 			if (create || update) {
 			%>
+			<input type="button" value="저장" title="저장" class="gray" onclick="save90();">
 			<input type="button" value="추가" title="추가" class="blue" onclick="popup90();">
 			<input type="button" value="삭제" title="삭제" class="red" onclick="deleteRow90();">
 			<%
@@ -177,6 +178,34 @@ if (header) {
 		AUIGrid.setGridData(myGridID90, <%=AUIGridUtil.include(oid, "doc")%>);
 		<%}%>
 	}
+	
+	function save90() {
+		const addRows = AUIGrid.getGridData(myGridID90);
+		if(addRows.length === 0) {
+			alert("추가된 문서가 없습니다.");
+			return false;
+		}
+		
+		if(!confirm("저장 하시겠습니까?")) {
+			return false;
+		}
+		const url = getCallUrl("/eco/save90");
+		
+		const params = {
+			addRows : addRows,
+			oid : "<%=oid%>"
+		};
+		logger(params);
+		openLayer();
+		call(url, params, function(data) {
+			alert(data.msg);
+			if(data.result) {
+				document.location.reload();
+			}
+			closeLayer();
+		})
+	}
+	
 
 	// 추가 버튼 클릭 시 팝업창 메서드
 	function popup90() {

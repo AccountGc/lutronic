@@ -170,7 +170,7 @@ boolean isAdmin = (boolean) request.getAttribute("isAdmin");
 			</tr>
 		</table>
 		<!-- 	관련 문서 -->
-		<jsp:include page="/extcore/jsp/document/include/document-include.jsp">
+		<jsp:include page="/extcore/jsp/change/eco/include/eco-document-include.jsp">
 			<jsp:param value="<%=dto.getOid()%>" name="oid" />
 			<jsp:param value="update" name="mode" />
 			<jsp:param value="true" name="multi" />

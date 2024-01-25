@@ -8,6 +8,7 @@
 <%
 String oid = request.getParameter("oid");
 ArrayList<Map<String, Object>> list = EChangeUtils.manager.summary(oid);
+boolean isAdmin = CommonUtil.isAdmin();
 %>
 
 <%
@@ -73,6 +74,13 @@ for (int i = 0; i < list.size(); i++) {
 		<td colspan="5" style="padding-left: 11px;">
 			<table class="view-table" style="margin: 5px 0px 5px -5px;">
 				<colgroup>
+					<%
+					if (isAdmin) {
+					%>
+					<col width="60">
+					<%
+					}
+					%>
 					<col width="180">
 					<col width="*">
 					<col width="80">
@@ -82,6 +90,13 @@ for (int i = 0; i < list.size(); i++) {
 					<col width="100">
 				</colgroup>
 				<tr>
+					<%
+					if (isAdmin) {
+					%>
+					<th class="lb">&nbsp;</th>
+					<%
+					}
+					%>
 					<th class="lb">내부문서번호</th>
 					<th class="lb">문서제목</th>
 					<th class="lb">상태</th>
@@ -95,9 +110,19 @@ for (int i = 0; i < list.size(); i++) {
 				for (int k = 0; k < arr.size(); k++) {
 					JSONObject node = (JSONObject) arr.get(k);
 					String _oid = (String) node.get("oid");
+					String link = (String) node.get("link");
 					String url = "/Windchill/plm/doc/view?oid=" + _oid;
 				%>
 				<tr>
+					<%
+					if (isAdmin) {
+					%>
+					<td class="center">
+						<img src="/Windchill/extcore/images/delete.png" class="delete" title="삭제" onclick="_delete('<%=link%>');">
+					</td>
+					<%
+					}
+					%>
 					<td class="center">
 						<a href="javascript:_popup('<%=url%>', 1600, 800, 'n');">
 							<%=node.get("number")%>
@@ -132,7 +157,7 @@ if (i != list.size() - 1) {
 }
 %>
 <%
-	if(list.size() == 0) {
+if (list.size() == 0) {
 %>
 <table class="button-table">
 	<tr>
@@ -161,5 +186,24 @@ if (i != list.size() - 1) {
 	</tr>
 </table>
 <%
-	}
+}
 %>
+<script type="text/javascript">
+	function _delete(oid) {
+		if(!confirm("해당 산출물을 삭제 하시겠습니까?")) {
+			return false;
+		}
+		const params ={
+			oid : oid
+		}
+		const url = getCallUrl("/eco/removeLink");
+		openLayer();
+		call(url, params, function(data) {
+			alert(data.msg);
+			if (data.result) {
+				document.location.reload();
+			}
+			closeLayer();
+		})
+	}
+</script>

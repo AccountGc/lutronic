@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Vector;
 
+import com.e3ps.change.DocumentActivityLink;
 import com.e3ps.change.EChangeActivity;
 import com.e3ps.change.EChangeOrder;
 import com.e3ps.change.EChangeRequest;
@@ -22,6 +23,7 @@ import com.e3ps.common.util.CommonUtil;
 import com.e3ps.common.util.DateUtil;
 import com.e3ps.common.util.StringUtil;
 import com.e3ps.common.util.WCUtil;
+import com.e3ps.doc.DocumentECOLink;
 import com.e3ps.org.service.MailUserHelper;
 import com.e3ps.part.service.PartHelper;
 import com.e3ps.workspace.ApprovalLine;
@@ -34,6 +36,7 @@ import wt.content.ContentHelper;
 import wt.content.ContentItem;
 import wt.content.ContentRoleType;
 import wt.content.ContentServerHelper;
+import wt.doc.WTDocument;
 import wt.epm.EPMDocument;
 import wt.fc.PersistenceHelper;
 import wt.fc.PersistenceServerHelper;
@@ -613,6 +616,63 @@ public class StandardEcoService extends StandardManager implements EcoService {
 
 				PersistenceHelper.manager.modify(eLink);
 			}
+
+			trs.commit();
+			trs = null;
+		} catch (Exception e) {
+			e.printStackTrace();
+			trs.rollback();
+			throw e;
+		} finally {
+			if (trs != null)
+				trs.rollback();
+		}
+	}
+
+	@Override
+	public void save90(Map<String, Object> params) throws Exception {
+		String oid = (String) params.get("oid");
+		ArrayList<Map<String, Object>> addRows = (ArrayList<Map<String, Object>>) params.get("addRows");
+		Transaction trs = new Transaction();
+		try {
+			trs.start();
+
+			EChangeOrder eco = (EChangeOrder) CommonUtil.getObject(oid);
+			// 기존꺼 삭제
+			QueryResult qr = PersistenceHelper.manager.navigate(eco, "document", DocumentECOLink.class, false);
+			while (qr.hasMoreElements()) {
+				DocumentECOLink l = (DocumentECOLink) qr.nextElement();
+				PersistenceHelper.manager.delete(l);
+			}
+
+			for (Map<String, Object> m : addRows) {
+				String s = (String) m.get("oid");
+				WTDocument doc = (WTDocument) CommonUtil.getObject(s);
+				DocumentECOLink link = DocumentECOLink.newDocumentECOLink(doc, eco);
+				PersistenceHelper.manager.save(link);
+			}
+
+			trs.commit();
+			trs = null;
+		} catch (Exception e) {
+			e.printStackTrace();
+			trs.rollback();
+			throw e;
+		} finally {
+			if (trs != null)
+				trs.rollback();
+		}
+	}
+
+	@Override
+	public void removeLink(Map<String, Object> params) throws Exception {
+		String oid = (String) params.get("oid");
+		Transaction trs = new Transaction();
+		try {
+			trs.start();
+
+			DocumentActivityLink link = (DocumentActivityLink) CommonUtil.getObject(oid);
+			PersistenceHelper.manager.delete(link);
 
 			trs.commit();
 			trs = null;

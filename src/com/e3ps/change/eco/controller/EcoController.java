@@ -226,7 +226,7 @@ public class EcoController extends BaseController {
 		model.setViewName("popup:/change/eco/eco-sap-resultPage");
 		return model;
 	}
-	
+
 	@Description(value = "설변품목 정보 저장")
 	@PostMapping(value = "/save")
 	@ResponseBody
@@ -242,6 +242,40 @@ public class EcoController extends BaseController {
 			EcoHelper.service.save(dataMap);
 			result.put("result", SUCCESS);
 			result.put("msg", SAVE_MSG);
+		} catch (Exception e) {
+			e.printStackTrace();
+			result.put("result", FAIL);
+			result.put("msg", e.toString());
+		}
+		return result;
+	}
+
+	@Description(value = "설변 관련 문서 저장")
+	@PostMapping(value = "/save90")
+	@ResponseBody
+	public Map<String, Object> save90(@RequestBody Map<String, Object> params) throws Exception {
+		Map<String, Object> result = new HashMap<String, Object>();
+		try {
+			EcoHelper.service.save90(params);
+			result.put("result", SUCCESS);
+			result.put("msg", SAVE_MSG);
+		} catch (Exception e) {
+			e.printStackTrace();
+			result.put("result", FAIL);
+			result.put("msg", e.toString());
+		}
+		return result;
+	}
+	
+	@Description(value = "산출물 삭제")
+	@PostMapping(value = "/removeLink")
+	@ResponseBody
+	public Map<String, Object> removeLink(@RequestBody Map<String, Object> params) throws Exception {
+		Map<String, Object> result = new HashMap<String, Object>();
+		try {
+			EcoHelper.service.removeLink(params);
+			result.put("result", SUCCESS);
+			result.put("msg", DELETE_MSG);
 		} catch (Exception e) {
 			e.printStackTrace();
 			result.put("result", FAIL);

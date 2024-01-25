@@ -3,6 +3,7 @@ package com.e3ps.change.eco.service;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
+import java.util.Map;
 
 import com.e3ps.change.EChangeOrder;
 import com.e3ps.change.EOCompletePartLink;
@@ -48,5 +49,15 @@ public interface EcoService {
 	 * 설변 품목 창에서 통보서를 위한 저장
 	 */
 	public abstract void save(HashMap<String, ArrayList<LinkedHashMap<String, Object>>> dataMap) throws Exception;
+
+	/**
+	 * 설변 관련 문서
+	 */
+	public abstract void save90(Map<String, Object> params) throws Exception;
+
+	/**
+	 * 산출물 삭제
+	 */
+	public abstract void removeLink(Map<String, Object> params) throws Exception;
 
 }
