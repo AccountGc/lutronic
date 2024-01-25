@@ -17,4 +17,9 @@ public interface AsmService {
 	 */
 	public abstract void delete(String oid) throws Exception;
 
+	/**
+	 * 일괄 결재 수정
+	 */
+	public abstract void modify(Map<String, Object> params)throws Exception;
+
 }

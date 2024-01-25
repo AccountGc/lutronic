@@ -388,7 +388,13 @@ public class NumberCodeHelper {
 		}
 
 		QuerySpecUtils.toBooleanAnd(query, idx, NumberCode.class, NumberCode.DISABLED, false);
-		QuerySpecUtils.toOrderBy(query, idx, NumberCode.class, NumberCode.SORT, false);
+
+		if ("MODEL".equals(codeType)) {
+			QuerySpecUtils.toOrderBy(query, idx, NumberCode.class, NumberCode.NAME, false);
+		} else {
+			QuerySpecUtils.toOrderBy(query, idx, NumberCode.class, NumberCode.SORT, false);
+		}
+
 		QueryResult result = PersistenceHelper.manager.find(query);
 		while (result.hasMoreElements()) {
 			Object[] obj = (Object[]) result.nextElement();

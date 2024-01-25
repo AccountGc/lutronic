@@ -23,8 +23,9 @@ public class AsmDTO {
 	private String description;
 	private String type;
 	private JSONArray data = new JSONArray();
-	
+
 	private boolean _delete = false;
+	private boolean _modify = false;
 
 	public AsmDTO() {
 
@@ -47,14 +48,19 @@ public class AsmDTO {
 		setModifiedDate_text(asm.getModifyTimestamp().toString().substring(0, 16));
 		setAuth(asm);
 	}
-	
+
 	private void setAuth(AsmApproval asm) throws Exception {
 		WTUser user = CommonUtil.sessionUser();
 		boolean isCreator = user.getName().equals(asm.getCreatorName());
 		boolean isApproved = asm.getLifeCycleState().toString().equals("APPROVED");
+		boolean isLine = asm.getLifeCycleState().toString().equals("LINE_REGISTER");
 		boolean isAdmin = CommonUtil.isAdmin();
-		if((isAdmin || isCreator) && !isApproved) {
+		if ((isAdmin || isCreator) && !isApproved) {
 			set_delete(true);
+		}
+
+		if ((isAdmin || isCreator) && isLine) {
+			set_modify(true);
 		}
 	}
 }

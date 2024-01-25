@@ -4,19 +4,27 @@
 boolean isAdmin = (boolean) request.getAttribute("isAdmin");
 AsmDTO dto = (AsmDTO) request.getAttribute("dto");
 String title = (String) request.getAttribute("title");
+String type = (String) request.getAttribute("type");
 %>
 <input type="hidden" name="oid" id="oid" value="<%=dto.getOid()%>">
+<input type="hidden" name="type" id="type" value="<%=type%>">
 
 <table class="button-table">
 	<tr>
 		<td class="left">
 			<div class="header">
 				<img src="/Windchill/extcore/images/header.png">
-				<%=title %> 일괄결재 상세보기
+				<%=title%>
+				일괄결재 상세보기
 			</div>
 		</td>
 		<td class="right">
 			<%
+			if (dto.is_modify()) {
+			%>
+			<input type="button" value="수정" title="수정" class="gray" onclick="modify();">
+			<%
+			}
 			if (dto.is_delete()) {
 			%>
 			<input type="button" value="삭제" title="삭제" class="red" onclick="_delete();">
@@ -36,9 +44,13 @@ String title = (String) request.getAttribute("title");
 		<col width="430">
 	</colgroup>
 	<tr>
-		<th class="lb"><%=title %> 일괄결재제목</th>
+		<th class="lb"><%=title%>
+			일괄결재제목
+		</th>
 		<td class="indent5"><%=dto.getName()%></td>
-		<th><%=title %> 일괄결재번호</th>
+		<th><%=title%>
+			일괄결재번호
+		</th>
 		<td class="indent5"><%=dto.getNumber()%></td>
 	</tr>
 	<tr>
@@ -92,7 +104,7 @@ String title = (String) request.getAttribute("title");
 				const url = item.viewUrl;
 				_popup(url, "", "", "f");
 			}
-		},		
+		},
 	}, {
 		dataField : "name",
 		headerText : "제목",
@@ -105,7 +117,7 @@ String title = (String) request.getAttribute("title");
 				const url = item.viewUrl;
 				_popup(url, "", "", "f");
 			}
-		},		
+		},
 	}, {
 		dataField : "state",
 		headerText : "상태",
@@ -162,6 +174,13 @@ String title = (String) request.getAttribute("title");
 			}
 			closeLayer();
 		}, "DELETE");
+	}
+
+	function modify() {
+		const oid = document.getElementById("oid").value;
+		const type = document.getElementById("type").value;
+		const url = getCallUrl("/asm/modify?oid=" + oid + "&type=" + type);
+		document.location.href = url;
 	}
 
 	document.addEventListener("DOMContentLoaded", function() {

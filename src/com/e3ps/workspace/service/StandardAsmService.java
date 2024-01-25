@@ -112,7 +112,6 @@ public class StandardAsmService extends StandardManager implements AsmService {
 		try {
 			trs.start();
 
-			System.out.println("oid=" + oid);
 			AsmApproval asm = (AsmApproval) CommonUtil.getObject(oid);
 
 			WorkData wd = WorkDataHelper.manager.getWorkData(asm);
@@ -139,6 +138,49 @@ public class StandardAsmService extends StandardManager implements AsmService {
 			}
 
 			PersistenceHelper.manager.delete(asm);
+
+			trs.commit();
+			trs = null;
+		} catch (Exception e) {
+			e.printStackTrace();
+			trs.rollback();
+			throw e;
+		} finally {
+			if (trs != null)
+				trs.rollback();
+		}
+	}
+
+	@Override
+	public void modify(Map<String, Object> params) throws Exception {
+		String oid = (String) params.get("oid");
+		String name = (String) params.get("name");
+		String description = (String) params.get("description");
+		Transaction trs = new Transaction();
+		try {
+			trs.start();
+
+			AsmApproval asm = (AsmApproval) CommonUtil.getObject(oid);
+			asm.setName(name);
+			asm.setDescription(description);
+			asm = (AsmApproval) PersistenceHelper.manager.modify(asm);
+
+			ArrayList<Map<String, Object>> list = (ArrayList<Map<String, Object>>) params.get("list");
+
+			// 기존꺼 삭제
+			QueryResult qr = PersistenceHelper.manager.navigate(asm, "persistable", AppPerLink.class, false);
+			while (qr.hasMoreElements()) {
+				AppPerLink link = (AppPerLink) qr.nextElement();
+				PersistenceHelper.manager.delete(link);
+			}
+
+			for (Map<String, Object> map : list) {
+				String s = (String) map.get("oid");
+				WTDocument doc = (WTDocument) CommonUtil.getObject(s);
+				AppPerLink link = AppPerLink.newAppPerLink(doc, asm);
+				LifeCycleHelper.service.setLifeCycleState(doc, State.toState(asm.getLifeCycleState().toString()));
+				PersistenceHelper.manager.save(link);
+			}
 
 			trs.commit();
 			trs = null;

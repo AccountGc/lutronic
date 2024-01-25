@@ -116,22 +116,28 @@ public class AsmController extends BaseController {
 		AsmDTO dto = new AsmDTO(oid);
 		String number = dto.getNumber();
 		String title = "";
-		
-		if(number.startsWith("NDBT")) {
+		String type = "";
+		if (number.startsWith("NDBT")) {
 			title = "문서";
-		} else if(number.startsWith("ROHSBT")) {
+			type = "DOC";
+		} else if (number.startsWith("ROHSBT")) {
 			title = "RoHS";
-		} else if(number.startsWith("MMBT")) {
+			type = "ROHS";
+		} else if (number.startsWith("MMBT")) {
 			title = "금형";
-		} else if(number.startsWith("CMBT")) {
+			type = "MOLD";
+		} else if (number.startsWith("CMBT")) {
 			title = "화장품";
-		} else if(number.startsWith("BMBT")) {
+			type = "COSMETIC";
+		} else if (number.startsWith("BMBT")) {
 			title = "임상개발";
-		} else if(number.startsWith("AMBT")) {
+			type = "CLINICAL";
+		} else if (number.startsWith("AMBT")) {
 			title = "병리연구";
+			type = "PATHOLOGICAL";
 		}
-		
 
+		model.addObject("type", type);
 		model.addObject("title", title);
 		model.addObject("isAdmin", isAdmin);
 		model.addObject("dto", dto);
@@ -169,7 +175,7 @@ public class AsmController extends BaseController {
 		model.addObject("type", type);
 		return model;
 	}
-	
+
 	@Description(value = "일괄결재 삭제 함수")
 	@ResponseBody
 	@DeleteMapping(value = "/delete")
@@ -178,6 +184,59 @@ public class AsmController extends BaseController {
 		try {
 			AsmHelper.service.delete(oid);
 			result.put("msg", DELETE_MSG);
+			result.put("result", SUCCESS);
+		} catch (Exception e) {
+			e.printStackTrace();
+			result.put("result", FAIL);
+			result.put("msg", e.toString());
+		}
+		return result;
+	}
+
+	@Description(value = "일괄결재 수정")
+	@GetMapping(value = "/modify")
+	public ModelAndView modify(@RequestParam String oid, @RequestParam String type) throws Exception {
+		ModelAndView model = new ModelAndView();
+		boolean isAdmin = CommonUtil.isAdmin();
+		AsmDTO dto = new AsmDTO(oid);
+		String title = "";
+		String location = EtcHelper.manager.getLocation(type);
+		if ("DOC".equals(type)) {
+			title = "문서";
+			model.setViewName("popup:/document/document-asm-modify");
+		} else if ("MOLD".equals(type)) {
+			title = "금형";
+			model.setViewName("popup:/rmold/mold-asm-modify");
+		} else if ("ROHS".equals(type)) {
+			title = "RoHS";
+			model.setViewName("popup:/rohs/rohs-asm-modify");
+		} else if ("COSMETIC".equals(type)) {
+			title = "화장품";
+			model.setViewName("popup:/document/etc/etc-asm-modify");
+		} else if ("CLINICAL".equals(type)) {
+			title = "임상개발";
+			model.setViewName("popup:/document/etc/etc-asm-modify");
+		} else if ("PATHOLOGICAL".equals(type)) {
+			title = "병리연구";
+			model.setViewName("popup:/document/etc/etc-asm-modify");
+		}
+
+		model.addObject("title", title);
+		model.addObject("location", location);
+		model.addObject("isAdmin", isAdmin);
+		model.addObject("dto", dto);
+//		model.setViewName("popup:/workspace/asm-modify");
+		return model;
+	}
+
+	@Description(value = "일괄결재 수정 함수")
+	@ResponseBody
+	@PostMapping(value = "/modify")
+	public Map<String, Object> modify(@RequestBody Map<String, Object> params) throws Exception {
+		Map<String, Object> result = new HashMap<String, Object>();
+		try {
+			AsmHelper.service.modify(params);
+			result.put("msg", MODIFY_MSG);
 			result.put("result", SUCCESS);
 		} catch (Exception e) {
 			e.printStackTrace();
