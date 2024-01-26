@@ -25,8 +25,7 @@ EpmData dto = (EpmData) request.getAttribute("dto");
 					</div>
 				</td>
 				<td class="right">
-					<input type="button" value="수정" title="수정" class="blue" onclick="update('false');">
-					<input type="button" value="임시저장" title="임시저장" class="" onclick="update('true');">
+					<input type="button" value="수정완료" title="수정완료" class="blue" onclick="update('false');">
 					<input type="button" value="닫기" title="닫기" class="gray" onclick="self.close();">
 				</td>
 			</tr>
@@ -102,8 +101,7 @@ EpmData dto = (EpmData) request.getAttribute("dto");
 		<table class="button-table">
 			<tr>
 				<td class="center">
-					<input type="button" value="수정" title="수정" class="blue" onclick="update('false');">
-					<input type="button" value="임시저장" title="임시저장" class="" onclick="update('true');">
+					<input type="button" value="수정완료" title="수정완료" class="blue" onclick="update('false');">
 					<input type="button" value="닫기" title="닫기" class="gray" onclick="self.close();">
 				</td>
 			</tr>
@@ -132,10 +130,10 @@ EpmData dto = (EpmData) request.getAttribute("dto");
 				const primary = document.querySelector("input[name=primary]");
 // 				const addRows8 = AUIGrid.getAddedRowItems(myGridID8);
 				
-				if (temprary) {
-					if (!confirm("임시저장하시겠습니까??")) {
-						return false;
-					}
+// 				if (temprary) {
+// 					if (!confirm("임시저장하시겠습니까??")) {
+// 						return false;
+// 					}
 					
 // 					if (addRows8.length > 0) {
 // 						alert("결재선 지정을 해지해주세요.")
