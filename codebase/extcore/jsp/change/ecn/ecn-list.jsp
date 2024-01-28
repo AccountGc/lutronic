@@ -272,15 +272,15 @@ boolean isAdmin = (boolean) request.getAttribute("isAdmin");
 							};
 						}
 					},
-				}, {
-					dataField : "creator",
-					headerText : "등록자",
-					dataType : "string",
-					width : 100,
-					cellMerge : true,
-					editable : false,
-					mergeRef : "number",
-					mergePolicy : "restrict",
+// 				}, {
+// 					dataField : "creator",
+// 					headerText : "등록자",
+// 					dataType : "string",
+// 					width : 100,
+// 					cellMerge : true,
+// 					editable : false,
+// 					mergeRef : "number",
+// 					mergePolicy : "restrict",
 				}, {
 					dataField : "createdDate",
 					headerText : "등록일",

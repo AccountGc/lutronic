@@ -12,6 +12,8 @@ import com.e3ps.groupware.notice.dto.NoticeDTO;
 import com.e3ps.rohs.ROHSMaterial;
 
 import wt.fc.PagingQueryResult;
+import wt.fc.PersistenceHelper;
+import wt.fc.QueryResult;
 import wt.query.QuerySpec;
 import wt.query.SearchCondition;
 import wt.services.ServiceFactory;
@@ -71,5 +73,24 @@ public class NoticeHelper {
 			return Notice.TITLE;
 		}
 		return Notice.CREATE_TIMESTAMP;
+	}
+
+	/**
+	 * 팝업 형태의 공지사항
+	 */
+	public ArrayList<NoticeDTO> cookie() throws Exception {
+		ArrayList<NoticeDTO> list = new ArrayList<NoticeDTO>();
+		QuerySpec query = new QuerySpec();
+		int idx = query.addClassList(Notice.class, true);
+		query.appendWhere(new SearchCondition(Notice.class, Notice.IS_POPUP, SearchCondition.IS_TRUE),
+				new int[] { idx });
+		QueryResult rt = PersistenceHelper.manager.find(query);
+		while (rt.hasMoreElements()) {
+			Object[] o = (Object[]) rt.nextElement();
+			Notice notice = (Notice) o[0];
+			NoticeDTO data = new NoticeDTO(notice);
+			list.add(data);
+		}
+		return list;
 	}
 }

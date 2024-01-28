@@ -19,12 +19,12 @@ boolean validate = dto.isValidate();
 		<input type="hidden" name="oid" id="oid" value="<%=dto.getOid()%>">
 		<input type="hidden" name="poid" id="poid" value="<%=dto.getPoid()%>">
 		<%
-			if(dto.isValidate()) {
-				// 검증..
+		if (dto.isValidate()) {
+			// 검증..
 		%>
-		<input type="hidden" name="validate" id="validate"> 
+		<input type="hidden" name="validate" id="validate">
 		<%
-			}
+		}
 		%>
 
 		<table class="button-table">
@@ -37,11 +37,11 @@ boolean validate = dto.isValidate();
 				</td>
 				<td class="right">
 					<%
-						if(validate) {
+					if (validate) {
 					%>
 					<input type="button" value="검증" title="검증" class="blue" onclick="validate();">
 					<%
-						}
+					}
 					%>
 					<input type="button" value="기안" title="기안" class="red" onclick="_submit();">
 					<input type="button" value="뒤로" title="뒤로" class="gray" onclick="history.go(-1);">
@@ -116,7 +116,6 @@ boolean validate = dto.isValidate();
 		</table>
 	</form>
 	<script type="text/javascript">
-	
 		// SAP 전송전 검증 단계
 		function validate() {
 			const url = getCallUrl("/sap/validate");
@@ -124,27 +123,39 @@ boolean validate = dto.isValidate();
 			parent.openLayer();
 			call(url, params, function(data) {
 				alert(data.msg);
-				if(data.result) {
-					
+				if (data.result) {
+
 				}
 				parent.closeLayer();
 			});
 		}
-	
+
 		function view(url) {
 			_popup(url, "", "", "f");
 		}
-	
+
 		function _submit() {
 			const oid = document.getElementById("oid").value;
 			const description = document.getElementById("description").value;
-			// 			const addRows8 = AUIGrid.getAddedRowItems(myGridID8);
-// 			const addRows8 = AUIGrid.getGridData(myGridID8);
 			const addRows8 = AUIGrid.getGridDataWithState(myGridID8, "gridState");
-			
+
+			const checker = [];
+			for (let i = 0; i < addRows8.length; i++) {
+				const type = addRows8[i].type;
+				if (type === "결재") {
+					checker.push(addRows8[i]);
+				}
+			}
+
 			if (addRows8.length === 0) {
 				alert("결재선을 지정하세요.");
-				addRows8();
+				popup8();
+				return false;
+			}
+
+			if (checker.length === 0) {
+				alert("결재라인은 반드시 하나 이상 지정해야합니다.");
+				popup8();
 				return false;
 			}
 
@@ -183,7 +194,7 @@ boolean validate = dto.isValidate();
 			parent.openLayer();
 			call(url, null, function(data) {
 				if (data.result) {
-// 					opener.loadGridData();
+					// 					opener.loadGridData();
 				} else {
 					alert(data.msg);
 				}

@@ -1263,11 +1263,9 @@ public class EcoHelper {
 			startRow = row;
 
 			ApprovalMaster master = WorkspaceHelper.manager.getMaster(eco);
-			ArrayList<ApprovalLine> lines = WorkspaceHelper.manager.getAllLines(master);
-
-//		List<Map<String, Object>> appList = GroupwareHelper.service.getApprovalList(oid);
-
-			for (ApprovalLine line : lines) {
+			// 합의 라인
+			ArrayList<ApprovalLine> agreeLines = WorkspaceHelper.manager.getAgreeLine(master);
+			for (ApprovalLine agreeLine : agreeLines) {
 
 				if (row > startRow) {
 					POIUtil.copyRow(workbook, sheet, (row - 1), 1);
@@ -1275,12 +1273,12 @@ public class EcoHelper {
 
 				// 이름 (B, 1)
 				XSSFCell name = sheet.getRow(row).getCell(1);
-				name.setCellValue(line.getOwnership().getOwner().getFullName());
+				name.setCellValue(agreeLine.getOwnership().getOwner().getFullName());
 
 				// 날짜 (D, 3)
 				String processDate = "";
-				if (line.getCompleteTime() != null) {
-					processDate = line.getCompleteTime().toString().substring(0, 10);
+				if (agreeLine.getCompleteTime() != null) {
+					processDate = agreeLine.getCompleteTime().toString().substring(0, 10);
 				}
 
 				XSSFCell date = sheet.getRow(row).getCell(3);
@@ -1288,10 +1286,10 @@ public class EcoHelper {
 
 				// 내용 (F, 5)
 				XSSFCell description = sheet.getRow(row).getCell(5);
-				description.setCellValue(line.getDescription() != null ? line.getDescription() : "");
+				description.setCellValue(agreeLine.getDescription() != null ? agreeLine.getDescription() : "");
 				XSSFRow comDescRow = (XSSFRow) sheet.getRow(row);
 				int descheight = comDescRow.getHeight();
-				String comdescd = line.getDescription() != null ? line.getDescription() : "";
+				String comdescd = agreeLine.getDescription() != null ? agreeLine.getDescription() : "";
 				if (null != comdescd) {
 					for (int i = 0; i < comdescd.length(); i++) {
 						char ca = comdescd.charAt(i);
@@ -1302,7 +1300,46 @@ public class EcoHelper {
 					}
 				}
 				comDescRow.setHeight((short) descheight);
+				row++;
+			}
 
+			// 결재라인
+			ArrayList<ApprovalLine> approvalLines = WorkspaceHelper.manager.getApprovalLines(master);
+			for (ApprovalLine appovalLine : approvalLines) {
+
+				if (row > startRow) {
+					POIUtil.copyRow(workbook, sheet, (row - 1), 1);
+				}
+
+				// 이름 (B, 1)
+				XSSFCell name = sheet.getRow(row).getCell(1);
+				name.setCellValue(appovalLine.getOwnership().getOwner().getFullName());
+
+				// 날짜 (D, 3)
+				String processDate = "";
+				if (appovalLine.getCompleteTime() != null) {
+					processDate = appovalLine.getCompleteTime().toString().substring(0, 10);
+				}
+
+				XSSFCell date = sheet.getRow(row).getCell(3);
+				date.setCellValue(processDate);
+
+				// 내용 (F, 5)
+				XSSFCell description = sheet.getRow(row).getCell(5);
+				description.setCellValue(appovalLine.getDescription() != null ? appovalLine.getDescription() : "");
+				XSSFRow comDescRow = (XSSFRow) sheet.getRow(row);
+				int descheight = comDescRow.getHeight();
+				String comdescd = appovalLine.getDescription() != null ? appovalLine.getDescription() : "";
+				if (null != comdescd) {
+					for (int i = 0; i < comdescd.length(); i++) {
+						char ca = comdescd.charAt(i);
+						Character careCa = Character.valueOf('\n');
+						if (ca == careCa) {
+							descheight += 350;
+						}
+					}
+				}
+				comDescRow.setHeight((short) descheight);
 				row++;
 			}
 

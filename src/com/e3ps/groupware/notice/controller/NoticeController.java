@@ -147,17 +147,20 @@ public class NoticeController extends BaseController {
 		return result;
 	}
 
-	@Description(value = "팝업 공지사항 불러오기")
+	@Description(value = "팝업 공지사항")
 	@ResponseBody
-	@PostMapping(value = "/popup")
-	public List<NoticeDTO> popupNoticeAction() throws Exception {
-		List<NoticeDTO> returnData = new ArrayList<NoticeDTO>();
+	@PostMapping(value = "/cookie")
+	public Map<String, Object> cookie() throws Exception {
+		Map<String, Object> result = new HashMap<>();
 		try {
-			returnData = NoticeHelper.service.getPopUpNotice();
+			ArrayList<NoticeDTO> list = NoticeHelper.manager.cookie();
+			result.put("result", SUCCESS);
+			result.put("list", list);
 		} catch (Exception e) {
+			result.put("msg", e.toString());
+			result.put("result", FAIL);
 			e.printStackTrace();
-
 		}
-		return returnData;
+		return result;
 	}
 }

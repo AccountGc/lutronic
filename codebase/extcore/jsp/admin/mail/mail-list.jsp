@@ -96,7 +96,7 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 					<input type="button" value="검색" title="검색" onclick="loadGridData();">
 					<input type="button" value="추가" title="추가" class="blue" onclick="addRow();">
 					<input type="button" value="삭제" title="삭제" class="red" onclick="_delete();">
-					<input type="button" value="저장" title="저장" onclick="save();">
+					<input type="button" value="저장" title="저장" onclick="save();" class="gray">
 				</td>
 			</tr>
 		</table>
@@ -111,6 +111,7 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 					headerText : "번호",
 					width : 40,
 					dataType : "numeric",
+					editable : false,
 					filter : {
 						inline : false
 					},
@@ -144,7 +145,6 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 					headerHeight : 30,
 					showRowNumColumn : false,
 					showRowCheckColumn : true,
-					rowNumHeaderText : "번호",
 					showAutoNoDataMessage : false,
 					selectionMode : "multipleCells",
 					hoverMode : "singleRow",
@@ -195,7 +195,7 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 					document.getElementById("sessionid").value = 0;
 					document.getElementById("curPage").value = 1;
 				}
-				let params = {
+				const params = {
 					name: toId("name"),
 					email: toId("email"),
 				};

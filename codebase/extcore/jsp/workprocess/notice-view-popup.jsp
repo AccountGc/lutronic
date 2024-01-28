@@ -68,7 +68,7 @@ NoticeDTO dto = (NoticeDTO) request.getAttribute("dto");
 				<input type="checkbox" name="checkId" id="checkId" onclick="setCookie();">
 				<div class="state p-success">
 					<label>
-						<b>일주일 간 열지 않기</b>
+						<b>더 이상 열지 않기</b>
 					</label>
 				</div>
 			</div>

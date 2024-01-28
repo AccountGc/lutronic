@@ -47,18 +47,18 @@ WTUser sessionUser = (WTUser) SessionHelper.manager.getPrincipal();
 			<input type="button" value="BOM 보기" title="BOM 보기" onclick="view();">
 			<input type="button" value="BOM 비교" title="BOM 비교" onclick="compare();" class="blue">
 			<%
-				if(dto.is_modify()) {
+			if (dto.is_modify()) {
 			%>
 			<input type="button" value="BOM 편집" title="BOM 편집" onclick="editor();" class="gray">
 			<input type="button" value="속성 CLEARING" class="red" title="속성 CLEARING" onclick="_clean();">
 			<input type="button" value="일괄 수정" title="일괄 수정" onclick="packageUpdate();">
 			<input type="button" value="수정" title="수정" class="blue" onclick="update();">
 			<input type="button" value="삭제" title="삭제" class="red" onclick="_delete();">
-<!-- 			<input type="button" value="채번" title="채번" onclick="change();"> -->
+			<!-- 			<input type="button" value="채번" title="채번" onclick="change();"> -->
+			<input type="button" value="진채번" title="진채번" class="blue" onclick="order();">
 			<%
 			}
 			%>
-			<input type="button" value="진채번" title="진채번" class="blue" onclick="order();">
 			<input type="button" value="닫기" title="닫기" class="gray" onclick="self.close();">
 		</td>
 	</tr>
@@ -87,9 +87,10 @@ WTUser sessionUser = (WTUser) SessionHelper.manager.getPrincipal();
 				<col width="300">
 				<col width="80">
 				<col width="150">
+				<col width="150">
 			</colgroup>
 			<tr>
-				<th class="lb" colspan="6"><%=dto.getName()%></th>
+				<th class="lb" colspan="7"><%=dto.getName()%></th>
 			</tr>
 			<tr>
 				<th class="lb">품목번호</th>
@@ -99,7 +100,12 @@ WTUser sessionUser = (WTUser) SessionHelper.manager.getPrincipal();
 					<%=dto.getLocation()%>
 				</td>
 				<td class="" align="center" rowspan="5" colspan="2">
-					<jsp:include page="/extcore/jsp/common/thumbnail-view.jsp">
+					<jsp:include page="/extcore/jsp/common/thumbnail-view-3d.jsp">
+						<jsp:param value="<%=dto.getOid()%>" name="oid" />
+					</jsp:include>
+				</td>
+				<td class="" align="center" rowspan="5" colspan="2">
+					<jsp:include page="/extcore/jsp/common/thumbnail-view-2d.jsp">
 						<jsp:param value="<%=dto.getOid()%>" name="oid" />
 					</jsp:include>
 				</td>

@@ -50,6 +50,7 @@ public class EcoDTO {
 	private boolean _withdraw = false;
 	private boolean _validate = false;
 	private boolean _excel = false;
+	private boolean _output = false;
 
 	// 변수용
 	private String primary;
@@ -143,11 +144,15 @@ public class EcoDTO {
 	private void setAuth(EChangeOrder eco) throws Exception {
 		boolean isAdmin = CommonUtil.isAdmin();
 		boolean isCreator = CommonUtil.isCreator(eco);
-		
+
+		if (check(eco, "APPROVED") || isAdmin) {
+			set_output(true);
+		}
+
 		if (check(eco, "APPROVING") && (isAdmin || isCreator)) {
 			set_withdraw(true);
 		}
-		
+
 		if ((check(eco, "INWORK") || check(eco, "LINE_REGISTER") || (check(eco, "ACTIVITY")) || check(eco, "RETURN"))) {
 			set_modify(true);
 		}

@@ -1097,7 +1097,7 @@ public class StandardWorkspaceService extends StandardManager implements Workspa
 				// 진행 되었던 모든 결재 정보를 초기화를 한다.
 				resetLines(d);
 
-				// 상태값 작업중으로 변경
+				// 상태값 결재선 지정으로 변경
 				if (per instanceof LifeCycleManaged) {
 					LifeCycleManaged lcm = (LifeCycleManaged) per;
 					LifeCycleHelper.service.setLifeCycleState(lcm, State.toState("LINE_REGISTER"));

@@ -118,31 +118,6 @@ public class StandardNoticeService extends StandardManager implements NoticeServ
 		}
 	}
 
-	@Override
-	public List<NoticeDTO> getPopUpNotice() {
-
-		List<NoticeDTO> returnData = new ArrayList<NoticeDTO>();
-
-		try {
-			QuerySpec query = new QuerySpec();
-			int idx = query.addClassList(Notice.class, true);
-			query.appendWhere(new SearchCondition(Notice.class, Notice.IS_POPUP, SearchCondition.IS_TRUE),
-					new int[] { idx });
-			QueryResult rt = PersistenceHelper.manager.find(query);
-			while (rt.hasMoreElements()) {
-				Object[] o = (Object[]) rt.nextElement();
-				Notice notice = (Notice) o[0];
-				NoticeDTO data = new NoticeDTO(notice);
-				String oid = CommonUtil.getOIDString(notice);
-				returnData.add(data);
-
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-
-		return returnData;
-	}
 
 	@Override
 	public void create(Map<String, Object> params) throws Exception {

@@ -463,8 +463,6 @@ function withdraw(remove) {
 			return false;
 		}
 	} else {
-		alert("개발중");
-		return false;
 		if (!confirm("기존 지정한 결재선 유지한 상태로 결재회수를 합니다.\n진행하시겠습니까?")) {
 			return false;
 		}

@@ -17,6 +17,7 @@ List<Map<String, String>> lifecycleList = (List<Map<String, String>>) request.ge
 String method = (String) request.getAttribute("method");
 boolean multi = (boolean) request.getAttribute("multi");
 String state = (String) request.getAttribute("state");
+String oid = (String) request.getAttribute("oid");
 %>
 <style type="text/css">
 .approved {
@@ -26,7 +27,7 @@ String state = (String) request.getAttribute("state");
 </style>
 <input type="hidden" name="sessionid" id="sessionid">
 <input type="hidden" name="curPage" id="curPage">
-<input type="hidden" name="oid" id="oid">
+<input type="hidden" name="oid" id="oid" value="<%=oid %>">
 <input type="hidden" name="sortKey" id="sortKey">
 <input type="hidden" name="sortType" id="sortType">
 
@@ -488,13 +489,14 @@ document.addEventListener("DOMContentLoaded", function() {
 ;});
 
 function <%=method%>() {
+	const oid = document.getElementById("oid").value;
 	const checkedItems = AUIGrid.getCheckedRowItems(myGridID);
 	if (checkedItems.length === 0) {
 		alert("추가할 문서를 선택하세요.");
 		return false;
 	}
 	
-	opener.<%=method%>(checkedItems, function(res, close, msg) {
+	opener.<%=method%>(checkedItems, oid, function(res, close, msg) {
 		trigger(close, msg);
 	})
 }

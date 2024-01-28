@@ -131,9 +131,9 @@ int eca = (int) request.getAttribute("eca");
 							</span>
 						</a>
 					</li>
-<!-- 					<li> -->
-<!-- 						<a onclick="moveToPage(this, '/temprary/list', '> 나의업무 > 임시저장함');">임시저장함</a> -->
-<!-- 					</li> -->
+					<!-- 					<li> -->
+					<!-- 						<a onclick="moveToPage(this, '/temprary/list', '> 나의업무 > 임시저장함');">임시저장함</a> -->
+					<!-- 					</li> -->
 					<li>
 						<a onclick="_popup('/Windchill/plm/groupware/password', 800, 300, 'n');">비밀번호 변경</a>
 					</li>
@@ -552,58 +552,48 @@ int eca = (int) request.getAttribute("eca");
 		</ul>
 	</div>
 </nav>
-<script>
+<script type="text/javascript">
 	window.onload = function() {
-		checkPopUP();
+		list();
 	}
 
-	function checkPopUP() {
-
-		const url = getCallUrl("/notice/popup");
+	function list() {
+		const url = getCallUrl("/notice/cookie");
 		call(url, null, function(data) {
-			if (data) {
-				let position = 0;
-				for (var i = 0; i < data.length; i++) {
-					position += 5;
-					const oid = data[i].oid;
-					if (mainIsPopup(oid)) {
-						mainPopUP(oid, position);
+			if (data.result) {
+				const list = data.list;
+				for (let i = 0; i < list.length; i++) {
+					const oid = list[i].oid;
+					if (check(oid)) {
+
 					}
 				}
 			} else {
 				alert(data.msg);
 			}
-		});
-
+		})
 	}
 
-	function mainPopUP(oid, position) {
-		const url = getCallUrl("/notice/popup?oid=" + oid);
-		_popup2(url, 1000, 500, position, "n");
+	function check(oid) {
+		let popup = false;
+		let value = getCookie(oid);
+		alert(value);
 	}
 
-	function mainIsPopup(oid) {
-		let isPopup = false;
-		cValue = getNoticeCookie(oid);
-		if (!cValue) {
-			isPopup = true;
+	function getCookie(oid) {
+		let name = name + "=";
+		const cookie = document.cookie;
+		logger(cookie);
+		const start = cookie.indexOf(name);
+		let value = "";
+		if (start !== -1) {
+			start += name.length;
+			const end = cookie.indexOf(",", start);
+			if (end === -1) {
+				end = cookie.length;
+			}
+			value = cookie.substring(start, end);
 		}
-		return isPopup
-	}
-
-	//쿠키 가져오기
-	function getNoticeCookie(cName) {
-		cName = cName + '=';
-		const cookieData = document.cookie;
-		let start = cookieData.indexOf(cName);
-		let cValue = '';
-		if (start != -1) {
-			start += cName.length;
-			let end = cookieData.indexOf(';', start);
-			if (end == -1)
-				end = cookieData.length;
-			cValue = cookieData.substring(start, end);
-		}
-		return unescape(cValue);
+		return unescape(value);
 	}
 </script>

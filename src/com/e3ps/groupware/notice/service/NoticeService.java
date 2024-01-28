@@ -26,10 +26,8 @@ public interface NoticeService {
 	public abstract void modify(Map<String, Object> params) throws Exception;
 
 	/**
-	 * 공지사항 조회 횟수 카운트
-ㄴ	 */
+	 * 공지사항 조회 횟수 카운트 ㄴ
+	 */
 	public abstract void read(String oid) throws Exception;
-
-	List<NoticeDTO> getPopUpNotice();
 
 }

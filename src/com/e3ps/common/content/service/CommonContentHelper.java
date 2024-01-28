@@ -10,6 +10,7 @@ import java.util.UUID;
 
 import javax.servlet.http.HttpServletRequest;
 
+import com.e3ps.common.content.LutronicFileRenamePolicy;
 import com.e3ps.common.fasoo.FasooUtils;
 import com.e3ps.common.util.CommonUtil;
 import com.e3ps.common.util.ContentUtils;
@@ -18,10 +19,8 @@ import com.e3ps.common.util.StringUtil;
 import com.e3ps.rohs.ROHSContHolder;
 import com.e3ps.rohs.ROHSMaterial;
 import com.e3ps.rohs.service.RohsHelper;
-import com.e3ps.system.SystemErrorLog;
 import com.e3ps.system.service.SystemHelper;
 import com.oreilly.servlet.MultipartRequest;
-import com.oreilly.servlet.multipart.DefaultFileRenamePolicy;
 
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
@@ -42,7 +41,6 @@ import wt.services.ServiceFactory;
 import wt.util.EncodingConverter;
 import wt.util.FileUtil;
 import wt.util.WTAttributeNameIfc;
-import wt.util.WTException;
 import wt.util.WTProperties;
 
 public class CommonContentHelper {
@@ -53,7 +51,7 @@ public class CommonContentHelper {
 	static {
 		try {
 			if (savePath == null) {
-				savePath = WTProperties.getServerProperties().getProperty("wt.temp") + File.separator + "lutronic";
+				savePath = WTProperties.getLocalProperties().getProperty("wt.temp") + File.separator + "lutronic";
 				File tempFolder = new File(savePath);
 				if (!tempFolder.exists()) {
 					tempFolder.mkdirs();
@@ -206,7 +204,7 @@ public class CommonContentHelper {
 	public JSONObject upload(HttpServletRequest request) throws Exception {
 		int sizeLimit = (1024 * 1024 * 5000);
 		MultipartRequest multi = new MultipartRequest(request, savePath, sizeLimit, "UTF-8",
-				new DefaultFileRenamePolicy());
+				new LutronicFileRenamePolicy());
 
 		String roleType = multi.getParameter("roleType");
 		String origin = multi.getOriginalFileName(roleType);

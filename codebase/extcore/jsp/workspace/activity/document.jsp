@@ -1,3 +1,4 @@
+<%@page import="com.e3ps.change.EChangeOrder"%>
 <%@page import="net.sf.json.JSONArray"%>
 <%@page import="com.e3ps.workspace.dto.EcaDTO"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
@@ -5,6 +6,11 @@
 EcaDTO dto = (EcaDTO) request.getAttribute("dto");
 JSONArray docList = dto.getDocList();
 boolean complete = docList.size() > 0;
+boolean isECO = false;
+EChangeOrder eco = (EChangeOrder) request.getAttribute("eco");
+if ("CHANGE".equals(eco.getEoType())) {
+	isECO = true;
+}
 %>
 <!DOCTYPE html>
 <html>
@@ -18,6 +24,7 @@ boolean complete = docList.size() > 0;
 <body>
 	<form>
 		<input type="hidden" name="oid" id="oid" value="<%=dto.getOid()%>">
+		<input type="hidden" name="eoid" id="eoid" value="<%=dto.getEoid()%>">
 		<table class="button-table">
 			<tr>
 				<td class="left">
@@ -41,7 +48,9 @@ boolean complete = docList.size() > 0;
 			</colgroup>
 			<tr>
 				<th class="lb">EO/ECO 번호</th>
-				<td class="indent5"><%=dto.getNumber()%></td>
+				<td class="indent5">
+					<a href="javascript:view();"><%=dto.getNumber()%></a>
+				</td>
 				<th>작업자</th>
 				<td class="indent5"><%=dto.getActivityUser_txt()%></td>
 			</tr>
@@ -68,7 +77,9 @@ boolean complete = docList.size() > 0;
 			<tr>
 				<th class="lb">의견</th>
 				<td class="indent5" colspan="3">
-					<textarea name="description" id="description" rows="6"></textarea>
+					<div class="textarea-auto">
+						<textarea name="description" id="description" rows="6"></textarea>
+					</div>
 				</td>
 			</tr>
 			<tr>
@@ -118,7 +129,7 @@ boolean complete = docList.size() > 0;
 						const url = getCallUrl("/doc/view?oid=" + oid);
 						_popup(url, "", "", "f");
 					}
-				},				
+				},
 			}, {
 				dataField : "version",
 				dataType : "string",
@@ -213,7 +224,7 @@ boolean complete = docList.size() > 0;
 			}
 
 			function complete() {
-			const oid = document.getElementById("oid").value;
+				const oid = document.getElementById("oid").value;
 				const description = document.getElementById("description").value;
 				if (!confirm("설변활동을 완료 하시겠습니까?")) {
 					return false;
@@ -241,11 +252,23 @@ boolean complete = docList.size() > 0;
 				const url = getCallUrl("/doc/link?oid=" + oid);
 				_popup(url, 1600, 800, "n");
 			}
+			function view() {
+				const oid = document.getElementById("eoid").value;
+				let url;
+				<%if (isECO) {%>
+				url = getCallUrl("/eco/view?oid="+oid);
+				<%} else {%>
+				url = getCallUrl("/eo/view?oid="+oid);
+				<%}%>
+				_popup(url, "", "", "f");
+			}
+			
 
 			document.addEventListener("DOMContentLoaded", function() {
 				createAUIGrid(columns);
 				AUIGrid.resize(myGridID);
 				finderUser("reassignUser");
+				autoTextarea();
 			})
 
 			window.addEventListener("resize", function() {

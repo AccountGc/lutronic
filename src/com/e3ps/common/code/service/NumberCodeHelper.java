@@ -389,7 +389,8 @@ public class NumberCodeHelper {
 
 		QuerySpecUtils.toBooleanAnd(query, idx, NumberCode.class, NumberCode.DISABLED, false);
 
-		if ("MODEL".equals(codeType)) {
+		if ("MANUFACTURE".equals(codeType)) {
+			// 협력업체
 			QuerySpecUtils.toOrderBy(query, idx, NumberCode.class, NumberCode.NAME, false);
 		} else {
 			QuerySpecUtils.toOrderBy(query, idx, NumberCode.class, NumberCode.SORT, false);

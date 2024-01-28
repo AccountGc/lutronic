@@ -429,7 +429,7 @@ iframe {
 	}
 
 	function publish() {
-		if (!confirm("개발문서 또는 지침서를 재변환 합니다.")) {
+		if (!confirm("재변환을 진행 하시겠습니까?")) {
 			return false;
 		}
 		const oid = document.getElementById("oid").value;

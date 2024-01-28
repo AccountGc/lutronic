@@ -19,6 +19,7 @@ import com.e3ps.common.iba.AttributeKey;
 import com.e3ps.common.message.Message;
 import com.e3ps.common.util.CommonUtil;
 import com.e3ps.common.util.DateUtil;
+import com.e3ps.common.util.FolderUtils;
 import com.e3ps.common.util.PageQueryUtils;
 import com.e3ps.common.util.QuerySpecUtils;
 import com.e3ps.common.util.StringUtil;
@@ -35,6 +36,7 @@ import wt.content.ContentHelper;
 import wt.content.ContentRoleType;
 import wt.content.ContentServerHelper;
 import wt.content.HolderToContent;
+import wt.doc.WTDocument;
 import wt.epm.EPMDocument;
 import wt.epm.EPMDocumentMaster;
 import wt.epm.EPMDocumentType;
@@ -116,25 +118,40 @@ public class DrawingHelper {
 		String sortType = (String) params.get("sortType");
 
 		Folder folder = FolderTaskLogic.getFolder(location, WCUtil.getWTContainerRef());
-		int isQuery = PART_ROOT.indexOf(location);
+//		int isQuery = DOCUMENT_ROOT.indexOf(location);
 		if (query.getConditionCount() > 0) {
 			query.appendAnd();
 		}
 
-		if (isQuery < 0) {
-			int f_idx = query.appendClassList(IteratedFolderMemberLink.class, false);
-			ClassAttribute fca = new ClassAttribute(IteratedFolderMemberLink.class, "roleBObjectRef.key.branchId");
-			SearchCondition fsc = new SearchCondition(fca, "=",
-					new ClassAttribute(EPMDocument.class, "iterationInfo.branchId"));
-			fsc.setFromIndicies(new int[] { f_idx, idx }, 0);
-			fsc.setOuterJoin(0);
-			query.appendWhere(fsc, new int[] { f_idx, idx });
-			query.appendAnd();
+//		if (isQuery < 0) {
+		int f_idx = query.appendClassList(IteratedFolderMemberLink.class, false);
+		ClassAttribute fca = new ClassAttribute(IteratedFolderMemberLink.class, "roleBObjectRef.key.branchId");
+		SearchCondition fsc = new SearchCondition(fca, "=",
+				new ClassAttribute(EPMDocument.class, "iterationInfo.branchId"));
+		fsc.setFromIndicies(new int[] { f_idx, idx }, 0);
+		fsc.setOuterJoin(0);
+		query.appendWhere(fsc, new int[] { f_idx, idx });
+		query.appendAnd();
 
-			long fid = folder.getPersistInfo().getObjectIdentifier().getId();
-			query.appendWhere(new SearchCondition(IteratedFolderMemberLink.class, "roleAObjectRef.key.id", "=", fid),
+//		long fid = folder.getPersistInfo().getObjectIdentifier().getId();
+//		query.appendWhere(new SearchCondition(IteratedFolderMemberLink.class, "roleAObjectRef.key.id", "=", fid),
+//				new int[] { f_idx });
+//		}
+
+		query.appendOpenParen();
+		long fid = folder.getPersistInfo().getObjectIdentifier().getId();
+		query.appendWhere(new SearchCondition(IteratedFolderMemberLink.class, "roleAObjectRef.key.id", "=", fid),
+				new int[] { f_idx });
+
+		ArrayList<Folder> folders = FolderUtils.getSubFolders(folder, new ArrayList<Folder>());
+		for (int i = 0; i < folders.size(); i++) {
+			Folder sub = (Folder) folders.get(i);
+			query.appendOr();
+			long sfid = sub.getPersistInfo().getObjectIdentifier().getId();
+			query.appendWhere(new SearchCondition(IteratedFolderMemberLink.class, "roleAObjectRef.key.id", "=", sfid),
 					new int[] { f_idx });
 		}
+		query.appendCloseParen();
 
 		// Working Copy 제외
 		if (query.getConditionCount() > 0) {

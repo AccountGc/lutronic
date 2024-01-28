@@ -6,8 +6,10 @@ import java.util.Map;
 
 import com.e3ps.common.util.CommonUtil;
 import com.e3ps.common.util.QuerySpecUtils;
+import com.e3ps.common.util.WCUtil;
 
 import net.sf.json.JSONObject;
+import wt.clients.folder.FolderTaskLogic;
 import wt.clients.vc.CheckInOutTaskLogic;
 import wt.enterprise.CopyObjectInfo;
 import wt.enterprise.EnterpriseHelper;
@@ -15,6 +17,8 @@ import wt.enterprise.RevisionControlled;
 import wt.fc.PersistenceHelper;
 import wt.fc.QueryResult;
 import wt.folder.Folder;
+import wt.folder.FolderEntry;
+import wt.folder.FolderHelper;
 import wt.part.Quantity;
 import wt.part.QuantityUnit;
 import wt.part.WTPart;
@@ -497,6 +501,7 @@ public class StandardBomService extends StandardManager implements BomService {
 	@Override
 	public Map<String, Object> saveAs(Map<String, Object> params) throws Exception {
 		Map<String, Object> map = new HashMap<>();
+		String location = (String) params.get("location");
 		String oid = (String) params.get("oid"); // 본인
 		String saveAsNum = (String) params.get("saveAsNum");
 		Transaction trs = new Transaction();
@@ -526,6 +531,9 @@ public class StandardBomService extends StandardManager implements BomService {
 			copy.setContainer(part.getContainer());
 
 			copyInfoArray = EnterpriseHelper.service.saveMultiObjectCopy(copyInfoArray);
+
+			Folder folder = FolderTaskLogic.getFolder(location, WCUtil.getWTContainerRef());
+			FolderHelper.service.changeFolder((FolderEntry) copy, folder);
 
 			map.put("copy", copy.getPersistInfo().getObjectIdentifier().getStringValue());
 

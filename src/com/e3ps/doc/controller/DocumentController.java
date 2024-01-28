@@ -472,6 +472,7 @@ public class DocumentController extends BaseController {
 		Map<String, Object> result = new HashMap<String, Object>();
 		try {
 			DocumentHelper.service.publish(oid);
+			result.put("msg", "재변환 되었습니다.");
 			result.put("result", SUCCESS);
 		} catch (Exception e) {
 			e.printStackTrace();

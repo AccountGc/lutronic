@@ -31,6 +31,32 @@ import net.sf.json.JSONArray;
 @RequestMapping(value = "/eco/**")
 public class EcoController extends BaseController {
 
+	@Description(value = "ECO 산출물")
+	@GetMapping(value = "/output")
+	public ModelAndView output(@RequestParam String method, @RequestParam String multi,
+			@RequestParam(required = false) String state, @RequestParam(required = false) String location, String oid)
+			throws Exception {
+		ArrayList<NumberCode> preserationList = NumberCodeHelper.manager.getArrayCodeList("PRESERATION");
+		ArrayList<NumberCode> deptcodeList = NumberCodeHelper.manager.getArrayCodeList("DEPTCODE");
+		ArrayList<NumberCode> modelList = NumberCodeHelper.manager.getArrayCodeList("MODEL");
+		List<Map<String, String>> lifecycleList = CommonUtil.getLifeCycleState("LC_Default");
+//		ArrayList<Map<String, String>> classTypes1 = DocumentClassHelper.manager.getClassTypes1();
+
+		ModelAndView model = new ModelAndView();
+//		model.addObject("classTypes1", classTypes1);
+		model.addObject("state", state);
+		model.addObject("preserationList", preserationList);
+		model.addObject("deptcodeList", deptcodeList);
+		model.addObject("modelList", modelList);
+		model.addObject("lifecycleList", lifecycleList);
+		model.addObject("method", method);
+		model.addObject("location", location);
+		model.addObject("oid", oid);
+		model.addObject("multi", Boolean.parseBoolean(multi));
+		model.setViewName("popup:/change/eco/include/eco-output");
+		return model;
+	}
+
 	@Description(value = "설변품목 더미 제외여부")
 	@ResponseBody
 	@GetMapping(value = "/reloadData")
@@ -266,7 +292,7 @@ public class EcoController extends BaseController {
 		}
 		return result;
 	}
-	
+
 	@Description(value = "산출물 삭제")
 	@PostMapping(value = "/removeLink")
 	@ResponseBody

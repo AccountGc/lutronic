@@ -6,6 +6,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Hashtable;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
@@ -18,6 +19,7 @@ import com.e3ps.change.ECPRRequest;
 import com.e3ps.change.EChangeActivity;
 import com.e3ps.change.EChangeOrder;
 import com.e3ps.change.EChangeRequest;
+import com.e3ps.common.aspose.AsposeUtils;
 import com.e3ps.common.beans.ResultData;
 import com.e3ps.common.content.service.CommonContentHelper;
 import com.e3ps.common.util.CommonUtil;
@@ -845,10 +847,20 @@ public class StandardDocumentService extends StandardManager implements Document
 
 			WTDocument doc = (WTDocument) CommonUtil.getObject(oid);
 
-			
-			
-			
-			
+			// 기존에 첨부된 PDF삭제
+			QueryResult qr = ContentHelper.service.getContentsByRole(doc, ContentRoleType.toContentRoleType("PDF"));
+			if (qr.hasMoreElements()) {
+				ApplicationData dd = (ApplicationData) qr.nextElement();
+				ContentServerHelper.service.deleteContent(doc, dd);
+			}
+
+			Hashtable<String, String> hash = new Hashtable<>();
+			hash.put("oid", oid);
+			AsposeUtils.wordToPdf(hash);
+
+			// 재생성 시작
+			createCover(doc);
+
 			trs.commit();
 			trs = null;
 		} catch (Exception e) {

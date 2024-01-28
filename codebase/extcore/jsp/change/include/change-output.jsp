@@ -23,12 +23,7 @@ for (int i = 0; i < list.size(); i++) {
 			<div class="header">
 				<img src="/Windchill/extcore/images/header.png">
 				산출물<%
-				if (CommonUtil.isAdmin()) {
-				%>&nbsp;<%
 				//=eoid
-				%>
-				<%
-				}
 				%>
 			</div>
 		</td>
@@ -72,6 +67,13 @@ for (int i = 0; i < list.size(); i++) {
 	<tr>
 		<th class="lb">산출물</th>
 		<td colspan="5" style="padding-left: 11px;">
+			<table style="margin: 5px 0px 5px 0px;">
+				<tr>
+					<td class="right" style="border: none; padding-right: 10px;">
+						<input type="button" value="링크등록" title="링크등록" class="gray" onclick="popup00('<%=eoid%>');">
+					</td>
+				</tr>
+			</table>
 			<table class="view-table" style="margin: 5px 0px 5px -5px;">
 				<colgroup>
 					<%
@@ -97,7 +99,7 @@ for (int i = 0; i < list.size(); i++) {
 					<%
 					}
 					%>
-					<th class="lb">내부문서번호</th>
+					<th class="lb">문서번호</th>
 					<th class="lb">문서제목</th>
 					<th class="lb">상태</th>
 					<th class="lb">REV</th>
@@ -118,7 +120,7 @@ for (int i = 0; i < list.size(); i++) {
 					if (isAdmin) {
 					%>
 					<td class="center">
-						<img src="/Windchill/extcore/images/delete.png" class="delete" title="삭제" onclick="_delete('<%=link%>');">
+						<img style="cursor: pointer;" src="/Windchill/extcore/images/delete.png" class="delete" title="삭제" onclick="_deleteLink('<%=link%>');">
 					</td>
 					<%
 					}
@@ -189,11 +191,40 @@ if (list.size() == 0) {
 }
 %>
 <script type="text/javascript">
-	function _delete(oid) {
-		if(!confirm("해당 산출물을 삭제 하시겠습니까?")) {
+	function popup00(oid) {
+		const url = getCallUrl("/eco/output?method=insert00&multi=true&oid=" + oid);
+		_popup(url, 1400, 700, "n");
+	}
+
+	function insert00(arr, oid, callBack) {
+		const list = new Array();
+		arr.forEach(function(dd) {
+			const item = dd.item;
+			list.push(item.oid);
+		})
+
+		const url = getCallUrl("/activity/saveLink");
+		const params = {
+			list : list,
+			oid : oid
+		}
+		logger(params);
+		parent.openLayer();
+		call(url, params, function(data) {
+			const msg = data.msg;
+			if (data.result) {
+				document.location.reload();
+				callBack(true, true, msg);
+			}
+			parent.closeLayer();
+		})
+	}
+
+	function _deleteLink(oid) {
+		if (!confirm("해당 산출물을 삭제 하시겠습니까?")) {
 			return false;
 		}
-		const params ={
+		const params = {
 			oid : oid
 		}
 		const url = getCallUrl("/eco/removeLink");

@@ -1,3 +1,4 @@
+<%@page import="com.e3ps.part.service.PartHelper"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html>
@@ -122,6 +123,14 @@
 							<input type="button" value="다른 품번으로 저장" title="다른 품번으로저장" onclick="saveAs();" class="gray">
 						</td>
 					</tr>
+					<tr>
+						<th class="req lb">품목분류</th>
+						<td class="indent5">
+							<input type="hidden" name="location" id="location" value="/Default/PART_Drawing">
+							<span id="locationText"><%=PartHelper.PART_ROOT%></span>
+							<input type="button" value="폴더선택" title="폴더선택" onclick="folder();" class="blue">
+						</td>
+					</tr>
 				</table>
 				<br>
 				<table id="treetable">
@@ -153,9 +162,23 @@
 	</table>
 </body>
 <script type="text/javascript">
+	function folder() {
+		const location = decodeURIComponent("/Default/PART_Drawing");
+		const url = getCallUrl("/folder/popup?location=" + location);
+		_popup(url, 500, 600, "n");
+	}
+
 	function saveAs() {
 		const tree = $.ui.fancytree.getTree("#righttable");
+		const location = document.getElementById("location").value;
 		const saveAsNum = document.getElementById("saveAsNum");
+
+		if (location === "/Default/PART_Drawing") {
+			alert("품목분류를 선택하세요.");
+			folder();
+			return false;
+		}
+
 		if (tree === null) {
 			alert("다른 품번으로 저장할 BOM을 먼저 선택하세요.");
 			saveAsNum.focus();
@@ -173,7 +196,8 @@
 		const params = {
 			oid : node.data.oid,
 			link : node.data.link,
-			saveAsNum : saveAsNum.value
+			saveAsNum : saveAsNum.value,
+			location : location
 		};
 		parent.openLayer();
 		logger(params);
@@ -185,7 +209,7 @@
 		call(url, params, function(data) {
 			alert(data.msg);
 			if (data.result) {
-				const oid = data.copy; 
+				const oid = data.copy;
 				copyTreeLoad(oid);
 			} else {
 				parent.closeLayer();

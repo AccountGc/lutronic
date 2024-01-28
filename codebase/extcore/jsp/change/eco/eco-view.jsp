@@ -331,6 +331,12 @@ boolean isAdmin = (boolean) request.getAttribute("isAdmin");
 		});
 	}
 
+	function output() {
+		const oid = document.getElementById("oid").value;
+		const url = getCallUrl("/eco/output?oid=" + oid);
+		_popup(url, 1100, 550, "n");
+	}
+
 	function excel() {
 
 		if (!confirm("설계변경 통보서를 다운받습니다.")) {
