@@ -698,7 +698,7 @@ public class DocumentHelper {
 	 * 표지 싸인입력
 	 */
 	public File stamping(WTDocument d, File excelFile, String classTypeCode) throws Exception {
-		String number = IBAUtil.getStringValue(d, "INTERALNUMBER");
+		String number = d.getNumber();
 		ApprovalMaster m = WorkspaceHelper.manager.getMaster(d);
 		ArrayList<ApprovalLine> agreeLines = WorkspaceHelper.manager.getAgreeLine(m);
 

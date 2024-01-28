@@ -559,7 +559,8 @@ int eca = (int) request.getAttribute("eca");
 
 	function list() {
 		const url = getCallUrl("/notice/cookie");
-		call(url, null, function(data) {
+		const params = new Object();
+		call(url, params, function(data) {
 			if (data.result) {
 				const list = data.list;
 				for (let i = 0; i < list.length; i++) {
@@ -571,13 +572,13 @@ int eca = (int) request.getAttribute("eca");
 			} else {
 				alert(data.msg);
 			}
-		})
+		});
 	}
 
 	function check(oid) {
 		let popup = false;
 		let value = getCookie(oid);
-		alert(value);
+// 		alert(value);
 	}
 
 	function getCookie(oid) {

@@ -107,6 +107,8 @@ public class AsposeUtils {
 			String pdfFilePath = savePath + File.separator + pdfName;
 			String wordFilePath = wordPath + File.separator + name;
 
+			System.out.println("name=" + pdfName);
+
 			Document pdf = new Document(wordFilePath);
 			pdf.save(pdfFilePath, SaveFormat.PDF);
 
