@@ -218,7 +218,7 @@ List<PartDTO> partList = PartHelper.service.include_PartList(oid, moduleType);
 			autoGridHeight : true
 		}
 		refbyGridID = AUIGrid.create("#grid_refby", columnLayout, props);
-		AUIGrid.setGridData(refbyGridID, <%=json%>);
+		AUIGrid.setGridData(refbyGridID, <%=json2%>);
 	}
 	
 	//구성원 접기/펼치기

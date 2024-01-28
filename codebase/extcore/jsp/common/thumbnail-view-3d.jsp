@@ -1,3 +1,12 @@
+<%@page import="wt.epm.structure.EPMStructureHelper"%>
+<%@page import="wt.fc.PersistenceHelper"%>
+<%@page import="wt.fc.QueryResult"%>
+<%@page import="com.e3ps.common.util.QuerySpecUtils"%>
+<%@page import="wt.epm.EPMDocumentMaster"%>
+<%@page import="com.ptc.wpcfg.deliverables.library.EPMDocumentMaker"%>
+<%@page import="wt.query.SearchCondition"%>
+<%@page import="wt.epm.structure.EPMReferenceLink"%>
+<%@page import="wt.query.QuerySpec"%>
 <%@page import="com.e3ps.part.service.PartHelper"%>
 <%@page import="com.e3ps.drawing.service.DrawingHelper"%>
 <%@page import="wt.epm.EPMDocument"%>
@@ -19,7 +28,21 @@ WTPart part = null;
 Representation representation = null;
 if (representable instanceof EPMDocument) {
 	EPMDocument epm = (EPMDocument) representable;
-	part = PartHelper.manager.getPart(epm);
+	System.out.println(epm.getDocType().toString());
+	if (epm.getDocType().toString().equals("CADDRAWING")) {
+		QueryResult qr = EPMStructureHelper.service.navigateReferences(epm, null, false);
+		EPMReferenceLink link = null;
+		while (qr.hasMoreElements()) {
+	link = (EPMReferenceLink) qr.nextElement();
+	EPMDocumentMaster master = (EPMDocumentMaster) link.getReferences();
+	EPMDocument e = DrawingHelper.manager.latest(master);
+	if (e.getDocType().toString().equals("CADCOMPONENT")) {
+		part = PartHelper.manager.getPart(e);
+	}
+		}
+	} else {
+		part = PartHelper.manager.getPart(epm);
+	}
 	representation = PublishUtils.getRepresentation(part, true, null, false);
 } else if (representable instanceof WTPart) {
 	part = (WTPart) representable;
@@ -33,8 +56,6 @@ File dir = new File(path);
 if (!dir.exists()) {
 	dir.mkdirs();
 }
-System.out.println("===" + representable);
-System.out.println("!!!!!!!!!!!!" + representation);
 if (representation != null) {
 	Representer pre = new Representer();
 	RepHelper.saveAsZIPFile(representation.getPersistInfo().getObjectIdentifier().getStringValue(), true, true,

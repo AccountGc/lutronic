@@ -50,25 +50,21 @@ Map<String, String> step = dto.getStep();
 		<table class="view-table">
 			<colgroup>
 				<col width="130">
-				<col width="300">
+				<col width="250">
 				<col width="130">
+				<col width="350">
 				<col width="300">
-				<col width="150">
-				<col width="150">
+				<col width="300">
 			</colgroup>
 			<tr>
 				<th class="lb">도면번호</th>
-				<td class="indent5"><%=dto.getNumber()%></td>
-				<th>도면분류</th>
-				<td class="indent5">
-					<%=dto.getLocation()%>
-				</td>
-				<td class="" align="center" rowspan="5">
+				<td class="indent5" colspan="3"><%=dto.getNumber()%></td>
+				<td style="min-width: 300px;" class="" align="center" rowspan="7">
 					<jsp:include page="/extcore/jsp/common/thumbnail-view-3d.jsp">
 						<jsp:param value="<%=dto.getOid()%>" name="oid" />
 					</jsp:include>
 				</td>
-				<td class="" align="center" rowspan="5">
+				<td style="min-width: 300px;" class="" align="center" rowspan="7">
 					<jsp:include page="/extcore/jsp/common/thumbnail-view-2d.jsp">
 						<jsp:param value="<%=dto.getOid()%>" name="oid" />
 					</jsp:include>

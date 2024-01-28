@@ -154,7 +154,7 @@ public class PartHelper {
 	}
 
 	public Map<String, Object> list(@RequestBody Map<String, Object> params) throws Exception {
-		long start = System.currentTimeMillis() /1000;
+		long start = System.currentTimeMillis() / 1000;
 		System.out.println("쿼리 시작 = " + start);
 		Map<String, Object> map = new HashMap<>();
 		ArrayList<PartColumn> list = new ArrayList<>();
@@ -193,9 +193,10 @@ public class PartHelper {
 		QuerySpec query = new QuerySpec();
 		int idx = query.addClassList(WTPart.class, false);
 
-		query.appendSelect(new ClassAttribute(WTPart.class, "thePersistInfo.theObjectIdentifier.id"),
-				new int[] { idx }, false);;
-		
+		query.appendSelect(new ClassAttribute(WTPart.class, "thePersistInfo.theObjectIdentifier.id"), new int[] { idx },
+				false);
+		;
+
 		// 상태 임시저장 제외
 		if (query.getConditionCount() > 0) {
 			query.appendAnd();
@@ -335,7 +336,7 @@ public class PartHelper {
 		map.put("total", pager.getTotalSize());
 		map.put("sessionid", pager.getSessionId());
 		map.put("curPage", pager.getCpage());
-		long end = System.currentTimeMillis() /1000;
+		long end = System.currentTimeMillis() / 1000;
 		System.out.println("쿼리 종료 = " + end + ", 걸린 시간 = " + (end - start));
 		return map;
 	}

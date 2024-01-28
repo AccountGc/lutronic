@@ -661,6 +661,19 @@ public class DrawingHelper {
 	/**
 	 * 최신버전 도면
 	 */
+	public EPMDocument latest(EPMDocumentMaster master) throws Exception {
+		LatestConfigSpec config = new LatestConfigSpec();
+		QueryResult result = ConfigHelper.service.filteredIterationsOf(master, config);
+		if (result.hasMoreElements()) {
+			EPMDocument latest = (EPMDocument) result.nextElement();
+			return latest;
+		}
+		return null;
+	}
+	
+	/**
+	 * 최신버전 도면
+	 */
 	public EPMDocument latest(String oid) throws Exception {
 		EPMDocument epm = (EPMDocument) CommonUtil.getObject(oid);
 		LatestConfigSpec config = new LatestConfigSpec();

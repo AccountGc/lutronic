@@ -33,9 +33,9 @@ if (per instanceof WTPart) {
 		epm2d = epm;
 	}
 }
-
+String thumb = "";
 if (epm2d != null) {
-	String thumb = ThumbnailUtil.thumbnail(epm2d);
-	out.println(thumb);
+	thumb = ThumbnailUtil.thumbnail(epm2d);
 }
 %>
+<img src="<%=thumb%>">
