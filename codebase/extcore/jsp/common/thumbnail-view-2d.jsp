@@ -1,3 +1,4 @@
+<%@page import="com.e3ps.common.util.ThumbnailUtil"%>
 <%@page import="wt.rule.impl.EpmdocumentCopyruleSeq"%>
 <%@page import="wt.fc.Persistable"%>
 <%@page import="com.e3ps.part.service.PartHelper"%>
@@ -21,16 +22,20 @@ EPMDocument epm2d = null;
 if (per instanceof WTPart) {
 	WTPart part = (WTPart) per;
 	EPMDocument epm = PartHelper.manager.getEPMDocument(part);
-	epm2d = PartHelper.manager.getEPMDocument2D(epm);
+	if (epm != null) {
+		epm2d = PartHelper.manager.getEPMDocument2D(epm);
+	}
 } else if (per instanceof EPMDocument) {
 	EPMDocument epm = (EPMDocument) per;
-	if(!epm.getDocType().toString().equals("CADDRAWING")) {
+	if (!epm.getDocType().toString().equals("CADDRAWING")) {
 		epm2d = PartHelper.manager.getEPMDocument2D(epm);
 	} else {
 		epm2d = epm;
 	}
-	
 }
 
-s
+if (epm2d != null) {
+	String thumb = ThumbnailUtil.thumbnail(epm2d);
+	out.println(thumb);
+}
 %>

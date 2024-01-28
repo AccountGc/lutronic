@@ -77,7 +77,7 @@ public class DrawingHelper {
 	public static final String PART_ROOT = "/Default/PART_Drawing";
 
 	public Map<String, Object> list(Map<String, Object> params) throws Exception {
-		long start = System.currentTimeMillis() % 60;
+		long start = System.currentTimeMillis() / 1000;
 		System.out.println("쿼리 시작 = " + start);
 		QuerySpec query = new QuerySpec();
 		int idx = query.addClassList(EPMDocument.class, false);
@@ -473,7 +473,7 @@ public class DrawingHelper {
 		map.put("total", pager.getTotalSize());
 		map.put("sessionid", pager.getSessionId());
 		map.put("curPage", pager.getCpage());
-		long end = System.currentTimeMillis() % 60;
+		long end = System.currentTimeMillis() / 1000;
 		System.out.println("쿼리 종료 = " + end + ", 걸린 시간 = " + (end - start));
 		return map;
 	}

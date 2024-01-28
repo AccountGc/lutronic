@@ -85,12 +85,11 @@ WTUser sessionUser = (WTUser) SessionHelper.manager.getPrincipal();
 				<col width="300">
 				<col width="130">
 				<col width="300">
-				<col width="80">
 				<col width="150">
 				<col width="150">
 			</colgroup>
 			<tr>
-				<th class="lb" colspan="7"><%=dto.getName()%></th>
+				<th class="lb" colspan="6"><%=dto.getName()%></th>
 			</tr>
 			<tr>
 				<th class="lb">품목번호</th>
@@ -99,12 +98,12 @@ WTUser sessionUser = (WTUser) SessionHelper.manager.getPrincipal();
 				<td class="indent5">
 					<%=dto.getLocation()%>
 				</td>
-				<td class="" align="center" rowspan="5" colspan="2">
+				<td class="" align="center" rowspan="5">
 					<jsp:include page="/extcore/jsp/common/thumbnail-view-3d.jsp">
 						<jsp:param value="<%=dto.getOid()%>" name="oid" />
 					</jsp:include>
 				</td>
-				<td class="" align="center" rowspan="5" colspan="2">
+				<td class="" align="center" rowspan="5">
 					<jsp:include page="/extcore/jsp/common/thumbnail-view-2d.jsp">
 						<jsp:param value="<%=dto.getOid()%>" name="oid" />
 					</jsp:include>
@@ -167,7 +166,7 @@ WTUser sessionUser = (WTUser) SessionHelper.manager.getPrincipal();
 						<jsp:param value="<%=dto.getOid()%>" name="oid" />
 					</jsp:include>
 				</td>
-				<td class="center" colspan="2">
+				<td class="center" colspan="3">
 					<input type="button" value="CREO VIEW" title="CREO VIEW" class="gray" onclick="openCreoView();">
 				</td>
 			</tr>

@@ -53,14 +53,23 @@ Map<String, String> step = dto.getStep();
 				<col width="300">
 				<col width="130">
 				<col width="300">
-				<col width="80">
+				<col width="150">
 				<col width="150">
 			</colgroup>
 			<tr>
 				<th class="lb">도면번호</th>
-				<td class="indent5" colspan="3"><%=dto.getNumber()%></td>
-				<td class="" align="center" rowspan="7" colspan="2">
-					<jsp:include page="/extcore/jsp/common/thumbnail-view.jsp">
+				<td class="indent5"><%=dto.getNumber()%></td>
+				<th>도면분류</th>
+				<td class="indent5">
+					<%=dto.getLocation()%>
+				</td>
+				<td class="" align="center" rowspan="5">
+					<jsp:include page="/extcore/jsp/common/thumbnail-view-3d.jsp">
+						<jsp:param value="<%=dto.getOid()%>" name="oid" />
+					</jsp:include>
+				</td>
+				<td class="" align="center" rowspan="5">
+					<jsp:include page="/extcore/jsp/common/thumbnail-view-2d.jsp">
 						<jsp:param value="<%=dto.getOid()%>" name="oid" />
 					</jsp:include>
 				</td>
@@ -269,7 +278,7 @@ Map<String, String> step = dto.getStep();
 				};
 				if (!checkUrl(res.url)) {
 					alert("썸네일이 없습니다.\n자동 재변환을 진행합니다.");
-// 					publish(oid);
+					// 					publish(oid);
 					return false;
 				}
 				$.ajax({
@@ -312,7 +321,7 @@ Map<String, String> step = dto.getStep();
 			parent.closeLayer();
 		}, "GET");
 	}
-	
+
 	document.addEventListener("DOMContentLoaded", function() {
 		$("#tabs").tabs({
 			active : 0,
