@@ -3,6 +3,7 @@ package com.e3ps.drawing.column;
 
 import java.sql.Timestamp;
 
+import com.e3ps.common.util.CommonUtil;
 import com.e3ps.common.util.ThumbnailUtil;
 import com.e3ps.drawing.service.DrawingHelper;
 import com.e3ps.part.service.PartHelper;
@@ -45,6 +46,10 @@ public class EpmColumn {
 
 	public EpmColumn() {
 
+	}
+
+	public EpmColumn(String oid) throws Exception {
+		this((EPMDocument) CommonUtil.getObject(oid));	
 	}
 
 	public EpmColumn(Object[] obj) throws Exception {

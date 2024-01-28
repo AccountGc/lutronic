@@ -1,33 +1,29 @@
 package com.e3ps;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.regex.Pattern;
+import java.math.BigDecimal;
 
-import org.apache.commons.codec.binary.Base64;
-
-import com.e3ps.common.util.CommonUtil;
-import com.e3ps.part.PartToPartLink;
-import com.e3ps.part.service.PartHelper;
-import com.ptc.windchill.cadx.remove.removeResource;
-
+import wt.doc.WTDocument;
 import wt.fc.PersistenceHelper;
 import wt.fc.QueryResult;
-import wt.method.RemoteMethodServer;
-import wt.org.OrganizationServicesHelper;
-import wt.org.WTUser;
-import wt.part.WTPart;
-import wt.util.FileUtil;
+import wt.query.ClassAttribute;
+import wt.query.QuerySpec;
 
 public class Test2 {
 
 	public static void main(String[] args) throws Exception {
 
-		String s = "/Default/PART_Drawing";
-		int l = "/Default/PART_Drawing".indexOf(s);
+		QuerySpec query = new QuerySpec();
+		int idx = query.appendClassList(WTDocument.class, false);
 
-		System.out.println(l);
+		query.appendSelect(new ClassAttribute(WTDocument.class, "thePersistInfo.theObjectIdentifier.id"),
+				new int[] { idx }, false);
+
+		QueryResult qr = PersistenceHelper.manager.find(query);
+		while (qr.hasMoreElements()) {
+			Object[] obj = (Object[]) qr.nextElement();
+			BigDecimal bd = (BigDecimal) obj[0];
+			System.out.println(bd.longValue());
+		}
 
 	}
 }

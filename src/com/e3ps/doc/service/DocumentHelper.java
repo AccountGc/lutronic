@@ -3,6 +3,7 @@ package com.e3ps.doc.service;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.InputStream;
+import java.math.BigDecimal;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Date;
@@ -115,6 +116,8 @@ public class DocumentHelper {
 	 * 문서 검색
 	 */
 	public Map<String, Object> list(Map<String, Object> params) throws Exception {
+		long start = System.currentTimeMillis() / 1000;
+		System.out.println("쿼리 시작 = " + start);
 		Map<String, Object> map = new HashMap<>();
 		ArrayList<DocumentColumn> list = new ArrayList<>();
 
@@ -146,11 +149,14 @@ public class DocumentHelper {
 		String sortType = (String) params.get("sortType");
 
 		QuerySpec query = new QuerySpec();
-		int idx = query.appendClassList(WTDocument.class, true);
+		int idx = query.appendClassList(WTDocument.class, false);
 		int idx_m = query.appendClassList(WTDocumentMaster.class, false);
 
 		query.setAdvancedQueryEnabled(true);
 		query.setDescendantQuery(false);
+
+		query.appendSelect(new ClassAttribute(WTDocument.class, "thePersistInfo.theObjectIdentifier.id"),
+				new int[] { idx }, false);
 
 		QuerySpecUtils.toEqualsAnd(query, idx, WTDocument.class, "typeInfoWTDocument.ptc_str_2", classType1);
 
@@ -241,7 +247,9 @@ public class DocumentHelper {
 		int rowNum = (pager.getCpage() - 1) * pager.getPsize() + 1;
 		while (result.hasMoreElements()) {
 			Object[] obj = (Object[]) result.nextElement();
-			DocumentColumn column = new DocumentColumn(obj);
+			BigDecimal bd = (BigDecimal) obj[0];
+			String oid = "wt.doc.WTDocument:" + bd.longValue();
+			DocumentColumn column = new DocumentColumn(oid);
 			column.setRowNum(rowNum++);
 			list.add(column);
 		}
@@ -252,6 +260,8 @@ public class DocumentHelper {
 		map.put("total", pager.getTotalSize());
 		map.put("sessionid", pager.getSessionId());
 		map.put("curPage", pager.getCpage());
+		long end = System.currentTimeMillis() / 1000;
+		System.out.println("쿼리 종료 = " + end + ", 걸린 시간 = " + (end - start));
 		return map;
 	}
 

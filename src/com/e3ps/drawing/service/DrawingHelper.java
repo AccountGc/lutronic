@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.InputStream;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -76,9 +77,14 @@ public class DrawingHelper {
 	public static final String PART_ROOT = "/Default/PART_Drawing";
 
 	public Map<String, Object> list(Map<String, Object> params) throws Exception {
-
+		long start = System.currentTimeMillis() / 1000;
+		System.out.println("쿼리 시작 = " + start);
 		QuerySpec query = new QuerySpec();
 		int idx = query.addClassList(EPMDocument.class, true);
+		
+		query.appendSelect(new ClassAttribute(EPMDocument.class, "thePersistInfo.theObjectIdentifier.id"),
+				new int[] { idx }, false);
+		
 		ReferenceFactory rf = new ReferenceFactory();
 		ArrayList<EpmColumn> list = new ArrayList<>();
 		Map<String, Object> map = new HashMap<>();
@@ -454,7 +460,9 @@ public class DrawingHelper {
 		int rowNum = (pager.getCpage() - 1) * pager.getPsize() + 1;
 		while (result.hasMoreElements()) {
 			Object[] obj = (Object[]) result.nextElement();
-			EpmColumn column = new EpmColumn(obj);
+			BigDecimal bd = (BigDecimal) obj[0];
+			String oid = "wt.epm.EPMDocument:" + bd.longValue();
+			EpmColumn column = new EpmColumn(oid);
 			column.setRowNum(rowNum++);
 			list.add(column);
 		}
@@ -465,7 +473,8 @@ public class DrawingHelper {
 		map.put("total", pager.getTotalSize());
 		map.put("sessionid", pager.getSessionId());
 		map.put("curPage", pager.getCpage());
-
+		long end = System.currentTimeMillis() / 1000;
+		System.out.println("쿼리 종료 = " + end + ", 걸린 시간 = " + (end - start));
 		return map;
 	}
 

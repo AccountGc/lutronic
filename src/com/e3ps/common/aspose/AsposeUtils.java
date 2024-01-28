@@ -102,8 +102,10 @@ public class AsposeUtils {
 
 		if (!pass) {
 
+			String v = doc.getVersionIdentifier().getSeries().getValue();
+
 			int idx = name.lastIndexOf(".");
-			String pdfName = name.substring(0, idx) + ".pdf";
+			String pdfName = name.substring(0, idx) + "_" + v + ".pdf";
 			String pdfFilePath = savePath + File.separator + pdfName;
 			String wordFilePath = wordPath + File.separator + name;
 

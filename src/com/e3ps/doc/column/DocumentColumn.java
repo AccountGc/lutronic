@@ -53,6 +53,10 @@ public class DocumentColumn {
 
 	}
 
+	public DocumentColumn(String oid) throws Exception {
+		this((WTDocument) CommonUtil.getObject(oid));
+	}
+
 	public DocumentColumn(Object[] obj) throws Exception {
 		this((WTDocument) obj[0]);
 	}

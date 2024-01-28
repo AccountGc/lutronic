@@ -2,7 +2,6 @@ package com.e3ps.part.column;
 
 import java.sql.Timestamp;
 
-import com.e3ps.common.iba.AttributeKey;
 import com.e3ps.common.iba.IBAUtil;
 import com.e3ps.common.util.CommonUtil;
 import com.e3ps.common.util.ThumbnailUtil;
@@ -47,6 +46,10 @@ public class PartColumn {
 
 	public PartColumn() {
 
+	}
+
+	public PartColumn(String oid) throws Exception {
+		this((WTPart) CommonUtil.getObject(oid));
 	}
 
 	public PartColumn(Object[] obj) throws Exception {

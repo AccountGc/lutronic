@@ -1,5 +1,6 @@
 package com.e3ps.part.service;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.HashMap;
@@ -153,6 +154,8 @@ public class PartHelper {
 	}
 
 	public Map<String, Object> list(@RequestBody Map<String, Object> params) throws Exception {
+		long start = System.currentTimeMillis() / 1000;
+		System.out.println("쿼리 시작 = " + start);
 		Map<String, Object> map = new HashMap<>();
 		ArrayList<PartColumn> list = new ArrayList<>();
 		ReferenceFactory rf = new ReferenceFactory();
@@ -182,14 +185,17 @@ public class PartHelper {
 		boolean latest = (boolean) params.get("latest");
 		String preOrder = (String) params.get("preOrder");
 		boolean complete = (boolean) params.get("complete");
-		
+
 		// 정렬
-				String sortKey = (String) params.get("sortKey");
-				String sortType = (String) params.get("sortType");
+		String sortKey = (String) params.get("sortKey");
+		String sortType = (String) params.get("sortType");
 
 		QuerySpec query = new QuerySpec();
 		int idx = query.addClassList(WTPart.class, true);
 
+		query.appendSelect(new ClassAttribute(WTPart.class, "thePersistInfo.theObjectIdentifier.id"),
+				new int[] { idx }, false);;
+		
 		// 상태 임시저장 제외
 		if (query.getConditionCount() > 0) {
 			query.appendAnd();
@@ -279,8 +285,7 @@ public class PartHelper {
 //		if (isQuery < 0) {
 		int f_idx = query.appendClassList(IteratedFolderMemberLink.class, false);
 		ClassAttribute fca = new ClassAttribute(IteratedFolderMemberLink.class, "roleBObjectRef.key.branchId");
-		SearchCondition fsc = new SearchCondition(fca, "=",
-				new ClassAttribute(WTPart.class, "iterationInfo.branchId"));
+		SearchCondition fsc = new SearchCondition(fca, "=", new ClassAttribute(WTPart.class, "iterationInfo.branchId"));
 		fsc.setFromIndicies(new int[] { f_idx, idx }, 0);
 		fsc.setOuterJoin(0);
 		query.appendWhere(fsc, new int[] { f_idx, idx });
@@ -310,14 +315,16 @@ public class PartHelper {
 
 		boolean sort = QuerySpecUtils.toSort(sortType);
 		QuerySpecUtils.toOrderBy(query, idx, WTPart.class, toSortKey(sortKey), sort);
-				
+
 		PageQueryUtils pager = new PageQueryUtils(params, query);
 		PagingQueryResult result = pager.find();
 		int rowNum = (pager.getCpage() - 1) * pager.getPsize() + 1;
 		while (result.hasMoreElements()) {
 			Object[] obj = (Object[]) result.nextElement();
-			WTPart part = (WTPart) obj[0];
-			PartColumn column = new PartColumn(part);
+//			WTPart part = (WTPart) obj[0];
+			BigDecimal bd = (BigDecimal) obj[0];
+			String oid = "wt.part.WTPart:" + bd.longValue();
+			PartColumn column = new PartColumn(oid);
 			if (eca) {
 				QueryResult qr = PersistenceHelper.manager.navigate((WTPartMaster) part.getMaster(), "eco",
 						EcoPartLink.class);
@@ -343,19 +350,21 @@ public class PartHelper {
 		map.put("total", pager.getTotalSize());
 		map.put("sessionid", pager.getSessionId());
 		map.put("curPage", pager.getCpage());
+		long end = System.currentTimeMillis() / 1000;
+		System.out.println("쿼리 종료 = " + end + ", 걸린 시간 = " + (end - start));
 		return map;
 	}
 
-	private String toSortKey(String sortKey) throws Exception{
-		if("number".equals(sortKey)) {
+	private String toSortKey(String sortKey) throws Exception {
+		if ("number".equals(sortKey)) {
 			return WTPart.NUMBER;
-		} else if("name".equals(sortKey)) {
+		} else if ("name".equals(sortKey)) {
 			return WTPart.NAME;
 		} else if ("state".equals(sortKey)) {
 			return WTPart.LIFE_CYCLE_STATE;
-		} else if("creator".equals(sortKey)) {
+		} else if ("creator".equals(sortKey)) {
 			return (WTPart.CREATOR + "." + WTAttributeNameIfc.REF_OBJECT_ID);
-		} else if("createdDate".equals(sortKey)) {
+		} else if ("createdDate".equals(sortKey)) {
 			return WTPart.CREATE_TIMESTAMP;
 		} else if ("modifiedDate".equals(sortKey)) {
 			return WTPart.MODIFY_TIMESTAMP;
