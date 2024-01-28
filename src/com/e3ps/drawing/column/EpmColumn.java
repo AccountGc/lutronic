@@ -49,7 +49,7 @@ public class EpmColumn {
 	}
 
 	public EpmColumn(String oid) throws Exception {
-		this((EPMDocument) CommonUtil.getObject(oid));	
+		this((EPMDocument) CommonUtil.getObject(oid));		
 	}
 
 	public EpmColumn(Object[] obj) throws Exception {

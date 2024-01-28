@@ -428,7 +428,7 @@ QuantityUnit[] unitList = (QuantityUnit[]) request.getAttribute("unitList");
 					enableRowCheckShiftKey : true
 				};
 				myGridID = AUIGrid.create("#grid_wrap", columnLayout, props);
-				loadGridData();
+				// 				loadGridData();
 				AUIGrid.bind(myGridID, "contextMenu", _auiContextMenuHandler);
 				AUIGrid.bind(myGridID, "vScrollChange", function(event) {
 					hideContextMenu();
@@ -439,7 +439,7 @@ QuantityUnit[] unitList = (QuantityUnit[]) request.getAttribute("unitList");
 				AUIGrid.bind(myGridID, "cellClick", auiCellClickHandler);
 				AUIGrid.bind(myGridID, "sorting", auiSortingHandler);
 			}
-			
+
 			let sortCache = [];
 			let compField;
 			function auiSortingHandler(event) {
@@ -552,7 +552,8 @@ QuantityUnit[] unitList = (QuantityUnit[]) request.getAttribute("unitList");
 				}
 				let params = new Object();
 				const url = getCallUrl("/drawing/list");
-				const field = [ "sortKey", "sortType", "location", "cadDivision", "cadType", "number", "name", "createdFrom", "createdTo", "modifiedFrom", "modifiedTo", "creatorOid", "state", "modelcode", "productmethod", "deptcode", "unit", "weight1", "weight2", "manufacture", "mat", "finish", "remarks", "specification" ];
+				const field = [ "sortKey", "sortType", "location", "cadDivision", "cadType", "number", "name", "createdFrom", "createdTo", "modifiedFrom", "modifiedTo", "creatorOid", "state", "modelcode", "productmethod", "deptcode", "unit", "weight1", "weight2", "manufacture", "mat", "finish",
+						"remarks", "specification" ];
 				const latest = document.querySelector("input[name=latest]:checked").value;
 				params = toField(params, field);
 				params.latest = JSON.parse(latest);

@@ -154,7 +154,7 @@ public class PartHelper {
 	}
 
 	public Map<String, Object> list(@RequestBody Map<String, Object> params) throws Exception {
-		long start = System.currentTimeMillis() / 1000;
+		long start = System.currentTimeMillis() %60;
 		System.out.println("쿼리 시작 = " + start);
 		Map<String, Object> map = new HashMap<>();
 		ArrayList<PartColumn> list = new ArrayList<>();
@@ -191,7 +191,7 @@ public class PartHelper {
 		String sortType = (String) params.get("sortType");
 
 		QuerySpec query = new QuerySpec();
-		int idx = query.addClassList(WTPart.class, true);
+		int idx = query.addClassList(WTPart.class, false);
 
 		query.appendSelect(new ClassAttribute(WTPart.class, "thePersistInfo.theObjectIdentifier.id"),
 				new int[] { idx }, false);;
@@ -324,22 +324,7 @@ public class PartHelper {
 //			WTPart part = (WTPart) obj[0];
 			BigDecimal bd = (BigDecimal) obj[0];
 			String oid = "wt.part.WTPart:" + bd.longValue();
-			PartColumn column = new PartColumn(oid);
-			if (eca) {
-				QueryResult qr = PersistenceHelper.manager.navigate((WTPartMaster) part.getMaster(), "eco",
-						EcoPartLink.class);
-				while (qr.hasMoreElements()) {
-					EChangeOrder ee = (EChangeOrder) qr.nextElement();
-					// 작업중 혹은 승인중?
-					if (ee.getLifeCycleState().toString().equals("INWORK")
-							|| ee.getLifeCycleState().toString().equals("LINE_REGISTER")
-							|| ee.getLifeCycleState().toString().equals("APPROVING")
-							|| ee.getLifeCycleState().toString().equals("ACTIVITY")) {
-						column.setVisible(false);
-					}
-				}
-			}
-
+			PartColumn column = new PartColumn(oid, eca);
 			column.setRowNum(rowNum++);
 			list.add(column);
 		}
@@ -350,7 +335,7 @@ public class PartHelper {
 		map.put("total", pager.getTotalSize());
 		map.put("sessionid", pager.getSessionId());
 		map.put("curPage", pager.getCpage());
-		long end = System.currentTimeMillis() / 1000;
+		long end = System.currentTimeMillis() % 60;
 		System.out.println("쿼리 종료 = " + end + ", 걸린 시간 = " + (end - start));
 		return map;
 	}

@@ -2,6 +2,8 @@ package com.e3ps.part.column;
 
 import java.sql.Timestamp;
 
+import com.e3ps.change.EChangeOrder;
+import com.e3ps.change.EcoPartLink;
 import com.e3ps.common.iba.IBAUtil;
 import com.e3ps.common.util.CommonUtil;
 import com.e3ps.common.util.ThumbnailUtil;
@@ -11,7 +13,10 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Getter;
 import lombok.Setter;
 import wt.epm.EPMDocument;
+import wt.fc.PersistenceHelper;
+import wt.fc.QueryResult;
 import wt.part.WTPart;
+import wt.part.WTPartMaster;
 import wt.vc.VersionControlHelper;
 import wt.vc.wip.WorkInProgressHelper;
 
@@ -48,15 +53,23 @@ public class PartColumn {
 
 	}
 
+	public PartColumn(WTPart part) throws Exception {
+		this(part, false);
+	}
+
+	public PartColumn(String oid, boolean eca) throws Exception {
+		this((WTPart) CommonUtil.getObject(oid), eca);
+	}
+
 	public PartColumn(String oid) throws Exception {
-		this((WTPart) CommonUtil.getObject(oid));
+		this((WTPart) CommonUtil.getObject(oid), false);
 	}
 
 	public PartColumn(Object[] obj) throws Exception {
-		this((WTPart) obj[0]);
+		this((WTPart) obj[0], false);
 	}
 
-	public PartColumn(WTPart part) throws Exception {
+	public PartColumn(WTPart part, boolean eca) throws Exception {
 		setLatest(PartHelper.manager.isLatest(part));
 		setPart_oid(part.getPersistInfo().getObjectIdentifier().getStringValue());
 		setThumb(ThumbnailUtil.thumbnailSmall(part));
@@ -80,6 +93,21 @@ public class PartColumn {
 		}
 		setCheckout(isCheckedOut);
 		setEpmInfo(part);
+		setView(part);
+	}
+
+	private void setView(WTPart part) throws Exception {
+		QueryResult qr = PersistenceHelper.manager.navigate((WTPartMaster) part.getMaster(), "eco", EcoPartLink.class);
+		while (qr.hasMoreElements()) {
+			EChangeOrder ee = (EChangeOrder) qr.nextElement();
+			// 작업중 혹은 승인중?
+			if (ee.getLifeCycleState().toString().equals("INWORK")
+					|| ee.getLifeCycleState().toString().equals("LINE_REGISTER")
+					|| ee.getLifeCycleState().toString().equals("APPROVING")
+					|| ee.getLifeCycleState().toString().equals("ACTIVITY")) {
+				setVisible(false);
+			}
+		}
 	}
 
 	private void setEpmInfo(WTPart part) throws Exception {
