@@ -187,7 +187,7 @@ public class AdminHelper {
 		while (result.hasMoreElements()) {
 			Object[] obj = (Object[]) result.nextElement();
 			MailUserDTO dto = new MailUserDTO(obj);
-			dto.setRowNum(rowNum);
+			dto.setRowNum(rowNum++);
 			list.add(dto);
 		}
 		map.put("list", list);

@@ -26,7 +26,7 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 		<input type="hidden" name="sessionName" id="sessionName" value="<%=user.getFullName()%>">
 		<input type="hidden" name="sortKey" id="sortKey">
 		<input type="hidden" name="sortType" id="sortType">
-		
+
 		<table class="button-table">
 			<tr>
 				<td class="left">
@@ -87,11 +87,11 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 				</td>
 				<td class="right">
 					<select name="_psize" id="_psize" onchange="loadGridData();">
+						<option value="10">10</option>
+						<option value="20" selected="selected">20</option>
 						<option value="30">30</option>
 						<option value="50">50</option>
 						<option value="100">100</option>
-						<option value="200">200</option>
-						<option value="300">300</option>
 					</select>
 					<input type="button" value="검색" title="검색" onclick="loadGridData();">
 					<input type="button" value="추가" title="추가" class="blue" onclick="addRow();">
@@ -115,7 +115,7 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 					filter : {
 						inline : false
 					},
-				},{
+				}, {
 					dataField : "name",
 					headerText : "이름",
 					dataType : "string",
@@ -169,7 +169,7 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 				});
 				AUIGrid.bind(myGridID, "sorting", auiSortingHandler);
 			}
-			
+
 			let sortCache = [];
 			let compField;
 			function auiSortingHandler(event) {
@@ -191,16 +191,15 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 			}
 
 			function loadGridData(movePage) {
-				if(movePage === undefined) {
+				if (movePage === undefined) {
 					document.getElementById("sessionid").value = 0;
 					document.getElementById("curPage").value = 1;
 				}
-				const params = {
-					name: toId("name"),
-					email: toId("email"),
-				};
 				const enable = document.querySelector("input[name=enable]:checked").value;
 				const url = getCallUrl("/admin/mail");
+				let params = new Object();
+				const field = [ "name", "email" ];
+				params = toField(params, field);
 				params.enable = JSON.parse(enable);
 				AUIGrid.showAjaxLoader(myGridID);
 				logger(params);
@@ -232,6 +231,7 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 				});
 				createAUIGrid(columns);
 				selectbox("_psize");
+				$("#_psize").bindSelectSetValue("20");
 			});
 
 			document.addEventListener("keydown", function(event) {
@@ -301,11 +301,11 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 					}
 				}, "PUT");
 			}
-			
+
 			function exportExcel() {
-			    const exceptColumnFields = [ "enable" ];
-			    const sessionName = document.getElementById("sessionName").value;
-			    exportToExcel("외부메일관리 리스트", "외부메일관리", "외부메일관리 리스트", exceptColumnFields, sessionName);
+				const exceptColumnFields = [ "enable" ];
+				const sessionName = document.getElementById("sessionName").value;
+				exportToExcel("외부메일관리 리스트", "외부메일관리", "외부메일관리 리스트", exceptColumnFields, sessionName);
 			}
 		</script>
 	</form>
