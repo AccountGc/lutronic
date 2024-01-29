@@ -576,7 +576,7 @@ public class StandardWorkspaceService extends StandardManager implements Workspa
 				if ("CHANGE".equals(t)) {
 					System.out.println("ECO 결재 완료");
 //					EcoHelper.manager.postAfterAction(hash);
-//					EChangeUtils.afterEcoAction(hash);
+					EChangeUtils.afterEcoAction(hash);
 					// EO
 				} else {
 					Map<String, Object> s = EoHelper.manager.checkCheckout(e);
