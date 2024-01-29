@@ -160,18 +160,19 @@ const columns = [ {
 	filter : {
 		inline : false
 	},
+	sortable : false
 },{
 	dataField : "number",
 	headerText : "ECPR 번호",
 	dataType : "string",
-	width : 140,
+	width : 130,
 	renderer : {
 		type : "LinkRenderer",
 		baseUrl : "javascript",
 		jsCallback : function(rowIndex, columnIndex, value, item) {
 			const oid = item.oid;
 			const url = getCallUrl("/ecpr/view?oid=" + oid);
-			popup(url, 1600, 800);
+			_popup(url, 1600, 800, "n");
 		}
 	},
 }, {
@@ -185,46 +186,73 @@ const columns = [ {
 		jsCallback : function(rowIndex, columnIndex, value, item) {
 			const oid = item.oid;
 			const url = getCallUrl("/ecpr/view?oid=" + oid);
-			popup(url, 1600, 800);
+			_popup(url, 1600, 800, "n");
 		}
+	},
+},{
+	dataField : "model",
+	headerText : "프로젝트 코드 [명]",
+	dataType : "string",
+	width : 200,
+	style : "aui-left",
+	sortable : false,
+	renderer : {
+		type : "TemplateRenderer"
 	},
 }, {
 	dataField : "changeSection",
 	headerText : "변경구분",
 	dataType : "string",
-	width : 120,
+	style : "aui-left",
+	width : 100,
+	sortable : false
+}, {
+	dataField : "period",
+	headerText : "보존년한",
+	dataType : "string",
+	width : 70
 }, {
 	dataField : "createDepart",
 	headerText : "작성부서",
 	dataType : "string",
-	width : 100,
+	width : 100
 }, {
 	dataField : "writer",
 	headerText : "작성자",
 	dataType : "string",
-	width : 100,
+	width : 100
 }, {
 	dataField : "writeDate",
 	headerText : "작성일",
 	dataType : "string",
-	width : 100,
+	width : 100
 }, {
 	dataField : "state",
 	headerText : "상태",
 	dataType : "string",
 	width : 100,
+	styleFunction : function(rowIndex, columnIndex, value, headerText, item, dataField) {
+		if (value === "승인됨") {
+			return "approved";
+		}
+		return null;
+	}
 }, {
 	dataField : "creator",
 	headerText : "등록자",
 	dataType : "string",
-	width : 100,
+	width : 100
 }, {
 	dataField : "createdDate_txt",
 	headerText : "등록일",
 	dataType : "string",
-	width : 100,
+	width : 100
+}, {
+	dataField : "approveDate",
+	headerText : "승인일",
+	dataType : "string",
+	width : 100
 } ]
-
 function createAUIGrid(columnLayout) {
 	const props = {
 		headerHeight : 30,

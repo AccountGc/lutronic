@@ -1056,6 +1056,15 @@ public class EcoHelper {
 			 * 설계변경 부품 내역 46 Line(45 Index) 부터 ~
 			 */
 
+			Style textCenterStyle = workbook.createStyle();
+			textCenterStyle.setHorizontalAlignment(TextAlignmentType.CENTER);
+			textCenterStyle.setBorder(BorderType.BOTTOM_BORDER, CellBorderType.MEDIUM, Color.getBlack());
+			textCenterStyle.setBorder(BorderType.TOP_BORDER, CellBorderType.MEDIUM, Color.getBlack());
+			textCenterStyle.setBorder(BorderType.LEFT_BORDER, CellBorderType.MEDIUM, Color.getBlack());
+			textCenterStyle.setBorder(BorderType.RIGHT_BORDER, CellBorderType.MEDIUM, Color.getBlack());
+//			textCenterStyle.setShrinkToFit(true);
+			textCenterStyle.getFont().setSize(10);
+
 			int row = 45;
 			int rowNum = 1;
 			QueryResult rs = PersistenceHelper.manager.navigate(eco, "part", EcoPartLink.class, false);
@@ -1063,10 +1072,28 @@ public class EcoHelper {
 				EcoPartLink eLink = (EcoPartLink) rs.nextElement();
 				WTPartMaster mm = eLink.getPart();
 				WTPart pp = PartHelper.manager.getPart(mm.getNumber(), eLink.getVersion());
-//
-//				if (row > 45) {
+
+				if (row > 45) {
 //					POIUtil.copyRow(workbook, sheet, (row - 1), 1);
-//				}
+					Row sourceRow = worksheet.getCells().getRows().get(row);
+					// Insert a new row
+					System.out.println("row=" + row);
+					worksheet.getCells().insertRows(row, 1, true);
+					Row copyRow = worksheet.getCells().getRows().get(row);
+
+					for (int i = 0; i < copyRow.getLastCell().getColumn() - 1; i++) {
+						Cell copiedCell = copyRow.get(i);
+
+						if (i == 0) {
+							continue;
+						}
+						worksheet.getCells().merge((row), 2, 1, 3);
+						worksheet.getCells().merge((row), 6, 1, 2);
+						worksheet.getCells().merge((row), 13, 1, 2);
+
+						copiedCell.setStyle(textCenterStyle);
+					}
+				}
 
 				boolean isPast = eLink.getPast();
 
@@ -1168,6 +1195,8 @@ public class EcoHelper {
 			row++;
 			row++;
 			row++;
+
+			System.out.println("빈공간?=" + row);
 
 			// 설계변경 세부내용 (blank)
 			worksheet.getCells().setRowHeight(row, 90 / 20);

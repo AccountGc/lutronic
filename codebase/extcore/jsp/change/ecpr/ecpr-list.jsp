@@ -136,18 +136,11 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 						%>
 					</select>
 				</td>
-				<th>제품명</th>
+				<th>프로젝트 코드</th>
 				<td class="indent5" colspan="3">
-					<select name="model" id="model" class="width-200">
-						<option value="">선택</option>
-						<%
-						for (NumberCode model : modelList) {
-						%>
-						<option value="<%=model.getCode()%>"><%=model.getName()%></option>
-						<%
-						}
-						%>
-					</select>
+					<input type="text" name="model" id="model" class="width-200">
+					<input type="hidden" name="modelcode" id="modelcode">
+					<img src="/Windchill/extcore/images/delete.png" class="delete" title="삭제" onclick="clearValue('model', 'code')">
 				</td>
 			</tr>
 		</table>
@@ -216,18 +209,28 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 							_popup(url, 1600, 800, "n");
 						}
 					},
+				},{
+					dataField : "model",
+					headerText : "프로젝트 코드 [명]",
+					dataType : "string",
+					width : 200,
+					style : "aui-left",
+					sortable : false,
+					renderer : {
+						type : "TemplateRenderer"
+					},
 				}, {
 					dataField : "changeSection",
 					headerText : "변경구분",
 					dataType : "string",
 					style : "aui-left",
-					width : 250,
+					width : 100,
 					sortable : false
 				}, {
 					dataField : "period",
 					headerText : "보존년한",
 					dataType : "string",
-					width : 100
+					width : 70
 				}, {
 					dataField : "createDepart",
 					headerText : "작성부서",
@@ -505,7 +508,8 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 				twindate("writed");
 				selectbox("_psize");
 				selectbox("changeSection");
-				selectbox("model");
+// 				selectbox("model");
+				finderCode("model", "MODEL");
 				selectbox("createDepart");
 				$("#_psize").bindSelectSetValue("20");
 			});

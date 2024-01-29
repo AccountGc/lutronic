@@ -157,26 +157,26 @@ public class EcprHelper {
 		return map;
 	}
 
-	private String toSortKey(String sortKey) throws Exception{
-		if("number".equals(sortKey)) {
+	private String toSortKey(String sortKey) throws Exception {
+		if ("number".equals(sortKey)) {
 			return ECPRRequest.EO_NUMBER;
-		} else if("name".equals(sortKey)) {
+		} else if ("name".equals(sortKey)) {
 			return ECPRRequest.EO_NAME;
-		} else if("period".equals(sortKey)) {
+		} else if ("period".equals(sortKey)) {
 			return ECPRRequest.PERIOD;
-		} else if("createDepart".equals(sortKey)) {
+		} else if ("createDepart".equals(sortKey)) {
 			return ECPRRequest.CREATE_DEPART;
-		} else if("writer".equals(sortKey)) {
+		} else if ("writer".equals(sortKey)) {
 			return ECPRRequest.WRITER;
-		} else if("writeDate".equals(sortKey)) {
+		} else if ("writeDate".equals(sortKey)) {
 			return ECPRRequest.CREATE_DATE;
-		} else if("state".equals(sortKey)) {
+		} else if ("state".equals(sortKey)) {
 			return ECPRRequest.LIFE_CYCLE_STATE;
-		} else if("creator".equals(sortKey)) {
+		} else if ("creator".equals(sortKey)) {
 			return ECPRRequest.CREATOR_FULL_NAME;
-		} else if("createdDate_txt".equals(sortKey)) {
+		} else if ("createdDate_txt".equals(sortKey)) {
 			return ECPRRequest.CREATE_TIMESTAMP;
-		} else if("approveDate".equals(sortKey)) {
+		} else if ("approveDate".equals(sortKey)) {
 			return ECPRRequest.APPROVE_DATE;
 		}
 		return ECPRRequest.CREATE_TIMESTAMP;
@@ -187,14 +187,22 @@ public class EcprHelper {
 	 */
 	public String displayToModel(String model) throws Exception {
 		String display = "";
-		if (model != null) {
+		if (StringUtil.checkString(model)) {
 			String[] ss = model.split(",");
 			for (int i = 0; i < ss.length; i++) {
 				String s = ss[i];
-				if (ss.length - 1 == i) {
-					display += NumberCodeHelper.manager.getNumberCodeName(s, "MODEL");
-				} else {
-					display += NumberCodeHelper.manager.getNumberCodeName(s, "MODEL") + ",";
+				if (s.length() > 0) {
+					if (ss.length - 1 == i) {
+						NumberCode n = NumberCodeHelper.manager.getNumberCode(s, "MODEL");
+						if (n != null) {
+							display += s + " [<font color='red'><b>" + n.getName() + "</b></font>]";
+						}
+					} else {
+						NumberCode n = NumberCodeHelper.manager.getNumberCode(s, "MODEL");
+						if (n != null) {
+							display += s + " [<font color='red'><b>" + n.getName() + "</b></font>], ";
+						}
+					}
 				}
 			}
 		}
