@@ -66,13 +66,14 @@ public class DocumentColumn {
 	 */
 	public DocumentColumn(WTDocument doc) throws Exception {
 		setOid(doc.getPersistInfo().getObjectIdentifier().getStringValue());
-		setLatest(DocumentHelper.manager.isLatest(doc));
+//		setLatest(DocumentHelper.manager.isLatest(doc));
 		setNumber(doc.getNumber());
 		setInteralnumber(IBAUtils.getStringValue(doc, "INTERALNUMBER"));
 		setModel(keyToValue(IBAUtils.getStringValue(doc, "MODEL"), "MODEL"));
 		setName(doc.getName());
 		setLocation(doc.getLocation());
-		setVersion(setVersionInfo(doc));
+//		setVersion(setVersionInfo(doc));
+		setVersion(doc.getVersionIdentifier().getSeries().getValue());
 		setState(doc.getLifeCycleState().getDisplay());
 		setWriter(IBAUtils.getStringValue(doc, "DSGN"));
 		setCreator(doc.getCreatorFullName());

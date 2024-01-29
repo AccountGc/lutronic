@@ -37,6 +37,7 @@ String height = request.getParameter("height");
 			forceTreeView : true,
 			useContextMenu : true,
 			showTooltip : true,
+			treeLazyMode : true,
 			treeLevelIndent : 28,
 			enableRightDownFocus : true,
 			<%
@@ -53,7 +54,25 @@ String height = request.getParameter("height");
 <%}%>
 		AUIGrid.bind(_myGridID, "cellClick", _auiCellClick);
 		AUIGrid.bind(_myGridID, "ready", auiReadyHandler);
+		AUIGrid.bind(myGridID, "treeLazyRequest", auiLazyLoadHandler);
 		tree();
+	}
+	
+	function auiLazyLoadHandler(event) {
+		const item = event.item;
+		logger(event.item);
+		const oid = item.oid;
+		const params = {
+			oid : oid,
+		}
+// 		const url = getCallUrl("/bom/lazyLoad")
+// 		openLayer();
+// 		call(url, params, function(data) {
+// 			if (data.result) {
+// 				closeLayer();
+// 				event.response(data.list);
+// 			}
+// 		})
 	}
 
 	function auiContextMenuHandler_(event) {
@@ -142,6 +161,7 @@ String height = request.getParameter("height");
 
 	let timerId = null;
 	function _auiCellClick(event) {
+		logger(event);
 		if(event.treeIcon) {
 			return false;
 		}

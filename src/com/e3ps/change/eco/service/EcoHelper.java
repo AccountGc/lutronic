@@ -509,7 +509,6 @@ public class EcoHelper {
 			} else {
 				WTPart pre_part = part;
 
-				System.out.println("revise=" + link.isRevise());
 				if (link.isRevise()) {
 					WTPart next_part = (WTPart) EChangeUtils.manager.getNext(part);
 					if (next_part != null) {
@@ -1208,7 +1207,8 @@ public class EcoHelper {
 			// 설계변경 세부내용 (B, 1)
 			worksheet.getCells().setRowHeight(row, 1050 / 20);
 
-			Cell commentBCell = worksheet.getCells().getRows().get(row).get(3);
+			System.out.println("row1111=" + row);
+			Cell commentBCell = worksheet.getCells().getRows().get(row).get(1);
 			commentBCell.putValue(dto.getEoCommentB());
 
 			Row comBRow = worksheet.getCells().getRows().get(row);
@@ -1236,7 +1236,6 @@ public class EcoHelper {
 			int startRow = row;
 			int documentIndex = 1;
 
-			System.out.println("row=" + row);
 			ArrayList<Map<String, Object>> docList = ActivityHelper.manager.getDocFromActivity(eco);
 			for (Map<String, Object> dmap : docList) {
 				JSONArray arr = (JSONArray) dmap.get("data");
@@ -1246,7 +1245,6 @@ public class EcoHelper {
 
 						worksheet.getCells().insertRows(row, 1, true);
 						Row copyRow = worksheet.getCells().getRows().get(row);
-
 						for (int i = 0; i < copyRow.getLastCell().getColumn() - 1; i++) {
 							Cell copiedCell = copyRow.get(i);
 							if (i == 0) {
@@ -1258,6 +1256,7 @@ public class EcoHelper {
 							worksheet.getCells().merge((row), 12, 1, 3);
 
 							if (i == 4) {
+								textLeftStyle.setIndentLevel(1);
 								copiedCell.setStyle(textLeftStyle);
 							} else {
 								copiedCell.setStyle(textCenterStyle);
@@ -1379,6 +1378,7 @@ public class EcoHelper {
 							worksheet.getCells().merge((row), 2, 1, 13);
 
 							if (i == 2) {
+								textLeftStyle.setIndentLevel(1);
 								copiedCell.setStyle(textLeftStyle);
 							} else {
 								copiedCell.setStyle(textCenterStyle);
@@ -1394,7 +1394,7 @@ public class EcoHelper {
 
 					// 파일명 (C, 2)
 					Cell attchNameCell = worksheet.getCells().getRows().get(row).get(2);
-					attchNoCell.putValue(appData.getFileName());
+					attchNameCell.putValue(appData.getFileName());
 
 					attachCount++;
 					row++;
@@ -1420,9 +1420,27 @@ public class EcoHelper {
 			// 합의 라인
 			ArrayList<ApprovalLine> agreeLines = WorkspaceHelper.manager.getAgreeLine(master);
 			for (ApprovalLine agreeLine : agreeLines) {
-
 				if (row > startRow) {
-//					POIUtil.copyRow(workbook, sheet, (row - 1), 1);
+					worksheet.getCells().insertRows(row, 1, true);
+					Row copyRow = worksheet.getCells().getRows().get(row);
+					worksheet.autoFitRow(row);
+					for (int i = 0; i < copyRow.getLastCell().getColumn() - 1; i++) {
+						Cell copiedCell = copyRow.get(i);
+						if (i == 0) {
+							continue;
+						}
+
+						worksheet.getCells().merge((row), 1, 1, 2);
+						worksheet.getCells().merge((row), 3, 1, 2);
+						worksheet.getCells().merge((row), 5, 1, 10);
+
+						if (i == 5) {
+							textLeftStyle.setIndentLevel(1);
+							copiedCell.setStyle(textLeftStyle);
+						} else {
+							copiedCell.setStyle(textCenterStyle);
+						}
+					}
 				}
 
 				// 이름 (B, 1)
@@ -1454,7 +1472,7 @@ public class EcoHelper {
 						}
 					}
 				}
-				comDescRow.setHeight((short) descheight / 20);
+//				comDescRow.setHeight((short) descheight / 20);
 				row++;
 			}
 
@@ -1463,7 +1481,26 @@ public class EcoHelper {
 			for (ApprovalLine appovalLine : approvalLines) {
 
 				if (row > startRow) {
-//					POIUtil.copyRow(workbook, sheet, (row - 1), 1);
+					worksheet.getCells().insertRows(row, 1, true);
+					Row copyRow = worksheet.getCells().getRows().get(row);
+					worksheet.autoFitRow(row);
+					for (int i = 0; i < copyRow.getLastCell().getColumn() - 1; i++) {
+						Cell copiedCell = copyRow.get(i);
+						if (i == 0) {
+							continue;
+						}
+
+						worksheet.getCells().merge((row), 1, 1, 2);
+						worksheet.getCells().merge((row), 3, 1, 2);
+						worksheet.getCells().merge((row), 5, 1, 10);
+
+						if (i == 5) {
+							textLeftStyle.setIndentLevel(1);
+							copiedCell.setStyle(textLeftStyle);
+						} else {
+							copiedCell.setStyle(textCenterStyle);
+						}
+					}
 				}
 
 				// 이름 (B, 1)
@@ -1495,7 +1532,7 @@ public class EcoHelper {
 						}
 					}
 				}
-				comDescRow.setHeight((short) descheight / 20);
+//				comDescRow.setHeight((short) descheight / 20);
 				row++;
 			}
 
@@ -1862,7 +1899,6 @@ public class EcoHelper {
 
 			if (isSkip) {
 				if (EChangeUtils.isDummy(part.getNumber())) {
-					System.out.println("더미 품목 = " + part.getNumber());
 					continue;
 				}
 			}
@@ -1962,7 +1998,6 @@ public class EcoHelper {
 			} else {
 				WTPart pre_part = part;
 
-				System.out.println("revise=" + link.isRevise());
 				if (link.isRevise()) {
 					WTPart next_part = (WTPart) EChangeUtils.manager.getNext(part);
 					if (next_part != null) {
