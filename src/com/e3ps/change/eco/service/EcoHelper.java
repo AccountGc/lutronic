@@ -1075,15 +1075,11 @@ public class EcoHelper {
 
 				if (row > 45) {
 //					POIUtil.copyRow(workbook, sheet, (row - 1), 1);
-					Row sourceRow = worksheet.getCells().getRows().get(row);
-					// Insert a new row
-					System.out.println("row=" + row);
 					worksheet.getCells().insertRows(row, 1, true);
 					Row copyRow = worksheet.getCells().getRows().get(row);
 
 					for (int i = 0; i < copyRow.getLastCell().getColumn() - 1; i++) {
 						Cell copiedCell = copyRow.get(i);
-
 						if (i == 0) {
 							continue;
 						}
@@ -1207,10 +1203,11 @@ public class EcoHelper {
 
 			Cell commentBCell = worksheet.getCells().getRows().get(36).get(3);
 			commentBCell.putValue(dto.getEoCommentB());
+			
 			Row comBRow = worksheet.getCells().getRows().get(row);
 			int bheight = (int) comBRow.getHeight();
 			String comB = dto.getEoCommentB();
-			if (null != comB) {
+			if (StringUtil.checkString(comB)) {
 				for (int i = 0; i < comB.length(); i++) {
 					char ca = comB.charAt(i);
 					Character careCa = Character.valueOf('\n');

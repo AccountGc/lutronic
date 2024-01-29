@@ -119,7 +119,7 @@ boolean complete = (boolean) request.getAttribute("complete");
 			</div>
 			&nbsp;
 			<div class="pretty p-switch">
-				<input type="radio" name="latest" value="">
+				<input type="radio" name="latest" value="false">
 				<div class="state p-success">
 					<label>
 						<b>모든REV</b>

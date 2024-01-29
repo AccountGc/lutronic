@@ -120,7 +120,7 @@ boolean complete = (boolean) request.getAttribute("complete");
 			</div>
 			&nbsp;
 			<div class="pretty p-switch">
-				<input type="radio" name="latest" value="">
+				<input type="radio" name="latest" value="false">
 				<div class="state p-success">
 					<label>
 						<b>모든REV</b>
@@ -486,9 +486,10 @@ function loadGridData(movePage) {
 	const url = getCallUrl("/part/list");
 	const field = [ "location", "partNumber", "partName", "createdFrom", "createdTo", "modifiedFrom", "modifiedTo", "creator", "state", "model", "productmethod", "deptcode", "unit", "weight", "mat", "finish", "remarks",
 		"ecoNo", "eoNo" ,"creatorOid","specification"];
-	const  latest = document.querySelector("input[name=latest]:checked").value;
+	const latest = document.querySelector("input[name=latest]:checked").value;
 	const complete = document.querySelector("input[name=comp]:checked");
 	const preOrder = document.querySelector("input[name=preOrder]:checked").value;
+	console.log(latest);
 	params = toField(params, field);
 	params.latest = JSON.parse(latest);
 	params.preOrder = preOrder;

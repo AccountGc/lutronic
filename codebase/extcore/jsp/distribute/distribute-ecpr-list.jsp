@@ -148,8 +148,8 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 			<tr>
 				<td class="left">
 					<img src="/Windchill/extcore/images/fileicon/file_excel.gif" title="엑셀 다운로드" onclick="exportExcel();">
-					<img src="/Windchill/extcore/images/save.gif" title="테이블 저장" onclick="saveColumnLayout('ecpr-list');">
-					<img src="/Windchill/extcore/images/redo.gif" title="테이블 초기화" onclick="resetColumnLayout('ecpr-list');">
+					<img src="/Windchill/extcore/images/save.gif" title="테이블 저장" onclick="saveColumnLayout('dist-ecpr-list');">
+					<img src="/Windchill/extcore/images/redo.gif" title="테이블 초기화" onclick="resetColumnLayout('dist-ecpr-list');">
 				</td>
 				<td class="right">
 					<select name="_psize" id="_psize" onchange="loadGridData();">
@@ -350,7 +350,7 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 
 			document.addEventListener("DOMContentLoaded", function() {
 				toFocus("number");
-				const columns = loadColumnLayout("distribute-ecpr-list");
+				const columns = loadColumnLayout("dist-ecpr-list");
 				const contenxtHeader = genColumnHtml(columns);
 				$("#h_item_ul").append(contenxtHeader);
 				$("#headerMenu").menu({
