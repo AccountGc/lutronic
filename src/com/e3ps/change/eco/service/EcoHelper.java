@@ -1003,7 +1003,6 @@ public class EcoHelper {
 
 			Row comARow = worksheet.getCells().getRows().get(36);
 			int height = (int) comARow.getHeight();
-
 			String com = dto.getEoCommentA();
 			if (StringUtil.checkString(com)) {
 				for (int i = 0; i < com.length(); i++) {
@@ -1015,6 +1014,7 @@ public class EcoHelper {
 				}
 			}
 			comARow.setHeight((short) height / 20);
+
 			// 변경근거(38-D, 37-3)
 			Row ecrNo = worksheet.getCells().getRows().get(37);
 			Style cellStyleEcrNo_UP = workbook.createStyle();
@@ -1202,8 +1202,9 @@ public class EcoHelper {
 			worksheet.getCells().setRowHeight(row, 1050 / 20);
 
 			Cell commentBCell = worksheet.getCells().getRows().get(36).get(3);
+			System.out.println(dto.getEoCommentB());
 			commentBCell.putValue(dto.getEoCommentB());
-			
+
 			Row comBRow = worksheet.getCells().getRows().get(row);
 			int bheight = (int) comBRow.getHeight();
 			String comB = dto.getEoCommentB();
@@ -1235,7 +1236,22 @@ public class EcoHelper {
 				for (int k = 0; k < arr.size(); k++) {
 					JSONObject node = (JSONObject) arr.get(k);
 					if (row > startRow) {
-//						POIUtil.copyRow(workbook, sheet, (row - 1), 1);
+						
+						worksheet.getCells().insertRows(row, 1, true);
+						Row copyRow = worksheet.getCells().getRows().get(row);
+
+						for (int i = 0; i < copyRow.getLastCell().getColumn() - 1; i++) {
+							Cell copiedCell = copyRow.get(i);
+							if (i == 0) {
+								continue;
+							}
+							worksheet.getCells().merge((row), 2, 1, 3);
+							worksheet.getCells().merge((row), 5, 1, 4);
+							worksheet.getCells().merge((row), 8, 1, 4);
+							worksheet.getCells().merge((row), 12, 1, 3);
+
+							copiedCell.setStyle(textCenterStyle);
+						}
 					}
 
 					// NO (B, 1)

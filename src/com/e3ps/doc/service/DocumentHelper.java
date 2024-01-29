@@ -710,6 +710,9 @@ public class DocumentHelper {
 	public File stamping(WTDocument d, File excelFile, String classTypeCode) throws Exception {
 		String number = d.getNumber();
 		ApprovalMaster m = WorkspaceHelper.manager.getMaster(d);
+		if(m == null) {
+			throw new Exception("결재라인이 없습니다.");
+		}
 		ArrayList<ApprovalLine> agreeLines = WorkspaceHelper.manager.getAgreeLine(m);
 
 		Workbook workbook = new Workbook(excelFile.getPath());
@@ -769,9 +772,7 @@ public class DocumentHelper {
 
 		if (classType2 != null) {
 			String cc = classType2.getClazz().trim();
-			System.out.println("cc=" + cc);
 			if ("DMR".equals(cc)) {
-				System.out.println("제품명 = " + d.getTypeInfoWTDocument().getPtc_str_1());
 				Cell productCell = worksheet.getCells().get(7, 0);
 				productCell.putValue(d.getTypeInfoWTDocument().getPtc_str_1());
 			}
