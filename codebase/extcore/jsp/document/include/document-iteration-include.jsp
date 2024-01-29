@@ -34,11 +34,39 @@ boolean popup = Boolean.parseBoolean((String) request.getParameter("popup"));
 		dataType : "string",
 		style : "aui-left",
 		width : 350,
+		renderer : {
+			type : "LinkRenderer",
+			baseUrl : "javascript",
+			jsCallback : function(rowIndex, columnIndex, value, item) {
+				const oid = item.oid;
+				let permission = isPermission(oid);
+				if (!permission) {
+					authMsg();
+					return false;
+				}
+				const url = getCallUrl("/doc/view?oid=" + oid);
+				_popup(url, "", "", "f");
+			}
+		},
 	}, {
 		dataField : "number",
 		headerText : "문서번호",
 		dataType : "string",
 		width : 180,
+		renderer : {
+			type : "LinkRenderer",
+			baseUrl : "javascript",
+			jsCallback : function(rowIndex, columnIndex, value, item) {
+				const oid = item.oid;
+				let permission = isPermission(oid);
+				if (!permission) {
+					authMsg();
+					return false;
+				}
+				const url = getCallUrl("/doc/view?oid=" + oid);
+				_popup(url, "", "", "f");
+			}
+		},
 	}, {
 		dataField : "version",
 		headerText : "REV",

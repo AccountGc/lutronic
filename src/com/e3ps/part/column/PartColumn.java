@@ -17,14 +17,13 @@ import wt.fc.PersistenceHelper;
 import wt.fc.QueryResult;
 import wt.part.WTPart;
 import wt.part.WTPartMaster;
-import wt.vc.VersionControlHelper;
 import wt.vc.wip.WorkInProgressHelper;
 
 @Getter
 @Setter
 public class PartColumn {
 
-	private boolean latest = false;
+//	private boolean latest = false;
 	private int rowNum;
 	private String part_oid; // 부품
 	private String epm_oid;
@@ -70,13 +69,15 @@ public class PartColumn {
 	}
 
 	public PartColumn(WTPart part, boolean eca) throws Exception {
-		setLatest(PartHelper.manager.isLatest(part));
+//		setLatest(PartHelper.manager.isLatest(part));
 		setPart_oid(part.getPersistInfo().getObjectIdentifier().getStringValue());
 		setThumb(ThumbnailUtil.thumbnailSmall(part));
 		setNumber(part.getNumber());
 		setName(part.getName());
 		setLocation(part.getLocation());
-		setVersion(setVersionInfo(part));
+//		setVersion(setVersionInfo(part));
+		setVersion(part.getVersionIdentifier().getSeries().getValue() + "."
+				+ part.getIterationIdentifier().getSeries().getValue());
 		setRemarks(IBAUtil.getAttrValue(part, "REMARKS"));
 		setState(part.getLifeCycleState().getDisplay());
 		setCreator(part.getCreatorFullName());
@@ -124,16 +125,16 @@ public class PartColumn {
 	/**
 	 * 최신버건과 함께 표시
 	 */
-	private String setVersionInfo(WTPart part) throws Exception {
-		WTPart latest = PartHelper.manager.latest(getPart_oid());
-		String version = VersionControlHelper.getVersionDisplayIdentifier(part) + "."
-				+ part.getIterationIdentifier().getSeries().getValue();
-		String latest_version = latest.getVersionIdentifier().getSeries().getValue() + "."
-				+ latest.getIterationIdentifier().getSeries().getValue();
-		if (isLatest()) {
-			return version;
-		} else {
-			return version + " <b><font color='red'>(" + latest_version + ")</font></b>";
-		}
-	}
+//	private String setVersionInfo(WTPart part) throws Exception {
+//		WTPart latest = PartHelper.manager.latest(getPart_oid());
+//		String version = VersionControlHelper.getVersionDisplayIdentifier(part) + "."
+//				+ part.getIterationIdentifier().getSeries().getValue();
+//		String latest_version = latest.getVersionIdentifier().getSeries().getValue() + "."
+//				+ latest.getIterationIdentifier().getSeries().getValue();
+//		if (isLatest()) {
+//			return version;
+//		} else {
+//			return version + " <b><font color='red'>(" + latest_version + ")</font></b>";
+//		}
+//	}
 }

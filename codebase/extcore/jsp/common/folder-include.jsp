@@ -37,7 +37,7 @@ String height = request.getParameter("height");
 			forceTreeView : true,
 			useContextMenu : true,
 			showTooltip : true,
-			treeLazyMode : true,
+// 			treeLazyMode : true,
 			treeLevelIndent : 28,
 			enableRightDownFocus : true,
 			<%
@@ -54,7 +54,7 @@ String height = request.getParameter("height");
 <%}%>
 		AUIGrid.bind(_myGridID, "cellClick", _auiCellClick);
 		AUIGrid.bind(_myGridID, "ready", auiReadyHandler);
-		AUIGrid.bind(myGridID, "treeLazyRequest", auiLazyLoadHandler);
+// 		AUIGrid.bind(myGridID, "treeLazyRequest", auiLazyLoadHandler);
 		tree();
 	}
 	

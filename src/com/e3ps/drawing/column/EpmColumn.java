@@ -26,7 +26,7 @@ public class EpmColumn {
 	private String part_oid;
 	private String thumb;
 	private String icon;
-	private boolean latest;
+//	private boolean latest;
 	private int rowNum;
 	private String cadType;
 	private String cadTypeKey;
@@ -49,7 +49,7 @@ public class EpmColumn {
 	}
 
 	public EpmColumn(String oid) throws Exception {
-		this((EPMDocument) CommonUtil.getObject(oid));		
+		this((EPMDocument) CommonUtil.getObject(oid));
 	}
 
 	public EpmColumn(Object[] obj) throws Exception {
@@ -61,12 +61,14 @@ public class EpmColumn {
 		setCadTypeKey(epm.getDocType().toString());
 		iconInfo(epm);
 		setEpm_oid(epm.getPersistInfo().getObjectIdentifier().getStringValue());
-		setLatest(DrawingHelper.manager.isLatest(epm));
+//		setLatest(DrawingHelper.manager.isLatest(epm));
 		setThumb(ThumbnailUtil.thumbnailSmall(epm));
 		setNumber(epm.getNumber());
 		setName(epm.getName());
 		setLocation(epm.getLocation());
-		setVersion(setVersionInfo(epm));
+		setVersion(epm.getVersionIdentifier().getSeries().getValue() + "."
+				+ epm.getIterationIdentifier().getSeries().getValue());
+//		setVersion(setVersionInfo(epm));
 		setState(epm.getLifeCycleState().getDisplay());
 		setCreator(epm.getCreatorFullName());
 		setCreatedDate(epm.getCreateTimestamp());
@@ -87,18 +89,18 @@ public class EpmColumn {
 	/**
 	 * 최신버건과 함께 표시
 	 */
-	private String setVersionInfo(EPMDocument epm) throws Exception {
-		EPMDocument latest = DrawingHelper.manager.latest(getEpm_oid());
-		String version = VersionControlHelper.getVersionDisplayIdentifier(epm) + "."
-				+ epm.getIterationIdentifier().getSeries().getValue();
-		String latest_version = latest.getVersionIdentifier().getSeries().getValue() + "."
-				+ latest.getIterationIdentifier().getSeries().getValue();
-		if (isLatest()) {
-			return version;
-		} else {
-			return version + " <b><font color='red'>(" + latest_version + ")</font></b>";
-		}
-	}
+//	private String setVersionInfo(EPMDocument epm) throws Exception {
+//		EPMDocument latest = DrawingHelper.manager.latest(getEpm_oid());
+//		String version = VersionControlHelper.getVersionDisplayIdentifier(epm) + "."
+//				+ epm.getIterationIdentifier().getSeries().getValue();
+//		String latest_version = latest.getVersionIdentifier().getSeries().getValue() + "."
+//				+ latest.getIterationIdentifier().getSeries().getValue();
+//		if (isLatest()) {
+//			return version;
+//		} else {
+//			return version + " <b><font color='red'>(" + latest_version + ")</font></b>";
+//		}
+//	}
 
 	/**
 	 * 도면 아이콘 세팅

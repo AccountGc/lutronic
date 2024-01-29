@@ -25,7 +25,7 @@ public class DocumentColumn {
 
 	private String oid;
 	private int rowNum;
-	private boolean latest;
+//	private boolean latest;
 	private String number;
 	private String interalnumber;
 	private String model;
@@ -111,18 +111,18 @@ public class DocumentColumn {
 	/**
 	 * 최신버건과 함께 표시
 	 */
-	private String setVersionInfo(WTDocument doc) throws Exception {
-		WTDocument latest = DocumentHelper.manager.latest(getOid());
-		String version = VersionControlHelper.getVersionDisplayIdentifier(doc) + "."
-				+ doc.getIterationIdentifier().getSeries().getValue();
-		String latest_version = latest.getVersionIdentifier().getSeries().getValue() + "."
-				+ latest.getIterationIdentifier().getSeries().getValue();
-		if (isLatest()) {
-			return version;
-		} else {
-			return version + " <b><font color='red'>(" + latest_version + ")</font></b>";
-		}
-	}
+//	private String setVersionInfo(WTDocument doc) throws Exception {
+//		WTDocument latest = DocumentHelper.manager.latest(getOid());
+//		String version = VersionControlHelper.getVersionDisplayIdentifier(doc) + "."
+//				+ doc.getIterationIdentifier().getSeries().getValue();
+//		String latest_version = latest.getVersionIdentifier().getSeries().getValue() + "."
+//				+ latest.getIterationIdentifier().getSeries().getValue();
+//		if (isLatest()) {
+//			return version;
+//		} else {
+//			return version + " <b><font color='red'>(" + latest_version + ")</font></b>";
+//		}
+//	}
 
 	/**
 	 * IBA 코드값 디스플레이값으로 변경

@@ -20,14 +20,32 @@ String oid = request.getParameter("oid");
 	let myGridID50;
 	const columns50 = [ {
 		dataField : "number",
-		headerText : "부품번호",
+		headerText : "품목번호",
 		dataType : "string",
 		width : 180,
+		renderer : {
+			type : "LinkRenderer",
+			baseUrl : "javascript",
+			jsCallback : function(rowIndex, columnIndex, value, item) {
+				const oid = item.oid;
+				const url = getCallUrl("/part/view?oid=" + oid);
+				_popup(url, 1600, 800, "n");
+			}
+		},
 	}, {
 		dataField : "name",
-		headerText : "부품명",
+		headerText : "품목명",
 		dataType : "string",
 		style : "aui-left",
+		renderer : {
+			type : "LinkRenderer",
+			baseUrl : "javascript",
+			jsCallback : function(rowIndex, columnIndex, value, item) {
+				const oid = item.oid;
+				const url = getCallUrl("/part/view?oid=" + oid);
+				_popup(url, 1600, 800, "n");
+			}
+		},
 	}, {
 		dataField : "version",
 		headerText : "REV",
