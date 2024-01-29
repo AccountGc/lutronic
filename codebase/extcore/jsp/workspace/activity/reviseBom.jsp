@@ -10,14 +10,19 @@
 EcaDTO dto = (EcaDTO) request.getAttribute("dto");
 EChangeOrder eco = (EChangeOrder) request.getAttribute("eco");
 boolean isECO = false;
+boolean isSCO = false;
 if ("CHANGE".equals(eco.getEoType())) {
 	isECO = true;
 }
+
 String sendType = eco.getSendType();
 boolean isOrder = false;
 if ("ORDER".equals(sendType)) {
 	isOrder = true;
+} else if("SCO".equals(sendType)) {
+	isSCO = true;
 }
+	
 ArrayList<Map<String, Object>> list = (ArrayList<Map<String, Object>>) request.getAttribute("list");
 JSONArray clist = (JSONArray) request.getAttribute("clist");
 WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
@@ -820,6 +825,9 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 					return false;
 				}
 
+				<%
+					if(!isOrder && !isSCO) {
+				%>
 				for (let i = 0; i < data.length; i++) {
 					const group = data[i].group;
 					if (group === "") {
@@ -827,6 +835,9 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 						return false;
 					}
 				}
+				<%
+					}
+				%>
 
 				const oid = document.getElementById("oid").value;
 // 				const description = document.getElementById("description").value;

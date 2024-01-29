@@ -1062,8 +1062,15 @@ public class EcoHelper {
 			textCenterStyle.setBorder(BorderType.TOP_BORDER, CellBorderType.MEDIUM, Color.getBlack());
 			textCenterStyle.setBorder(BorderType.LEFT_BORDER, CellBorderType.MEDIUM, Color.getBlack());
 			textCenterStyle.setBorder(BorderType.RIGHT_BORDER, CellBorderType.MEDIUM, Color.getBlack());
-//			textCenterStyle.setShrinkToFit(true);
 			textCenterStyle.getFont().setSize(10);
+
+			Style textLeftStyle = workbook.createStyle();
+			textLeftStyle.setHorizontalAlignment(TextAlignmentType.LEFT);
+			textLeftStyle.setBorder(BorderType.BOTTOM_BORDER, CellBorderType.MEDIUM, Color.getBlack());
+			textLeftStyle.setBorder(BorderType.TOP_BORDER, CellBorderType.MEDIUM, Color.getBlack());
+			textLeftStyle.setBorder(BorderType.LEFT_BORDER, CellBorderType.MEDIUM, Color.getBlack());
+			textLeftStyle.setBorder(BorderType.RIGHT_BORDER, CellBorderType.MEDIUM, Color.getBlack());
+			textLeftStyle.getFont().setSize(10);
 
 			int row = 45;
 			int rowNum = 1;
@@ -1201,8 +1208,7 @@ public class EcoHelper {
 			// 설계변경 세부내용 (B, 1)
 			worksheet.getCells().setRowHeight(row, 1050 / 20);
 
-			Cell commentBCell = worksheet.getCells().getRows().get(36).get(3);
-			System.out.println(dto.getEoCommentB());
+			Cell commentBCell = worksheet.getCells().getRows().get(row).get(3);
 			commentBCell.putValue(dto.getEoCommentB());
 
 			Row comBRow = worksheet.getCells().getRows().get(row);
@@ -1230,13 +1236,14 @@ public class EcoHelper {
 			int startRow = row;
 			int documentIndex = 1;
 
+			System.out.println("row=" + row);
 			ArrayList<Map<String, Object>> docList = ActivityHelper.manager.getDocFromActivity(eco);
 			for (Map<String, Object> dmap : docList) {
 				JSONArray arr = (JSONArray) dmap.get("data");
 				for (int k = 0; k < arr.size(); k++) {
 					JSONObject node = (JSONObject) arr.get(k);
 					if (row > startRow) {
-						
+
 						worksheet.getCells().insertRows(row, 1, true);
 						Row copyRow = worksheet.getCells().getRows().get(row);
 
@@ -1245,12 +1252,16 @@ public class EcoHelper {
 							if (i == 0) {
 								continue;
 							}
-							worksheet.getCells().merge((row), 2, 1, 3);
-							worksheet.getCells().merge((row), 5, 1, 4);
+							worksheet.getCells().merge((row), 1, 1, 3);
+							worksheet.getCells().merge((row), 4, 1, 4);
 							worksheet.getCells().merge((row), 8, 1, 4);
 							worksheet.getCells().merge((row), 12, 1, 3);
 
-							copiedCell.setStyle(textCenterStyle);
+							if (i == 4) {
+								copiedCell.setStyle(textLeftStyle);
+							} else {
+								copiedCell.setStyle(textCenterStyle);
+							}
 						}
 					}
 
@@ -1356,7 +1367,23 @@ public class EcoHelper {
 				if (item != null) {
 
 					if (row > startRow) {
-//						POIUtil.copyRow(workbook, sheet, (row - 1), 1);
+
+						worksheet.getCells().insertRows(row, 1, true);
+						Row copyRow = worksheet.getCells().getRows().get(row);
+
+						for (int i = 0; i < copyRow.getLastCell().getColumn() - 1; i++) {
+							Cell copiedCell = copyRow.get(i);
+							if (i == 0) {
+								continue;
+							}
+							worksheet.getCells().merge((row), 2, 1, 13);
+
+							if (i == 2) {
+								copiedCell.setStyle(textLeftStyle);
+							} else {
+								copiedCell.setStyle(textCenterStyle);
+							}
+						}
 					}
 
 					ApplicationData appData = (ApplicationData) item;

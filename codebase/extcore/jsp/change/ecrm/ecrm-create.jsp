@@ -201,7 +201,7 @@ iframe {
 
 				const params = {
 					name : name.value,
-					period : period,
+					period_code : period,
 					contents : content,
 					sections : sections, //변경 구분
 					secondarys : secondarys,
