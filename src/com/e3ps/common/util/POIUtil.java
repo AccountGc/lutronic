@@ -1,25 +1,22 @@
 package com.e3ps.common.util;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-import jxl.Cell;
-
-import org.apache.poi.hssf.usermodel.HSSFCell;
-import org.apache.poi.hssf.usermodel.HSSFRow;
-import org.apache.poi.hssf.usermodel.HSSFSheet;
-import org.apache.poi.hssf.usermodel.HSSFWorkbook;
-import org.apache.poi.poifs.filesystem.POIFSFileSystem;
 import org.apache.poi.ss.usermodel.CellValue;
 import org.apache.poi.ss.usermodel.FormulaEvaluator;
-import org.apache.poi.ss.util.CellRangeAddress;
 import org.apache.poi.xssf.usermodel.XSSFCell;
-import org.apache.poi.xssf.usermodel.XSSFCellStyle;
 import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+
+import com.aspose.cells.Cell;
+import com.aspose.cells.Range;
+import com.aspose.cells.Row;
+import com.aspose.cells.Style;
+import com.aspose.cells.Workbook;
+import com.aspose.cells.Worksheet;
 
 public class POIUtil {
 
@@ -210,87 +207,52 @@ public class POIUtil {
 	 * @param sourceRowNum
 	 * @param count
 	 */
-	public static void copyRow(XSSFWorkbook workbook, XSSFSheet worksheet, int sourceRowNum, int count) {
+	public static void copyRow(Workbook workbook, Worksheet worksheet, int sourceRowNum, int count) {
 		try {
 			for (int a = 0; a < count; a++) {
-				// Get the source / new row
-				XSSFRow newRow = worksheet.getRow((sourceRowNum + a));
-				XSSFRow sourceRow = worksheet.getRow(sourceRowNum);
+				// Get the source row
+				Row sourceRow = worksheet.getCells().getRow(sourceRowNum);
 
-				// If the row exist in destination, push down all rows by 1 else
-				// create a new row
-				worksheet.shiftRows((sourceRowNum + a), worksheet.getLastRowNum(), 1);
-				newRow = worksheet.createRow((sourceRowNum + a));
+				// Insert a new row
+				worksheet.getCells().insertRows(sourceRowNum + 1, 1, true);
 
-				// Loop through source columns to add to new row
-				for (int i = 0; i < sourceRow.getLastCellNum(); i++) {
+				// Get the new row
+				Row newRow = worksheet.getCells().getRow(sourceRowNum + 1);
+
+				// Loop through source columns to add to the new row
+				for (int i = 0; i <= sourceRow.getLastCell().getColumn() : -1; i++) {
 					// Grab a copy of the old/new cell
-					XSSFCell oldCell = sourceRow.getCell(i);
-					XSSFCell newCell = newRow.createCell(i);
+					Cell oldCell = sourceRow.getCellOrNull(i);
+					Cell newCell = newRow.getCellOrNull(i);
 
-					// If the old cell is null jump to next cell
-					if (oldCell == null) {
-						newCell = null;
+					// If the old cell is null, jump to the next cell
+					if (oldCell == null || newCell == null) {
 						continue;
 					}
 
-					// Copy style from old cell and apply to new cell
-					XSSFCellStyle newCellStyle = workbook.createCellStyle();
-					newCellStyle.cloneStyleFrom(oldCell.getCellStyle());
-					newCell.setCellStyle(newCellStyle);
+					// Copy style from old cell and apply to the new cell
+					Style newCellStyle = workbook.createStyle();
+					newCellStyle.copy(oldCell.getStyle());
+					newRow.get(i).setStyle(newCellStyle);
 
-					// If there is a cell comment, copy
-					if (newCell.getCellComment() != null) {
-						newCell.setCellComment(oldCell.getCellComment());
-					}
 
-					// If there is a cell hyperlink, copy
-					if (oldCell.getHyperlink() != null) {
-						newCell.setHyperlink(oldCell.getHyperlink());
-					}
+                    newCell.putValue(oldCell.getStringValue()); // 여기에서 값을 설정하도록 수정
 
-					// Set the cell data type
-					newCell.setCellType(oldCell.getCellType());
-
-					// Set the cell data value
-					switch (oldCell.getCellType()) {
-					case BLANK:
-						newCell.setCellValue(oldCell.getStringCellValue());
-						break;
-					case BOOLEAN:
-						newCell.setCellValue(oldCell.getBooleanCellValue());
-						break;
-					case ERROR:
-						newCell.setCellErrorValue(oldCell.getErrorCellValue());
-						break;
-					case FORMULA:
-						newCell.setCellFormula(oldCell.getCellFormula());
-						break;
-					case NUMERIC:
-						newCell.setCellValue(oldCell.getNumericCellValue());
-						break;
-					case STRING:
-						newCell.setCellValue(oldCell.getRichStringCellValue());
-						break;
-					}
 				}
 
-				// If there are are any merged regions in the source row, copy to
-				// new row
-				for (int i = 0; i < worksheet.getNumMergedRegions(); i++) {
-					CellRangeAddress cellRangeAddress = worksheet.getMergedRegion(i);
-					if (cellRangeAddress.getFirstRow() == sourceRow.getRowNum()) {
-						CellRangeAddress newCellRangeAddress = new CellRangeAddress(newRow.getRowNum(),
-								(newRow.getRowNum() + (cellRangeAddress.getLastRow() - cellRangeAddress.getFirstRow())),
-								cellRangeAddress.getFirstColumn(), cellRangeAddress.getLastColumn());
-						worksheet.addMergedRegion(newCellRangeAddress);
-					}
-				}
+				// If there are any merged regions in the source row, copy to the new row
+			       for (int i = 0; i < worksheet.getCells().getMergedCells().size() ; i++) {
+	                    Range mergedCell = (Range)worksheet.getCells().getMergedCells().get(i);
+	                    if (mergedCell.getFirstRow() == sourceRow && mergedCell.getFirstColumn() == 0) {
+	                        Range newMergedCell = worksheet.getCells().createRange(newRow, newRow.getRow() + mergedCell.getRowCount() - 1,
+	                                mergedCell.getFirstColumn(), mergedCell.getl());
+	                        worksheet.getCells().addMergedRegion(newMergedCell);
+	                    }
+	                }
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-
 	}
 
 	public static void main(String[] args) {

@@ -26,27 +26,29 @@ String oid = (String) request.getParameter("oid");
 Representable representable = (Representable) CommonUtil.getObject(oid);
 WTPart part = null;
 Representation representation = null;
+EPMDocument e = null;
 if (representable instanceof EPMDocument) {
 	EPMDocument epm = (EPMDocument) representable;
-	System.out.println(epm.getDocType().toString());
 	if (epm.getDocType().toString().equals("CADDRAWING")) {
 		QueryResult qr = EPMStructureHelper.service.navigateReferences(epm, null, false);
 		EPMReferenceLink link = null;
 		while (qr.hasMoreElements()) {
 	link = (EPMReferenceLink) qr.nextElement();
+	String referenceType = link.getReferenceType().toString();
 	EPMDocumentMaster master = (EPMDocumentMaster) link.getReferences();
-	EPMDocument e = DrawingHelper.manager.latest(master);
-	if (e.getDocType().toString().equals("CADCOMPONENT")) {
+	e = DrawingHelper.manager.latest(master);
+	if (e.getDocType().toString().equals("CADCOMPONENT") && referenceType.equals("DRAWING")) {
 		part = PartHelper.manager.getPart(e);
+		representation = PublishUtils.getRepresentation(e, true, null, false);
 	}
 		}
 	} else {
-		part = PartHelper.manager.getPart(epm);
+// 		part = PartHelper.manager.getPart(epm);
+		representation = PublishUtils.getRepresentation(epm, true, null, false);
 	}
-	representation = PublishUtils.getRepresentation(part, true, null, false);
 } else if (representable instanceof WTPart) {
 	part = (WTPart) representable;
-	representation = PublishUtils.getRepresentation(part, true, null, false);
+	representation = PublishUtils.getRepresentation(e, true, null, false);
 }
 
 String temp = WTProperties.getLocalProperties().getProperty("wt.codebase.location");

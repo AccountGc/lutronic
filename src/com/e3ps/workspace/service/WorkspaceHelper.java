@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.amazonaws.services.workspaces.model.Workspace;
 import com.e3ps.change.ECOChange;
 import com.e3ps.common.mail.MailUtils;
 import com.e3ps.common.util.CommonUtil;
@@ -24,7 +23,6 @@ import com.e3ps.workspace.AsmApproval;
 import com.e3ps.workspace.PersistMasterLink;
 import com.e3ps.workspace.WorkData;
 import com.e3ps.workspace.WorkDataMailUserLink;
-import com.e3ps.workspace._ApprovalMaster;
 import com.e3ps.workspace.column.ApprovalLineColumn;
 import com.e3ps.workspace.dto.ApprovalLineDTO;
 
@@ -115,7 +113,7 @@ public class WorkspaceHelper {
 		// 정렬
 		String sortKey = (String) params.get("sortKey");
 		String sortType = (String) params.get("sortType");
-		
+
 		QuerySpec query = new QuerySpec();
 		int idx = query.appendClassList(ApprovalMaster.class, true);
 
@@ -134,7 +132,7 @@ public class WorkspaceHelper {
 
 		boolean sort = QuerySpecUtils.toSort(sortType);
 		QuerySpecUtils.toOrderBy(query, idx, ApprovalMaster.class, toSortkey(sortKey), sort);
-		
+
 		PageQueryUtils pager = new PageQueryUtils(params, query);
 		PagingQueryResult result = pager.find();
 		int rowNum = (pager.getCpage() - 1) * pager.getPsize() + 1;
@@ -160,7 +158,7 @@ public class WorkspaceHelper {
 	}
 
 	private String toSortkey(String sortKey) throws Exception {
-		if("name".equals(sortKey)) {
+		if ("name".equals(sortKey)) {
 			return ApprovalMaster.NAME;
 //		} else if ("submiter".equals(sortKey)) {
 //			return ApprovalMaster.OWNERSHIP;
@@ -170,7 +168,7 @@ public class WorkspaceHelper {
 			return ApprovalMaster.COMPLETE_TIME;
 		} else if ("createdDate".equals(sortKey)) {
 			return ApprovalMaster.CREATE_TIMESTAMP;
-		} 
+		}
 		return ApprovalMaster.CREATE_TIMESTAMP;
 	}
 
@@ -240,12 +238,12 @@ public class WorkspaceHelper {
 		return map;
 	}
 
-	private String toSortKey(String sortKey) throws Exception{
-		if("name".equals(sortKey)) {
+	private String toSortKey(String sortKey) throws Exception {
+		if ("name".equals(sortKey)) {
 			return ApprovalLine.NAME;
-		} else if("reads".equals(sortKey)) {
+		} else if ("reads".equals(sortKey)) {
 			return ApprovalLine.READS;
-		} else if("receiveTime".equals(sortKey)) {
+		} else if ("receiveTime".equals(sortKey)) {
 			return ApprovalLine.START_TIME;
 		}
 		return ApprovalLine.CREATE_TIMESTAMP;
@@ -856,7 +854,6 @@ public class WorkspaceHelper {
 		ArrayList<ApprovalLine> list = getApprovalLines(master);
 		for (ApprovalLine appLine : list) {
 			int compare = appLine.getSort();
-			System.out.println("=" + compare);
 			if (sort <= compare) {
 				isEndApprovalLine = false;
 				break;
@@ -1204,4 +1201,53 @@ public class WorkspaceHelper {
 		}
 	}
 
+	/**
+	 * 최종 결재라인
+	 */
+	public ApprovalLine getLastApprovalLine(ApprovalMaster master) throws Exception {
+		QuerySpec query = new QuerySpec();
+		int idx = query.appendClassList(ApprovalLine.class, true);
+		int idx_m = query.appendClassList(ApprovalMaster.class, true);
+
+		QuerySpecUtils.toInnerJoin(query, ApprovalLine.class, ApprovalMaster.class, "masterReference.key.id",
+				WTAttributeNameIfc.ID_NAME, idx, idx_m);
+		QuerySpecUtils.toEqualsAnd(query, idx, ApprovalLine.class, "masterReference.key.id", master);
+		QuerySpecUtils.toEqualsAnd(query, idx, ApprovalLine.class, ApprovalLine.ROLE, WORKING_APPROVAL);
+		QuerySpecUtils.toEqualsAnd(query, idx, ApprovalLine.class, ApprovalLine.TYPE, APPROVAL_LINE);
+		QuerySpecUtils.toOrderBy(query, idx, ApprovalLine.class, ApprovalLine.COMPLETE_TIME, false);
+
+		QueryResult qr = PersistenceHelper.manager.find(query);
+		if (qr.hasMoreElements()) {
+			Object[] obj = (Object[]) qr.nextElement();
+			ApprovalLine last = (ApprovalLine) obj[0];
+			return last;
+		}
+		return null;
+	}
+
+	/**
+	 * 최종결재자 마지막
+	 */
+	public ApprovalLine getLastPreApprovalLine(ApprovalMaster master) throws Exception {
+		ApprovalLine lastLine = getLastApprovalLine(master);
+		QuerySpec query = new QuerySpec();
+		int idx = query.appendClassList(ApprovalLine.class, true);
+		int idx_m = query.appendClassList(ApprovalMaster.class, true);
+
+		QuerySpecUtils.toInnerJoin(query, ApprovalLine.class, ApprovalMaster.class, "masterReference.key.id",
+				WTAttributeNameIfc.ID_NAME, idx, idx_m);
+		QuerySpecUtils.toEqualsAnd(query, idx, ApprovalLine.class, "masterReference.key.id", master);
+		QuerySpecUtils.toEqualsAnd(query, idx, ApprovalLine.class, ApprovalLine.ROLE, WORKING_APPROVAL);
+		QuerySpecUtils.toEqualsAnd(query, idx, ApprovalLine.class, ApprovalLine.TYPE, APPROVAL_LINE);
+		QuerySpecUtils.toEqualsAnd(query, idx, ApprovalLine.class, ApprovalLine.SORT, lastLine.getSort() + 1);
+
+		System.out.println(query);
+		QueryResult qr = PersistenceHelper.manager.find(query);
+		if (qr.hasMoreElements()) {
+			Object[] obj = (Object[]) qr.nextElement();
+			ApprovalLine preLine = (ApprovalLine) obj[0];
+			return preLine;
+		}
+		return null;
+	}
 }

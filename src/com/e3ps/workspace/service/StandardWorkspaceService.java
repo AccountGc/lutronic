@@ -472,7 +472,6 @@ public class StandardWorkspaceService extends StandardManager implements Workspa
 			master = (ApprovalMaster) PersistenceHelper.manager.modify(master);
 
 			boolean isEndApprovalLine = WorkspaceHelper.manager.isEndApprovalLine(master, 0);
-			System.out.println(isEndApprovalLine);
 			if (isEndApprovalLine) {
 
 				// 모든 수신라인 상태 변경
@@ -577,7 +576,7 @@ public class StandardWorkspaceService extends StandardManager implements Workspa
 				if ("CHANGE".equals(t)) {
 					System.out.println("ECO 결재 완료");
 //					EcoHelper.manager.postAfterAction(hash);
-					EChangeUtils.afterEcoAction(hash);
+//					EChangeUtils.afterEcoAction(hash);
 					// EO
 				} else {
 					Map<String, Object> s = EoHelper.manager.checkCheckout(e);

@@ -23,6 +23,7 @@ import com.e3ps.common.util.DateUtil;
 import com.e3ps.common.util.QuerySpecUtils;
 import com.e3ps.common.util.StringUtil;
 import com.e3ps.common.util.WCUtil;
+import com.e3ps.drawing.service.DrawingHelper;
 import com.e3ps.part.PartToPartLink;
 import com.e3ps.part.service.PartHelper;
 import com.e3ps.workspace.service.WorkDataHelper;
@@ -34,6 +35,7 @@ import wt.content.ContentServerHelper;
 import wt.doc.WTDocument;
 import wt.doc.WTDocumentMaster;
 import wt.epm.EPMDocument;
+import wt.epm.EPMDocumentMaster;
 import wt.epm.structure.EPMDescribeLink;
 import wt.fc.PersistenceHelper;
 import wt.fc.PersistenceServerHelper;
@@ -657,6 +659,7 @@ public class StandardActivityService extends StandardManager implements Activity
 				if (epm != null) {
 					boolean isApproved = epm.getLifeCycleState().toString().equals("APPROVED");
 					if (isApproved) {
+						epm = DrawingHelper.manager.latest((EPMDocumentMaster) epm.getMaster());
 						newEpm = (EPMDocument) VersionControlHelper.service.newVersion(epm);
 						VersionControlHelper.setNote(epm, message);
 						PersistenceHelper.manager.save(newEpm);
@@ -673,6 +676,7 @@ public class StandardActivityService extends StandardManager implements Activity
 					// 2d
 					EPMDocument epm2d = PartHelper.manager.getEPMDocument2D(epm);
 					if (epm2d != null) {
+						epm2d = DrawingHelper.manager.latest((EPMDocumentMaster) epm2d.getMaster());
 						EPMDocument newEpm2d = (EPMDocument) VersionControlHelper.service.newVersion(epm2d);
 						VersionControlHelper.setNote(newEpm2d, message);
 						PersistenceHelper.manager.save(newEpm2d);
