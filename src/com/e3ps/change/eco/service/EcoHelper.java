@@ -1037,6 +1037,16 @@ public class EcoHelper {
 				String nn = ecr.getEoNumber() + " [" + ecr.getEoName() + "]";
 				ecrNumbersNames += (nn + "\r\n");
 			}
+
+			// ecpr로 변경
+			qr.reset();
+			qr = PersistenceHelper.manager.navigate(eco, "ecpr", EcoToEcprLink.class);
+			while (qr.hasMoreElements()) {
+				ECPRRequest ecpr = (ECPRRequest) qr.nextElement();
+				String nn = ecpr.getEoNumber() + " [" + ecpr.getEoName() + "]";
+				ecrNumbersNames += (nn + "\r\n");
+			}
+
 			Row ecrNumbersNamesRow = worksheet.getCells().getRows().get(37);
 			if (null != ecrNumbersNames) {
 				for (int i = 0; i < ecrNumbersNames.length(); i++) {
