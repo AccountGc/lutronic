@@ -102,7 +102,7 @@ public class MailUtils {
 	/**
 	 * 결재선 지정 메일
 	 */
-	public void sendWorkDataMail(Hashtable<String, String> h) throws Exception {
+	public static void sendWorkDataMail(Hashtable<String, String> h) throws Exception {
 		System.out.println("결재선 지정 메일 호출!!!");
 
 		String oid = h.get("oid");
@@ -141,7 +141,7 @@ public class MailUtils {
 	/**
 	 * 메일 전달용 데이터
 	 */
-	private Hashtable<String, String> setParseData(LifeCycleManaged lcm) throws Exception {
+	private static Hashtable<String, String> setParseData(LifeCycleManaged lcm) throws Exception {
 		Hashtable<String, String> hash = new Hashtable<>();
 
 		String description = "";
@@ -221,7 +221,7 @@ public class MailUtils {
 	/**
 	 * 메일중 대산 객체 이름 반환
 	 */
-	private String getTargetName(LifeCycleManaged lcm) {
+	private static String getTargetName(LifeCycleManaged lcm) {
 		String target = "";
 		if (lcm instanceof WTDocument) {
 			WTDocument d = (WTDocument) lcm;
@@ -255,7 +255,7 @@ public class MailUtils {
 	/**
 	 * 메일 전송
 	 */
-	private void sendMail(Hashtable<String, Object> hash) throws Exception {
+	private static void sendMail(Hashtable<String, Object> hash) throws Exception {
 
 		HashMap<String, String> to = (HashMap<String, String>) hash.get("TO");
 		String subject = (String) hash.get("SUBJECT");
@@ -320,7 +320,7 @@ public class MailUtils {
 	/**
 	 * 수신 메일 전송
 	 */
-	public void sendReceiveMail(Hashtable<String, String> h) throws Exception {
+	public static void sendReceiveMail(Hashtable<String, String> h) throws Exception {
 		System.out.println("수신 요청 메일 호출!!");
 		String oid = h.get("oid");
 		Persistable per = CommonUtil.getObject(oid);
@@ -361,7 +361,7 @@ public class MailUtils {
 	/**
 	 * 합의 메일 전송
 	 */
-	public void sendAgreeMail(Hashtable<String, String> h) throws Exception {
+	public static void sendAgreeMail(Hashtable<String, String> h) throws Exception {
 		System.out.println("합의 요청 메일 호출!!");
 		String oid = h.get("oid");
 		Persistable per = CommonUtil.getObject(oid);
@@ -477,7 +477,7 @@ public class MailUtils {
 	/**
 	 * 결재 요청 메일
 	 */
-	public void sendApprovalMail(Hashtable<String, String> h) throws Exception {
+	public static void sendApprovalMail(Hashtable<String, String> h) throws Exception {
 		System.out.println("결재 요청 메일 호출!!");
 		String oid = h.get("oid");
 		Persistable per = CommonUtil.getObject(oid);
