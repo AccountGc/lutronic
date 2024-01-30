@@ -12,7 +12,7 @@ public class SendMailTest {
 
 		WTDocument doc = (WTDocument) CommonUtil.getObject("wt.doc.WTDocument:153521");
 
-		MailUtils.manager.sendWorkDataMail(doc, "결재선지정", "결재선지정");
+//		MailUtils.manager.sendWorkDataMail(doc, "결재선지정", "결재선지정");
 //		System.exit(0);
 	}
 }

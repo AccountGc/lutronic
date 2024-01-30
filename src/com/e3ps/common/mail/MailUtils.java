@@ -90,12 +90,12 @@ public class MailUtils {
 	/**
 	 * 결재선 지정 메일
 	 */
-	public void sendWorkDataMail(LifeCycleManaged lcm, String workName, String loc) throws Exception {
+	public void sendWorkDataMail(LifeCycleManaged lcm) throws Exception {
 		Hashtable<String, Object> hash = new Hashtable<>();
 		WTUser fromUser = (WTUser) SessionHelper.manager.getAdministrator();
 
 		String targetName = getTargetName(lcm);
-		String subject = targetName + "의 " + workName + "요청 알림 메일입니다.";
+		String subject = targetName + "의 결재선 지정요청 알림 메일입니다.";
 
 		HashMap<String, String> to = new HashMap<>();
 		WTUser toUser = (WTUser) SessionHelper.manager.getPrincipal();
@@ -106,8 +106,8 @@ public class MailUtils {
 		to.put(toUser.getEMail(), toUser.getFullName());
 
 		Hashtable<String, String> data = setParseData(lcm);
-		data.put("workName", workName);
-		data.put("Location", loc);
+		data.put("workName", "결재선지정");
+		data.put("Location", "결재선지정");
 
 		MailHtmlContentTemplate mhct = MailHtmlContentTemplate.getInstance();
 		String mcontent = mhct.htmlContent(data, "mail_notice.html");
