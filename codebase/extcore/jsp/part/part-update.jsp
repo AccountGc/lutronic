@@ -82,7 +82,7 @@ QuantityUnit[] unitList = (QuantityUnit[]) request.getAttribute("unitList");
 		</td>
 	</tr>
 	<tr>
-		<th class="lb req">사용자 Key in</th>
+		<th class="lb">사용자 Key in</th>
 		<td class="indent5">
 			<input id="partName4" name="partName4" class='partName width-300' type="text" value="<%=data.getPartName4()%>">
 		</td>
@@ -535,10 +535,7 @@ function update() {
 			alert("품목구분을 입력하세요.");
 			return;					
 		}
-		if(isEmpty(partName4)){
-			alert("Key-in을 입력하세요.");
-			return;					
-		}
+
 		if(isEmpty(model)){
 			alert("프로젝트 코드를 입력하세요.");
 			return;					
