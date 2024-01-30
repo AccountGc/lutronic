@@ -167,6 +167,8 @@ WTUser sessionUser = (WTUser) SessionHelper.manager.getPrincipal();
 					</jsp:include>
 				</td>
 				<td class="center" colspan="3">
+					<input type="button" value="재변환" title="재변환" class="blue" onclick="publish('<%=dto.getOid()%>');">
+					&nbsp;
 					<input type="button" value="CREO VIEW" title="CREO VIEW" class="gray" onclick="openCreoView();">
 				</td>
 			</tr>
@@ -542,6 +544,9 @@ WTUser sessionUser = (WTUser) SessionHelper.manager.getPrincipal();
 
 	// 재변환
 	function publish(oid) {
+		if (!confirm("재변환 하시겠습니까?")) {
+			return false;
+		}
 		const url = getCallUrl("/part/publish?oid=" + oid);
 		parent.openLayer();
 		call(url, null, function(data) {

@@ -106,10 +106,11 @@ boolean multi = (boolean) request.getAttribute("multi");
 		</td>
 	</tr>
 	<tr>
-		<th class="b">프로젝트 코드</th>
+		<th>프로젝트 코드</th>
 		<td class="indent5" colspan="3">
 			<input type="text" name="model" id="model" class="width-200">
-			<img src="/Windchill/extcore/images/delete.png" class="delete" title="삭제" onclick="clearUser('model')">
+			<input type="hidden" name="modelcode" id="modelcode">
+			<img src="/Windchill/extcore/images/delete.png" class="delete" title="삭제" onclick="clearValue('model', 'code')">
 		</td>
 		<th>승인일</th>
 		<td class="indent5">
@@ -286,7 +287,7 @@ function loadGridData(movePage) {
 	}
 	let params = new Object();
 	const url = getCallUrl("/eo/list");
-	const field = [ "name", "number", "createdFrom", "createdTo", "creatorOid", "state", "licensing", "model", "sortCheck", "sortValue", "riskType", "approveFrom", "approveTo" ];
+	const field = [ "name", "number", "createdFrom", "createdTo", "creatorOid", "state", "licensing", "modelcode", "sortCheck", "sortValue", "riskType", "approveFrom", "approveTo" ];
 	const rows104 = AUIGrid.getGridDataWithState(myGridID104, "gridState");
 	params.rows104 = rows104;
 	params = toField(params, field);

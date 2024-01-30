@@ -132,16 +132,9 @@ iframe {
 		</td>
 		<th>프로젝트코드</th>
 		<td class="indent5">
-			<select name="model" id="model" class="width-200">
-				<option value="">선택</option>
-				<%
-				for (NumberCode model : modelList) {
-				%>
-				<option value="<%=model.getCode()%>"><%=model.getName()%></option>
-				<%
-				}
-				%>
-			</select>
+			<input type="text" name="model" id="model" class="width-200">
+			<input type="hidden" name="modelcode" id="modelcode">
+			<img src="/Windchill/extcore/images/delete.png" class="delete" title="삭제" onclick="clearValue('model', 'code')">
 		</td>
 	</tr>
 	<tr>
@@ -293,7 +286,7 @@ iframe {
 		const lifecycle = document.querySelector("input[name=lifecycle]:checked").value;
 		const secondarys = toArray("secondarys");
 		const primary = document.querySelector("input[name=primary]");
-		const model = document.getElementById("model").value;
+		const model = document.getElementById("modelcode").value;
 		const writer = document.getElementById("writer").value;
 		const interalnumber = document.getElementById("interalnumber").value;
 		const deptcode = document.getElementById("deptcode").value;
@@ -317,7 +310,7 @@ iframe {
 		const rows105 = AUIGrid.getGridDataWithState(myGridID105, "gridState");
 		// 내용
 		const content = DEXT5.getBodyValue("content");
-		
+
 		if (isNull(documentName.value)) {
 			alert("문서종류를 입력해주세요.");
 			documentName.focus();
@@ -340,7 +333,7 @@ iframe {
 				alert("주 첨부파일을 첨부해주세요.");
 				return false;
 			}
-			
+
 			if (!confirm("등록하시겠습니까?")) {
 				return false;
 			}
@@ -354,7 +347,7 @@ iframe {
 			description : description.value,
 			content : content,
 			secondarys : secondarys,
-			primary : primary==null ? '' : primary.value,
+			primary : primary == null ? '' : primary.value,
 			location : location.value,
 			model_code : model,
 			deptcode_code : deptcode,
@@ -388,7 +381,8 @@ iframe {
 		selectbox("formType");
 		selectbox("preseration");
 		selectbox("documentType");
-		selectbox("model");
+		// 		selectbox("model");
+		finderCode("model", "MODEL");
 		selectbox("deptcode");
 		$("#preseration").bindSelectSetValue("PR001");
 		createAUIGrid90(columns90);

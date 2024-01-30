@@ -26,15 +26,15 @@
 		</table>
 		<table class="create-table">
 			<colgroup>
-				<col width="180">
-				<col width="*">
-				<col width="180">
-				<col width="*">
+				<col width="150">
+				<col width="500">
+				<col width="150">
+				<col width="500">
 			</colgroup>
 			<tr>
 				<th class="req lb">ECO 제목</th>
 				<td class="indent5">
-					<input type="text" name="name" id="name" class="width-400">
+					<input type="text" name="name" id="name" class="width-700">
 				</td>
 				<th class="req">ECO 타입</th>
 				<td>

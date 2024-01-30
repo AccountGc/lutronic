@@ -140,6 +140,8 @@ Map<String, String> step = dto.getStep();
 					</jsp:include>
 				</td>
 				<td class="center" colspan="2">
+					<input type="button" value="재변환" title="재변환" class="blue" onclick="publish('<%=dto.getOid()%>');">
+					&nbsp;
 					<input type="button" value="CREO VIEW" title="CREO VIEW" class="gray" onclick="openCreoView();">
 				</td>
 			</tr>
@@ -310,6 +312,9 @@ Map<String, String> step = dto.getStep();
 
 	// 재변환
 	function publish(oid) {
+		if(!confirm("재변환 하시겠습니까?")) {
+			return false;
+		}
 		const url = getCallUrl("/drawing/publish?oid=" + oid);
 		parent.openLayer();
 		call(url, null, function(data) {

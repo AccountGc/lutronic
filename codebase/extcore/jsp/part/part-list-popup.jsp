@@ -89,7 +89,8 @@ boolean complete = (boolean) request.getAttribute("complete");
 		<th>프로젝트코드</th>
 		<td class="indent5">
 			<input type="text" name="model" id="model" class="width-200">
-			<img src="/Windchill/extcore/images/delete.png" class="delete" title="삭제" onclick="clearUser('model')">
+			<input type="hidden" name="modelcode" id="modelcode">
+			<img src="/Windchill/extcore/images/delete.png" class="delete" title="삭제" onclick="clearValue('model', 'code')">
 		</td>
 		<th>상태</th>
 		<td class="indent5">
@@ -502,7 +503,7 @@ function loadGridData(movePage) {
 	}
 	let params = new Object();
 	const url = getCallUrl("/part/list");
-	const field = [ "location", "partNumber", "partName", "createdFrom", "createdTo", "modifiedFrom", "modifiedTo", "creator", "state", "model", "productmethod", "deptcode", "unit", "weight", "mat", "finish", "remarks",
+	const field = [ "location", "partNumber", "partName", "createdFrom", "createdTo", "modifiedFrom", "modifiedTo", "creator", "state", "modelcode", "productmethod", "deptcode", "unit", "weight", "mat", "finish", "remarks",
 		"ecoNo", "eoNo" ,"creatorOid","specification"];
 	const  latest = document.querySelector("input[name=latest]:checked").value;
 	const  complete = document.querySelector("input[name=complete]:checked");

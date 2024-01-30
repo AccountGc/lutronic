@@ -121,16 +121,9 @@ String state = (String) request.getAttribute("state");
 	<tr>
 		<th>프로젝트코드</th>
 		<td class="indent5">
-			<select name="model" id="model" class="width-200">
-				<option value="">선택</option>
-				<%
-				for (NumberCode model : modelList) {
-				%>
-				<option value="<%=model.getCode()%>"><%=model.getName()%></option>
-				<%
-				}
-				%>
-			</select>
+			<input type="text" name="model" id="model" class="width-200">
+			<input type="hidden" name="modelcode" id="modelcode">
+			<img src="/Windchill/extcore/images/delete.png" class="delete" title="삭제" onclick="clearValue('model', 'code')">
 		</td>
 		<th>REV</th>
 		<td>
@@ -384,7 +377,7 @@ function auiCellClick(event) {
 function loadGridData() {
 	let params = new Object();
 	const url = getCallUrl("/etc/list");
-	const field = [ "location", "name", "number", "state", "creatorOid", "createdFrom", "createdTo", "modifiedFrom", "modifiedTo", "documentType", "preseration", "model", "deptcode", "interalnumber", "writer", "description"];
+	const field = [ "location", "name", "number", "state", "creatorOid", "createdFrom", "createdTo", "modifiedFrom", "modifiedTo", "documentType", "preseration", "modelcode", "deptcode", "interalnumber", "writer", "description"];
 	const latest = !!document.querySelector("input[name=latest]:checked").value;
 	params = toField(params, field);
 	params.latest = latest;
@@ -426,7 +419,7 @@ document.addEventListener("DOMContentLoaded", function() {
 	twindate("modified");
 	selectbox("_psize");
 	selectbox("preseration");
-	selectbox("model");
+	finderCode("model", "MODEL");
 	selectbox("deptcode");
 	$("#_psize").bindSelectSetValue("20");
 	<%if (StringUtil.checkString(state)) {%>

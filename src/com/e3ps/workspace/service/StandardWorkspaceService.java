@@ -16,6 +16,7 @@ import com.e3ps.change.eo.service.EoHelper;
 import com.e3ps.change.util.EChangeUtils;
 import com.e3ps.common.mail.MailHtmlContentTemplate;
 import com.e3ps.common.mail.MailUtil;
+import com.e3ps.common.mail.MailUtils;
 import com.e3ps.common.util.CommonUtil;
 import com.e3ps.common.util.QuerySpecUtils;
 import com.e3ps.common.util.StringUtil;
@@ -159,7 +160,7 @@ public class StandardWorkspaceService extends StandardManager implements Workspa
 				PersistenceHelper.manager.save(agreeLine);
 
 				// 모든 합의자에게 메일 전송
-//				MailUtils.manager.sendWorkDataMail((LifeCycleManaged) per, "합의", "합의함");
+				MailUtils.manager.sendAgreeMail(per, agreeLine);
 			}
 		}
 
@@ -189,6 +190,8 @@ public class StandardWorkspaceService extends StandardManager implements Workspa
 					approvalLine.setStartTime(startTime);
 					approvalLine.setState(WorkspaceHelper.STATE_APPROVAL_APPROVING);
 					approvalLine.setCompleteTime(null);
+					// 합의 없을 경우 메일 보낸다..
+					MailUtils.manager.sendApprovalMail(per, approvalLine);
 				} else {
 					approvalLine.setStartTime(null);
 					approvalLine.setState(WorkspaceHelper.STATE_APPROVAL_READY);
@@ -219,9 +222,7 @@ public class StandardWorkspaceService extends StandardManager implements Workspa
 			receiveLine.setState(WorkspaceHelper.STATE_RECEIVE_READY);
 			PersistenceHelper.manager.save(receiveLine);
 		}
-
 		afterRegisterAction(master);
-
 	}
 
 	/**
@@ -479,8 +480,8 @@ public class StandardWorkspaceService extends StandardManager implements Workspa
 				for (ApprovalLine rLine : ll) {
 					rLine.setState(WorkspaceHelper.STATE_RECEIVE_START);
 					PersistenceHelper.manager.modify(rLine);
-
 					// 모든 수신라인에 메일 전송
+					MailUtils.manager.sendReceiveMail(per, rLine);
 				}
 
 				master.setCompleteTime(completeTime);
@@ -901,6 +902,7 @@ public class StandardWorkspaceService extends StandardManager implements Workspa
 			line = (ApprovalLine) PersistenceHelper.manager.modify(line);
 
 			ApprovalMaster master = line.getMaster();
+			Persistable per = master.getPersist();
 			boolean isAgreeApprovalLine = WorkspaceHelper.manager.isAgreeApprovalLine(master);
 			if (!isAgreeApprovalLine) { // 합의중 없으면
 				ArrayList<ApprovalLine> approvalLines = WorkspaceHelper.manager.getApprovalLines(master);
@@ -912,6 +914,7 @@ public class StandardWorkspaceService extends StandardManager implements Workspa
 						approvalLine.setStartTime(completeTime);
 						approvalLine = (ApprovalLine) PersistenceHelper.manager.modify(approvalLine);
 //						MailUtils.manager.sendWorkDataMail((LifeCycleManaged) master.getPersist(), "결재", "결재함");
+						MailUtils.manager.sendApprovalMail(per, approvalLine);
 					}
 				}
 				master.setState(WorkspaceHelper.STATE_MASTER_APPROVAL_APPROVING);
@@ -1083,6 +1086,15 @@ public class StandardWorkspaceService extends StandardManager implements Workspa
 				// 바로 다시 결재선 지정 모드..
 				WorkDataHelper.service.create(per);
 			} else {
+
+				// 일괄결재 체크
+				if (!(per instanceof AsmApproval)) {
+					QueryResult result = PersistenceHelper.manager.navigate(per, "approval", AppPerLink.class);
+					if (result.size() > 0) {
+						throw new Exception("일괄결재로 진행중인 결재입니다.\n결재 회수는 일괄결재를 선택해서 진행하세요.");
+					}
+				}
+
 				QueryResult qr = PersistenceHelper.manager.navigate(per, "workData", PerWorkDataLink.class);
 				WorkData d = null;
 				if (qr.hasMoreElements()) {

@@ -68,7 +68,7 @@ public class DocumentColumn {
 		setOid(doc.getPersistInfo().getObjectIdentifier().getStringValue());
 //		setLatest(DocumentHelper.manager.isLatest(doc));
 		setNumber(doc.getNumber());
-		setInteralnumber(IBAUtils.getStringValue(doc, "INTERALNUMBER"));
+//		setInteralnumber(IBAUtils.getStringValue(doc, "INTERALNUMBER"));
 		setModel(keyToValue(IBAUtils.getStringValue(doc, "MODEL"), "MODEL"));
 		setName(doc.getName());
 		setLocation(doc.getLocation());

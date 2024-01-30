@@ -302,17 +302,88 @@ public class MailUtils {
 	/**
 	 * 수신 메일 전송
 	 */
-	public void sendReceiveMail(Persistable per, ArrayList<ApprovalLine> ll) throws Exception {
-		for (ApprovalLine receiveLine : ll) {
+	public void sendReceiveMail(Persistable per, ApprovalLine receiveLine) throws Exception {
+		Hashtable<String, Object> hash = new Hashtable<>();
+		WTUser fromUser = (WTUser) SessionHelper.manager.getAdministrator();
+
+		String targetName = getTargetName((LifeCycleManaged) per);
+		String subject = targetName + "의 수신 요청 알림 메일입니다.";
+
+		HashMap<String, String> to = new HashMap<>();
+//			WTUser toUser = (WTUser) SessionHelper.manager.getPrincipal();
+		WTUser toUser = (WTUser) receiveLine.getOwnership().getOwner().getPrincipal();
+		if (!StringUtil.checkString(toUser.getEMail())) {
+			throw new Exception("받는 사람 = " + toUser.getFullName() + " 이메일 주소가 없습니다.");
+		}
+
+		to.put(toUser.getEMail(), toUser.getFullName());
+
+		Hashtable<String, String> data = setParseData((LifeCycleManaged) per);
+		data.put("workName", "수신");
+		data.put("Location", "수신함");
+
+		MailHtmlContentTemplate mhct = MailHtmlContentTemplate.getInstance();
+		String mcontent = mhct.htmlContent(data, "mail_notice.html");
+
+		hash.put("FROM", fromUser);
+		hash.put("TO", to);
+		hash.put("SUBJECT", subject);
+		hash.put("CONTENT", mcontent);
+
+		sendMail(hash);
+	}
+
+	/**
+	 * 합의 메일 전송
+	 */
+	public void sendAgreeMail(Persistable per, ApprovalLine agreeLine) throws Exception {
+		WTUser fromUser = (WTUser) SessionHelper.manager.getAdministrator();
+		Hashtable<String, Object> hash = new Hashtable<>();
+
+		String targetName = getTargetName((LifeCycleManaged) per);
+		String subject = targetName + "의 합의 요청 알림 메일입니다.";
+
+		HashMap<String, String> to = new HashMap<>();
+		WTUser toUser = (WTUser) agreeLine.getOwnership().getOwner().getPrincipal();
+		if (!StringUtil.checkString(toUser.getEMail())) {
+			throw new Exception("받는 사람 = " + toUser.getFullName() + " 이메일 주소가 없습니다.");
+		}
+
+		to.put(toUser.getEMail(), toUser.getFullName());
+
+		Hashtable<String, String> data = setParseData((LifeCycleManaged) per);
+		data.put("workName", "합의");
+		data.put("Location", "합의함");
+
+		MailHtmlContentTemplate mhct = MailHtmlContentTemplate.getInstance();
+		String mcontent = mhct.htmlContent(data, "mail_notice.html");
+
+		hash.put("FROM", fromUser);
+		hash.put("TO", to);
+		hash.put("SUBJECT", subject);
+		hash.put("CONTENT", mcontent);
+
+		sendMail(hash);
+	}
+
+	/**
+	 * 합의 메일 전송 테스트
+	 */
+	public void sendAgreeMailTest(Persistable per, ArrayList<WTUser> ll) throws Exception {
+		WTUser fromUser = (WTUser) SessionHelper.manager.getAdministrator();
+
+		for (WTUser toUser : ll) {
+//		for (ApprovalLine agreeLine : ll) {
+
+			System.out.println("메일 전송 테스트...!");
+
 			Hashtable<String, Object> hash = new Hashtable<>();
-			WTUser fromUser = (WTUser) SessionHelper.manager.getAdministrator();
 
 			String targetName = getTargetName((LifeCycleManaged) per);
-			String subject = targetName + "의 수신 요청 알림 메일입니다.";
+			String subject = targetName + "의 합의 요청 알림 메일입니다.";
 
 			HashMap<String, String> to = new HashMap<>();
-//			WTUser toUser = (WTUser) SessionHelper.manager.getPrincipal();
-			WTUser toUser = (WTUser) receiveLine.getOwnership().getOwner().getPrincipal();
+//			WTUser toUser = (WTUser) agreeLine.getOwnership().getOwner().getPrincipal();
 			if (!StringUtil.checkString(toUser.getEMail())) {
 				throw new Exception("받는 사람 = " + toUser.getFullName() + " 이메일 주소가 없습니다.");
 			}
@@ -362,6 +433,39 @@ public class MailUtils {
 
 		MailHtmlContentTemplate mhct = MailHtmlContentTemplate.getInstance();
 		String mcontent = mhct.htmlContent(data, "ecn_notice.html");
+
+		hash.put("FROM", fromUser);
+		hash.put("TO", to);
+		hash.put("SUBJECT", subject);
+		hash.put("CONTENT", mcontent);
+
+		sendMail(hash);
+	}
+
+	/**
+	 * 결재 요청 메일
+	 */
+	public void sendApprovalMail(Persistable per, ApprovalLine approvalLine) throws Exception {
+		WTUser fromUser = (WTUser) SessionHelper.manager.getAdministrator();
+		Hashtable<String, Object> hash = new Hashtable<>();
+
+		String targetName = getTargetName((LifeCycleManaged) per);
+		String subject = targetName + "의 결재 요청 알림 메일입니다.";
+
+		HashMap<String, String> to = new HashMap<>();
+		WTUser toUser = (WTUser) approvalLine.getOwnership().getOwner().getPrincipal();
+		if (!StringUtil.checkString(toUser.getEMail())) {
+			throw new Exception("받는 사람 = " + toUser.getFullName() + " 이메일 주소가 없습니다.");
+		}
+
+		to.put(toUser.getEMail(), toUser.getFullName());
+
+		Hashtable<String, String> data = setParseData((LifeCycleManaged) per);
+		data.put("workName", "결재");
+		data.put("Location", "결재함");
+
+		MailHtmlContentTemplate mhct = MailHtmlContentTemplate.getInstance();
+		String mcontent = mhct.htmlContent(data, "mail_notice.html");
 
 		hash.put("FROM", fromUser);
 		hash.put("TO", to);

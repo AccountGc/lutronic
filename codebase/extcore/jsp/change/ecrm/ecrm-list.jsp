@@ -136,7 +136,7 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 						%>
 					</select>
 				</td>
-				<th class="req lb">프로젝트 코드</th>
+				<th>프로젝트 코드</th>
 				<td class="indent5" colspan="3">
 					<input type="text" name="model" id="model" class="width-200">
 					<input type="hidden" name="modelcode" id="modelcode">
