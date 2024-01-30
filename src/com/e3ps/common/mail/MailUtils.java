@@ -321,7 +321,7 @@ public class MailUtils {
 	 * 수신 메일 전송
 	 */
 	public void sendReceiveMail(Hashtable<String, String> h) throws Exception {
-
+		System.out.println("수신 요청 메일 호출!!");
 		String oid = h.get("oid");
 		Persistable per = CommonUtil.getObject(oid);
 
@@ -355,13 +355,14 @@ public class MailUtils {
 		hash.put("CONTENT", mcontent);
 
 		sendMail(hash);
+		System.out.println("수신 요청 메일 종료!!");
 	}
 
 	/**
 	 * 합의 메일 전송
 	 */
 	public void sendAgreeMail(Hashtable<String, String> h) throws Exception {
-
+		System.out.println("합의 요청 메일 호출!!");
 		String oid = h.get("oid");
 		Persistable per = CommonUtil.getObject(oid);
 
@@ -394,6 +395,7 @@ public class MailUtils {
 		hash.put("CONTENT", mcontent);
 
 		sendMail(hash);
+		System.out.println("결재 요청 메일 종료!!");
 	}
 
 	/**
@@ -476,7 +478,7 @@ public class MailUtils {
 	 * 결재 요청 메일
 	 */
 	public void sendApprovalMail(Hashtable<String, String> h) throws Exception {
-
+		System.out.println("결재 요청 메일 호출!!");
 		String oid = h.get("oid");
 		Persistable per = CommonUtil.getObject(oid);
 
@@ -509,6 +511,7 @@ public class MailUtils {
 		hash.put("CONTENT", mcontent);
 
 		sendMail(hash);
+		System.out.println("결재 요청 메일 종료!!");
 	}
 
 	/**
