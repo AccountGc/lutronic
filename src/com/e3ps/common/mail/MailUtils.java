@@ -395,7 +395,7 @@ public class MailUtils {
 		hash.put("CONTENT", mcontent);
 
 		sendMail(hash);
-		System.out.println("결재 요청 메일 종료!!");
+		System.out.println("합의 요청 메일 종료!!");
 	}
 
 	/**
@@ -404,10 +404,11 @@ public class MailUtils {
 	public void sendAgreeMailTest(Persistable per, ArrayList<WTUser> ll) throws Exception {
 		WTUser fromUser = (WTUser) SessionHelper.manager.getAdministrator();
 
+		int i=0;
 		for (WTUser toUser : ll) {
 //		for (ApprovalLine agreeLine : ll) {
 
-			System.out.println("메일 전송 테스트...!");
+			System.out.println("메일 전송 테스트...! = " + i);
 
 			Hashtable<String, Object> hash = new Hashtable<>();
 
@@ -435,6 +436,7 @@ public class MailUtils {
 			hash.put("CONTENT", mcontent);
 
 			sendMail(hash);
+			i++;
 		}
 	}
 

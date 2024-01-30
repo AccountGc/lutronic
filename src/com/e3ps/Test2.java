@@ -20,9 +20,6 @@ public class Test2 {
 		ArrayList<WTUser> ll = new ArrayList<>();
 
 		ll.add(user);
-		ll.add(user);
-		ll.add(user);
-		ll.add(user);
 
 		MailUtils.manager.sendAgreeMailTest(doc, ll);
 
