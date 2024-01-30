@@ -47,7 +47,8 @@ public class SendMail {
 		Session session = null;
 		props.put("mail.smtp.port", "587");
 		props.put("mail.smtp.starttls.enable", "true");
-		props.put("mail.smtp.debug", "true");
+		props.put("mail.smtp.debug", "false");
+//		props.put("mail.smtp.debug", "true");
 		props.put("mail.smtp.auth", "true");
 		MailAuthenticator authenticator = new MailAuthenticator("pdm-admin@lutronic.com", "anrndghkqorentksdl@2021");
 		session = Session.getDefaultInstance(props, authenticator);

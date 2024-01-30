@@ -65,7 +65,6 @@
 14. 설병용 PDF 큐 생성
 	- 사이트 > 유틸리티 > 대기열관리 > AttachPdfProcessQueue 프로세스 큐 생성
 	
-	
 15. 워커 설정, 캐시, DB설정
    <!-- Publish Filter -->
    <Property name="publish.service.filterepmdocumentpublishmethod" overridable="true"
@@ -128,4 +127,7 @@
     <!-- Db Connection Setting -->
    <Property name="wt.pom.maxDbConnections" overridable="true"
              targetFile="db/db.properties"
-             value="200"/>             
+             value="200"/>
+             
+16. 메일 전송 큐 생성
+	- 사이트 -> 대기열 관리 -> SendMailProcessQueue 큐 생성                          

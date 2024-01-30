@@ -10,6 +10,7 @@ import com.e3ps.change.ECRMRequest;
 import com.e3ps.change.EChangeNotice;
 import com.e3ps.change.EChangeOrder;
 import com.e3ps.change.EChangeRequest;
+import com.e3ps.common.util.CommonUtil;
 import com.e3ps.common.util.StringUtil;
 import com.e3ps.org.MailUser;
 import com.e3ps.rohs.ROHSMaterial;
@@ -20,15 +21,26 @@ import wt.doc.WTDocument;
 import wt.fc.Persistable;
 import wt.lifecycle.LifeCycleManaged;
 import wt.org.OrganizationServicesHelper;
+import wt.org.WTPrincipal;
 import wt.org.WTUser;
 import wt.part.WTPart;
+import wt.queue.ProcessingQueue;
+import wt.queue.QueueHelper;
 import wt.session.SessionHelper;
 
 public class MailUtils {
 
 	public static final MailUtils manager = new MailUtils();
 
-	protected MailUtils() {
+	private static final String processQueueName = "SendMailProcessQueue";
+	private static final String className = "com.e3ps.common.mail.MailUtils";
+	private static final String sendWorkDataMailMethod = "sendWorkDataMail"; // 결재선 지정 메일
+	private static final String sendApprovalMailMethod = "sendApprovalMail"; // 결재 메일
+	private static final String sendAgreeMailMethod = "sendAgreeMail"; // 합의 메일
+	private static final String sendReceiveMailMethod = "sendReceiveMail"; // 수신 메일
+	private static final String sendExternalMailMethod = "sendExternalMail"; // 외부메일
+
+	private MailUtils() {
 
 	}
 
@@ -90,7 +102,12 @@ public class MailUtils {
 	/**
 	 * 결재선 지정 메일
 	 */
-	public void sendWorkDataMail(LifeCycleManaged lcm) throws Exception {
+	public void sendWorkDataMail(Hashtable<String, String> h) throws Exception {
+		System.out.println("결재선 지정 메일 호출!!!");
+
+		String oid = h.get("oid");
+		LifeCycleManaged lcm = (LifeCycleManaged) CommonUtil.getObject(oid);
+
 		Hashtable<String, Object> hash = new Hashtable<>();
 		WTUser fromUser = (WTUser) SessionHelper.manager.getAdministrator();
 
@@ -118,6 +135,7 @@ public class MailUtils {
 		hash.put("CONTENT", mcontent);
 
 		sendMail(hash);
+		System.out.println("결재선 지정 메일 종료!!");
 	}
 
 	/**
@@ -302,7 +320,13 @@ public class MailUtils {
 	/**
 	 * 수신 메일 전송
 	 */
-	public void sendReceiveMail(Persistable per, ApprovalLine receiveLine) throws Exception {
+	public void sendReceiveMail(Hashtable<String, String> h) throws Exception {
+
+		String oid = h.get("oid");
+		Persistable per = CommonUtil.getObject(oid);
+
+		ApprovalLine receiveLine = (ApprovalLine) CommonUtil.getObject(h.get("line"));
+
 		Hashtable<String, Object> hash = new Hashtable<>();
 		WTUser fromUser = (WTUser) SessionHelper.manager.getAdministrator();
 
@@ -336,7 +360,13 @@ public class MailUtils {
 	/**
 	 * 합의 메일 전송
 	 */
-	public void sendAgreeMail(Persistable per, ApprovalLine agreeLine) throws Exception {
+	public void sendAgreeMail(Hashtable<String, String> h) throws Exception {
+
+		String oid = h.get("oid");
+		Persistable per = CommonUtil.getObject(oid);
+
+		ApprovalLine agreeLine = (ApprovalLine) CommonUtil.getObject(h.get("line"));
+
 		WTUser fromUser = (WTUser) SessionHelper.manager.getAdministrator();
 		Hashtable<String, Object> hash = new Hashtable<>();
 
@@ -445,7 +475,13 @@ public class MailUtils {
 	/**
 	 * 결재 요청 메일
 	 */
-	public void sendApprovalMail(Persistable per, ApprovalLine approvalLine) throws Exception {
+	public void sendApprovalMail(Hashtable<String, String> h) throws Exception {
+
+		String oid = h.get("oid");
+		Persistable per = CommonUtil.getObject(oid);
+
+		ApprovalLine approvalLine = (ApprovalLine) CommonUtil.getObject(h.get("line"));
+
 		WTUser fromUser = (WTUser) SessionHelper.manager.getAdministrator();
 		Hashtable<String, Object> hash = new Hashtable<>();
 
@@ -473,5 +509,76 @@ public class MailUtils {
 		hash.put("CONTENT", mcontent);
 
 		sendMail(hash);
+	}
+
+	/**
+	 * 결재선 지정 메일 백그라운 호출
+	 */
+	public void sendWorkDataMailMethod(Persistable per) throws Exception {
+
+		WTPrincipal principal = SessionHelper.manager.setAdministrator();
+		ProcessingQueue queue = (ProcessingQueue) QueueHelper.manager.getQueue(processQueueName, ProcessingQueue.class);
+
+		Hashtable<String, String> hash = new Hashtable<>();
+		hash.put("oid", per.getPersistInfo().getObjectIdentifier().getStringValue());
+
+		Class[] argClasses = { Hashtable.class };
+		Object[] argObjects = { hash };
+
+		queue.addEntry(principal, sendWorkDataMailMethod, className, argClasses, argObjects);
+	}
+
+	/**
+	 * 결재 메일 백그라운드 호출
+	 */
+	public void sendApprovalMailMethod(Persistable per, ApprovalLine approvalLine) throws Exception {
+
+		WTPrincipal principal = SessionHelper.manager.setAdministrator();
+		ProcessingQueue queue = (ProcessingQueue) QueueHelper.manager.getQueue(processQueueName, ProcessingQueue.class);
+
+		Hashtable<String, String> hash = new Hashtable<>();
+		hash.put("oid", per.getPersistInfo().getObjectIdentifier().getStringValue());
+		hash.put("line", approvalLine.getPersistInfo().getObjectIdentifier().getStringValue());
+
+		Class[] argClasses = { Hashtable.class };
+		Object[] argObjects = { hash };
+
+		queue.addEntry(principal, sendApprovalMailMethod, className, argClasses, argObjects);
+	}
+
+	/**
+	 * 합의 메일 백그라운드 호출
+	 */
+	public void sendAgreeMailMethod(Persistable per, ApprovalLine agreeLine) throws Exception {
+
+		WTPrincipal principal = SessionHelper.manager.setAdministrator();
+		ProcessingQueue queue = (ProcessingQueue) QueueHelper.manager.getQueue(processQueueName, ProcessingQueue.class);
+
+		Hashtable<String, String> hash = new Hashtable<>();
+		hash.put("oid", per.getPersistInfo().getObjectIdentifier().getStringValue());
+		hash.put("line", agreeLine.getPersistInfo().getObjectIdentifier().getStringValue());
+
+		Class[] argClasses = { Hashtable.class };
+		Object[] argObjects = { hash };
+
+		queue.addEntry(principal, sendAgreeMailMethod, className, argClasses, argObjects);
+	}
+
+	/**
+	 * 수신 메일 백그라운드 호출
+	 */
+	public void sendReceiveMailMethod(Persistable per, ApprovalLine receiveLine) throws Exception {
+
+		WTPrincipal principal = SessionHelper.manager.setAdministrator();
+		ProcessingQueue queue = (ProcessingQueue) QueueHelper.manager.getQueue(processQueueName, ProcessingQueue.class);
+
+		Hashtable<String, String> hash = new Hashtable<>();
+		hash.put("oid", per.getPersistInfo().getObjectIdentifier().getStringValue());
+		hash.put("line", receiveLine.getPersistInfo().getObjectIdentifier().getStringValue());
+
+		Class[] argClasses = { Hashtable.class };
+		Object[] argObjects = { hash };
+
+		queue.addEntry(principal, sendReceiveMailMethod, className, argClasses, argObjects);
 	}
 }

@@ -160,7 +160,8 @@ public class StandardWorkspaceService extends StandardManager implements Workspa
 				PersistenceHelper.manager.save(agreeLine);
 
 				// 모든 합의자에게 메일 전송
-				MailUtils.manager.sendAgreeMail(per, agreeLine);
+//				MailUtils.manager.sendAgreeMail(per, agreeLine);
+				MailUtils.manager.sendAgreeMailMethod(per, agreeLine);
 			}
 		}
 
@@ -191,7 +192,8 @@ public class StandardWorkspaceService extends StandardManager implements Workspa
 					approvalLine.setState(WorkspaceHelper.STATE_APPROVAL_APPROVING);
 					approvalLine.setCompleteTime(null);
 					// 합의 없을 경우 메일 보낸다..
-					MailUtils.manager.sendApprovalMail(per, approvalLine);
+//					MailUtils.manager.sendApprovalMail(per, approvalLine);
+					MailUtils.manager.sendApprovalMailMethod(per, approvalLine);
 				} else {
 					approvalLine.setStartTime(null);
 					approvalLine.setState(WorkspaceHelper.STATE_APPROVAL_READY);
@@ -466,6 +468,8 @@ public class StandardWorkspaceService extends StandardManager implements Workspa
 					approvalLine.setStartTime(completeTime);
 					approvalLine.setState(WorkspaceHelper.STATE_APPROVAL_APPROVING);
 					approvalLine = (ApprovalLine) PersistenceHelper.manager.modify(approvalLine);
+					MailUtils.manager.sendApprovalMailMethod(per, approvalLine);
+
 				}
 			}
 
@@ -481,7 +485,8 @@ public class StandardWorkspaceService extends StandardManager implements Workspa
 					rLine.setState(WorkspaceHelper.STATE_RECEIVE_START);
 					PersistenceHelper.manager.modify(rLine);
 					// 모든 수신라인에 메일 전송
-					MailUtils.manager.sendReceiveMail(per, rLine);
+//					MailUtils.manager.sendReceiveMail(per, rLine);
+					MailUtils.manager.sendReceiveMailMethod(per, rLine);
 				}
 
 				master.setCompleteTime(completeTime);
@@ -914,7 +919,7 @@ public class StandardWorkspaceService extends StandardManager implements Workspa
 						approvalLine.setStartTime(completeTime);
 						approvalLine = (ApprovalLine) PersistenceHelper.manager.modify(approvalLine);
 //						MailUtils.manager.sendWorkDataMail((LifeCycleManaged) master.getPersist(), "결재", "결재함");
-						MailUtils.manager.sendApprovalMail(per, approvalLine);
+						MailUtils.manager.sendApprovalMailMethod(per, approvalLine);
 					}
 				}
 				master.setState(WorkspaceHelper.STATE_MASTER_APPROVAL_APPROVING);
