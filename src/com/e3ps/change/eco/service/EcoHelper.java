@@ -843,38 +843,39 @@ public class EcoHelper {
 
 			ApprovalMaster master = WorkspaceHelper.manager.getMaster(eco);
 			ApprovalLine preLine = WorkspaceHelper.manager.getLastPreApprovalLine(master);
+			if (preLine != null) {
+				// 승인 싸인 (16-I, 15-8)
+				String agreeSignPath = OrgHelper.manager.getSignPath(preLine.getOwnership().getOwner().getName());
+				if (agreeSignPath != null) {
+					int picIndex = worksheet.getPictures().add(15, 10, agreeSignPath);
+					Picture picture = worksheet.getPictures().get(picIndex);
+					picture.setHeightCM(2.5);
+					picture.setWidthCM(2.5);
+					picture.setAutoSize(true);
 
-			// 승인 싸인 (16-I, 15-8)
-			String agreeSignPath = OrgHelper.manager.getSignPath(preLine.getOwnership().getOwner().getName());
-			if (agreeSignPath != null) {
-				int picIndex = worksheet.getPictures().add(15, 10, agreeSignPath);
-				Picture picture = worksheet.getPictures().get(picIndex);
-				picture.setHeightCM(2.5);
-				picture.setWidthCM(2.5);
-				picture.setAutoSize(true);
+					int cellRowIndex = 15; // Specify the row index of the cell
+					int cellColumnIndex = 10; // Specify the column index of the cell
+					int cellWidth = worksheet.getCells().getColumnWidthPixel(cellColumnIndex);
+					int cellHeight = worksheet.getCells().getRowHeightPixel(cellRowIndex);
+					int imageWidth = (int) picture.getWidthInch() * 96; // Convert width from cm to pixels
+					int imageHeight = (int) picture.getHeightInch() * 96; // Convert height from cm to pixels
 
-				int cellRowIndex = 15; // Specify the row index of the cell
-				int cellColumnIndex = 10; // Specify the column index of the cell
-				int cellWidth = worksheet.getCells().getColumnWidthPixel(cellColumnIndex);
-				int cellHeight = worksheet.getCells().getRowHeightPixel(cellRowIndex);
-				int imageWidth = (int) picture.getWidthInch() * 96; // Convert width from cm to pixels
-				int imageHeight = (int) picture.getHeightInch() * 96; // Convert height from cm to pixels
-
-				int deltaX = (cellWidth - imageWidth) / 2;
+					int deltaX = (cellWidth - imageWidth) / 2;
 //				int deltaY = (cellHeight - imageHeight) / 2;
-				picture.setPlacement(PlacementType.FREE_FLOATING);
-				picture.setUpperDeltaX(deltaX);
+					picture.setPlacement(PlacementType.FREE_FLOATING);
+					picture.setUpperDeltaX(deltaX);
 //				picture.setUpperDeltaY(deltaY);
+				}
+
+				// 검토자 (17-K, 16-10)
+				Cell checkerCell = worksheet.getCells().get(16, 10);
+				checkerCell.putValue(preLine.getOwnership().getOwner().getFullName());
+
+				// 검토일 (18-K, 17-10)
+				Cell checkerDateCell = worksheet.getCells().get(17, 10);
+				checkerDateCell.putValue(
+						preLine.getCompleteTime() != null ? preLine.getCompleteTime().toString().substring(0, 10) : "");
 			}
-
-			// 검토자 (17-K, 16-10)
-			Cell checkerCell = worksheet.getCells().get(16, 10);
-			checkerCell.putValue(preLine.getOwnership().getOwner().getFullName());
-
-			// 검토일 (18-K, 17-10)
-			Cell checkerDateCell = worksheet.getCells().get(17, 10);
-			checkerDateCell.putValue(
-					preLine.getCompleteTime() != null ? preLine.getCompleteTime().toString().substring(0, 10) : "");
 
 			// 승인자 (17-M 16-12)
 			ApprovalLine last = WorkspaceHelper.manager.getLastApprovalLine(master);

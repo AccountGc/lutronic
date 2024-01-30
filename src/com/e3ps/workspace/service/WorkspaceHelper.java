@@ -1214,8 +1214,9 @@ public class WorkspaceHelper {
 		QuerySpecUtils.toEqualsAnd(query, idx, ApprovalLine.class, "masterReference.key.id", master);
 		QuerySpecUtils.toEqualsAnd(query, idx, ApprovalLine.class, ApprovalLine.ROLE, WORKING_APPROVAL);
 		QuerySpecUtils.toEqualsAnd(query, idx, ApprovalLine.class, ApprovalLine.TYPE, APPROVAL_LINE);
-		QuerySpecUtils.toOrderBy(query, idx, ApprovalLine.class, ApprovalLine.COMPLETE_TIME, false);
+		QuerySpecUtils.toOrderBy(query, idx, ApprovalLine.class, ApprovalLine.COMPLETE_TIME, true);
 
+		System.out.println("마지막=" + query);
 		QueryResult qr = PersistenceHelper.manager.find(query);
 		if (qr.hasMoreElements()) {
 			Object[] obj = (Object[]) qr.nextElement();
@@ -1239,7 +1240,7 @@ public class WorkspaceHelper {
 		QuerySpecUtils.toEqualsAnd(query, idx, ApprovalLine.class, "masterReference.key.id", master);
 		QuerySpecUtils.toEqualsAnd(query, idx, ApprovalLine.class, ApprovalLine.ROLE, WORKING_APPROVAL);
 		QuerySpecUtils.toEqualsAnd(query, idx, ApprovalLine.class, ApprovalLine.TYPE, APPROVAL_LINE);
-		QuerySpecUtils.toEqualsAnd(query, idx, ApprovalLine.class, ApprovalLine.SORT, lastLine.getSort() + 1);
+		QuerySpecUtils.toEqualsAnd(query, idx, ApprovalLine.class, ApprovalLine.SORT, lastLine.getSort() - 1);
 
 		System.out.println(query);
 		QueryResult qr = PersistenceHelper.manager.find(query);
