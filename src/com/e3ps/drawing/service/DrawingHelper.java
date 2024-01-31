@@ -117,7 +117,7 @@ public class DrawingHelper {
 		String sortKey = (String) params.get("sortKey");
 		String sortType = (String) params.get("sortType");
 
-		if (location.length() > 0) {
+		if (StringUtil.checkString(location)) {
 			int l = location.indexOf(PART_ROOT);
 
 			if (l >= 0) {
@@ -134,7 +134,6 @@ public class DrawingHelper {
 				query.appendWhere(new SearchCondition(EpmLocation.class, "loc", SearchCondition.LIKE, location + "%"),
 						new int[] { folder_idx });
 			}
-
 		}
 
 //		Folder folder = FolderTaskLogic.getFolder(location, WCUtil.getWTContainerRef());
