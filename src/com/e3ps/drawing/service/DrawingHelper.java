@@ -117,6 +117,9 @@ public class DrawingHelper {
 		String sortKey = (String) params.get("sortKey");
 		String sortType = (String) params.get("sortType");
 
+		if (!StringUtil.checkString(location)) {
+			location = PART_ROOT;
+		}
 		if (StringUtil.checkString(location)) {
 			int l = location.indexOf(PART_ROOT);
 

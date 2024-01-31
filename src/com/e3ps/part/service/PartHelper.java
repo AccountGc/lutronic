@@ -271,7 +271,7 @@ public class PartHelper {
 		QuerySpecUtils.toIBALikeAnd(query, WTPart.class, idx, AttributeKey.IBAKey.IBA_ECONO, eoNo);
 
 		if (!StringUtil.checkString(location)) {
-			location = "/Default/PART_Drawing";
+			location = PART_ROOT;
 		}
 
 		if (StringUtil.checkString(location)) {

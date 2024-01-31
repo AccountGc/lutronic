@@ -188,6 +188,10 @@ public class DocumentHelper {
 		QuerySpecUtils.toIBAEqualsAnd(query, WTDocument.class, idx, "DEPTCODE", deptcode);
 		QuerySpecUtils.toIBAEqualsAnd(query, WTDocument.class, idx, "DSGN", writer);
 
+		if (!StringUtil.checkString(location)) {
+			location =DOCUMENT_ROOT;
+		}
+		
 		if (StringUtil.checkString(location)) {
 			if (location.length() > 0) {
 				int l = location.indexOf(DOCUMENT_ROOT);
