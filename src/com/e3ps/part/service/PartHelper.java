@@ -195,17 +195,12 @@ public class PartHelper {
 
 		query.appendSelect(new ClassAttribute(WTPart.class, "thePersistInfo.theObjectIdentifier.id"), new int[] { idx },
 				false);
-		;
 
 		// 상태 임시저장 제외
 		if (query.getConditionCount() > 0) {
 			query.appendAnd();
 		}
-		query.appendWhere(
-				new SearchCondition(WTPart.class, WTPart.LIFE_CYCLE_STATE, SearchCondition.NOT_EQUAL, "TEMPRARY"),
-				new int[] { idx });
 
-//		QuerySpecUtils.toCI(query, idx, WTPart.class);
 		QuerySpecUtils.toLikeAnd(query, idx, WTPart.class, WTPart.NUMBER, partNumber);
 		QuerySpecUtils.toLikeAnd(query, idx, WTPart.class, WTPart.NAME, partName);
 		QuerySpecUtils.toTimeGreaterAndLess(query, idx, WTPart.class, WTPart.CREATE_TIMESTAMP, createdFrom, createdTo);

@@ -193,7 +193,6 @@ public class StandardWorkspaceService extends StandardManager implements Workspa
 					approvalLine.setCompleteTime(null);
 					// 합의 없을 경우 메일 보낸다..
 //					MailUtils.manager.sendApprovalMail(per, approvalLine);
-					MailUtils.manager.sendApprovalMailMethod(per, approvalLine);
 				} else {
 					approvalLine.setStartTime(null);
 					approvalLine.setState(WorkspaceHelper.STATE_APPROVAL_READY);
@@ -201,6 +200,11 @@ public class StandardWorkspaceService extends StandardManager implements Workspa
 				}
 			}
 			PersistenceHelper.manager.save(approvalLine);
+
+			if (sort == 0) {
+				MailUtils.manager.sendApprovalMailMethod(per, approvalLine);
+			}
+
 			sort += 1;
 		}
 

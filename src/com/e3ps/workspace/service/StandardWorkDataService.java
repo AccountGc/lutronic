@@ -58,9 +58,14 @@ public class StandardWorkDataService extends StandardManager implements WorkData
 
 			if (per instanceof LifeCycleManaged) {
 				LifeCycleManaged lcm = (LifeCycleManaged) per;
-				LifeCycleHelper.service.reassign(lcm, LifeCycleHelper.service
-						.getLifeCycleTemplateReference(lcm.getLifeCycleName(), WCUtil.getWTContainerRef())); // Lifecycle
-				LifeCycleHelper.service.setLifeCycleState((LifeCycleManaged) per, State.toState("LINE_REGISTER"));
+
+				LifeCycleTemplate lct = (LifeCycleTemplate) lcm.getLifeCycleTemplate().getObject();
+				if (!lct.isLatestIteration()) {
+					lcm = (LifeCycleManaged) LifeCycleHelper.service.reassign(lcm, LifeCycleHelper.service
+							.getLifeCycleTemplateReference(lcm.getLifeCycleName(), WCUtil.getWTContainerRef())); // Lifecycle
+					lcm = (LifeCycleManaged) PersistenceHelper.manager.refresh(lcm);
+					LifeCycleHelper.service.setLifeCycleState(lcm, State.toState("LINE_REGISTER"));
+				}
 			}
 
 			// 일괄겨재일 경우 대상들 결재선 지정상태로만 변경한다
