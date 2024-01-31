@@ -161,7 +161,7 @@ if ("CHANGE".equals(eco.getEoType())) {
 						if (!confirm("삭제 하시겠습니까?")) {
 							return false;
 						}
-						const oid = item.oid;
+						const oid = item.link;
 						const url = getCallUrl("/activity/deleteLink?oid=" + oid);
 						parent.openLayer();
 						call(url, null, function(data) {

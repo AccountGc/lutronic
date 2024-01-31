@@ -151,7 +151,8 @@ public class IndexController extends BaseController {
 		boolean isRa = DepartmentHelper.manager.isRa(people, new String[] { "RA팀" });
 		boolean isProduction = DepartmentHelper.manager.isProduction(people,
 				new String[] { "제조팀", "제조기술팀", "QC팀", "구매자재팀", "제품기술팀" });
-		boolean isCosmetic = DepartmentHelper.manager.isCosmetic(people, new String[] { "RA팀", "PM팀" });
+		boolean isCosmetic = DepartmentHelper.manager.isCosmetic(people,
+				new String[] { "마케팅팀", "APAC 프로덕트 엑스퍼트팀", "RA팀", "PM팀" });
 		boolean isPathological = DepartmentHelper.manager.isPathological(people, new String[] { "병리연구팀" });
 		boolean isClinical = DepartmentHelper.manager.isClinical(people, new String[] { "임상개발팀" });
 		boolean isAdmin = CommonUtil.isAdmin();

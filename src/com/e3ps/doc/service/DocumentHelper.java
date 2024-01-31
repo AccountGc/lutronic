@@ -150,28 +150,43 @@ public class DocumentHelper {
 
 		QuerySpec query = new QuerySpec();
 		int idx = query.appendClassList(WTDocument.class, false);
-		int idx_m = query.appendClassList(WTDocumentMaster.class, false);
 
-		query.setAdvancedQueryEnabled(true);
-		query.setDescendantQuery(false);
+		if (query.getConditionCount() > 0) {
+			query.appendAnd();
+		}
+
+		query.appendOpenParen();
+		query.appendWhere(
+				new SearchCondition(WTDocument.class, WTDocument.DOC_TYPE, SearchCondition.NOT_EQUAL, "$$MMDocument"),
+				new int[] { idx });
+		query.appendAnd();
+		query.appendWhere(
+				new SearchCondition(WTDocument.class, WTDocument.DOC_TYPE, SearchCondition.NOT_EQUAL, "$$ROHS"),
+				new int[] { idx });
+		query.appendCloseParen();
+
+//		int idx_m = query.appendClassList(WTDocumentMaster.class, false);
+
+//		query.setAdvancedQueryEnabled(true);
+//		query.setDescendantQuery(false);
 
 		query.appendSelect(new ClassAttribute(WTDocument.class, "thePersistInfo.theObjectIdentifier.id"),
 				new int[] { idx }, false);
 
-		QuerySpecUtils.toEqualsAnd(query, idx, WTDocument.class, "typeInfoWTDocument.ptc_str_2", classType1);
+//		QuerySpecUtils.toEqualsAnd(query, idx, WTDocument.class, "typeInfoWTDocument.ptc_str_2", classType1);
 
-		if (StringUtil.checkString(classType2)) {
-			DocumentClass class2 = (DocumentClass) CommonUtil.getObject(classType2);
-			QuerySpecUtils.toEqualsAnd(query, idx, WTDocument.class, "typeInfoWTDocument.ptc_ref_2.key.id", class2);
-		}
+//		if (StringUtil.checkString(classType2)) {
+//			DocumentClass class2 = (DocumentClass) CommonUtil.getObject(classType2);
+//			QuerySpecUtils.toEqualsAnd(query, idx, WTDocument.class, "typeInfoWTDocument.ptc_ref_2.key.id", class2);
+//		}
 
-		if (StringUtil.checkString(classType3)) {
-			DocumentClass class3 = (DocumentClass) CommonUtil.getObject(classType3);
-			QuerySpecUtils.toEqualsAnd(query, idx, WTDocument.class, "typeInfoWTDocument.ptc_ref_3.key.id", class3);
-		}
+//		if (StringUtil.checkString(classType3)) {
+//			DocumentClass class3 = (DocumentClass) CommonUtil.getObject(classType3);
+//			QuerySpecUtils.toEqualsAnd(query, idx, WTDocument.class, "typeInfoWTDocument.ptc_ref_3.key.id", class3);
+//		}
 
-		QuerySpecUtils.toInnerJoin(query, WTDocument.class, WTDocumentMaster.class, "masterReference.key.id",
-				WTAttributeNameIfc.ID_NAME, idx, idx_m);
+//		QuerySpecUtils.toInnerJoin(query, WTDocument.class, WTDocumentMaster.class, "masterReference.key.id",
+//				WTAttributeNameIfc.ID_NAME, idx, idx_m);
 
 		// 상태 임시저장 제외
 //		if (query.getConditionCount() > 0) {
@@ -260,7 +275,7 @@ public class DocumentHelper {
 		map.put("total", pager.getTotalSize());
 		map.put("sessionid", pager.getSessionId());
 		map.put("curPage", pager.getCpage());
-		long end = System.currentTimeMillis() /1000;
+		long end = System.currentTimeMillis() / 1000;
 		System.out.println("쿼리 종료 = " + end + ", 걸린 시간 = " + (end - start));
 		return map;
 	}
@@ -710,7 +725,7 @@ public class DocumentHelper {
 	public File stamping(WTDocument d, File excelFile, String classTypeCode) throws Exception {
 		String number = d.getNumber();
 		ApprovalMaster m = WorkspaceHelper.manager.getMaster(d);
-		if(m == null) {
+		if (m == null) {
 			throw new Exception("결재라인이 없습니다.");
 		}
 		ArrayList<ApprovalLine> agreeLines = WorkspaceHelper.manager.getAgreeLine(m);

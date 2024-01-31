@@ -66,46 +66,19 @@ public class DocumentColumn {
 	 */
 	public DocumentColumn(WTDocument doc) throws Exception {
 		setOid(doc.getPersistInfo().getObjectIdentifier().getStringValue());
-//		setLatest(DocumentHelper.manager.isLatest(doc));
 		setNumber(doc.getNumber());
-//		setInteralnumber(IBAUtils.getStringValue(doc, "INTERALNUMBER"));
 		setModel(keyToValue(IBAUtils.getStringValue(doc, "MODEL"), "MODEL"));
 		setName(doc.getName());
 		setLocation(doc.getLocation());
-//		setVersion(setVersionInfo(doc));
 		setVersion(doc.getVersionIdentifier().getSeries().getValue());
 		setState(doc.getLifeCycleState().getDisplay());
-		setWriter(IBAUtils.getStringValue(doc, "DSGN"));
+//		setWriter(IBAUtils.getStringValue(doc, "DSGN"));
 		setCreator(doc.getCreatorFullName());
 		setCreatedDate(doc.getCreateTimestamp());
 		setCreatedDate_txt(doc.getCreateTimestamp().toString().substring(0, 10));
 		setModifier(doc.getModifierFullName());
 		setModifiedDate(doc.getModifyTimestamp());
 		setModifiedDate_txt(doc.getModifyTimestamp().toString().substring(0, 10));
-//		setPrimary(AUIGridUtil.primary(doc));
-//		setSecondary(AUIGridUtil.secondary(doc));
-
-//		WTDocumentTypeInfo info = doc.getTypeInfoWTDocument();
-//		if (info != null) {
-//			if (StringUtil.checkString(info.getPtc_str_2())) {
-//				DocumentClassType classType1 = DocumentClassType.toDocumentClassType(info.getPtc_str_2());
-//				setClassType1_name(classType1.getDisplay());
-//			}
-//
-//			if (info.getPtc_ref_2() != null) {
-//				DocumentClass classType2 = (DocumentClass) info.getPtc_ref_2().getObject();
-//				if (classType2 != null) {
-//					setClassType2_name(classType2.getName());
-//				}
-//			}
-//
-//			if (info.getPtc_ref_3() != null) {
-//				DocumentClass classType3 = (DocumentClass) info.getPtc_ref_3().getObject();
-//				if (classType3 != null) {
-//					setClassType3_name(classType3.getName());
-//				}
-//			}
-//		}
 	}
 
 	/**

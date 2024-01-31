@@ -334,12 +334,12 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 						}
 						return null;
 					},
-				}, {
-					dataField : "writer",
-					headerText : "작성자",
-					dataType : "string",
-					width : 100,
-					sortable : false
+// 				}, {
+// 					dataField : "writer",
+// 					headerText : "작성자",
+// 					dataType : "string",
+// 					width : 100,
+// 					sortable : false
 				}, {
 					dataField : "creator",
 					headerText : "등록자",

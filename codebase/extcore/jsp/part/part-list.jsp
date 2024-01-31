@@ -428,7 +428,7 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 					dataField : "creator",
 					headerText : "등록자",
 					dataType : "string",
-					width : 140,
+					width : 100,
 				}, {
 					dataField : "createdDate",
 					headerText : "등록일",

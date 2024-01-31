@@ -55,6 +55,9 @@ String height = request.getParameter("height");
 		AUIGrid.bind(_myGridID, "cellClick", _auiCellClick);
 		AUIGrid.bind(_myGridID, "ready", auiReadyHandler);
 		AUIGrid.bind(_myGridID, "treeLazyRequest", auiLazyLoadHandler);
+// 		AUIGrid.bind(_myGridID, "treeOpenChange", function( event ) {
+			return false;
+		});
 		tree();
 	}
 	

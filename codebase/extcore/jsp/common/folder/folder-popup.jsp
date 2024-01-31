@@ -43,6 +43,7 @@ if (method == null) {
 			showRowNumColumn : true,
 			rowNumHeaderText : "번호",
 			selectionMode : "multipleCells",
+			treeLazyMode : true,
 			hoverMode : "singleRow",
 			enableFilter : true,
 			displayTreeOpen : false,
@@ -55,6 +56,24 @@ if (method == null) {
 		tree();
 		AUIGrid.bind(myGridID, "cellDoubleClick", auiCellDoubleClick);
 		AUIGrid.bind(myGridID, "cellClick", auiCellClick);
+		AUIGrid.bind(myGridID, "treeLazyRequest", auiLazyLoadHandler);
+	}
+	
+	function auiLazyLoadHandler(event) {
+		logger(event);
+		const item = event.item;
+		const oid = item.oid;
+		const params = {
+			oid : oid,
+		}
+		const url = getCallUrl("/folder/lazyTree");
+// 		parent.openLayer();
+		call(url, params, function(data) {
+			if (data.result) {
+// 				parent.closeLayer();
+				event.response(data.list);
+			}
+		})
 	}
 
 	function auiCellClick(event) {
