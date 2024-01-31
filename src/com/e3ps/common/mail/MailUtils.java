@@ -13,12 +13,15 @@ import com.e3ps.change.EChangeRequest;
 import com.e3ps.common.util.CommonUtil;
 import com.e3ps.common.util.StringUtil;
 import com.e3ps.org.MailUser;
+import com.e3ps.org.MailWTobjectLink;
 import com.e3ps.rohs.ROHSMaterial;
 import com.e3ps.workspace.ApprovalLine;
 import com.e3ps.workspace.AsmApproval;
 
 import wt.doc.WTDocument;
 import wt.fc.Persistable;
+import wt.fc.PersistenceHelper;
+import wt.fc.QueryResult;
 import wt.lifecycle.LifeCycleManaged;
 import wt.org.OrganizationServicesHelper;
 import wt.org.WTPrincipal;
@@ -285,39 +288,6 @@ public class MailUtils {
 	}
 
 	/**
-	 * 외부 메일 발송용 함수
-	 */
-	public void sendExternalMail(LifeCycleManaged per, MailUser toUser) throws Exception {
-		Hashtable<String, Object> hash = new Hashtable<>();
-		WTUser fromUser = (WTUser) SessionHelper.manager.getAdministrator();
-
-		String targetName = getTargetName((LifeCycleManaged) per);
-		String subject = targetName + "의 알림 메일입니다.";
-
-		HashMap<String, String> to = new HashMap<>();
-//		WTUser toUser = (WTUser) SessionHelper.manager.getPrincipal();
-		if (!StringUtil.checkString(toUser.getEmail())) {
-			throw new Exception("받는 사람 = " + toUser.getName() + " 이메일 주소가 없습니다.");
-		}
-
-		to.put(toUser.getEmail(), toUser.getName());
-
-		Hashtable<String, String> data = setParseData((LifeCycleManaged) per);
-		data.put("workName", "");
-		data.put("Location", "");
-
-		MailHtmlContentTemplate mhct = MailHtmlContentTemplate.getInstance();
-		String mcontent = mhct.htmlContent(data, "mail_notice.html");
-
-		hash.put("FROM", fromUser);
-		hash.put("TO", to);
-		hash.put("SUBJECT", subject);
-		hash.put("CONTENT", mcontent);
-
-		sendMail(hash);
-	}
-
-	/**
 	 * 수신 메일 전송
 	 */
 	public static void sendReceiveMail(Hashtable<String, String> h) throws Exception {
@@ -404,7 +374,7 @@ public class MailUtils {
 	public void sendAgreeMailTest(Persistable per, ArrayList<WTUser> ll) throws Exception {
 		WTUser fromUser = (WTUser) SessionHelper.manager.getAdministrator();
 
-		int i=0;
+		int i = 0;
 		for (WTUser toUser : ll) {
 //		for (ApprovalLine agreeLine : ll) {
 
@@ -474,6 +444,49 @@ public class MailUtils {
 		hash.put("CONTENT", mcontent);
 
 		sendMail(hash);
+	}
+
+	/**
+	 * 외부 메일
+	 */
+	public static void sendExternalMail(Hashtable<String, String> h) throws Exception {
+		System.out.println("외부 메일 호출!!");
+		String oid = h.get("oid");
+		Persistable per = CommonUtil.getObject(oid);
+
+		QueryResult qr = PersistenceHelper.manager.navigate(per, "user", MailWTobjectLink.class);
+		while (qr.hasMoreElements()) {
+			MailUser mailUser = (MailUser) qr.nextElement();
+
+			WTUser fromUser = (WTUser) SessionHelper.manager.getAdministrator();
+			Hashtable<String, Object> hash = new Hashtable<>();
+
+			String targetName = getTargetName((LifeCycleManaged) per);
+			String subject = targetName + "의 수신전용(외부메일용) 메일입니다.";
+
+			HashMap<String, String> to = new HashMap<>();
+//		WTUser toUser = (WTUser) approvalLine.getOwnership().getOwner().getPrincipal();
+			if (!StringUtil.checkString(mailUser.getEmail())) {
+				throw new Exception("받는 사람 = " + mailUser.getName() + " 이메일 주소가 없습니다.");
+			}
+
+			to.put(mailUser.getEmail(), mailUser.getName());
+
+			Hashtable<String, String> data = setParseData((LifeCycleManaged) per);
+//		data.put("workName", "결재");
+//		data.put("Location", "결재함");
+
+			MailHtmlContentTemplate mhct = MailHtmlContentTemplate.getInstance();
+			String mcontent = mhct.htmlContent(data, "mail_notice.html");
+
+			hash.put("FROM", fromUser);
+			hash.put("TO", to);
+			hash.put("SUBJECT", subject);
+			hash.put("CONTENT", mcontent);
+
+			sendMail(hash);
+		}
+		System.out.println("외부 메일 종료!!");
 	}
 
 	/**
@@ -585,5 +598,22 @@ public class MailUtils {
 		Object[] argObjects = { hash };
 
 		queue.addEntry(principal, sendReceiveMailMethod, className, argClasses, argObjects);
+	}
+
+	/**
+	 * 외부 메일 백그라운드 호출
+	 */
+	public void sendExternalMailMethod(Persistable per) throws Exception {
+
+		WTPrincipal principal = SessionHelper.manager.setAdministrator();
+		ProcessingQueue queue = (ProcessingQueue) QueueHelper.manager.getQueue(processQueueName, ProcessingQueue.class);
+
+		Hashtable<String, String> hash = new Hashtable<>();
+		hash.put("oid", per.getPersistInfo().getObjectIdentifier().getStringValue());
+
+		Class[] argClasses = { Hashtable.class };
+		Object[] argObjects = { hash };
+
+		queue.addEntry(principal, sendExternalMailMethod, className, argClasses, argObjects);
 	}
 }

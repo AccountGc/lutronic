@@ -73,6 +73,9 @@
    <Property name="publish.service.filterepmdocumentpublishmethod.defaultrule" overridable="true"
              targetFile="codebase/WEB-INF/conf/wvs.properties"
              value="include"/>
+   <Property name="publish.service.filterepmdocumentpublishmethod.excludelist" overridable="true"
+             targetFile="codebase/WEB-INF/conf/wvs.properties"
+             value="CONTAINERS&gt;*;EXTENSIONS&gt;frm,lay;LIFECYCLES&gt;*"/>
              
    <!-- Worker Queue Set -->
    <Property name="publish.publishqueue.priorities.filtermethod" overridable="true"

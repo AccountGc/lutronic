@@ -502,7 +502,7 @@ public class StandardWorkspaceService extends StandardManager implements Workspa
 				// 결재가 끝낫을시 메일 전송한다. 수신인과 외부메일로 들어가 있는사람
 //				MailUtils.manager.sendReceiveMail(per, ll);
 
-//				WorkspaceHelper.manager.sendExternalMail(per);
+				MailUtils.manager.sendExternalMailMethod(per);
 
 			}
 

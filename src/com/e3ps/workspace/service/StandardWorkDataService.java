@@ -13,7 +13,9 @@ import com.e3ps.workspace.ApprovalMaster;
 import com.e3ps.workspace.AsmApproval;
 import com.e3ps.workspace.WorkData;
 import com.e3ps.workspace.dto.WorkDataDTO;
+import com.ptc.wvs.service.VisualizationService;
 
+import wt.doc.StandardWTDocumentService;
 import wt.fc.Persistable;
 import wt.fc.PersistenceHelper;
 import wt.fc.QueryResult;
@@ -74,8 +76,15 @@ public class StandardWorkDataService extends StandardManager implements WorkData
 				QueryResult rs = PersistenceHelper.manager.navigate(asm, "persistable", AppPerLink.class);
 				while (rs.hasMoreElements()) {
 					Persistable persistable = (Persistable) rs.nextElement();
+					LifeCycleManaged lcm = (LifeCycleManaged)persistable;
+					LifeCycleTemplate lct = (LifeCycleTemplate) lcm.getLifeCycleTemplate().getObject();
+					if (!lct.isLatestIteration()) {
+						lcm = (LifeCycleManaged) LifeCycleHelper.service.reassign(lcm, LifeCycleHelper.service
+								.getLifeCycleTemplateReference(lcm.getLifeCycleName(), WCUtil.getWTContainerRef())); // Lifecycle
+						lcm = (LifeCycleManaged) PersistenceHelper.manager.refresh(lcm);
 					LifeCycleHelper.service.setLifeCycleState((LifeCycleManaged) persistable,
 							State.toState("LINE_REGISTER"));
+					}
 				}
 			}
 

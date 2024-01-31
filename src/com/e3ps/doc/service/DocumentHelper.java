@@ -117,7 +117,7 @@ public class DocumentHelper {
 	 */
 	public Map<String, Object> list(Map<String, Object> params) throws Exception {
 		long start = System.currentTimeMillis() / 1000;
-		System.out.println("쿼리 시작 = " + start);
+		System.out.println("문서 쿼리 시작 = " + start);
 		Map<String, Object> map = new HashMap<>();
 		ArrayList<DocumentColumn> list = new ArrayList<>();
 
@@ -279,7 +279,7 @@ public class DocumentHelper {
 		map.put("sessionid", pager.getSessionId());
 		map.put("curPage", pager.getCpage());
 		long end = System.currentTimeMillis() / 1000;
-		System.out.println("쿼리 종료 = " + end + ", 걸린 시간 = " + (end - start));
+		System.out.println("문서 쿼리 종료 = " + end + ", 걸린 시간 = " + (end - start));
 		return map;
 	}
 
