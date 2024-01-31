@@ -241,17 +241,17 @@ const columns = [ {
 	},
 	sortable : false
 }, {
+	dataField : "number",
+	headerText : "문서번호",
+	dataType : "string",
+	width : 180,
+},{
 	dataField : "name",
 	headerText : "문서명",
 	dataType : "string",
 	style : "aui-left",
 	width : 350,
-}, {
-	dataField : "number",
-	headerText : "문서번호",
-	dataType : "string",
-	width : 180,
-}, {
+},  {
 	dataField : "model",
 	headerText : "프로젝트 코드 [명]",
 	dataType : "string",

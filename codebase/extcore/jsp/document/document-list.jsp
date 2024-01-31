@@ -224,11 +224,10 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 					},
 					sortable : false
 				}, {
-					dataField : "name",
-					headerText : "문서명",
+					dataField : "number",
+					headerText : "문서번호",
 					dataType : "string",
-					style : "aui-left",
-					width : 350,
+					width : 180,
 					renderer : {
 						type : "LinkRenderer",
 						baseUrl : "javascript",
@@ -244,10 +243,11 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 						}
 					},
 				}, {
-					dataField : "number",
-					headerText : "문서번호",
+					dataField : "name",
+					headerText : "문서명",
 					dataType : "string",
-					width : 180,
+					style : "aui-left",
+					width : 350,
 					renderer : {
 						type : "LinkRenderer",
 						baseUrl : "javascript",
@@ -280,24 +280,24 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 					width : 250,
 					sortable : false
 				}, {
-// 					dataField : "classType1_name",
-// 					headerText : "대분류",
-// 					dataType : "string",
-// 					width : 100,
-// 					sortable : false
-// 				}, {
-// 					dataField : "classType2_name",
-// 					headerText : "중분류",
-// 					dataType : "string",
-// 					width : 200,
-// 					sortable : false
-// 				}, {
-// 					dataField : "classType3_name",
-// 					headerText : "소분류",
-// 					dataType : "string",
-// 					width : 100,
-// 					sortable : false
-// 				}, {
+					// 					dataField : "classType1_name",
+					// 					headerText : "대분류",
+					// 					dataType : "string",
+					// 					width : 100,
+					// 					sortable : false
+					// 				}, {
+					// 					dataField : "classType2_name",
+					// 					headerText : "중분류",
+					// 					dataType : "string",
+					// 					width : 200,
+					// 					sortable : false
+					// 				}, {
+					// 					dataField : "classType3_name",
+					// 					headerText : "소분류",
+					// 					dataType : "string",
+					// 					width : 100,
+					// 					sortable : false
+					// 				}, {
 					dataField : "version",
 					headerText : "REV",
 					dataType : "string",
@@ -317,12 +317,12 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 						}
 						return null;
 					}
-// 				}, {
-// 					dataField : "writer",
-// 					headerText : "작성자",
-// 					dataType : "string",
-// 					width : 100,
-// 					sortable : false
+				// 				}, {
+				// 					dataField : "writer",
+				// 					headerText : "작성자",
+				// 					dataType : "string",
+				// 					width : 100,
+				// 					sortable : false
 				}, {
 					dataField : "creator",
 					headerText : "등록자",
@@ -338,30 +338,30 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 					headerText : "수정일",
 					dataType : "date",
 					width : 100,
-// 				}, {
-// 					dataField : "primary",
-// 					headerText : "주 첨부파일",
-// 					dataType : "string",
-// 					width : 80,
-// 					sortable : false,
-// 					renderer : {
-// 						type : "TemplateRenderer"
-// 					},
-// 					filter : {
-// 						inline : false
-// 					},
-// 				}, {
-// 					dataField : "secondary",
-// 					headerText : "첨부파일",
-// 					dataType : "string",
-// 					width : 100,
-// 					sortable : false,
-// 					renderer : {
-// 						type : "TemplateRenderer"
-// 					},
-// 					filter : {
-// 						inline : false
-// 					},
+				// 				}, {
+				// 					dataField : "primary",
+				// 					headerText : "주 첨부파일",
+				// 					dataType : "string",
+				// 					width : 80,
+				// 					sortable : false,
+				// 					renderer : {
+				// 						type : "TemplateRenderer"
+				// 					},
+				// 					filter : {
+				// 						inline : false
+				// 					},
+				// 				}, {
+				// 					dataField : "secondary",
+				// 					headerText : "첨부파일",
+				// 					dataType : "string",
+				// 					width : 100,
+				// 					sortable : false,
+				// 					renderer : {
+				// 						type : "TemplateRenderer"
+				// 					},
+				// 					filter : {
+				// 						inline : false
+				// 					},
 				} ]
 			}
 
@@ -382,7 +382,7 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 					enableRowCheckShiftKey : true,
 				};
 				myGridID = AUIGrid.create("#grid_wrap", columnLayout, props);
-// 				loadGridData();
+				// 				loadGridData();
 				AUIGrid.bind(myGridID, "contextMenu", _auiContextMenuHandler);
 				AUIGrid.bind(myGridID, "vScrollChange", function(event) {
 					hideContextMenu();

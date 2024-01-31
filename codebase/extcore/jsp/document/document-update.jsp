@@ -72,9 +72,7 @@ iframe {
 		</td>
 		<th>문서명</th>
 		<td class="indent5" colspan="3">
-			<input type="text" name="preFix" id="preFix" class="width-400" readonly="readonly" value="<%=dto.getPrefix()%>">
-			&nbsp;&nbsp;
-			<input type="text" name="suffix" id="suffix" class="width-300" value="<%=dto.getSuffix()%>">
+			<input type="text" name="name" id="name" class="width-500" value="<%=dto.getName()%>">
 		</td>
 	</tr>
 	<tr>
@@ -253,8 +251,6 @@ iframe {
 		const model = document.getElementById("model").value;
 		const preseration = document.getElementById("preseration").value;
 		const iterationNote = document.getElementById("iterationNote");
-		const preFix = document.getElementById("preFix").value;
-		const suffix = document.getElementById("suffix").value;
 		
 		const url = getCallUrl("/doc/<%=mode%>");
 
@@ -275,9 +271,14 @@ iframe {
 		
 		const classType1 = document.getElementById("classType1").value;
 		const classType2 = document.getElementById("classType2").value;
-		
-		let name;
+		const name = document.getElementById("name");
 		let checker = true;
+		
+		if(name.value === "" ) {
+			alert("문서명을 입력하세요.");
+			return false;
+		}
+		
 		if("DEV" === classType1) {
 			checker = false;
 		}
@@ -290,21 +291,6 @@ iframe {
 		}
 
 		
-		if(checker) {
-			if (suffix === "") {
-				alert("문서명을 입력하세요,");
-				suffix.focus();
-				return false;
-			}
-		}
-		
-		if (preFix !== "") {
-			name = preFix + "_"+ suffix;
-		} else {
-			name = suffix;
-		}
-		
-			
 		if(preseration === "") {
 			alert("보존기간을 선택하세요.");
 			return false;
@@ -330,7 +316,7 @@ iframe {
 
 		const params = {
 			oid : oid,
-			name : name,
+			name : name.value,
 			lifecycle : lifecycle,
 			description : description.value,
 			content : content,
