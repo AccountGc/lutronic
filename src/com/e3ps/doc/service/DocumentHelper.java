@@ -151,6 +151,9 @@ public class DocumentHelper {
 		QuerySpec query = new QuerySpec();
 		int idx = query.appendClassList(WTDocument.class, false);
 
+		query.setAdvancedQueryEnabled(true);
+		query.setDescendantQuery(false);
+		
 		if (query.getConditionCount() > 0) {
 			query.appendAnd();
 		}

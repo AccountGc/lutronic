@@ -6,6 +6,7 @@ import java.util.Map;
 import com.e3ps.change.EChangeOrder;
 import com.e3ps.common.mail.MailUtils;
 import com.e3ps.common.util.CommonUtil;
+import com.e3ps.common.util.WCUtil;
 import com.e3ps.workspace.AppPerLink;
 import com.e3ps.workspace.ApprovalLine;
 import com.e3ps.workspace.ApprovalMaster;
@@ -18,6 +19,7 @@ import wt.fc.PersistenceHelper;
 import wt.fc.QueryResult;
 import wt.lifecycle.LifeCycleHelper;
 import wt.lifecycle.LifeCycleManaged;
+import wt.lifecycle.LifeCycleTemplate;
 import wt.lifecycle.State;
 import wt.ownership.Ownership;
 import wt.pom.Transaction;
@@ -54,7 +56,12 @@ public class StandardWorkDataService extends StandardManager implements WorkData
 
 			PersistenceHelper.manager.save(data);
 
-			LifeCycleHelper.service.setLifeCycleState((LifeCycleManaged) per, State.toState("LINE_REGISTER"));
+			if (per instanceof LifeCycleManaged) {
+				LifeCycleManaged lcm = (LifeCycleManaged) per;
+				LifeCycleHelper.service.reassign(lcm, LifeCycleHelper.service
+						.getLifeCycleTemplateReference(lcm.getLifeCycleName(), WCUtil.getWTContainerRef())); // Lifecycle
+				LifeCycleHelper.service.setLifeCycleState((LifeCycleManaged) per, State.toState("LINE_REGISTER"));
+			}
 
 			// 일괄겨재일 경우 대상들 결재선 지정상태로만 변경한다
 			if (per instanceof AsmApproval) {
