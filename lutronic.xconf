@@ -77,7 +77,7 @@
              value="com.ptc.wvs.util.AfterEDRloader/copyToEPM"/>
    <Property name="publish.afterloadermethod.copyToEPM.Filext" overridable="true"
              targetFile="codebase/WEB-INF/conf/wvs.properties"
-             value="pdf plt dwg igs stp dxf"/>
+             value="plt igs"/>
              
    <!-- Service Add -->
    <Property name="wt.services.service.1000000" overridable="true"

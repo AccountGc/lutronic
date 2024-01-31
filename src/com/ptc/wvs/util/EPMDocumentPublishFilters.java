@@ -173,7 +173,7 @@ public class EPMDocumentPublishFilters {
 			return Boolean.FALSE;
 		}
 
-		if (type.equalsIgnoreCase("pdf")) {
+		if (type.equalsIgnoreCase("pdf") || type.equalsIgnoreCase("docx") || type.equalsIgnoreCase("doc")) {
 			logger.info("The file extension is pdf, do not publish");
 			return Boolean.FALSE;
 		}
