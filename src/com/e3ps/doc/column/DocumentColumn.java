@@ -67,18 +67,18 @@ public class DocumentColumn {
 	public DocumentColumn(WTDocument doc) throws Exception {
 		setOid(doc.getPersistInfo().getObjectIdentifier().getStringValue());
 		setNumber(doc.getNumber());
-		setModel(keyToValue(IBAUtils.getStringValue(doc, "MODEL"), "MODEL"));
+//		setModel(keyToValue(IBAUtils.getStringValue(doc, "MODEL"), "MODEL"));
 		setName(doc.getName());
-		setLocation(doc.getLocation());
-		setVersion(doc.getVersionIdentifier().getSeries().getValue());
-		setState(doc.getLifeCycleState().getDisplay());
-//		setWriter(IBAUtils.getStringValue(doc, "DSGN"));
-		setCreator(doc.getCreatorFullName());
-		setCreatedDate(doc.getCreateTimestamp());
-		setCreatedDate_txt(doc.getCreateTimestamp().toString().substring(0, 10));
-		setModifier(doc.getModifierFullName());
-		setModifiedDate(doc.getModifyTimestamp());
-		setModifiedDate_txt(doc.getModifyTimestamp().toString().substring(0, 10));
+//		setLocation(doc.getLocation());
+//		setVersion(doc.getVersionIdentifier().getSeries().getValue());
+//		setState(doc.getLifeCycleState().getDisplay());
+////		setWriter(IBAUtils.getStringValue(doc, "DSGN"));
+//		setCreator(doc.getCreatorFullName());
+//		setCreatedDate(doc.getCreateTimestamp());
+//		setCreatedDate_txt(doc.getCreateTimestamp().toString().substring(0, 10));
+//		setModifier(doc.getModifierFullName());
+//		setModifiedDate(doc.getModifyTimestamp());
+//		setModifiedDate_txt(doc.getModifyTimestamp().toString().substring(0, 10));
 	}
 
 	/**

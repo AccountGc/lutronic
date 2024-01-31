@@ -76,14 +76,14 @@ public class StandardWorkDataService extends StandardManager implements WorkData
 				QueryResult rs = PersistenceHelper.manager.navigate(asm, "persistable", AppPerLink.class);
 				while (rs.hasMoreElements()) {
 					Persistable persistable = (Persistable) rs.nextElement();
-					LifeCycleManaged lcm = (LifeCycleManaged)persistable;
+					LifeCycleManaged lcm = (LifeCycleManaged) persistable;
 					LifeCycleTemplate lct = (LifeCycleTemplate) lcm.getLifeCycleTemplate().getObject();
 					if (!lct.isLatestIteration()) {
 						lcm = (LifeCycleManaged) LifeCycleHelper.service.reassign(lcm, LifeCycleHelper.service
 								.getLifeCycleTemplateReference(lcm.getLifeCycleName(), WCUtil.getWTContainerRef())); // Lifecycle
 						lcm = (LifeCycleManaged) PersistenceHelper.manager.refresh(lcm);
-					LifeCycleHelper.service.setLifeCycleState((LifeCycleManaged) persistable,
-							State.toState("LINE_REGISTER"));
+						LifeCycleHelper.service.setLifeCycleState((LifeCycleManaged) persistable,
+								State.toState("LINE_REGISTER"));
 					}
 				}
 			}
