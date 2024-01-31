@@ -38,12 +38,15 @@ import com.e3ps.part.dto.PartData;
 import com.e3ps.part.service.BomSearchHelper;
 import com.e3ps.part.service.PartHelper;
 import com.e3ps.part.service.PartSearchHelper;
+import com.ptc.wvs.server.util.PublishUtils;
 
 import net.sf.json.JSONArray;
 import wt.enterprise.Master;
+import wt.epm.EPMDocument;
 import wt.fc.ReferenceFactory;
 import wt.part.QuantityUnit;
 import wt.part.WTPart;
+import wt.representation.Representation;
 import wt.util.WTException;
 import wt.util.WTRuntimeException;
 import wt.vc.baseline.Baseline;
@@ -55,23 +58,37 @@ import wt.vc.views.ViewHelper;
 @RequestMapping(value = "/part/**")
 public class PartController extends BaseController {
 
-	
-	@Description(value="썸네일 여부 체크")
+	@Description(value = "품목 썸네일 팝업")
+	@GetMapping(value = "/viewThumb")
+	public ModelAndView viewThumb(@RequestParam String oid) throws Exception {
+		ModelAndView model = new ModelAndView();
+		model.setViewName("popup:/common/thumbnail-view-3d");
+		model.addObject("oid", oid);
+		return model;
+	}
+
+	@Description(value = "썸네일 여부 체크")
 	@ResponseBody
-	@GetMapping(value="/checkThumb")
+	@GetMapping(value = "/checkThumb")
 	public Map<String, Object> checkThumb(@RequestParam String oid) throws Exception {
 		Map<String, Object> result = new HashMap<>();
 		try {
-			WTPart part = (WTPart)CommonUtil.getObject(oid);
-			
-		} catch(Exception e) {
+			WTPart part = (WTPart) CommonUtil.getObject(oid);
+			Representation representation = PublishUtils.getRepresentation(part);
+			if (representation == null) {
+				result.put("exist", false);
+			} else {
+				result.put("exist", true);
+			}
+			result.put("result", SUCCESS);
+		} catch (Exception e) {
 			result.put("result", FAIL);
 			result.put("msg", e.toString());
 			e.printStackTrace();
 		}
 		return result;
 	}
-	
+
 	@Description(value = "새이름으로 저장")
 	@GetMapping(value = "/saveAs")
 	public ModelAndView saveAs() throws Exception {

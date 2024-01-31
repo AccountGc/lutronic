@@ -465,7 +465,19 @@ QuantityUnit[] unitList = (QuantityUnit[]) request.getAttribute("unitList");
 				const item = event.item;
 				const oid = item.epm_oid;
 				if ("thumb" === dataField) {
-					openCreoView(oid);
+					const checkUrl = getCallUrl("/drawing/checkThumb?oid=" + oid);
+					call(checkUrl, null, function(data) {
+						if (data.result) {
+							const exist = data.exist;
+							if (exist) {
+								const url = getCallUrl("/drawing/viewThumb?oid=" + oid);
+								_popup(url, 800, 600, "n");
+							} else {
+								alert("썸네일이 없습니다.");
+							}
+						}
+					}, "GET", false);
+				}
 				}
 			}
 

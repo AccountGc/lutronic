@@ -459,7 +459,7 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 					enableRowCheckShiftKey : true,
 				};
 				myGridID = AUIGrid.create("#grid_wrap", columnLayout, props);
-// 				loadGridData();
+				// 				loadGridData();
 				AUIGrid.bind(myGridID, "contextMenu", _auiContextMenuHandler);
 				AUIGrid.bind(myGridID, "vScrollChange", function(event) {
 					hideContextMenu();
@@ -470,7 +470,7 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 				AUIGrid.bind(myGridID, "cellClick", auiCellClickHandler);
 				AUIGrid.bind(myGridID, "sorting", auiSortingHandler);
 			}
-			
+
 			let sortCache = [];
 			let compField;
 			function auiSortingHandler(event) {
@@ -496,9 +496,18 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 				const item = event.item;
 				const oid = item.part_oid;
 				if ("thumb" === dataField) {
-// 					openCreoView(oid);
-					url = getCallUrl("/part/thumbnail?oid=" + oid);
-					_popup(url, 800, 600, "n");
+					const checkUrl = getCallUrl("/part/checkThumb?oid=" + oid);
+					call(checkUrl, null, function(data) {
+						if (data.result) {
+							const exist = data.exist;
+							if (exist) {
+								const url = getCallUrl("/part/viewThumb?oid=" + oid);
+								_popup(url, 800, 600, "n");
+							} else {
+								alert("썸네일이 없습니다.");
+							}
+						}
+					}, "GET", false);
 				}
 			}
 
@@ -643,7 +652,7 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 				params = toField(params, field);
 				params.latest = JSON.parse(latest);
 				params.preOrder = preOrder;
-				if(complete !== null) {
+				if (complete !== null) {
 					params.complete = JSON.parse(complete.value);
 				} else {
 					params.complete = false;

@@ -64,6 +64,49 @@ import wt.util.WTException;
 @RequestMapping(value = "/drawing/**")
 public class DrawingController extends BaseController {
 
+	@Description(value = "도면 썸네일 팝업")
+	@GetMapping(value = "/viewThumb")
+	public ModelAndView viewThumb(@RequestParam String oid) throws Exception {
+		ModelAndView model = new ModelAndView();
+		EPMDocument doc = (EPMDocument) CommonUtil.getObject(oid);
+		String docType = doc.getDocType().toString();
+		if (docType.equals("CADDRAWING")) {
+			model.setViewName("popup:/common/thumbnail-view-2d");
+		} else {
+			model.setViewName("popup:/common/thumbnail-view-3d");
+		}
+		model.addObject("oid", oid);
+		return model;
+	}
+
+	@Description(value = "썸네일 여부 체크")
+	@ResponseBody
+	@GetMapping(value = "/checkThumb")
+	public Map<String, Object> checkThumb(@RequestParam String oid) throws Exception {
+		Map<String, Object> result = new HashMap<>();
+		try {
+			EPMDocument epm = (EPMDocument) CommonUtil.getObject(oid);
+			Representation representation = PublishUtils.getRepresentation(epm);
+			String docType = epm.getDocType().toString();
+			boolean isDrawing = false;
+			if ("CADDRAWING".equals(docType)) {
+				isDrawing = true;
+			}
+			if (representation == null) {
+				result.put("exist", false);
+			} else {
+				result.put("exist", true);
+				result.put("isDrawing", isDrawing);
+			}
+			result.put("result", SUCCESS);
+		} catch (Exception e) {
+			result.put("result", FAIL);
+			result.put("msg", e.toString());
+			e.printStackTrace();
+		}
+		return result;
+	}
+
 	@Description(value = "크레오 뷰 URL 얻기")
 	@ResponseBody
 	@GetMapping(value = "/getCreoViewUrl")
@@ -506,18 +549,6 @@ public class DrawingController extends BaseController {
 		return model;
 	}
 
-	@ResponseBody
-	@RequestMapping("/linkDrawingAction")
-	public ResultData linkDrawingAction(HttpServletRequest request, HttpServletResponse response) {
-		return DrawingHelper.service.linkDrawingAction(request, response);
-	}
-
-	@ResponseBody
-	@RequestMapping("/deleteDrwaingLinkAction")
-	public ResultData deleteDrwaingLinkAction(HttpServletRequest request, HttpServletResponse response) {
-		return DrawingHelper.service.deleteDrawingLinkAction(request, response);
-	}
-
 	/**
 	 * 도면 삭제
 	 * 
@@ -541,49 +572,6 @@ public class DrawingController extends BaseController {
 		model.addObject("module", "drawing");
 		model.setViewName("default:/drawing/createPackageDrawing");
 		return model;
-	}
-
-	@RequestMapping("/createPackageDrawingAction")
-	public ModelAndView createPackageDrawingAction(HttpServletRequest request, HttpServletResponse response) {
-		String xmlString = "";
-
-		xmlString = DrawingHelper.service.createPackageDrawingAction(request, response);
-
-		ModelAndView model = new ModelAndView();
-		model.addObject("xmlString", xmlString);
-		model.setViewName("empty:/drawing/createPackageDrawingAction");
-		return model;
-	}
-
-	/**
-	 * BOM Drawing 다운
-	 * 
-	 * @param request
-	 * @param response
-	 */
-	@RequestMapping(value = "partTreeDrawingDown")
-	public ModelAndView partTreeDrawingDown(HttpServletRequest request, HttpServletResponse response) {
-		ModelAndView model = new ModelAndView();
-
-		try {
-			DrawingHelper.service.partTreeDrawingDown(request, response);
-
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		// model.addObject("xmlString", xmlString);
-		model.setViewName("empty:/drawing/createPackageDrawingAction");
-		return model;
-	}
-
-	@ResponseBody
-	@RequestMapping("/cadRePublish")
-	public ResultData cadRePublish(HttpServletRequest request, HttpServletResponse response) {
-
-		String oid = StringUtil.checkNull(request.getParameter("oid"));
-
-		return EpmSearchHelper.service.cadRePublish(oid);
-
 	}
 
 	@Description(value = "SAP 에서 호출할 주소")
