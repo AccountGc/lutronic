@@ -37,13 +37,13 @@ String height = request.getParameter("height");
 			forceTreeView : true,
 			useContextMenu : true,
 			showTooltip : true,
-// 			treeLazyMode : true,
+			treeLazyMode : true,
 			treeLevelIndent : 28,
 			enableRightDownFocus : true,
 			<%
 				if(isAdmin) {
 			%>
-			editable : true
+// 			editable : true
 			<%
 				}
 			%>
@@ -54,25 +54,25 @@ String height = request.getParameter("height");
 <%}%>
 		AUIGrid.bind(_myGridID, "cellClick", _auiCellClick);
 		AUIGrid.bind(_myGridID, "ready", auiReadyHandler);
-// 		AUIGrid.bind(myGridID, "treeLazyRequest", auiLazyLoadHandler);
+		AUIGrid.bind(_myGridID, "treeLazyRequest", auiLazyLoadHandler);
 		tree();
 	}
 	
 	function auiLazyLoadHandler(event) {
+		logger(event);
 		const item = event.item;
-		logger(event.item);
 		const oid = item.oid;
 		const params = {
 			oid : oid,
 		}
-// 		const url = getCallUrl("/bom/lazyLoad")
-// 		openLayer();
-// 		call(url, params, function(data) {
-// 			if (data.result) {
-// 				closeLayer();
-// 				event.response(data.list);
-// 			}
-// 		})
+		const url = getCallUrl("/folder/lazyTree");
+// 		parent.openLayer();
+		call(url, params, function(data) {
+			if (data.result) {
+// 				parent.closeLayer();
+				event.response(data.list);
+			}
+		})
 	}
 
 	function auiContextMenuHandler_(event) {
@@ -145,7 +145,6 @@ String height = request.getParameter("height");
 			addRows:addRows,
 		};
 		parent.openLayer();
-		logger(params);
 		call(url, params, function(data) {
 			alert(data.msg);
 			if(data.result) {

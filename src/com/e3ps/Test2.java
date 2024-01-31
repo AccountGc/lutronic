@@ -15,7 +15,7 @@ public class Test2 {
 		String oid = "wt.doc.WTDocument:1532391";
 		WTDocument doc = (WTDocument) CommonUtil.getObject(oid);
 
-		WTUser user = (WTUser) CommonUtil.getObject("wt.org.WTUser:311774");
+		WTUser user = (WTUser) CommonUtil.getObject("wt.org.WTUser:11");
 
 		ArrayList<WTUser> ll = new ArrayList<>();
 

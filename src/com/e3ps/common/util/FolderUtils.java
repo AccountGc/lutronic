@@ -2,6 +2,7 @@ package com.e3ps.common.util;
 
 import java.util.ArrayList;
 import java.util.Enumeration;
+import java.util.HashMap;
 import java.util.Map;
 
 import net.sf.json.JSONArray;
@@ -48,11 +49,57 @@ public class FolderUtils {
 			node.put("location", child.getFolderPath());
 			node.put("name", child.getName());
 			node.put("isNew", false);
-			tree(child, node);
+			boolean isLazy = isLazy(child);
+			if (!isLazy) {
+				node.put("isLazy", false);
+				node.put("children", new JSONArray());
+			} else {
+				node.put("isLazy", true);
+			}
+//			tree(child, node);
 			children.add(node);
 		}
 		rootNode.put("children", children);
 		list.add(rootNode);
+		return list;
+	}
+
+	/**
+	 * 하위 폴더 존재 여부 확인
+	 */
+	private static boolean isLazy(Folder parent) throws Exception {
+		Enumeration result = FolderTaskLogic.getSubFolders(parent);
+		if (result.hasMoreElements()) {
+			return true;
+		}
+		return false;
+	}
+
+	/**
+	 * 폴더 레이지로드
+	 */
+	public static ArrayList<Map<String, Object>> lazyTree(Map<String, Object> params) throws Exception {
+		ArrayList<Map<String, Object>> list = new ArrayList<Map<String, Object>>();
+		String oid = (String) params.get("oid");
+		Folder parent = (Folder) CommonUtil.getObject(oid);
+		Enumeration result = FolderTaskLogic.getSubFolders(parent);
+		while (result.hasMoreElements()) {
+			Folder child = (Folder) result.nextElement();
+			Map<String, Object> map = new HashMap<>();
+			map.put("poid", parent.getPersistInfo().getObjectIdentifier().getStringValue());
+			map.put("oid", child.getPersistInfo().getObjectIdentifier().getStringValue());
+			map.put("location", child.getFolderPath());
+			map.put("name", child.getName());
+			map.put("isNew", false);
+			boolean isLazy = isLazy(child);
+			if (!isLazy) {
+				map.put("isLazy", false);
+				map.put("children", new JSONArray());
+			} else {
+				map.put("isLazy", true);
+			}
+			list.add(map);
+		}
 		return list;
 	}
 
@@ -187,4 +234,5 @@ public class FolderUtils {
 		}
 		return isExist;
 	}
+
 }

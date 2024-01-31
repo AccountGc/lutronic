@@ -32,6 +32,7 @@ import com.e3ps.common.util.FolderUtils;
 import com.e3ps.common.util.StringUtil;
 import com.e3ps.common.util.WCUtil;
 import com.e3ps.controller.BaseController;
+import com.e3ps.part.bom.service.BomHelper;
 import com.google.gwt.i18n.client.LocalizableResource.Description;
 
 import net.sf.json.JSONArray;
@@ -39,6 +40,23 @@ import net.sf.json.JSONArray;
 @Controller
 @RequestMapping(value = "/folder")
 public class FolderController extends BaseController {
+
+	@Description(value = "폴더 LAZY LOAD")
+	@PostMapping(value = "/lazyTree")
+	@ResponseBody
+	public Map<String, Object> lazyTree(@RequestBody Map<String, Object> params) throws Exception {
+		Map<String, Object> result = new HashMap<String, Object>();
+		try {
+			ArrayList<Map<String, Object>> list = FolderUtils.lazyTree(params);
+			result.put("list", list);
+			result.put("result", SUCCESS);
+		} catch (Exception e) {
+			e.printStackTrace();
+			result.put("result", FAIL);
+			result.put("msg", e.toString());
+		}
+		return result;
+	}
 
 	@Description(value = "폴더 팝업창")
 	@GetMapping(value = "/popup")

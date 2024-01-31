@@ -262,7 +262,7 @@ public class MailUtils {
 		String content = (String) hash.get("CONTENT");
 
 		SendMail mail = new SendMail();
-		mail.setFromMailAddress("pdm-admin@lutronic.com", "PDM ADMIN");
+		mail.setFromMailAddress("kcplm@pro-packer.com", "PDM ADMIN");
 
 		Object[] objArr = to.keySet().toArray();
 		String emails = "";

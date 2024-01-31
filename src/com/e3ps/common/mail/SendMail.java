@@ -42,15 +42,18 @@ public class SendMail {
 
 	private Session getSession(boolean debug) throws Exception {
 		Properties props = new Properties();
-		props.put("mail.smtp.host", "smtp.office365.com");
-
 		Session session = null;
-		props.put("mail.smtp.port", "587");
+//		props.put("mail.smtp.host", "smtp.office365.com");
+//		props.put("mail.smtp.port", "587");
 		props.put("mail.smtp.socketFactory.class", "javax.net.ssl.SSLSocketFactory");
 		props.put("mail.smtp.starttls.enable", true);
 		props.put("mail.smtp.auth", true);
-		
-		MailAuthenticator authenticator = new MailAuthenticator("pdm-admin@lutronic.com", "anrndghkqorentksdl@2021");
+
+		props.put("mail.smtp.host", "smtp.mailplug.co.kr");
+		props.put("mail.smtp.port", 465);
+
+		MailAuthenticator authenticator = new MailAuthenticator("kcplm@pro-packer.com", "creator007");
+//		MailAuthenticator authenticator = new MailAuthenticator("pdm-admin@lutronic.com", "anrndghkqorentksdl@2021");
 		session = Session.getDefaultInstance(props, authenticator);
 		session.setDebug(debug);
 		return session;

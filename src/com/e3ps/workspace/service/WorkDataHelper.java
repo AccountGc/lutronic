@@ -53,7 +53,7 @@ public class WorkDataHelper {
 
 		QuerySpecUtils.toTimeGreaterAndLess(query, idx, WorkData.class, WorkData.CREATE_TIMESTAMP, receiveFrom,
 				receiveTo);
-
+		
 		QuerySpecUtils.toBooleanAnd(query, idx, WorkData.class, WorkData.PROCESS, false);
 
 		QuerySpecUtils.toOrderBy(query, idx, WorkData.class, WorkData.CREATE_TIMESTAMP, true);
