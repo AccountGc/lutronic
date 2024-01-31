@@ -94,6 +94,7 @@ import wt.representation.Representable;
 import wt.representation.Representation;
 import wt.services.StandardManager;
 import wt.session.SessionHelper;
+import wt.util.FileUtil;
 import wt.util.WTException;
 import wt.util.WTProperties;
 import wt.util.WTPropertyVetoException;
@@ -797,15 +798,17 @@ public class StandardDrawingService extends StandardManager implements DrawingSe
 		String applicationType = "MANUAL";
 
 		String extName = "";
+		String ext = "";
 		String authoringType = "";
 		if (primaryFile.length() > 0) {
 			File file = new File(fileName);
 			extName = file.getName();
+			ext = FileUtil.getExtension(extName);
 			authoringType = EpmUtil.getAuthoringType(extName);
 		}
 		String extentionName = getPrefix(extName);
 		WTPart part = (WTPart) CommonUtil.getObject(partOid);
-		String number = part.getNumber() + "." + extentionName;
+		String number = part.getNumber() + "." + ext;
 		String name = part.getName();
 
 		epm.setNumber(number);
