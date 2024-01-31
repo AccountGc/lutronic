@@ -1,3 +1,4 @@
+<%@page import="wt.fc.Persistable"%>
 <%@page import="wt.epm.structure.EPMStructureHelper"%>
 <%@page import="wt.fc.PersistenceHelper"%>
 <%@page import="wt.fc.QueryResult"%>
@@ -23,34 +24,16 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%
 String oid = (String) request.getParameter("oid");
-Representable representable = (Representable) CommonUtil.getObject(oid);
-WTPart part = null;
+Persistable per = CommonUtil.getObject(oid);
 Representation representation = null;
-EPMDocument e = null;
-if (representable instanceof EPMDocument) {
-	EPMDocument epm = (EPMDocument) representable;
-	if (epm.getDocType().toString().equals("CADDRAWING")) {
-		QueryResult qr = EPMStructureHelper.service.navigateReferences(epm, null, false);
-		EPMReferenceLink link = null;
-		while (qr.hasMoreElements()) {
-	link = (EPMReferenceLink) qr.nextElement();
-	String referenceType = link.getReferenceType().toString();
-	EPMDocumentMaster master = (EPMDocumentMaster) link.getReferences();
-	e = DrawingHelper.manager.latest(master);
-	if (e.getDocType().toString().equals("CADCOMPONENT") && referenceType.equals("DRAWING")) {
-		part = PartHelper.manager.getPart(e);
-		representation = PublishUtils.getRepresentation(e, true, null, false);
-	}
-		}
-	} else {
-		part = PartHelper.manager.getPart(epm);
-		representation = PublishUtils.getRepresentation(epm, true, null, false);
-	}
-} else if (representable instanceof WTPart) {
-	part = (WTPart) representable;
-	representation = PublishUtils.getRepresentation(e, true, null, false);
+if (per instanceof EPMDocument) {
+	EPMDocument epm = (EPMDocument) per;
+	representation = PublishUtils.getRepresentation(epm);
+} else if (per instanceof WTPart) {
+	WTPart part = (WTPart) per;
+	representation = PublishUtils.getRepresentation(part);
 }
-
+System.out.println("representation="+representation);
 String temp = WTProperties.getLocalProperties().getProperty("wt.codebase.location");
 String path = temp + File.separator + "extcore" + File.separator + "jsp" + File.separator + "part" + File.separator
 		+ "pvz";

@@ -118,6 +118,8 @@ public class MailUtils {
 		WTUser toUser = getToUser(lcm);
 		String subject = targetName + "의 결재선 지정요청 알림 메일입니다.";
 
+		System.out.println("전송자 = " + toUser.getEMail());
+		
 		HashMap<String, String> to = new HashMap<>();
 //		WTUser toUser = (WTUser) SessionHelper.manager.getPrincipal();
 		if (!StringUtil.checkString(toUser.getEMail())) {

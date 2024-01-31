@@ -496,7 +496,9 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 				const item = event.item;
 				const oid = item.part_oid;
 				if ("thumb" === dataField) {
-					openCreoView(oid);
+// 					openCreoView(oid);
+					url = getCallUrl("/part/thumbnail?oid=" + oid);
+					_popup(url, 800, 600, "n");
 				}
 			}
 

@@ -59,18 +59,24 @@ Map<String, String> step = dto.getStep();
 				<th class="lb">도면번호</th>
 				<td class="indent5" colspan="3"><%=dto.getNumber()%></td>
 				<%
-					if(dt)
+					if(!dto.getDocType().equals("CADDRAWING")) {
 				%>
 				<td style="min-width: 300px;" class="" align="center" rowspan="7">
 					<jsp:include page="/extcore/jsp/common/thumbnail-view-3d.jsp">
 						<jsp:param value="<%=dto.getOid()%>" name="oid" />
 					</jsp:include>
 				</td>
+				<%
+					} else {
+				%>
 				<td style="min-width: 300px;" class="" align="center" rowspan="7">
 					<jsp:include page="/extcore/jsp/common/thumbnail-view-2d.jsp">
 						<jsp:param value="<%=dto.getOid()%>" name="oid" />
 					</jsp:include>
 				</td>
+				<%
+					}
+				%>
 			</tr>
 			<tr>
 				<th class="lb">도면명</th>

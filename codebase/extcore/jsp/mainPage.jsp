@@ -208,7 +208,9 @@ div.ellipsis {
 												</span>
 											</div>
 											<div class="white-icon">
-												<i class="fa fa-envelope"></i>
+												<a href="javascript:gotoUrl('/workData/list');">
+													<i class="fa fa-envelope"></i>
+												</a>
 											</div>
 											<div class="circle-text">
 												<a href="javascript:gotoUrl('/workData/list');">결재선지정</a>
@@ -223,7 +225,9 @@ div.ellipsis {
 												</span>
 											</div>
 											<div class="white-icon">
-												<i class="fa fa-handshake"></i>
+												<a href="javascript:gotoUrl('/workspace/approval');">
+													<i class="fa fa-handshake"></i>
+												</a>
 											</div>
 											<div class="circle-text">
 												<a href="javascript:gotoUrl('/workspace/approval');">결재함</a>
@@ -238,7 +242,9 @@ div.ellipsis {
 												</span>
 											</div>
 											<div class="white-icon">
-												<i class="fa fa-clock"></i>
+												<a href="javascript:gotoUrl('/workspace/agree');">
+													<i class="fa fa-clock"></i>
+												</a>
 											</div>
 											<div class="circle-text">
 												<a href="javascript:gotoUrl('/workspace/agree');">합의함</a>
@@ -253,7 +259,9 @@ div.ellipsis {
 												</span>
 											</div>
 											<div class="white-icon">
-												<i class="fa fa-book"></i>
+												<a href="javascript:gotoUrl('/activity/eca');">
+													<i class="fa fa-book"></i>
+												</a>
 											</div>
 											<div class="circle-text">
 												<a href="javascript:gotoUrl('/activity/eca');">ECA 활동함</a>

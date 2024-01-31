@@ -47,6 +47,7 @@ public class EpmData {
 	public String applicationType;
 	private String version;
 	private String description;
+	private String docType;
 
 	private Map<String, String> pdf = new HashMap<>();
 	private Map<String, String> dxf = new HashMap<>();
@@ -66,6 +67,9 @@ public class EpmData {
 		if (!isDRW) {
 			setNameSyschronization(false);
 		}
+
+		setDocType(epm.getDocType().toString());
+
 		// 수정 가능여부
 		boolean wgm = false;
 		wgm = epm.getOwnerApplication().toString().equals("EPM") ? true : false;

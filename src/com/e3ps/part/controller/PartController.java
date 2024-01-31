@@ -55,6 +55,23 @@ import wt.vc.views.ViewHelper;
 @RequestMapping(value = "/part/**")
 public class PartController extends BaseController {
 
+	
+	@Description(value="썸네일 여부 체크")
+	@ResponseBody
+	@GetMapping(value="/checkThumb")
+	public Map<String, Object> checkThumb(@RequestParam String oid) throws Exception {
+		Map<String, Object> result = new HashMap<>();
+		try {
+			WTPart part = (WTPart)CommonUtil.getObject(oid);
+			
+		} catch(Exception e) {
+			result.put("result", FAIL);
+			result.put("msg", e.toString());
+			e.printStackTrace();
+		}
+		return result;
+	}
+	
 	@Description(value = "새이름으로 저장")
 	@GetMapping(value = "/saveAs")
 	public ModelAndView saveAs() throws Exception {
