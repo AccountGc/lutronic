@@ -62,7 +62,7 @@ public class PartController extends BaseController {
 	@GetMapping(value = "/viewThumb")
 	public ModelAndView viewThumb(@RequestParam String oid) throws Exception {
 		ModelAndView model = new ModelAndView();
-		model.setViewName("popup:/common/thumbnail-view-3d");
+		model.setViewName("/extcore/jsp/common/thumbnail-popup-3d.jsp");
 		model.addObject("oid", oid);
 		return model;
 	}

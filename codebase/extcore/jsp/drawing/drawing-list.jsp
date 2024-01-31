@@ -478,7 +478,6 @@ QuantityUnit[] unitList = (QuantityUnit[]) request.getAttribute("unitList");
 						}
 					}, "GET", false);
 				}
-				}
 			}
 
 			function _auiContextMenuHandler(event) {

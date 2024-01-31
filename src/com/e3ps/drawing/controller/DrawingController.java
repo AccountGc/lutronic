@@ -71,9 +71,9 @@ public class DrawingController extends BaseController {
 		EPMDocument doc = (EPMDocument) CommonUtil.getObject(oid);
 		String docType = doc.getDocType().toString();
 		if (docType.equals("CADDRAWING")) {
-			model.setViewName("popup:/common/thumbnail-view-2d");
+			model.setViewName("popup:/common/thumbnail-popup-2d");
 		} else {
-			model.setViewName("popup:/common/thumbnail-view-3d");
+			model.setViewName("/extcore/jsp/common/thumbnail-popup-3d.jsp");
 		}
 		model.addObject("oid", oid);
 		return model;
