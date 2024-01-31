@@ -470,8 +470,13 @@ QuantityUnit[] unitList = (QuantityUnit[]) request.getAttribute("unitList");
 						if (data.result) {
 							const exist = data.exist;
 							if (exist) {
-								const url = getCallUrl("/drawing/viewThumb?oid=" + oid);
-								_popup(url, 800, 600, "n");
+								const isDrawing = data.isDrawing;
+								if (!isDrawing) {
+									const url = getCallUrl("/drawing/viewThumb?oid=" + oid);
+									_popup(url, 800, 600, "n");
+								} else {
+									openCreoView(oid);
+								}
 							} else {
 								alert("썸네일이 없습니다.");
 							}

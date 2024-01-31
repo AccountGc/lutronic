@@ -27,8 +27,9 @@ if (epm != null) {
 %>
 <%
 if (StringUtil.checkString(thumb)) {
+	// 288 192
 %>
-<img src="<%=thumb%>" style="width: 500px; height: 500px;">
+<img src="<%=thumb%>" style="width: 864px; height: 576px;">
 <%
 }
 %>
