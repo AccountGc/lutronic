@@ -115,10 +115,11 @@ public class MailUtils {
 		WTUser fromUser = (WTUser) SessionHelper.manager.getAdministrator();
 
 		String targetName = getTargetName(lcm);
+		WTUser toUser = getToUser(lcm);
 		String subject = targetName + "의 결재선 지정요청 알림 메일입니다.";
 
 		HashMap<String, String> to = new HashMap<>();
-		WTUser toUser = (WTUser) SessionHelper.manager.getPrincipal();
+//		WTUser toUser = (WTUser) SessionHelper.manager.getPrincipal();
 		if (!StringUtil.checkString(toUser.getEMail())) {
 			throw new Exception("받는 사람 = " + toUser.getFullName() + " 이메일 주소가 없습니다.");
 		}
@@ -139,6 +140,33 @@ public class MailUtils {
 
 		sendMail(hash);
 		System.out.println("결재선 지정 메일 종료!!");
+	}
+
+	/**
+	 * 메일 받을 사람
+	 */
+	private static WTUser getToUser(LifeCycleManaged lcm) throws Exception {
+		WTUser toUser = null;
+		if (lcm instanceof WTDocument) {
+			WTDocument d = (WTDocument) lcm;
+			toUser = (WTUser) d.getCreator().getPrincipal();
+		} else if (lcm instanceof EChangeOrder) {
+			EChangeOrder e = (EChangeOrder) lcm;
+			toUser = (WTUser) e.getCreator().getPrincipal();
+		} else if (lcm instanceof AsmApproval) {
+			AsmApproval asm = (AsmApproval) lcm;
+			toUser = (WTUser) asm.getCreator().getPrincipal();
+		} else if (lcm instanceof ECPRRequest) {
+			ECPRRequest ecpr = (ECPRRequest) lcm;
+			toUser = (WTUser) ecpr.getCreator().getPrincipal();
+		} else if (lcm instanceof ECRMRequest) {
+			ECRMRequest ecrm = (ECRMRequest) lcm;
+			toUser = (WTUser) ecrm.getCreator().getPrincipal();
+		} else if (lcm instanceof EChangeRequest) {
+			EChangeRequest e = (EChangeRequest) lcm;
+			toUser = (WTUser) e.getCreator().getPrincipal();
+		}
+		return toUser;
 	}
 
 	/**

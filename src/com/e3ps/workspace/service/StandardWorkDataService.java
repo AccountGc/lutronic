@@ -47,9 +47,7 @@ public class StandardWorkDataService extends StandardManager implements WorkData
 			WorkData data = WorkData.newWorkData();
 			data.setPer(per);
 			if (per instanceof EChangeOrder) {
-				// 설변일 경우..
 				EChangeOrder e = (EChangeOrder) per;
-
 				Ownership owner = Ownership.newOwnership(e.getCreator());
 				data.setOwnership(owner);
 			} else {
@@ -89,7 +87,6 @@ public class StandardWorkDataService extends StandardManager implements WorkData
 			}
 
 			// 메일발송하기!
-//			MailUtils.manager.sendWorkDataMail((LifeCycleManaged) per);
 			MailUtils.manager.sendWorkDataMailMethod(per);
 
 			trs.commit();

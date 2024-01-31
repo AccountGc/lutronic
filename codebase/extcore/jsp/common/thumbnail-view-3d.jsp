@@ -43,7 +43,7 @@ if (representable instanceof EPMDocument) {
 	}
 		}
 	} else {
-// 		part = PartHelper.manager.getPart(epm);
+		part = PartHelper.manager.getPart(epm);
 		representation = PublishUtils.getRepresentation(epm, true, null, false);
 	}
 } else if (representable instanceof WTPart) {

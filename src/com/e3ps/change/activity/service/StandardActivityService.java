@@ -26,6 +26,7 @@ import com.e3ps.common.util.WCUtil;
 import com.e3ps.drawing.service.DrawingHelper;
 import com.e3ps.part.PartToPartLink;
 import com.e3ps.part.service.PartHelper;
+import com.e3ps.workspace.WorkData;
 import com.e3ps.workspace.service.WorkDataHelper;
 
 import net.sf.json.JSONArray;
@@ -408,9 +409,12 @@ public class StandardActivityService extends StandardManager implements Activity
 //				LifeCycleHelper.service.setLifeCycleState(eca.getEo(), State.toState("INWORK"));
 //				LifeCycleHelper.service.setLifeCycleState(eca.getEo(), State.toState("APPROVING"));
 				LifeCycleHelper.service.setLifeCycleState(eca, State.toState("COMPLETED"));
-				// 결재선들 시작 한다
-//				WorkspaceHelper.service.start(eca.getEo());
-				WorkDataHelper.service.create(eco);
+
+				// 없을시에만 생성한다
+				WorkData wd = WorkDataHelper.manager.getWorkData(eco);
+				if (wd == null) {
+					WorkDataHelper.service.create(eco);
+				}
 			}
 
 			// ECO 일경우 처리

@@ -54,11 +54,13 @@ Map<String, String> step = dto.getStep();
 				<col width="130">
 				<col width="350">
 				<col width="300">
-				<col width="300">
 			</colgroup>
 			<tr>
 				<th class="lb">도면번호</th>
 				<td class="indent5" colspan="3"><%=dto.getNumber()%></td>
+				<%
+					if(dt)
+				%>
 				<td style="min-width: 300px;" class="" align="center" rowspan="7">
 					<jsp:include page="/extcore/jsp/common/thumbnail-view-3d.jsp">
 						<jsp:param value="<%=dto.getOid()%>" name="oid" />
