@@ -584,7 +584,7 @@ public class StandardDocumentService extends StandardManager implements Document
 			// 일괄결재 일경우 결재선 지정을 안만든다..
 			if ("LC_Default_NonWF".equals(lifecycle)) {
 				workCopy = (WTDocument) PersistenceHelper.manager.refresh(workCopy);
-				LifeCycleHelper.service.setLifeCycleState(workCopy, State.toState("BATCHAPPROVAL"), *);
+				LifeCycleHelper.service.setLifeCycleState(workCopy, State.toState("BATCHAPPROVAL"));
 			} else {
 				WorkDataHelper.service.create(workCopy);
 			}
