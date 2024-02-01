@@ -406,32 +406,6 @@ public class DrawingHelper {
 			specification = "";
 		}
 
-		// Folder Search
-//			if (location.length() > 0) {
-//				int l = location.indexOf(ROOTLOCATION);
-//
-//				if (l >= 0) {
-//					if (query.getConditionCount() > 0) {
-//						query.appendAnd();
-//					}
-//					location = location
-//							.substring((l + ROOTLOCATION.length()));
-//					// Folder Search
-//					int folder_idx = query.addClassList(EpmLocation.class,
-//							false);
-//					query.appendWhere(new SearchCondition(EpmLocation.class,
-//							EpmLocation.EPM, EPMDocument.class,
-//							"thePersistInfo.theObjectIdentifier.id"),
-//							new int[] { folder_idx, idx });
-//					query.appendAnd();
-//
-//					query.appendWhere(new SearchCondition(EpmLocation.class,
-//							"loc", SearchCondition.LIKE, location + "%"),
-//							new int[] { folder_idx });
-//				}
-//
-//			}
-		// CAD ����
 		if (cadDivision.length() > 0) {
 			query.appendAnd();
 			query.appendWhere(new SearchCondition(EPMDocument.class, "master>authoringApplication",

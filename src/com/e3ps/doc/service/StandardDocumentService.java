@@ -872,4 +872,28 @@ public class StandardDocumentService extends StandardManager implements Document
 				trs.rollback();
 		}
 	}
+
+	@Override
+	public void forceWorkData(String oid) throws Exception {
+		Transaction trs = new Transaction();
+		try {
+			trs.start();
+
+			WTDocument doc = (WTDocument) CommonUtil.getObject(oid);
+
+			WorkData wd = WorkDataHelper.manager.getWorkData(doc);
+			if (wd != null) {
+				throw new Exception("이미 결재가 진행 중입니다.");
+			}
+
+			WorkDataHelper.service.create(doc);
+
+			trs.commit();
+			trs = null;
+		} catch (Exception e) {
+			e.printStackTrace();
+			trs.rollback();
+			throw e;
+		}
+	}
 }

@@ -61,4 +61,9 @@ public interface DocumentService {
 	 */
 	public abstract void publish(String oid) throws Exception;
 
+	/**
+	 * 이전 문서 결재 
+	 */
+	public abstract void forceWorkData(String oid) throws Exception;
+
 }

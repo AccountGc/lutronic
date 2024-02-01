@@ -42,6 +42,23 @@ import wt.part.WTPartDescribeLink;
 @RequestMapping(value = "/doc/**")
 public class DocumentController extends BaseController {
 
+	@Description(value = "강제 결재 진행")
+	@ResponseBody
+	@GetMapping(value = "/forceWorkData")
+	public Map<String, Object> forceWorkData(@RequestParam String oid) throws Exception {
+		Map<String, Object> result = new HashMap<String, Object>();
+		try {
+			DocumentHelper.service.forceWorkData(oid);
+			result.put("msg", "결재가 등록 되었습니다.");
+			result.put("result", SUCCESS);
+		} catch (Exception e) {
+			e.printStackTrace();
+			result.put("result", FAIL);
+			result.put("msg", e.toString());
+		}
+		return result;
+	}
+
 	@Description(value = "문서 등록 페이지 - 설변활동 링크등록")
 	@GetMapping(value = "/link")
 	public ModelAndView link(@RequestParam String oid) throws Exception {

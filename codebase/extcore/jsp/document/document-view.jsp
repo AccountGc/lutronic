@@ -65,6 +65,7 @@ iframe {
 			<%
 			if (dto.is_force()) {
 			%>
+			<input type="button" value="결재(강제)" title="결재(강제)" class="gray" onclick="forceWorkData();">
 			<input type="button" value="관리자 권한 수정" title="관리자 권한 수정" class="red" onclick="force();">
 			<%
 			}
@@ -396,6 +397,22 @@ iframe {
 	function update(mode) {
 		const url = getCallUrl("/doc/update?oid=" + oid + "&mode=" + mode);
 		document.location.href = url;
+	}
+
+	function forceWorkData() {
+		if (!confirm("결재 진행을 하시겠습니까?")) {
+			return false;
+		}
+
+		const url = getCallUrl("/doc/forceWorkData?oid=" + oid);
+		openLayer();
+		call(url, null, function(data) {
+			alert(data.msg);
+			if (data.result) {
+				opener.document.location.href = getCallUrl("/workData/list");
+			}
+			closeLayer();
+		}, "GET");
 	}
 
 	function force() {

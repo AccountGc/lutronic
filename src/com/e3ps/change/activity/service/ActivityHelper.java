@@ -304,7 +304,7 @@ public class ActivityHelper {
 			data.put("name", eo.getEoName());
 			data.put("step", NumberCodeHelper.manager.getNumberCodeName(eca.getStep(), "EOSTEP"));
 			data.put("finishDate", eca.getFinishDate());
-			data.put("state", eca.getLifeCycleState().getDisplay());
+			data.put("state", eo.getLifeCycleState().getDisplay()); // ECO / ECO 상태값으로 변경
 			data.put("activityName", getActName(eca.getActiveType()));
 			data.put("activityType", eca.getActiveType());
 			data.put("activityUser", eca.getActiveUser().getFullName());
