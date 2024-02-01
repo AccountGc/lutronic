@@ -50,7 +50,8 @@ public class DocumentDTO {
 	private String createdDate;
 	private String modifier;
 	private String modifiedDate;
-
+	private String lctName;
+	
 	// IBA
 	private String writer;
 	private String model_name;
@@ -147,6 +148,7 @@ public class DocumentDTO {
 		setNameInfo(doc);
 		setAuth(doc);
 		setEmpty(doc);
+		setLctName(doc.getLifeCycleName());
 	}
 
 	private void setEmpty(WTDocument doc) throws Exception {

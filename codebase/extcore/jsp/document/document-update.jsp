@@ -84,7 +84,7 @@ iframe {
 		<td>
 			&nbsp;
 			<div class="pretty p-switch">
-				<input type="radio" name="lifecycle" value="LC_Default" checked="checked">
+				<input type="radio" name="lifecycle" value="LC_Default" <%if(dto.getLctName().equals("LC_Default")) { %> checked="checked" <%} %>>
 				<div class="state p-success">
 					<label>
 						<b>기본결재</b>
@@ -93,7 +93,7 @@ iframe {
 			</div>
 			&nbsp;
 			<div class="pretty p-switch">
-				<input type="radio" name="lifecycle" value="LC_Default_NonWF">
+				<input type="radio" name="lifecycle" value="LC_Default_NonWF" <%if(dto.getLctName().equals("LC_Default_NonWF")) { %> checked="checked" <%} %>>
 				<div class="state p-success">
 					<label>
 						<b>일괄결재</b>

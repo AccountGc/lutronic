@@ -64,8 +64,8 @@ public class StandardWorkDataService extends StandardManager implements WorkData
 					lcm = (LifeCycleManaged) LifeCycleHelper.service.reassign(lcm, LifeCycleHelper.service
 							.getLifeCycleTemplateReference(lcm.getLifeCycleName(), WCUtil.getWTContainerRef())); // Lifecycle
 					lcm = (LifeCycleManaged) PersistenceHelper.manager.refresh(lcm);
-					LifeCycleHelper.service.setLifeCycleState(lcm, State.toState("LINE_REGISTER"));
 				}
+				LifeCycleHelper.service.setLifeCycleState(lcm, State.toState("LINE_REGISTER"));
 			}
 
 			// 일괄겨재일 경우 대상들 결재선 지정상태로만 변경한다
@@ -80,9 +80,9 @@ public class StandardWorkDataService extends StandardManager implements WorkData
 						lcm = (LifeCycleManaged) LifeCycleHelper.service.reassign(lcm, LifeCycleHelper.service
 								.getLifeCycleTemplateReference(lcm.getLifeCycleName(), WCUtil.getWTContainerRef())); // Lifecycle
 						lcm = (LifeCycleManaged) PersistenceHelper.manager.refresh(lcm);
-						LifeCycleHelper.service.setLifeCycleState((LifeCycleManaged) persistable,
-								State.toState("LINE_REGISTER"));
 					}
+					LifeCycleHelper.service.setLifeCycleState((LifeCycleManaged) persistable,
+							State.toState("LINE_REGISTER"));
 				}
 			}
 
