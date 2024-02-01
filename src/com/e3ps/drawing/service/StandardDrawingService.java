@@ -1722,7 +1722,6 @@ public class StandardDrawingService extends StandardManager implements DrawingSe
 		return data;
 	}
 
-
 	// PJT EDIT 20161130
 	@Override
 	public void partTreeDrawingDown(HttpServletRequest request, HttpServletResponse response) throws Exception {
@@ -2207,110 +2206,120 @@ public class StandardDrawingService extends StandardManager implements DrawingSe
 
 	@Override
 	public void update(Map<String, Object> params) throws Exception {
-		String oid = StringUtil.checkNull((String) params.get("oid"));
-		EPMDocument orgEpm = (EPMDocument) CommonUtil.getObject(oid);
-		if (orgEpm != null) {
-			String location = StringUtil.checkNull((String) params.get("location"));
-			String primary = StringUtil.checkNull((String) params.get("primary"));
-			String description = StringUtil.checkNull((String) params.get("description"));
-			String iterationNote = StringUtil.checkNull((String) params.get("iterationNote"));
-			boolean temprary = (boolean) params.get("temprary");
+		Transaction trs = new Transaction();
+		try {
+			trs.start();
+			String oid = StringUtil.checkNull((String) params.get("oid"));
+			EPMDocument orgEpm = (EPMDocument) CommonUtil.getObject(oid);
+			if (orgEpm != null) {
+				String location = StringUtil.checkNull((String) params.get("location"));
+				String primary = StringUtil.checkNull((String) params.get("primary"));
+				String description = StringUtil.checkNull((String) params.get("description"));
+				String iterationNote = StringUtil.checkNull((String) params.get("iterationNote"));
+				boolean temprary = (boolean) params.get("temprary");
 
-			// 결재
-			ArrayList<Map<String, String>> approvalRows = (ArrayList<Map<String, String>>) params.get("approvalRows");
-			ArrayList<Map<String, String>> agreeRows = (ArrayList<Map<String, String>>) params.get("agreeRows");
-			ArrayList<Map<String, String>> receiveRows = (ArrayList<Map<String, String>>) params.get("receiveRows");
+				// 결재
+				ArrayList<Map<String, String>> approvalRows = (ArrayList<Map<String, String>>) params
+						.get("approvalRows");
+				ArrayList<Map<String, String>> agreeRows = (ArrayList<Map<String, String>>) params.get("agreeRows");
+				ArrayList<Map<String, String>> receiveRows = (ArrayList<Map<String, String>>) params.get("receiveRows");
 
-			EPMDocument newEpm = (EPMDocument) getWorkingCopy(orgEpm);
-			newEpm.setDescription(description);
-			newEpm = (EPMDocument) PersistenceHelper.manager.modify(newEpm);
+				EPMDocument newEpm = (EPMDocument) getWorkingCopy(orgEpm);
+				newEpm.setDescription(description);
+				newEpm = (EPMDocument) PersistenceHelper.manager.modify(newEpm);
 
-			if (primary.length() > 0) {
-				ContentItem item = null;
-				QueryResult result = ContentHelper.service.getContentsByRole((ContentHolder) newEpm,
-						ContentRoleType.PRIMARY);
+				if (primary.length() > 0) {
+					ContentItem item = null;
+					QueryResult result = ContentHelper.service.getContentsByRole((ContentHolder) newEpm,
+							ContentRoleType.PRIMARY);
+					while (result.hasMoreElements()) {
+						item = (ContentItem) result.nextElement();
+						CommonContentHelper.service.delete(newEpm, item);
+					}
+					result.reset();
+					File vault = CommonContentHelper.manager.getFileFromCacheId(primary);
+					String fileName = vault.getName();
+					String TempCadName = newEpm.getCADName();
+					System.out.println("primary :: " + vault);
+					System.out.println("fileName :: " + fileName);
+					System.out.println("TempCadName :: " + TempCadName);
+
+					if (!TempCadName.equals(fileName)) {
+						throw new Exception(Message.get("파일명이 다릅니다."));
+					}
+				}
+
+				QueryResult result = ContentHelper.service.getContentsByRole(newEpm, ContentRoleType.SECONDARY);
 				while (result.hasMoreElements()) {
-					item = (ContentItem) result.nextElement();
-					CommonContentHelper.service.delete(newEpm, item);
+					ContentItem item = (ContentItem) result.nextElement();
+					ContentServerHelper.service.deleteContent(newEpm, item);
 				}
-				result.reset();
-				File vault = CommonContentHelper.manager.getFileFromCacheId(primary);
-				String fileName = vault.getName();
-				String TempCadName = newEpm.getCADName();
-				System.out.println("primary :: " + vault);
-				System.out.println("fileName :: " + fileName);
-				System.out.println("TempCadName :: " + TempCadName);
 
-				if (!TempCadName.equals(fileName)) {
-					throw new Exception(Message.get("파일명이 다릅니다."));
+				// 첨부파일 저장
+				saveAttach(newEpm, params);
+
+				// 관련품목
+				QueryResult partResults = PersistenceHelper.manager.navigate(newEpm, "describes", EPMDescribeLink.class,
+						false);
+				while (partResults.hasMoreElements()) {
+					EPMDescribeLink link = (EPMDescribeLink) partResults.nextElement();
+					PersistenceServerHelper.manager.remove(link);
+				}
+
+				ArrayList<Map<String, String>> partList = (ArrayList<Map<String, String>>) params.get("partList");
+				for (Map<String, String> partMap : partList) {
+					String partOid = partMap.get("oid");
+					WTPart part = (WTPart) CommonUtil.getObject(partOid);
+					EPMDescribeLink describeLink = EPMDescribeLink.newEPMDescribeLink(part, newEpm);
+					PersistenceServerHelper.manager.insert(describeLink);
+				}
+
+				newEpm = (EPMDocument) PersistenceHelper.manager.refresh(newEpm);
+
+				// Check-in
+				if (WorkInProgressHelper.isCheckedOut(newEpm)) {
+					newEpm = (EPMDocument) WorkInProgressHelper.service.checkin(newEpm,
+							StringUtil.checkNull(iterationNote));
+				}
+
+				if (location.length() > 0) {
+					Folder folder = FolderTaskLogic.getFolder(location, WCUtil.getWTContainerRef());
+					newEpm = (EPMDocument) FolderHelper.service.changeFolder((FolderEntry) newEpm, folder);
+				}
+
+				/* BuildRule History */
+				EPMBuildRule buildRule = PartSearchHelper.service.getBuildRule(newEpm);
+				if (buildRule != null) {
+					WTPart part = (WTPart) buildRule.getBuildTarget();
+					EPMBuildHistory history = EPMBuildHistory.newEPMBuildHistory(orgEpm, part, buildRule.getUniqueID(),
+							buildRule.getBuildType());
+					PersistenceServerHelper.manager.insert(history);
+				}
+
+				if (newEpm != null) {
+					EpmPublishUtil.publish(newEpm);
+				}
+
+				// 임시저장 하겠다 한 경우
+				if (temprary) {
+					State state = State.toState("TEMPRARY");
+					// 상태값 변경해준다 임시저장 <<< StateRB 추가..
+					LifeCycleHelper.service.setLifeCycleState(newEpm, state);
+				} else {
+					State state = State.toState("INWORK");
+					LifeCycleHelper.service.setLifeCycleState(newEpm, state);
 				}
 			}
 
-			QueryResult result = ContentHelper.service.getContentsByRole(newEpm, ContentRoleType.SECONDARY);
-			while (result.hasMoreElements()) {
-				ContentItem item = (ContentItem) result.nextElement();
-				ContentServerHelper.service.deleteContent(newEpm, item);
-			}
-
-			// 첨부파일 저장
-			saveAttach(newEpm, params);
-
-			// 관련품목
-			QueryResult partResults = PersistenceHelper.manager.navigate(newEpm, "describes", EPMDescribeLink.class,
-					false);
-			while (partResults.hasMoreElements()) {
-				EPMDescribeLink link = (EPMDescribeLink) partResults.nextElement();
-				PersistenceServerHelper.manager.remove(link);
-			}
-
-			ArrayList<Map<String, String>> partList = (ArrayList<Map<String, String>>) params.get("partList");
-			for (Map<String, String> partMap : partList) {
-				String partOid = partMap.get("oid");
-				WTPart part = (WTPart) CommonUtil.getObject(partOid);
-				EPMDescribeLink describeLink = EPMDescribeLink.newEPMDescribeLink(part, newEpm);
-				PersistenceServerHelper.manager.insert(describeLink);
-			}
-
-			newEpm = (EPMDocument) PersistenceHelper.manager.refresh(newEpm);
-
-			// Check-in
-			if (WorkInProgressHelper.isCheckedOut(newEpm)) {
-				newEpm = (EPMDocument) WorkInProgressHelper.service.checkin(newEpm,
-						StringUtil.checkNull(iterationNote));
-			}
-
-			if (location.length() > 0) {
-				Folder folder = FolderTaskLogic.getFolder(location, WCUtil.getWTContainerRef());
-				newEpm = (EPMDocument) FolderHelper.service.changeFolder((FolderEntry) newEpm, folder);
-			}
-
-			/* BuildRule History */
-			EPMBuildRule buildRule = PartSearchHelper.service.getBuildRule(newEpm);
-			if (buildRule != null) {
-				WTPart part = (WTPart) buildRule.getBuildTarget();
-				EPMBuildHistory history = EPMBuildHistory.newEPMBuildHistory(orgEpm, part, buildRule.getUniqueID(),
-						buildRule.getBuildType());
-				PersistenceServerHelper.manager.insert(history);
-			}
-
-			if (newEpm != null) {
-				EpmPublishUtil.publish(newEpm);
-			}
-
-			// 임시저장 하겠다 한 경우
-			if (temprary) {
-				State state = State.toState("TEMPRARY");
-				// 상태값 변경해준다 임시저장 <<< StateRB 추가..
-				LifeCycleHelper.service.setLifeCycleState(newEpm, state);
-			} else {
-				State state = State.toState("INWORK");
-				LifeCycleHelper.service.setLifeCycleState(newEpm, state);
-			}
-
-			// 결재시작
-//			if (approvalRows!=null) {
-//				WorkspaceHelper.service.register(newEpm, agreeRows, approvalRows, receiveRows);
-//			}
+			trs.commit();
+			trs = null;
+		} catch (Exception e) {
+			e.printStackTrace();
+			trs.rollback();
+			throw e;
+		} finally {
+			if (trs != null)
+				trs.rollback();
 		}
 	}
 }
