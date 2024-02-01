@@ -78,8 +78,7 @@ public class EpmData {
 		}
 		// 최신객체여부
 		setLatest(DrawingHelper.manager.isLatest(epm));
-
-		setLocation(StringUtil.checkNull(epm.getLocation()).replaceAll("/Default", ""));
+		setLocation(epm.getLocation());
 		setState(epm.getLifeCycleState().toString());
 		setStateDisplay(epm.getLifeCycleState().getDisplay());
 		EPMDocumentMaster master = (EPMDocumentMaster) epm.getMaster();

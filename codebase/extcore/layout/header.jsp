@@ -566,7 +566,8 @@ int eca = (int) request.getAttribute("eca");
 				for (let i = 0; i < list.length; i++) {
 					const oid = list[i].oid;
 					if (check(oid)) {
-
+						const callUrl = getCallUrl("/notice/popup?oid=" + oid);
+						_popup(callUrl, 1000, 600, "n");
 					}
 				}
 			} else {
@@ -577,19 +578,22 @@ int eca = (int) request.getAttribute("eca");
 
 	function check(oid) {
 		let popup = false;
-		let value = getCookie(oid);
-// 		alert(value);
+		const value = getCookie(oid);
+		if (!value) {
+			popup = true;
+		}
+		return popup;
 	}
 
-	function getCookie(oid) {
-		let name = name + "=";
+	function getCookie(name) {
+		name = name + "=";
+		// 		alert(name);
 		const cookie = document.cookie;
-		logger(cookie);
-		const start = cookie.indexOf(name);
+		let start = cookie.indexOf(name);
 		let value = "";
 		if (start !== -1) {
 			start += name.length;
-			const end = cookie.indexOf(",", start);
+			let end = cookie.indexOf(",", start);
 			if (end === -1) {
 				end = cookie.length;
 			}

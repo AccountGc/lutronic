@@ -453,7 +453,7 @@ while (it.hasNext()) {
 
 		<script type="text/javascript">
 			function view(oid) {
-				const url = getCallUrl("/notice/view?oid=" + oid + "&main=true");
+				const url = getCallUrl("/notice/popup?oid=" + oid + "&main=true");
 				_popup(url, 1000, 500, "n");
 			}
 

@@ -16,7 +16,6 @@ EpmData dto = (EpmData) request.getAttribute("dto");
 <body>
 	<form>
 		<input type="hidden" name="oid" id="oid" value="<%=dto.getOid()%>">
-		<input type="hidden" name="location" id="location" value="/Default/PART_Drawing">
 		<table class="button-table">
 			<tr>
 				<td class="left">
@@ -129,17 +128,6 @@ EpmData dto = (EpmData) request.getAttribute("dto");
 			function update(temp) {
 				const temprary = JSON.parse(temp);
 				const primary = document.querySelector("input[name=primary]");
-				// 				const addRows8 = AUIGrid.getAddedRowItems(myGridID8);
-
-				// 				if (temprary) {
-				// 					if (!confirm("임시저장하시겠습니까??")) {
-				// 						return false;
-				// 					}
-
-				// 					if (addRows8.length > 0) {
-				// 						alert("결재선 지정을 해지해주세요.")
-				// 						return false;
-				// 					}
 
 				if (primary == null) {
 					alert("주 첨부파일을 첨부해주세요.");

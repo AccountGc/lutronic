@@ -81,7 +81,7 @@ NoticeDTO dto = (NoticeDTO) request.getAttribute("dto");
 <script>
 	function setCookie() {
 		const oid = document.getElementById("oid").value;
-		const cDay = 7;
+		const cDay = 365;
 		let expire = new Date();
 
 		expire.setDate(expire.getDate() + cDay);
@@ -91,7 +91,8 @@ NoticeDTO dto = (NoticeDTO) request.getAttribute("dto");
 			cookies += ';expires=' + expire.toGMTString() + ';';
 		}
 		document.cookie = cookies;
-		self.close();
+		logger(cookies);
+// 		self.close();
 	}
 	document.addEventListener("DOMContentLoaded", function() {
 		autoTextarea();
