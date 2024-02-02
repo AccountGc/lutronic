@@ -754,7 +754,7 @@ public class DocumentHelper {
 				if ("RMP".equals(clazz.trim())) {
 					n = "QF-701-01";
 				} else if ("RMR".equals(clazz.trim())) {
-					n = "QF-701-02	";
+					n = "QF-701-02";
 				} else if ("PRS".equals(clazz.trim())) {
 					n = "QF-705-12";
 				} else if ("DSP".equals(clazz.trim())) {
