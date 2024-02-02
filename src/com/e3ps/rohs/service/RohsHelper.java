@@ -230,18 +230,18 @@ public class RohsHelper {
 
 	}
 
-	private String toSortKey(String sortKey) throws Exception{
-		if("number".equals(sortKey)) {
+	private String toSortKey(String sortKey) throws Exception {
+		if ("number".equals(sortKey)) {
 			return ROHSMaterial.NUMBER;
-		} else if("name".equals(sortKey)) {
+		} else if ("name".equals(sortKey)) {
 			return ROHSMaterial.NAME;
-		} else if("stateDisplay".equals(sortKey)) {
+		} else if ("stateDisplay".equals(sortKey)) {
 			return ROHSMaterial.LIFE_CYCLE_STATE;
-		} else if("creator".equals(sortKey)) {
+		} else if ("creator".equals(sortKey)) {
 			return ROHSMaterial.CREATOR_FULL_NAME;
-		} else if("createDate".equals(sortKey)) {
+		} else if ("createDate".equals(sortKey)) {
 			return ROHSMaterial.CREATE_TIMESTAMP;
-		} else if("modifyDate".equals(sortKey)) {
+		} else if ("modifyDate".equals(sortKey)) {
 			return ROHSMaterial.MODIFY_TIMESTAMP;
 		}
 		return ROHSMaterial.CREATE_TIMESTAMP;
@@ -282,7 +282,7 @@ public class RohsHelper {
 		String fileName = StringUtil.checkNull((String) params.get("fileName"));
 		String sortKey = (String) params.get("sortKey");
 		String sortType = (String) params.get("sortType");
-		
+
 		QuerySpec query = new QuerySpec();
 		int idx = query.addClassList(ROHSContHolder.class, true);
 		int idx2 = query.addClassList(ROHSMaterial.class, false);
@@ -314,7 +314,7 @@ public class RohsHelper {
 					SearchCondition.LESS_THAN_OR_EQUAL, publicationTo), new int[] { idx });
 		}
 		QuerySpecUtils.toOrderBy(query, idx, ROHSContHolder.class, ROHSContHolder.ROHS_REFERENCE + ".key.id", false);
-		
+
 		boolean sort = QuerySpecUtils.toSort(sortType);
 		QuerySpecUtils.toOrderBy(query, idx, ROHSContHolder.class, toSortKey(sortKey), sort);
 
@@ -373,6 +373,8 @@ public class RohsHelper {
 		HashMap<String, Integer> stateMap = new HashMap<String, Integer>();
 
 		int totalLevl = 0;
+		int green = 0;
+		int red = 0;
 		for (int i = 0; i < partlist.size(); i++) {
 			Map<String, Object> partMap = partlist.get(i);
 
@@ -391,10 +393,12 @@ public class RohsHelper {
 			String state = "검은색";
 			if (rohsState == RohsUtil.STATE_NOT_APPROVED) {
 				state = "빨강색";
+				red++;
 			} else if (rohsState == RohsUtil.STATE_NONE_ROHS) {
 				state = "주황색";
 			} else if (rohsState == RohsUtil.STATE_ALL_APPROVED) {
 				state = "녹색";
+				green++;
 			} else if (rohsState == RohsUtil.STATE_NOT_ROHS) {
 				state = "검은색";
 			}
@@ -439,6 +443,10 @@ public class RohsHelper {
 
 		// 정렬
 //		Collections.sort(partRohslist, new RohsPartComparator());
+
+		returnMap.put("total", partRohslist.size());
+		returnMap.put("green", green);
+		returnMap.put("red", red);
 
 		returnMap.put("totalLevel", totalLevl);
 		returnMap.put("partRohslist", partRohslist);

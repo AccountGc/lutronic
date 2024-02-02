@@ -411,7 +411,7 @@ iframe {
 					alert(data.msg);
 					if (data.result) {
 						parent.updateHeader();
-// 						document.location.href = getCallUrl("/doc/list");
+						document.location.href = getCallUrl("/doc/list");
 					}
 					parent.closeLayer();
 				});

@@ -797,7 +797,14 @@ public class StandardDocumentService extends StandardManager implements Document
 					if (StringUtil.checkString(classType1Code)) {
 						// 개발문서 일 경우
 						if ("DEV".equals(classType1Code) || "INSTRUCTION".equals(classType1Code)) {
-							excelFile = new File(preFixPath + File.separator + "DMR.xlsx");
+
+							String oldNumber = info.getPtc_str_3();
+							if (StringUtil.checkString(oldNumber)) {
+								excelFile = new File(preFixPath + File.separator + "DMR_OLD.xlsx");
+							} else {
+								excelFile = new File(preFixPath + File.separator + "DMR.xlsx");
+							}
+
 							rtnFile = DocumentHelper.manager.stamping(doc, excelFile, classType1Code);
 						}
 					}

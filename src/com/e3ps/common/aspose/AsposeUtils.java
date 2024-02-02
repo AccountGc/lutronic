@@ -18,6 +18,7 @@ import com.e3ps.change.ECPRRequest;
 import com.e3ps.change.ECRMRequest;
 import com.e3ps.change.EChangeRequest;
 import com.e3ps.common.util.CommonUtil;
+import com.e3ps.doc.service.DocumentHelper;
 
 import wt.content.ApplicationData;
 import wt.content.ContentHelper;
@@ -234,5 +235,16 @@ public class AsposeUtils {
 		ContentServerHelper.service.updateContent(e, applicationData, name);
 
 		System.out.println("CR, ECPR, ECRM PDF 변경 및 첨부파일 세팅 종료");
+	}
+
+	/**
+	 * 문서 표지 생성
+	 */
+	public static void createCoverMethod(Hashtable<String, String> hash) throws Exception {
+		System.out.println("문서 표지 생성 백그라운드 호출 시작!!");
+		String oid = hash.get("oid");
+		WTDocument doc = (WTDocument) CommonUtil.getObject(oid);
+		DocumentHelper.service.createCover(doc);
+		System.out.println("문서 표지 생성 백그라운드 호출 종료!!");
 	}
 }

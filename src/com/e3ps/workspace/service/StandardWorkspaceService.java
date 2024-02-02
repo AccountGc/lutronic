@@ -536,6 +536,7 @@ public class StandardWorkspaceService extends StandardManager implements Workspa
 				if (!"$$MMDocument".equals(docType) && !"$$ROHS".equals(docType)) {
 					System.out.println("표지 생성한다.");
 					DocumentHelper.service.createCover(doc);
+					DocumentHelper.manager
 				}
 			}
 

@@ -69,6 +69,7 @@ import wt.doc.WTDocumentMaster;
 import wt.doc.WTDocumentTypeInfo;
 import wt.fc.ObjectReference;
 import wt.fc.PagingQueryResult;
+import wt.fc.Persistable;
 import wt.fc.PersistenceHelper;
 import wt.fc.QueryResult;
 import wt.folder.Folder;
@@ -110,6 +111,7 @@ public class DocumentHelper {
 	private static final String className = "com.e3ps.common.aspose.AsposeUtils";
 	private static final String wordToPdfMethod = "wordToPdf";
 	private static final String genWordAndPdfMethod = "genWordAndPdf";
+	private static final String createCoverMethod = "createCover";
 
 	/**
 	 * 문서 검색
@@ -1116,5 +1118,22 @@ public class DocumentHelper {
 			rtn = number + "01";
 		}
 		return rtn;
+	}
+
+	/**
+	 * 표지 생성 백그라운드 호출
+	 */
+	public void createCover(Persistable per) throws Exception {
+
+		WTPrincipal principal = SessionHelper.manager.setAdministrator();
+		ProcessingQueue queue = (ProcessingQueue) QueueHelper.manager.getQueue(processQueueName, ProcessingQueue.class);
+
+		Hashtable<String, String> hash = new Hashtable<>();
+		hash.put("oid", per.getPersistInfo().getObjectIdentifier().getStringValue());
+
+		Class[] argClasses = { Hashtable.class };
+		Object[] argObjects = { hash };
+
+		queue.addEntry(principal, createCoverMethod, className, argClasses, argObjects);
 	}
 }

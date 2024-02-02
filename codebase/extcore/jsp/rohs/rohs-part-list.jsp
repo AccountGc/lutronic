@@ -64,16 +64,7 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 		<script type="text/javascript">
 			let myGridID;
 			function _layout() {
-				return [ {
-					dataField : "rowNum",
-					headerText : "번호",
-					width : 40,
-					dataType : "numeric",
-					filter : {
-						inline : false
-					},
-					sortable : false
-				},{
+				return [ { 
 					dataField : "level",
 					headerText : "LEVEL",
 					dataType : "string",
