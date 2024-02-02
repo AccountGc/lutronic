@@ -173,7 +173,7 @@ if(t.equals("CHANGE")) {
 
 	function popup100() {
 		const url = getCallUrl("/activity/popup?method=insert100&multi=true&complete=false");
-		_popup(url, 1600, 800, "n");
+		_popup(url, 1400, 700, "n");
 	}
 
 	function insert100(arr, callBack) {
