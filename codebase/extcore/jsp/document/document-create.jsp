@@ -124,8 +124,12 @@ iframe {
 					</select>
 				</td>
 				<th id="preq">제품명</th>
-				<td class="indent5" colspan="3">
+				<td class="indent5">
 					<input type="text" name="product" id="product" style="width: 95%;" readonly="readonly">
+				</td>
+				<th>문서번호(구)</th>
+				<td class="indent5">
+					<input type="text" name="oldNumber" id="oldNumber" class="width-200">
 				</td>
 			</tr>
 			<tr>
@@ -295,7 +299,10 @@ iframe {
 				const rows105 = AUIGrid.getGridDataWithState(myGridID105, "gridState");
 				// 내용
 				const content = DEXT5.getBodyValue("content");
-
+				// 구 문서번호
+				const oldNumber = document.getElementById("oldNumber").value;
+				
+				
 				if (location.value === "/Default/문서") {
 					alert("문서분류를 선택하세요.");
 					folder();
@@ -395,7 +402,8 @@ iframe {
 					classType1_code : classType1_code,
 					classType2_oid : classType2_oid,
 					classType3_oid : classType3_oid,
-					product : product
+					product : product,
+					oldNumber : oldNumber
 				};
 				logger(params);
 				parent.openLayer();
@@ -403,7 +411,7 @@ iframe {
 					alert(data.msg);
 					if (data.result) {
 						parent.updateHeader();
-						document.location.href = getCallUrl("/doc/list");
+// 						document.location.href = getCallUrl("/doc/list");
 					}
 					parent.closeLayer();
 				});

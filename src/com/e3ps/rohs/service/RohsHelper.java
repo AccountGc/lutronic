@@ -438,7 +438,7 @@ public class RohsHelper {
 		}
 
 		// 정렬
-		Collections.sort(partRohslist, new RohsPartComparator());
+//		Collections.sort(partRohslist, new RohsPartComparator());
 
 		returnMap.put("totalLevel", totalLevl);
 		returnMap.put("partRohslist", partRohslist);

@@ -64,6 +64,8 @@ public class DocumentDTO {
 	private String approvaltype_name;
 	private String approvaltype_code;
 
+	private String oldNumber;
+
 	private String classType1_code;
 	private String classType1_name;
 
@@ -201,6 +203,8 @@ public class DocumentDTO {
 	private void setNameInfo(WTDocument doc) throws Exception {
 		// 과거 데이터는 어떻게 할것인지..
 		String classType1 = doc.getTypeInfoWTDocument().getPtc_str_2();
+		String oldNumber = doc.getTypeInfoWTDocument().getPtc_str_3();
+		setOldNumber(oldNumber);
 		if (StringUtil.checkString(classType1)) {
 			DocumentClassType dct = DocumentClassType.toDocumentClassType(classType1);
 			if (dct != null) {

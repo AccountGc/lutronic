@@ -41,7 +41,7 @@
 	
 9. 문서컬럼 추가
 	- Shell -> AddColumns.bat wt.doc.WTDocument InlineBLOB=1 // 내용
-	- Shell -> AddColumns.bat wt.doc.WTDocument String=2 // 제품명
+	- Shell -> AddColumns.bat wt.doc.WTDocument String=3 // 제품명
 	- Shell -> AddColumns.bat wt.doc.WTDocument ObjectReference=3 // 대분류, 중분류, 소분류
 	- Shell -> codebase -> ant -f MakeJar.xml
 

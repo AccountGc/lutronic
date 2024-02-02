@@ -207,6 +207,7 @@ public class StandardDocumentService extends StandardManager implements Document
 		String classType1_code = dto.getClassType1_code();
 		String classType2_oid = dto.getClassType2_oid();
 		String classType3_oid = dto.getClassType3_oid();
+		String oldNumber = dto.getOldNumber();
 		Transaction trs = new Transaction();
 		try {
 			trs.start();
@@ -217,6 +218,10 @@ public class StandardDocumentService extends StandardManager implements Document
 			WTDocumentTypeInfo info = WTDocumentTypeInfo.newWTDocumentTypeInfo();
 			DocumentClassType docClassType = DocumentClassType.toDocumentClassType(classType1_code);
 			info.setPtc_str_2(docClassType.toString());
+
+			if (StringUtil.checkString(oldNumber)) {
+				info.setPtc_str_3(oldNumber);
+			}
 
 			if (StringUtil.checkString(product)) {
 				info.setPtc_str_1(product);

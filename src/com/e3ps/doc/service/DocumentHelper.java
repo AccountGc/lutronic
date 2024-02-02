@@ -189,9 +189,9 @@ public class DocumentHelper {
 		QuerySpecUtils.toIBAEqualsAnd(query, WTDocument.class, idx, "DSGN", writer);
 
 		if (!StringUtil.checkString(location)) {
-			location =DOCUMENT_ROOT;
+			location = DOCUMENT_ROOT;
 		}
-		
+
 		if (StringUtil.checkString(location)) {
 			if (location.length() > 0) {
 				int l = location.indexOf(DOCUMENT_ROOT);
@@ -794,16 +794,31 @@ public class DocumentHelper {
 			}
 		}
 
-		Cell numberCell = worksheet.getCells().get(10, 3);
-		numberCell.putValue(number);
+		String oldNumber = d.getTypeInfoWTDocument().getPtc_str_3();
+		// 구 번호가 있을시
+		int rowNumber = 10;
+		if (StringUtil.checkString(oldNumber)) {
+			Cell numberCell = worksheet.getCells().get(rowNumber, 3);
+			numberCell.putValue(number);
 
-		Cell versionCell = worksheet.getCells().get(11, 3);
+			rowNumber++;
+
+			Cell oldCell = worksheet.getCells().get(rowNumber, 3);
+			oldCell.putValue(oldNumber);
+		} else {
+
+			Cell numberCell = worksheet.getCells().get(rowNumber, 3);
+			numberCell.putValue(number);
+		}
+
+		rowNumber++;
+		Cell versionCell = worksheet.getCells().get(rowNumber, 3);
 		versionCell.putValue(d.getVersionIdentifier().getSeries().getValue());
 
 		// 최종결재에 만들어지니 당일 날짜로 하면된다..
-
+		rowNumber++;
 		String today = new Timestamp(new Date().getTime()).toString().substring(0, 10);
-		Cell dateCell = worksheet.getCells().get(12, 3);
+		Cell dateCell = worksheet.getCells().get(rowNumber, 3);
 		dateCell.putValue(today);
 
 		int rowIndex = 15;

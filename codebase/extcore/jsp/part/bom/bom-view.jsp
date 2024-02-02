@@ -631,7 +631,9 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 	})
 
 	window.addEventListener("resize", function() {
-		AUIGrid.resize(myGridID);
+		const h = window.innerHeight;
+		const w = window.innerWidth;
+		AUIGrid.resize(myGridID, w - 20, h - 100);
 	});
 
 	function batch() {

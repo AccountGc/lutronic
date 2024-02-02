@@ -58,6 +58,15 @@ List<PartDTO> partList = PartHelper.service.include_PartList(oid, moduleType);
 		filter : {
 			showIcon : true,
 		},
+		renderer : {
+			type : "LinkRenderer",
+			baseUrl : "javascript",
+			jsCallback : function(rowIndex, columnIndex, value, item) {
+				const oid = item.oid;
+				const url = getCallUrl("/drawing/view?oid=" + oid);
+				_popup(url, 1600, 800, "n");
+			}
+		},		
 	}, {
 		dataField : "name",
 		headerText : "도면명",
@@ -67,10 +76,10 @@ List<PartDTO> partList = PartHelper.service.include_PartList(oid, moduleType);
 			baseUrl : "javascript",
 			jsCallback : function(rowIndex, columnIndex, value, item) {
 				const oid = item.oid;
-				const url = getCallUrl("/project/info?oid=" + oid);
-				popup(url);
+				const url = getCallUrl("/drawing/view?oid=" + oid);
+				_popup(url, 1600, 800, "n");
 			}
-		},
+		},		
 		filter : {
 			showIcon : true,
 		},
@@ -143,6 +152,15 @@ List<PartDTO> partList = PartHelper.service.include_PartList(oid, moduleType);
 		dataField : "number",
 		headerText : "도면 번호",
 		dataType : "string",
+		renderer : {
+			type : "LinkRenderer",
+			baseUrl : "javascript",
+			jsCallback : function(rowIndex, columnIndex, value, item) {
+				const oid = item.oid;
+				const url = getCallUrl("/drawing/view?oid=" + oid);
+				_popup(url, 1600, 800, "n");
+			}
+		},				
 		filter : {
 			showIcon : true,
 		},
@@ -156,10 +174,10 @@ List<PartDTO> partList = PartHelper.service.include_PartList(oid, moduleType);
 			baseUrl : "javascript",
 			jsCallback : function(rowIndex, columnIndex, value, item) {
 				const oid = item.oid;
-				const url = getCallUrl("/project/info?oid=" + oid);
-				popup(url);
+				const url = getCallUrl("/drawing/view?oid=" + oid);
+				_popup(url, 1600, 800, "n");
 			}
-		},
+		},		
 		filter : {
 			showIcon : true,
 		},
