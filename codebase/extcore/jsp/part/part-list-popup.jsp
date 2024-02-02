@@ -519,6 +519,7 @@ function loadGridData(movePage) {
 	}
 	AUIGrid.showAjaxLoader(myGridID);
 	openLayer();
+	logger(params);
 	call(url, params, function(data) {
 		AUIGrid.removeAjaxLoader(myGridID);
 		if (data.result) {
