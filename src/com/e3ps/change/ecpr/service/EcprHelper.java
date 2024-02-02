@@ -41,6 +41,8 @@ public class EcprHelper {
 	public static final EcprHelper manager = new EcprHelper();
 
 	public Map<String, Object> list(Map<String, Object> params) throws Exception {
+		long start = System.currentTimeMillis() / 1000;
+		System.out.println("ECPR 쿼리 시작 = " + start);
 		Map<String, Object> map = new HashMap<>();
 		ArrayList<EcprColumn> list = new ArrayList<>();
 
@@ -153,7 +155,8 @@ public class EcprHelper {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-
+		long end = System.currentTimeMillis() / 1000;
+		System.out.println("ECPR 쿼리 종료 = " + end + ", 걸린 시간 = " + (end - start));
 		return map;
 	}
 

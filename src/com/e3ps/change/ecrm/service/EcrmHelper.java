@@ -40,6 +40,8 @@ public class EcrmHelper {
 	public static final EcrmHelper manager = new EcrmHelper();
 
 	public Map<String, Object> list(Map<String, Object> params) throws Exception {
+		long start = System.currentTimeMillis() / 1000;
+		System.out.println("ECRM 쿼리 시작 = " + start);
 		Map<String, Object> map = new HashMap<>();
 		ArrayList<EcrmColumn> list = new ArrayList<>();
 
@@ -148,29 +150,31 @@ public class EcrmHelper {
 		map.put("total", pager.getTotalSize());
 		map.put("sessionid", pager.getSessionId());
 		map.put("curPage", pager.getCpage());
+		long end = System.currentTimeMillis() / 1000;
+		System.out.println("ECRM 쿼리 종료 = " + end + ", 걸린 시간 = " + (end - start));
 		return map;
 	}
 
-	private String toSortKey(String sortKey) throws Exception{
-		if("number".equals(sortKey)) {
+	private String toSortKey(String sortKey) throws Exception {
+		if ("number".equals(sortKey)) {
 			return ECRMRequest.EO_NUMBER;
-		} else if("name".equals(sortKey)) {
+		} else if ("name".equals(sortKey)) {
 			return ECRMRequest.EO_NAME;
-		} else if("period".equals(sortKey)) {
+		} else if ("period".equals(sortKey)) {
 			return ECRMRequest.PERIOD;
-		} else if("createDepart".equals(sortKey)) {
+		} else if ("createDepart".equals(sortKey)) {
 			return ECRMRequest.CREATE_DEPART;
-		} else if("writer".equals(sortKey)) {
+		} else if ("writer".equals(sortKey)) {
 			return ECRMRequest.WRITER;
-		} else if("writeDate".equals(sortKey)) {
+		} else if ("writeDate".equals(sortKey)) {
 			return ECRMRequest.CREATE_DATE;
-		} else if("state".equals(sortKey)) {
+		} else if ("state".equals(sortKey)) {
 			return ECRMRequest.LIFE_CYCLE_STATE;
-		} else if("creator".equals(sortKey)) {
+		} else if ("creator".equals(sortKey)) {
 			return ECRMRequest.CREATOR_FULL_NAME;
-		} else if("createdDate_txt".equals(sortKey)) {
+		} else if ("createdDate_txt".equals(sortKey)) {
 			return ECRMRequest.CREATE_TIMESTAMP;
-		} else if("approvedDate".equals(sortKey)) {
+		} else if ("approvedDate".equals(sortKey)) {
 			return ECRMRequest.APPROVE_DATE;
 		}
 		return ECRMRequest.CREATE_TIMESTAMP;

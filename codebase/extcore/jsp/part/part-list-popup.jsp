@@ -506,7 +506,7 @@ function loadGridData(movePage) {
 	const field = [ "location", "partNumber", "partName", "createdFrom", "createdTo", "modifiedFrom", "modifiedTo", "creator", "state", "modelcode", "productmethod", "deptcode", "unit", "weight", "mat", "finish", "remarks",
 		"ecoNo", "eoNo" ,"creatorOid","specification"];
 	const  latest = document.querySelector("input[name=latest]:checked").value;
-	const  complete = document.querySelector("input[name=complete]:checked");
+	const  complete = document.querySelector("input[name=comp]:checked");
 	const preOrder = document.querySelector("input[name=preOrder]:checked").value;
 	params = toField(params, field);
 	params.latest = JSON.parse(latest);

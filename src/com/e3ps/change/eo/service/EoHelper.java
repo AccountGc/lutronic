@@ -65,6 +65,8 @@ public class EoHelper {
 	private static final String methodName = "afterEoAction";
 
 	public Map<String, Object> list(Map<String, Object> params) throws Exception {
+		long start = System.currentTimeMillis() / 1000;
+		System.out.println("EO 쿼리 시작 = " + start);
 		Map<String, Object> map = new HashMap<>();
 		ArrayList<EoColumn> list = new ArrayList<>();
 
@@ -80,10 +82,10 @@ public class EoHelper {
 		String approveTo = (String) params.get("approveTo");
 		String state = (String) params.get("state");
 		String model = (String) params.get("model");
-		
+
 		// 정렬
-				String sortKey = (String) params.get("sortKey");
-				String sortType = (String) params.get("sortType");
+		String sortKey = (String) params.get("sortKey");
+		String sortType = (String) params.get("sortType");
 
 		QuerySpec query = new QuerySpec();
 		int idx = query.appendClassList(EChangeOrder.class, true);
@@ -172,21 +174,23 @@ public class EoHelper {
 		map.put("total", pager.getTotalSize());
 		map.put("sessionid", pager.getSessionId());
 		map.put("curPage", pager.getCpage());
+		long end = System.currentTimeMillis() / 1000;
+		System.out.println("EO 쿼리 종료 = " + end + ", 걸린 시간 = " + (end - start));
 		return map;
 	}
 
-	private String toSortKey(String sortKey) throws Exception{
-		if("number".equals(sortKey)) {
+	private String toSortKey(String sortKey) throws Exception {
+		if ("number".equals(sortKey)) {
 			return EChangeOrder.EO_NUMBER;
-		} else if("name".equals(sortKey)) {
+		} else if ("name".equals(sortKey)) {
 			return EChangeOrder.EO_NAME;
-		} else if("state".equals(sortKey)) {
+		} else if ("state".equals(sortKey)) {
 			return EChangeOrder.LIFE_CYCLE_STATE;
-		} else if("creator".equals(sortKey)) {
+		} else if ("creator".equals(sortKey)) {
 			return EChangeOrder.CREATOR_FULL_NAME;
-		} else if("createdDate".equals(sortKey)) {
+		} else if ("createdDate".equals(sortKey)) {
 			return EChangeOrder.CREATE_TIMESTAMP;
-		} else if("approveDate".equals(sortKey)) {
+		} else if ("approveDate".equals(sortKey)) {
 			return EChangeOrder.EO_APPROVE_DATE;
 		}
 		return EChangeOrder.CREATE_TIMESTAMP;

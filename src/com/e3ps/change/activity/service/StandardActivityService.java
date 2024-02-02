@@ -473,6 +473,17 @@ public class StandardActivityService extends StandardManager implements Activity
 //			}
 
 			for (WTPart pp : clist) {
+
+				if (PartHelper.isCollectNumber(pp.getNumber())) {
+					System.out.println("숫자 아닌게 포함 더미!");
+					continue;
+				}
+
+				if (!PartHelper.isTopNumber(pp.getNumber())) {
+					System.out.println("최상위 품번이 아님!!");
+					continue;
+				}
+
 				// 중복 처리
 				QueryResult rs = PersistenceHelper.manager.navigate((WTPartMaster) pp.getMaster(), "eco",
 						EOCompletePartLink.class);
@@ -490,6 +501,7 @@ public class StandardActivityService extends StandardManager implements Activity
 			eco.setModel(model);
 			PersistenceHelper.manager.modify(eco);
 		}
+
 	}
 
 	/**

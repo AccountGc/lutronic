@@ -51,7 +51,7 @@ boolean isAdmin = CommonUtil.isAdmin();
 			width : 100,
 			renderer : {
 				type : "ButtonRenderer",
-				labelText : "BOM 편집",
+				labelText : "삭제",
 				onClick : function(event) {
 					const link = event.item.link;
 					if(!confirm("완제품 연결을 삭제 하시겠습니까?\n연결 관계만 삭제됩니다.")) {
@@ -65,7 +65,7 @@ boolean isAdmin = CommonUtil.isAdmin();
 							document.location.reload();
 						}
 						closeLayer();
-					}, "GET");
+					}, "DELETE");
 				}
 			}	
 		},

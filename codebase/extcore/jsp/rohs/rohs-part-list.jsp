@@ -33,7 +33,11 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 		<table class="search-table">
 			<colgroup>
 				<col width="130">
-				<col width="*">
+				<col width="300">
+				<col width="130">
+				<col width="300">
+				<col width="130">
+				<col width="300">
 			</colgroup>
 			<tr>
 				<th>부품</th>
@@ -42,6 +46,10 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 					<input type="hidden" name="partOid" id="partOid">
 					<input type="button" value="조회" title="조회" onclick="searchPart();">
 				</td>
+				<th>완료</th>
+				<td class="indent5" id="green">&nbsp;</td>
+				<th>미진행</th>
+				<td class="indent5" id="red">&nbsp;</td>
 			</tr>
 		</table>
 
@@ -64,7 +72,7 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 		<script type="text/javascript">
 			let myGridID;
 			function _layout() {
-				return [ { 
+				return [ {
 					dataField : "level",
 					headerText : "LEVEL",
 					dataType : "string",
@@ -178,7 +186,15 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 				call(url, params, function(data) {
 					AUIGrid.removeAjaxLoader(myGridID);
 					if (data.result) {
+						logger(data);
 						AUIGrid.setGridData(myGridID, data.partRohslist);
+						if (data.partRohslist.length > 0) {
+							const total = data.total;
+							const green = data.green;
+							const red = data.red;
+							const redTag = document.getElementById("red").innerText = "<font color='red'><b>" + ((red / total) * 100).toFixed(2) + "%</b></font>";
+							const greenTag = document.getElementById("green").innerText = "<font color='red'><b>" + ((green / total) * 100).toFixed(2) + "%</b></font>";
+						}
 					} else {
 						alert(data.msg);
 					}

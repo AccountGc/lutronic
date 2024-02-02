@@ -39,6 +39,8 @@ public class EcnHelper {
 	 * ECN 검색 함수
 	 */
 	public Map<String, Object> list(Map<String, Object> params) throws Exception {
+		long start = System.currentTimeMillis() / 1000;
+		System.out.println("ECN 쿼리 시작 = " + start);
 		Map<String, Object> map = new HashMap<>();
 		ArrayList<EcnColumn> list = new ArrayList<>();
 
@@ -54,10 +56,10 @@ public class EcnHelper {
 		String creatorOid = (String) params.get("creatorOid");
 		String model = (String) params.get("model");
 		String state = (String) params.get("state");
-		
+
 		// 정렬
-				String sortKey = (String) params.get("sortKey");
-				String sortType = (String) params.get("sortType");
+		String sortKey = (String) params.get("sortKey");
+		String sortType = (String) params.get("sortType");
 
 		QuerySpec query = new QuerySpec();
 		int idx = query.appendClassList(EChangeNotice.class, true);
@@ -98,25 +100,27 @@ public class EcnHelper {
 		map.put("total", pager.getTotalSize());
 		map.put("sessionid", pager.getSessionId());
 		map.put("curPage", pager.getCpage());
+		long end = System.currentTimeMillis() / 1000;
+		System.out.println("ECN 쿼리 종료 = " + end + ", 걸린 시간 = " + (end - start));
 		return map;
 	}
 
-	private String toSortKey(String sortKey) throws Exception{
-		if("ecoNumber".equals(sortKey)) {
+	private String toSortKey(String sortKey) throws Exception {
+		if ("ecoNumber".equals(sortKey)) {
 			return EChangeNotice.EO_NUMBER;
-		} else if("number".equals(sortKey)) {
+		} else if ("number".equals(sortKey)) {
 			return EChangeNotice.EO_NUMBER;
-		} else if("partNumber".equals(sortKey)) {
+		} else if ("partNumber".equals(sortKey)) {
 			return EChangeNotice.PART_NUMBER;
-		} else if("partName".equals(sortKey)) {
+		} else if ("partName".equals(sortKey)) {
 			return EChangeNotice.PART_NAME;
-		} else if("progress".equals(sortKey)) {
+		} else if ("progress".equals(sortKey)) {
 			return EChangeNotice.PROGRESS;
-		} else if("worker_oid".equals(sortKey)) {
+		} else if ("worker_oid".equals(sortKey)) {
 			return EChangeNotice.WORKER;
-		} else if("creator".equals(sortKey)) {
+		} else if ("creator".equals(sortKey)) {
 			return EChangeNotice.CREATOR_FULL_NAME;
-		} else if("createdDate".equals(sortKey)) {
+		} else if ("createdDate".equals(sortKey)) {
 			return EChangeNotice.CREATE_TIMESTAMP;
 		}
 		return EChangeNotice.CREATE_TIMESTAMP;
