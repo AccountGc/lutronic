@@ -192,8 +192,8 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 							const total = data.total;
 							const green = data.green;
 							const red = data.red;
-							const redTag = document.getElementById("red").innerText = "<font color='red'><b>" + ((red / total) * 100).toFixed(2) + "%</b></font>";
-							const greenTag = document.getElementById("green").innerText = "<font color='red'><b>" + ((green / total) * 100).toFixed(2) + "%</b></font>";
+							const redTag = document.getElementById("red").innerHTML = "<font color='red'><b>" + ((red / total) * 100).toFixed(2) + "%</b></font>";
+							const greenTag = document.getElementById("green").innerHTML = "<font color='red'><b>" + ((green / total) * 100).toFixed(2) + "%</b></font>";
 						}
 					} else {
 						alert(data.msg);

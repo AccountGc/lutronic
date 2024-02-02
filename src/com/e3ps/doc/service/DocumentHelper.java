@@ -1123,7 +1123,7 @@ public class DocumentHelper {
 	/**
 	 * 표지 생성 백그라운드 호출
 	 */
-	public void createCover(Persistable per) throws Exception {
+	public void createCoverMethod(Persistable per) throws Exception {
 
 		WTPrincipal principal = SessionHelper.manager.setAdministrator();
 		ProcessingQueue queue = (ProcessingQueue) QueueHelper.manager.getQueue(processQueueName, ProcessingQueue.class);
