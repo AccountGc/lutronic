@@ -31,6 +31,23 @@ import net.sf.json.JSONArray;
 @RequestMapping(value = "/eco/**")
 public class EcoController extends BaseController {
 
+	@Description(value = "ECO 완제품 연결 삭제 함수")
+	@ResponseBody
+	@DeleteMapping(value = "/deleteLink")
+	public Map<String, Object> deleteLink(@RequestParam String oid) throws Exception {
+		Map<String, Object> result = new HashMap<String, Object>();
+		try {
+			EcoHelper.service.deleteLink(oid);
+			result.put("msg", DELETE_MSG);
+			result.put("result", SUCCESS);
+		} catch (Exception e) {
+			e.printStackTrace();
+			result.put("result", FAIL);
+			result.put("msg", e.toString());
+		}
+		return result;
+	}
+	
 	@Description(value = "ECO 산출물")
 	@GetMapping(value = "/output")
 	public ModelAndView output(@RequestParam String method, @RequestParam String multi,

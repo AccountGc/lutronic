@@ -692,4 +692,24 @@ public class StandardEcoService extends StandardManager implements EcoService {
 				trs.rollback();
 		}
 	}
+
+	@Override
+	public void deleteLink(String oid) throws Exception {
+		Transaction trs = new Transaction();
+		try {
+			trs.start();
+			EOCompletePartLink link = (EOCompletePartLink) CommonUtil.getObject(oid);
+			PersistenceHelper.manager.delete(link);
+
+			trs.commit();
+			trs = null;
+		} catch (Exception e) {
+			e.printStackTrace();
+			trs.rollback();
+			throw e;
+		} finally {
+			if (trs != null)
+				trs.rollback();
+		}
+	}
 }

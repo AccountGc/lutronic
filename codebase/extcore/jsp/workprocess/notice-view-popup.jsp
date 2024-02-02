@@ -92,7 +92,7 @@ NoticeDTO dto = (NoticeDTO) request.getAttribute("dto");
 		}
 		document.cookie = cookies;
 		logger(cookies);
-// 		self.close();
+		self.close();
 	}
 	document.addEventListener("DOMContentLoaded", function() {
 		autoTextarea();

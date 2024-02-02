@@ -60,4 +60,9 @@ public interface EcoService {
 	 */
 	public abstract void removeLink(Map<String, Object> params) throws Exception;
 
+	/**
+	 * 완제품 연결 삭제 함수
+	 */
+	public abstract void deleteLink(String oid) throws Exception;
+
 }

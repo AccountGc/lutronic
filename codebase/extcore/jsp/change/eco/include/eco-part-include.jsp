@@ -40,17 +40,36 @@ boolean isAdmin = CommonUtil.isAdmin();
 <script type="text/javascript">
 	let myGridID500;
 	const columns500 = [
-	<%
-		if(isAdmin) {
-	%>
+	<%if (isAdmin) {%>
 		{
 			dataField : "link",
 			dataType : "string",
 			width : 100,
+		}, {
+			headerText : "삭제",
+			dataField : "",
+			width : 100,
+			renderer : {
+				type : "ButtonRenderer",
+				labelText : "BOM 편집",
+				onClick : function(event) {
+					const link = event.item.link;
+					if(!confirm("완제품 연결을 삭제 하시겠습니까?\n연결 관계만 삭제됩니다.")) {
+						return false;
+					}
+					const url = getCallUrl("/eco/deleteLink?oid="+link);
+					openLayer();
+					call(url, null, function(data) {
+						alert(data.msg);
+						if(data.result) {
+							document.location.reload();
+						}
+						closeLayer();
+					}, "GET");
+				}
+			}	
 		},
-	<%
-		}
-	%>
+	<%}%>
 		
 	{
 		dataField : "number",

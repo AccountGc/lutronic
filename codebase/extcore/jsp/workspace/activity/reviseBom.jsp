@@ -386,6 +386,11 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 					labelText : "BOM 편집",
 					onClick : function(event) {
 						const oid = event.item.next_oid;
+						if (oid === "") {
+							alert("개정 후 데이터가 없습니다.");
+							return false;
+						}
+						
 						url = getCallUrl("/bom/editor?oid=" + oid);
 						_popup(url, "", "", "f");
 					}
