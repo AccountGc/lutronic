@@ -799,6 +799,7 @@ public class DocumentHelper {
 		String oldNumber = d.getTypeInfoWTDocument().getPtc_str_3();
 		// 구 번호가 있을시
 		int rowNumber = 10;
+		int rowIndex = 15;
 		if (StringUtil.checkString(oldNumber)) {
 			Cell numberCell = worksheet.getCells().get(rowNumber, 3);
 			numberCell.putValue(number);
@@ -807,6 +808,7 @@ public class DocumentHelper {
 
 			Cell oldCell = worksheet.getCells().get(rowNumber, 3);
 			oldCell.putValue(oldNumber);
+			rowIndex = 16;
 		} else {
 
 			Cell numberCell = worksheet.getCells().get(rowNumber, 3);
@@ -823,7 +825,7 @@ public class DocumentHelper {
 		Cell dateCell = worksheet.getCells().get(rowNumber, 3);
 		dateCell.putValue(today);
 
-		int rowIndex = 15;
+		
 		int rowHeight = 30;
 
 		ApprovalLine submitLine = WorkspaceHelper.manager.getSubmitLine(m);
