@@ -32,9 +32,30 @@ boolean isMulti = Boolean.parseBoolean(multi);
 	</colgroup>
 	<tr>
 		<th>부서 및 사원 관리</th>
-		<td class="indent5" colspan="3">
+		<td class="indent5">
 			<input type="hidden" name="oid" id="oid" value="<%=oid%>">
 			<span id="locationName">루트로닉</span>
+		</td>
+		<th>퇴사여부</th>
+		<td>
+			&nbsp;
+			<div class="pretty p-switch">
+				<input type="radio" name="isFire" value="false" checked="checked">
+				<div class="state p-success">
+					<label>
+						<b>재직</b>
+					</label>
+				</div>
+			</div>
+			&nbsp;
+			<div class="pretty p-switch">
+				<input type="radio" name="isFire" value="true">
+				<div class="state p-success">
+					<label>
+						<b>퇴사</b>
+					</label>
+				</div>
+			</div>
 		</td>
 	</tr>
 	<tr>
@@ -53,11 +74,11 @@ boolean isMulti = Boolean.parseBoolean(multi);
 	<tr>
 		<td class="right">
 			<select name="_psize" id="_psize" onchange="loadGridData();">
+				<option value="10">10</option>
+				<option value="20" selected="selected">20</option>
 				<option value="30">30</option>
 				<option value="50">50</option>
 				<option value="100">100</option>
-				<option value="200">200</option>
-				<option value="300">300</option>
 			</select>
 			<input type="button" value="추가" title="추가" class="red" onclick="selected();">
 			<input type="button" value="검색" title="검색" onclick="loadGridData();">
@@ -187,7 +208,7 @@ boolean isMulti = Boolean.parseBoolean(multi);
 			headerHeight : 30,
 			showRowNumColumn : false,
 // 			rowNumHeaderText : "번호",
-			showAutoNoDataMessage : true,
+			showAutoNoDataMessage : false,
 			selectionMode : "multipleCells",
 			hoverMode : "singleRow",
 			enableMovingColumn : true,
@@ -267,16 +288,17 @@ boolean isMulti = Boolean.parseBoolean(multi);
 		const url = getCallUrl("/org/organization");
 		const field = [ "name", "userId", "oid" ];
 		params = toField(params, field);
-		const isFire = false;
+		const isFire = document.querySelector("input[name=isFire]:checked").value;
 		params.isFire = JSON.parse(isFire);
 		AUIGrid.showAjaxLoader(myGridID);
-		openLayer();
+		parent.openLayer();
 		call(url, params, function(data) {
+			logger(data);
 			AUIGrid.removeAjaxLoader(myGridID);
 			if (data.result) {
+				// 페이징처리..
 				totalPage = Math.ceil(data.total / data.pageSize);
-				document.getElementById("sessionid").value = data.sessionid;
-				createPagingNavigator(data.total, data.curPage);
+				createPagingNavigator(data.total, data.curPage, data.sessionid);
 				AUIGrid.setGridData(myGridID, data.list);
 				if (movePage === undefined) {
 					AUIGrid.setSorting(myGridID, sortCache);
@@ -285,7 +307,7 @@ boolean isMulti = Boolean.parseBoolean(multi);
 			} else {
 				alert(data.msg);
 			}
-			closeLayer();
+			parent.closeLayer();
 		});
 	}
 	
@@ -311,6 +333,7 @@ boolean isMulti = Boolean.parseBoolean(multi);
 		createAUIGrid(columns);
 		AUIGrid.resize(myGridID);
 		selectbox("_psize");
+		$("#_psize").bindSelectSetValue("20");
 	});
 
 	document.addEventListener("keydown", function(event) {

@@ -1982,8 +1982,10 @@ button.dim:active:before {
 }
 .label-info,
 .badge-info {
-  background-color: #23c6c8;
+  background-color: blue;
   color: #FFFFFF;
+  font-weight:900;
+  font-size: 12px !important;
 }
 .label-inverse,
 .badge-inverse {

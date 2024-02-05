@@ -35,11 +35,11 @@ String height = request.getParameter("height");
 		}
 		_myGridID = AUIGrid.create("#_grid_wrap", columnLayout, props);
 		loadTree();
-		AUIGrid.bind(_myGridID, "cellClick", auiCellClick);
 		AUIGrid.bind(_myGridID, "ready", auiReadyHandler);
 		<%if (isAdmin) {%>
 		AUIGrid.bind(_myGridID, "contextMenu", auiContextMenuHandler_);
 		<%}%>
+		AUIGrid.bind(_myGridID, "cellClick", _auiCellClick);
 	}
 
 	function auiContextMenuHandler_(event) {
@@ -127,7 +127,7 @@ String height = request.getParameter("height");
 	}
 
 	let timerId = null;
-	function auiCellClick(event) {
+	function _auiCellClick(event) {
 		const item = event.item;
 		if(event.treeIcon) {
 			return false;

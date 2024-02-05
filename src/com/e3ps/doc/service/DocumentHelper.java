@@ -202,7 +202,6 @@ public class DocumentHelper {
 						query.appendAnd();
 					}
 					location = location.substring((l + DOCUMENT_ROOT.length()));
-					System.out.println("location=" + location);
 					int folder_idx = query.addClassList(DocLocation.class, false);
 					query.appendWhere(new SearchCondition(DocLocation.class, DocLocation.DOC, WTDocument.class,
 							"thePersistInfo.theObjectIdentifier.id"), new int[] { folder_idx, idx });
@@ -214,7 +213,6 @@ public class DocumentHelper {
 			}
 		}
 
-		System.out.println(query);
 
 //		Folder folder = FolderTaskLogic.getFolder(location, WCUtil.getWTContainerRef());
 //		int isQuery = DOCUMENT_ROOT.indexOf(location);
@@ -1022,7 +1020,6 @@ public class DocumentHelper {
 			ContentServerHelper.service.deleteContent(doc, dd);
 		}
 
-		System.out.println("savePath=" + savePath);
 		ApplicationData applicationData = ApplicationData.newApplicationData(doc);
 		applicationData.setRole(ContentRoleType.toContentRoleType("MERGE"));
 		PersistenceHelper.manager.save(applicationData);
