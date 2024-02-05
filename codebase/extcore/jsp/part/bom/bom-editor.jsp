@@ -176,7 +176,7 @@ WTPart root = (WTPart) request.getAttribute("root");
 	document.addEventListener("DOMContentLoaded", function() {
 		$("#treetable").fancytree({
 			extensions : [ "dnd5", "filter", "table", "clones" ],
-			checkbox : true,
+// 			checkbox : true,
 			quicksearch : true,
 			debugLevel : 0,
 			selectMode : 2,
@@ -964,7 +964,7 @@ WTPart root = (WTPart) request.getAttribute("root");
 		$("#righttable").fancytree({
 			extensions : [ "dnd5", "table" ],
 			debugLevel : 0,
-			checkbox : true,
+// 			checkbox : true,
 			selectMode : 2,
 			dnd5 : {
 				autoExpandMS : 100,

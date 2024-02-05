@@ -291,7 +291,7 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 						<option value="100">100</option>
 					</select>
 					<input type="button" value="▼펼치기" title="▼펼치기" class="red" onclick="spread(this);">
-					<input type="button" value="검색" title="검색" onclick="();">
+					<input type="button" value="검색" title="검색" onclick="loadGridData();">
 				</td>
 			</tr>
 		</table>

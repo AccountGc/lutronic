@@ -240,7 +240,7 @@ List<Map<String, String>> lifecycleList = (List<Map<String, String>>) request.ge
 					enableRowCheckShiftKey : true
 				};
 				myGridID = AUIGrid.create("#grid_wrap", columnLayout, props);
-				loadGridData();
+// 				loadGridData();
 				AUIGrid.bind(myGridID, "contextMenu", _auiContextMenuHandler);
 				AUIGrid.bind(myGridID, "vScrollChange", function(event) {
 					hideContextMenu();

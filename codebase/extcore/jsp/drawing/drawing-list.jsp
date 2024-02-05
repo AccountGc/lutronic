@@ -109,13 +109,10 @@ QuantityUnit[] unitList = (QuantityUnit[]) request.getAttribute("unitList");
 				<td class="indent5">
 					<select name="cadType" id="cadType" class="width-200">
 						<option value="">선택</option>
-						<%
-						for (Map<String, String> cadType : cadTypeList) {
-						%>
-						<option value="<%=cadType.get("code")%>"><%=cadType.get("name")%></option>
-						<%
-						}
-						%>
+						<option value="CADASSEMBLY">어셈블리</option>
+						<option value="CADCOMPONENT">CAD 부품</option>
+						<option value="CADDRAWING">드로잉</option>
+						<option value="OTHER">기타</option>
 					</select>
 				</td>
 				<th>REV</th>
@@ -254,8 +251,8 @@ QuantityUnit[] unitList = (QuantityUnit[]) request.getAttribute("unitList");
 					<img src="/Windchill/extcore/images/fileicon/file_excel.gif" title="엑셀 다운로드" onclick="exportExcel();">
 					<img src="/Windchill/extcore/images/save.gif" title="테이블 저장" onclick="saveColumnLayout('drawing-list');">
 					<img src="/Windchill/extcore/images/redo.gif" title="테이블 초기화" onclick="resetColumnLayout('drawing-list');">
-					<input type="button" value="일괄다운" title="일괄다운" class="blue" onclick="batch();">
-					<input type="button" value="선택" title="선택" class="red" onclick="_select();">
+<!-- 					<input type="button" value="일괄다운" title="일괄다운" class="blue" onclick="batch();"> -->
+<!-- 					<input type="button" value="선택" title="선택" class="red" onclick="_select();"> -->
 				</td>
 				<td class="right">
 					<select name="_psize" id="_psize" onchange="loadGridData();">

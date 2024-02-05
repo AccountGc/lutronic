@@ -133,7 +133,7 @@ String codeType = (String) request.getAttribute("codeType");
 			autoGridHeight : true
 		};
 		myGridID = AUIGrid.create("#grid_wrap", columnLayout, props);
-		loadGridData();
+// 		loadGridData();
 		AUIGrid.bind(myGridID, "contextMenu", auiContextMenuHandler);
 		AUIGrid.bind(myGridID, "vScrollChange", function(event) {
 			hideContextMenu();

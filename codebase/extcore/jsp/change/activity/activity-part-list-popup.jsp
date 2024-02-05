@@ -328,12 +328,30 @@ const columns = [ {
 	headerText : "품목번호",
 	dataType : "string",
 	width : 180,
+	renderer : {
+		type : "LinkRenderer",
+		baseUrl : "javascript",
+		jsCallback : function(rowIndex, columnIndex, value, item) {
+			const oid = item.part_oid;
+			const url = getCallUrl("/part/view?oid=" + oid);
+			_popup(url, 1600, 800, "n");
+		}
+	},	
 }, {
 	dataField : "name",
 	headerText : "품목명",
 	dataType : "string",
 	style : "aui-left",
 	width : 380,
+	renderer : {
+		type : "LinkRenderer",
+		baseUrl : "javascript",
+		jsCallback : function(rowIndex, columnIndex, value, item) {
+			const oid = item.part_oid;
+			const url = getCallUrl("/part/view?oid=" + oid);
+			_popup(url, 1600, 800, "n");
+		}
+	},	
 }, {
 	dataField : "location",
 	headerText : "품목분류",

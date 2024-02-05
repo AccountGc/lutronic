@@ -125,7 +125,8 @@ iframe {
 				for (NumberCode model : modelList) {
 					boolean selected = model.getCode().equals(dto.getModel_code());
 				%>
-				<option value="<%=model.getCode()%>" <%if (selected) {%> selected="selected" <%}%>><%=model.getName()%></option>
+				
+				<option value="<%=model.getCode()%>" <%if (selected) {%> selected="selected" <%}%>><%=model.getCode()%> [<%=model.getName()%>]</option>
 				<%
 				}
 				%>
