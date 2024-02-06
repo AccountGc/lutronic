@@ -214,7 +214,7 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 				}
 			}
 
-			function loadGridData() {
+			function loadGridData(movePage) {
 				var params = new Object();
 				const field = [ "managerOid", "createdFrom", "createdTo", "type" ];
 				params = toField(params, field);
