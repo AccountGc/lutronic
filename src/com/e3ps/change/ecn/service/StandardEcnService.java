@@ -153,6 +153,17 @@ public class StandardEcnService extends StandardManager implements EcnService {
 						Map<String, String> endMap = (Map<String, String>) end.get(k);
 						String part_oid = endMap.get("oid");
 						WTPart endPart = (WTPart) CommonUtil.getObject(part_oid);
+						
+						if (PartHelper.isCollectNumber(endPart.getNumber())) {
+							System.out.println("ECN 숫자 아닌게 포함 더미!");
+							continue;
+						}
+
+						if (!PartHelper.isTopNumber(endPart.getNumber())) {
+							System.out.println("ECN 최상위 품번이 아님!!");
+							continue;
+						}
+						
 						WTPartMaster endMaster = (WTPartMaster) endPart.getMaster();
 //						// 최종품목이 포함되어있을 경우??
 

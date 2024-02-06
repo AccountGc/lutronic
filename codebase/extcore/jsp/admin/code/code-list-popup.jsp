@@ -64,11 +64,11 @@ String codeType = (String) request.getAttribute("codeType");
 	<tr>
 		<td class="right">
 			<select name="_psize" id="_psize" onchange="loadGridData();">
+				<option value="10">10</option>
+				<option value="20" selected="selected">20</option>
 				<option value="30">30</option>
 				<option value="50">50</option>
 				<option value="100">100</option>
-				<option value="200">200</option>
-				<option value="300">300</option>
 			</select>
 			<input type="button" value="검색" title="검색" onclick="loadGridData();">
 			<input type="button" value="추가" title="추가" class="blue" onclick="<%=method%>();">
@@ -205,6 +205,7 @@ String codeType = (String) request.getAttribute("codeType");
 		createAUIGrid(columns);
 		AUIGrid.resize(myGridID);
 		selectbox("_psize");
+		$("#_psize").bindSelectSetValue("20");
 	});
 
 	document.addEventListener("keydown", function(event) {

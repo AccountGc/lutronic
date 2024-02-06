@@ -5,6 +5,7 @@ import java.util.Map;
 
 import com.e3ps.workspace.ApprovalMaster;
 import com.e3ps.workspace.WorkData;
+import com.e3ps.workspace.dto.WorkDataDTO;
 
 import wt.fc.Persistable;
 import wt.util.WTException;
@@ -136,5 +137,10 @@ public interface WorkspaceService {
 	/**
 	 * 외부 메일 삭제 결재선 지정시
 	 */
-	public abstract void removeMail(Map<String, Object> params)throws Exception;
+	public abstract void removeMail(Map<String, Object> params) throws Exception;
+
+	/**
+	 * 결재선 유지로 회수후 재기안
+	 */
+	public abstract void reworkSubmit(WorkDataDTO dto, ApprovalMaster appMaster) throws Exception;
 }

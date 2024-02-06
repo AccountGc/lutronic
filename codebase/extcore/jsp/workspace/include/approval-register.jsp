@@ -62,7 +62,7 @@ boolean update = "update".equals(mode);
 			dataField : "name",
 			headerText : "이름",
 			dataType : "string",
-// 			width : 130
+		// 			width : 130
 		}, {
 			dataField : "id",
 			headerText : "아이디",
@@ -97,10 +97,19 @@ boolean update = "update".equals(mode);
 				enableRowCheckShiftKey : true,
 				enableSorting : false,
 				autoGridHeight : true,
-				softRemoveRowMode : false,
+				softRemoveRowMode : true,
+
+				rowCheckDisabledFunction : function(rowIndex, isChecked, item) {
+					if (item.complete) {
+						return false;
+					}
+					return true;
+				}
 			}
 			myGridID8 = AUIGrid.create("#grid8", columnLayout, props);
-			AUIGrid.setGridData(myGridID8, <%=WorkspaceHelper.manager.loadLines(oid)%>);
+			AUIGrid.setGridData(myGridID8,
+	<%=WorkspaceHelper.manager.loadLines(oid)%>
+		);
 		}
 
 		function popup8() {

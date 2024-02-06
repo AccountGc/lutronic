@@ -1140,6 +1140,8 @@ public class WorkspaceHelper {
 					map.put("duty", dto.getDuty());
 					map.put("email", dto.getEmail());
 					map.put("department_name", dto.getDepartment_name());
+					map.put("complete", line.getCompleteTime() != null ? true : false);
+					map.put("oid", line.getPersistInfo().getObjectIdentifier().getStringValue());
 				}
 				list.add(map);
 			}
@@ -1159,6 +1161,8 @@ public class WorkspaceHelper {
 					map.put("duty", dto.getDuty());
 					map.put("email", dto.getEmail());
 					map.put("department_name", dto.getDepartment_name());
+					map.put("complete", line.getCompleteTime() != null ? true : false);
+					map.put("oid", line.getPersistInfo().getObjectIdentifier().getStringValue());
 				}
 				list.add(map);
 				sort++;
@@ -1177,28 +1181,13 @@ public class WorkspaceHelper {
 					map.put("duty", dto.getDuty());
 					map.put("email", dto.getEmail());
 					map.put("department_name", dto.getDepartment_name());
+					map.put("complete", line.getCompleteTime() != null ? true : false);
+					map.put("oid", line.getPersistInfo().getObjectIdentifier().getStringValue());
 				}
 				list.add(map);
 			}
 		}
 		return JSONArray.fromObject(list);
-	}
-
-	/**
-	 * 최종 결재 종료 후 외부메일 유저에게 메일 전송
-	 */
-	public void sendExternalMail(Persistable per) throws Exception {
-		QueryResult qr = PersistenceHelper.manager.navigate(per, "user", MailWTobjectLink.class);
-		while (qr.hasMoreElements()) {
-			MailUser user = (MailUser) qr.nextElement();
-			String email = user.getEmail();
-			String name = user.getName();
-			if (!StringUtil.checkString(email)) {
-				throw new Exception(name + " 사용자의 이메일 주소가 없습ㄴ디ㅏ.");
-			}
-			// 반복적 메일 전송..
-			MailUtils.manager.sendExternalMail((LifeCycleManaged) per, user);
-		}
 	}
 
 	/**

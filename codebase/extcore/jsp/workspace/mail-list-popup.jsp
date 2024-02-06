@@ -44,11 +44,11 @@
 	<tr>
 		<td class="right">
 			<select name="_psize" id="_psize" onchange="loadGridData();">
+				<option value="10">10</option>
+				<option value="20" selected="selected">20</option>
 				<option value="30">30</option>
 				<option value="50">50</option>
 				<option value="100">100</option>
-				<option value="200">200</option>
-				<option value="300">300</option>
 			</select>
 			<input type="button" value="검색" title="검색" onclick="loaData();">
 			<input type="button" value="추가" title="추가" class="blue" onclick="addRow();">
@@ -101,7 +101,7 @@
 			filterItemMoreMessage : "필터링 검색이 너무 많습니다. 검색을 이용해주세요.",
 		};
 		myGridID = AUIGrid.create("#grid_wrap", columnLayout, props);
-// 		loadGridData();
+		// 		loadGridData();
 		AUIGrid.bind(myGridID, "contextMenu", auiContextMenuHandler);
 		AUIGrid.bind(myGridID, "vScrollChange", function(event) {
 			hideContextMenu();
@@ -112,7 +112,7 @@
 		AUIGrid.bind(myGridID, "cellClick", auiCellClick);
 		AUIGrid.bind(myGridID, "sorting", auiSortingHandler);
 	}
-	
+
 	let sortCache = [];
 	let compField;
 	function auiSortingHandler(event) {
@@ -132,7 +132,6 @@
 			}
 		}
 	}
-
 
 	function auiCellClick(event) {
 		const item = event.item;
@@ -184,6 +183,7 @@
 		});
 		createAUIGrid(columns);
 		selectbox("_psize");
+		$("#_psize").bindSelectSetValue("20");
 	});
 
 	document.addEventListener("keydown", function(event) {

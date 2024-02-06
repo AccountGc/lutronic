@@ -77,7 +77,7 @@ public class WorkDataController extends BaseController {
 		}
 		return result;
 	}
-
+	
 	@Description(value = "작업함 읽음 처리")
 	@ResponseBody
 	@GetMapping(value = "/read")

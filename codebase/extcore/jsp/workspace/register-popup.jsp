@@ -509,6 +509,12 @@ String oid = (String) request.getAttribute("oid");
 									enableDrop : true,
 									dropToOthers : true,
 									useContextMenu : true,
+									rowCheckDisabledFunction : function(rowIndex, isChecked, item) {
+										if (item.complete) {
+											return false;
+										}
+										return true;
+									},
 									contextMenuItems : [ {
 										label : "선택된 행 삭제",
 										callback : contextItemHandler
@@ -595,6 +601,12 @@ String oid = (String) request.getAttribute("oid");
 									enableDrop : true,
 									dropToOthers : true,
 									useContextMenu : true,
+									rowCheckDisabledFunction : function(rowIndex, isChecked, item) {
+										if (item.complete) {
+											return false;
+										}
+										return true;
+									},
 									contextMenuItems : [ {
 										label : "선택된 행 삭제",
 										callback : contextItemHandler
@@ -680,6 +692,12 @@ String oid = (String) request.getAttribute("oid");
 									enableDrop : true,
 									dropToOthers : true,
 									useContextMenu : true,
+									rowCheckDisabledFunction : function(rowIndex, isChecked, item) {
+										if (item.complete) {
+											return false;
+										}
+										return true;
+									},
 									contextMenuItems : [ {
 										label : "선택된 행 삭제",
 										callback : contextItemHandler
@@ -978,9 +996,11 @@ function moveRow() {
 		AUIGrid.resize(myGridID5000);
 		load1000(oid);
 		loadLine();
-		
-		logger(receives);
-		if(receives === undefined && approvals === undefined && agrees === undefined) {
+
+		const r = receives === undefined || receives.length === 0;
+		const a = approvals === undefined || approvals.length === 0;
+		const g = agrees === undefined || agrees.length === 0;
+		if(r && a && g) {
 			loadFavorite();
 		}
 	});

@@ -87,7 +87,7 @@ public class StandardWorkDataService extends StandardManager implements WorkData
 			}
 
 			// 메일발송하기!
-			MailUtils.manager.sendWorkDataMailMethod(per);
+//			MailUtils.manager.sendWorkDataMailMethod(per);
 
 			trs.commit();
 			trs = null;
@@ -117,13 +117,6 @@ public class StandardWorkDataService extends StandardManager implements WorkData
 			data.setProcess(true);
 			PersistenceHelper.manager.modify(data);
 
-			// 기존 연결된 .. 결재랑 외부 메일 있는지 확인한다
-			// 외부 메일 연결
-//			MailUserHelper.service.saveLink(data, data.getPer(), external);
-
-			// 결재 필수..
-			// 결재라인 + 워크데이터 연결
-
 			ApprovalMaster appMaster = data.getAppMaster();
 			if (appMaster == null) {
 				// 없을시 결재라인 생성
@@ -132,12 +125,7 @@ public class StandardWorkDataService extends StandardManager implements WorkData
 			} else {
 				// 상태값 및 날짜 변경들..
 				ArrayList<ApprovalLine> list = WorkspaceHelper.manager.getAllLines(appMaster);
-				for (ApprovalLine line : list) {
-					PersistenceHelper.manager.delete(line);
-				}
-				PersistenceHelper.manager.delete(appMaster);
-//				WorkspaceHelper.service.register(data, data.getPer(), description, agreeRows, approvalRows,
-//						receiveRows);
+				WorkspaceHelper.service.reworkSubmit(dto, appMaster);
 			}
 
 			trs.commit();

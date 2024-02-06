@@ -37,6 +37,7 @@ public class ApprovalLineColumn {
 	private Timestamp completeTime;
 	private Timestamp receiveTime;
 	private String persistType;
+	private boolean complete;
 
 	// 결재 진행
 	private String point;
@@ -79,6 +80,7 @@ public class ApprovalLineColumn {
 			setSubmiter(master.getOwnership().getOwner().getFullName());
 			setState(line.getState());
 			setReceiveTime(line.getCreateTimestamp());
+			setComplete(line.getCompleteTime() != null ? true : false);
 		}
 		persistInfo(master);
 		point(master);

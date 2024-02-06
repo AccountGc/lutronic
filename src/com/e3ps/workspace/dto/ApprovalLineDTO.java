@@ -38,6 +38,10 @@ public class ApprovalLineDTO {
 	private String viewUrl;
 	private final String context = "/Windchill/plm";
 
+	private boolean isReceive = false;
+	private boolean isAgree = false;
+	private boolean isApproval = false;
+
 	public ApprovalLineDTO() {
 
 	}
@@ -72,6 +76,18 @@ public class ApprovalLineDTO {
 		setLineType(line);
 		setPersist(per);
 		url(per);
+		setButtonAuth(line);
+	}
+
+	private void setButtonAuth(ApprovalLine line) throws Exception {
+
+		if (line.getState().equals(WorkspaceHelper.STATE_AGREE_START)) {
+			setAgree(true);
+		}
+
+		if (line.getState().equals(WorkspaceHelper.STATE_RECEIVE_START)) {
+			setReceive(true);
+		}
 	}
 
 	private void url(Persistable per) throws Exception {

@@ -37,6 +37,20 @@ import wt.part.WTPartDescribeLink;
 @Controller
 @RequestMapping(value = "/ecn/**")
 public class EcnController extends BaseController {
+	
+	@Description(value = "ECN 활동함 페이지")
+	@GetMapping(value = "/work")
+	public ModelAndView work() throws Exception {
+		ArrayList<NumberCode> modelList = NumberCodeHelper.manager.getArrayCodeList("MODEL");
+		boolean isAdmin = CommonUtil.isAdmin();
+		List<Map<String, String>> lifecycleList = CommonUtil.getLifeCycleState("LC_Default");
+		ModelAndView model = new ModelAndView();
+		model.addObject("isAdmin", isAdmin);
+		model.addObject("modelList", modelList);
+		model.addObject("lifecycleList", lifecycleList);
+		model.setViewName("/extcore/jsp/change/ecn/ecn-work.jsp");
+		return model;
+	}
 
 	@Description(value = "ECN 검색 페이지")
 	@GetMapping(value = "/list")

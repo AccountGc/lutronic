@@ -159,15 +159,14 @@ boolean validate = dto.isValidate();
 				return false;
 			}
 
-			// 			const external = AUIGrid.getGridDataWithState(myGridID9, "gridState");
-			const external = AUIGrid.getGridData(myGridID9);
+			const external = AUIGrid.getGridDataWithState(myGridID9, "gridState");
+// 			const external = AUIGrid.getGridData(myGridID9)
 			const url = getCallUrl("/workData/_submit");
 			const params = {
 				oid : oid,
 				external : external,
 				description : description
 			};
-			logger(addRows8);
 			toRegister(params, addRows8); // 결재선 세팅
 			logger(params);
 			if (!confirm("기안 하시겠습니까?")) {
@@ -175,7 +174,6 @@ boolean validate = dto.isValidate();
 			}
 
 			parent.openLayer();
-			logger(params);
 			call(url, params, function(data) {
 				alert(data.msg);
 				if (data.result) {

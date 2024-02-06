@@ -29,7 +29,7 @@ String tapOid = dto.getPersist().getPersistInfo().getObjectIdentifier().getStrin
 			}
 			%>
 			<%
-			if (dto.isAgreeLine()) {
+			if (dto.isAgreeLine() && dto.isAgree()) {
 			%>
 			<input type="button" value="합의완료" title="합의완료" onclick="_agree();">
 			<input type="button" value="합의반려" title="합의반려" class="red" onclick="_unagree()">
@@ -37,7 +37,7 @@ String tapOid = dto.getPersist().getPersistInfo().getObjectIdentifier().getStrin
 			}
 			%>
 			<%
-			if (dto.isReceiveLine()) {
+			if (dto.isReceiveLine() && dto.isReceive()) {
 			%>
 			<input type="button" value="수신확인" title="수신확인" onclick="_receive();">
 			<%

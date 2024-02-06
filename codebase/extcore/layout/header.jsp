@@ -83,6 +83,20 @@ int eca = (int) request.getAttribute("eca");
 							</span>
 						</a>
 					</li>
+					<%
+						if(isAdmin || isRa) {
+					%>
+					<li>
+						<a onclick="moveToPage(this, '/ecn/work', '> 나의업무 > ECA 활동함');">
+							ECN 활동함
+							<span class="label label-info float-right" id="activity">
+								<%=eca%>
+							</span>
+						</a>
+					</li>
+					<%
+						}
+					%>
 					<li>
 						<a onclick="moveToPage(this, '/workspace/approval', '> 나의업무 > 결재함');">
 							결재함
