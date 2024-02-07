@@ -153,7 +153,8 @@ public class EcoDTO {
 			set_withdraw(true);
 		}
 
-		if ((check(eco, "INWORK") || check(eco, "LINE_REGISTER") || (check(eco, "ACTIVITY")) || check(eco, "RETURN"))) {
+		if (isCreator && (check(eco, "INWORK") || check(eco, "LINE_REGISTER") || (check(eco, "ACTIVITY"))
+				|| check(eco, "RETURN"))) {
 			set_modify(true);
 		}
 

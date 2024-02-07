@@ -232,7 +232,6 @@ WTPart root = (WTPart) request.getAttribute("root");
 			table : {
 				indentation : 20,
 				nodeColumnIdx : 4,
-				checkboxColumnIdx : 0
 			},
 			source : $.ajax({
 				url : "/Windchill/plm/bom/loadEditor?oid=" + oid + "&skip=" + skip,
@@ -262,10 +261,9 @@ WTPart root = (WTPart) request.getAttribute("root");
 			},
 			renderColumns : function(event, data) {
 				const node = data.node;
+				const level= node.getIndex() + 1;
 				const isCheckOut = node.data.isCheckOut;
 				const isNew = node.data.isNew;
-				logger(node);
-				logger(isNew);
 				if (isNew) {
 					node.tr.style.backgroundColor = "#FFCBCB";
 				} else {
@@ -276,6 +274,7 @@ WTPart root = (WTPart) request.getAttribute("root");
 				const thum = node.data.thum;
 				const list = node.tr.querySelectorAll("td");
 				list[0].style.textAlign = "center";
+				list[0].textContent = level;
 				list[1].style.textAlign = "center";
 				if (thum != undefined) {
 					list[1].innerHTML = "<img src=" + node.data.thum + ">";
@@ -994,7 +993,6 @@ WTPart root = (WTPart) request.getAttribute("root");
 			table : {
 				indentation : 20,
 				nodeColumnIdx : 4,
-				checkboxColumnIdx : 0
 			},
 			source : $.ajax({
 				url : "/Windchill/plm/bom/loadEditor?oid=" + poid + "&skip=true",
@@ -1026,7 +1024,9 @@ WTPart root = (WTPart) request.getAttribute("root");
 				const node = data.node;
 				const list = node.tr.querySelectorAll("td");
 				const thum = node.data.thum;
+				const level= node.getIndex() + 1;
 				list[0].style.textAlign = "center";
+				list[0].textContent = level;
 				list[1].style.textAlign = "center";
 				if (thum != undefined) {
 					list[1].innerHTML = "<img src=" + node.data.thum + ">";
