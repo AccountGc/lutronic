@@ -124,9 +124,6 @@ int eca = (int) request.getAttribute("eca");
 					<li>
 						<a onclick="moveToPage(this, '/workspace/complete', '> 나의업무 > 완료함');">
 							완료함
-							<span class="label label-info float-right" id="complete">
-								<%=count.get("complete")%>
-							</span>
 						</a>
 					</li>
 					<li>
