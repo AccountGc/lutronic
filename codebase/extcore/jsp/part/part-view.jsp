@@ -98,12 +98,12 @@ WTUser sessionUser = (WTUser) SessionHelper.manager.getPrincipal();
 				<td class="indent5">
 					<%=dto.getLocation()%>
 				</td>
-				<td class="" align="center" rowspan="5">
+				<td style="text-align: center; width: 300px;" rowspan="5">
 					<jsp:include page="/extcore/jsp/common/thumbnail-view-3d.jsp">
 						<jsp:param value="<%=dto.getOid()%>" name="oid" />
 					</jsp:include>
 				</td>
-				<td class="" align="center" rowspan="5">
+				<td style="text-align: center" rowspan="5">
 					<jsp:include page="/extcore/jsp/common/thumbnail-view-2d.jsp">
 						<jsp:param value="<%=dto.getOid()%>" name="oid" />
 					</jsp:include>
@@ -509,6 +509,7 @@ WTUser sessionUser = (WTUser) SessionHelper.manager.getPrincipal();
 			callUrl = getCallUrl("/part/getCreoViewUrl?oid=" + oid);
 		}
 		call(callUrl, null, function(res) {
+			logger(res);
 			if (res.result) {
 				const params = {
 					browser : "chrome",

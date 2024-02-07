@@ -193,7 +193,7 @@ public class PartHelper {
 		String sortType = (String) params.get("sortType");
 
 		QuerySpec query = new QuerySpec();
-		int idx = query.addClassList(WTPart.class, false);
+		int idx = query.addClassList(WTPart.class, true);
 
 		query.appendSelect(new ClassAttribute(WTPart.class, "thePersistInfo.theObjectIdentifier.id"), new int[] { idx },
 				false);
@@ -268,54 +268,54 @@ public class PartHelper {
 			location = PART_ROOT;
 		}
 
-//		if (StringUtil.checkString(location)) {
-//			int l = location.indexOf(PART_ROOT);
-//
-//			if (l >= 0) {
-//				if (query.getConditionCount() > 0) {
-//					query.appendAnd();
-//				}
-//				location = location.substring((l + PART_ROOT.length()));
-//				// Folder Search
-//				int folder_idx = query.addClassList(PartLocation.class, false);
-//				query.appendWhere(new SearchCondition(PartLocation.class, PartLocation.PART, WTPart.class,
-//						"thePersistInfo.theObjectIdentifier.id"), new int[] { folder_idx, idx });
-//				query.appendAnd();
-//
-//				query.appendWhere(new SearchCondition(PartLocation.class, "loc", SearchCondition.LIKE, location + "%"),
-//						new int[] { folder_idx });
-//			}
+		if (StringUtil.checkString(location)) {
+			int l = location.indexOf(PART_ROOT);
+
+			if (l >= 0) {
+				if (query.getConditionCount() > 0) {
+					query.appendAnd();
+				}
+				location = location.substring((l + PART_ROOT.length()));
+				// Folder Search
+				int folder_idx = query.addClassList(PartLocation.class, false);
+				query.appendWhere(new SearchCondition(PartLocation.class, PartLocation.PART, WTPart.class,
+						"thePersistInfo.theObjectIdentifier.id"), new int[] { folder_idx, idx });
+				query.appendAnd();
+
+				query.appendWhere(new SearchCondition(PartLocation.class, "loc", SearchCondition.LIKE, location + "%"),
+						new int[] { folder_idx });
+			}
+		}
+
+//		Folder folder = FolderTaskLogic.getFolder(location, WCUtil.getWTContainerRef());
+////		int isQuery = DOCUMENT_ROOT.indexOf(location);
+//		if (query.getConditionCount() > 0) {
+//			query.appendAnd();
 //		}
-
-		Folder folder = FolderTaskLogic.getFolder(location, WCUtil.getWTContainerRef());
-//		int isQuery = DOCUMENT_ROOT.indexOf(location);
-		if (query.getConditionCount() > 0) {
-			query.appendAnd();
-		}
-
-//		if (isQuery < 0) {
-		int f_idx = query.appendClassList(IteratedFolderMemberLink.class, false);
-		ClassAttribute fca = new ClassAttribute(IteratedFolderMemberLink.class, "roleBObjectRef.key.branchId");
-		SearchCondition fsc = new SearchCondition(fca, "=", new ClassAttribute(WTPart.class, "iterationInfo.branchId"));
-		fsc.setFromIndicies(new int[] { f_idx, idx }, 0);
-		fsc.setOuterJoin(0);
-		query.appendWhere(fsc, new int[] { f_idx, idx });
-		query.appendAnd();
-
-		query.appendOpenParen();
-		long fid = folder.getPersistInfo().getObjectIdentifier().getId();
-		query.appendWhere(new SearchCondition(IteratedFolderMemberLink.class, "roleAObjectRef.key.id", "=", fid),
-				new int[] { f_idx });
-
-		ArrayList<Folder> folders = FolderUtils.getSubFolders(folder, new ArrayList<Folder>());
-		for (int i = 0; i < folders.size(); i++) {
-			Folder sub = (Folder) folders.get(i);
-			query.appendOr();
-			long sfid = sub.getPersistInfo().getObjectIdentifier().getId();
-			query.appendWhere(new SearchCondition(IteratedFolderMemberLink.class, "roleAObjectRef.key.id", "=", sfid),
-					new int[] { f_idx });
-		}
-		query.appendCloseParen();
+//
+////		if (isQuery < 0) {
+//		int f_idx = query.appendClassList(IteratedFolderMemberLink.class, false);
+//		ClassAttribute fca = new ClassAttribute(IteratedFolderMemberLink.class, "roleBObjectRef.key.branchId");
+//		SearchCondition fsc = new SearchCondition(fca, "=", new ClassAttribute(WTPart.class, "iterationInfo.branchId"));
+//		fsc.setFromIndicies(new int[] { f_idx, idx }, 0);
+//		fsc.setOuterJoin(0);
+//		query.appendWhere(fsc, new int[] { f_idx, idx });
+//		query.appendAnd();
+//
+//		query.appendOpenParen();
+//		long fid = folder.getPersistInfo().getObjectIdentifier().getId();
+//		query.appendWhere(new SearchCondition(IteratedFolderMemberLink.class, "roleAObjectRef.key.id", "=", fid),
+//				new int[] { f_idx });
+//
+//		ArrayList<Folder> folders = FolderUtils.getSubFolders(folder, new ArrayList<Folder>());
+//		for (int i = 0; i < folders.size(); i++) {
+//			Folder sub = (Folder) folders.get(i);
+//			query.appendOr();
+//			long sfid = sub.getPersistInfo().getObjectIdentifier().getId();
+//			query.appendWhere(new SearchCondition(IteratedFolderMemberLink.class, "roleAObjectRef.key.id", "=", sfid),
+//					new int[] { f_idx });
+//		}
+//		query.appendCloseParen();
 
 		// 최신 이터레이션.
 		if (latest) {
@@ -334,10 +334,10 @@ public class PartHelper {
 		int rowNum = (pager.getCpage() - 1) * pager.getPsize() + 1;
 		while (result.hasMoreElements()) {
 			Object[] obj = (Object[]) result.nextElement();
-//			WTPart part = (WTPart) obj[0];
-			BigDecimal bd = (BigDecimal) obj[0];
-			String oid = "wt.part.WTPart:" + bd.longValue();
-			PartColumn column = new PartColumn(oid, eca);
+			WTPart part = (WTPart) obj[0];
+//			BigDecimal bd = (BigDecimal) obj[0];
+//			String oid = "wt.part.WTPart:" + bd.longValue();
+			PartColumn column = new PartColumn(part, eca);
 			column.setRowNum(rowNum++);
 			list.add(column);
 		}

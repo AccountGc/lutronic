@@ -71,7 +71,7 @@ WTUser sessionUser = (WTUser) SessionHelper.manager.getPrincipal();
 				<col width="300">
 				<col width="130">
 				<col width="300">
-				<col width="80">
+				<col width="150">
 				<col width="150">
 			</colgroup>
 			<tr>
@@ -84,8 +84,13 @@ WTUser sessionUser = (WTUser) SessionHelper.manager.getPrincipal();
 				<td class="indent5">
 					<%=dto.getLocation()%>
 				</td>
-				<td class="" align="center" rowspan="5" colspan="2">
-					<jsp:include page="/extcore/jsp/common/thumbnail-view.jsp">
+				<td style="text-align: center;" rowspan="5">
+					<jsp:include page="/extcore/jsp/common/thumbnail-view-3d.jsp">
+						<jsp:param value="<%=dto.getOid()%>" name="oid" />
+					</jsp:include>
+				</td>
+				<td style="text-align: center" rowspan="5">
+					<jsp:include page="/extcore/jsp/common/thumbnail-view-2d.jsp">
 						<jsp:param value="<%=dto.getOid()%>" name="oid" />
 					</jsp:include>
 				</td>
@@ -147,8 +152,11 @@ WTUser sessionUser = (WTUser) SessionHelper.manager.getPrincipal();
 						<jsp:param value="<%=dto.getOid()%>" name="oid" />
 					</jsp:include>
 				</td>
-				<td class="center" colspan="2">
-					<input type="button" value="CREO VIEW" title="CREO VIEW" class="gray" onclick="openCreoView();">
+				<td class="center" colspan="3">
+<%-- 					<input type="button" value="재변환" title="재변환" class="blue" onclick="publish('<%=dto.getOid()%>');"> --%>
+					<input type="button" value="CREO VIEW 3D" title="CREO VIEW 3D" class="gray" onclick="openCreoView('false');">
+					&nbsp;
+					<input type="button" value="CREO VIEW 2D" title="CREO VIEW 2D" class="gray" onclick="openCreoView('true');">
 				</td>
 			</tr>
 		</table>
@@ -476,9 +484,16 @@ WTUser sessionUser = (WTUser) SessionHelper.manager.getPrincipal();
 		_popup(url, 1500, 600, "n");
 	}
 
-	function openCreoView() {
-		const oid = document.getElementById("oid").value;
-		const callUrl = getCallUrl("/part/getCreoViewUrl?oid=" + oid);
+	function openCreoView(is2D) {
+		let oid;
+		let callUrl;
+		if(JSON.parse(is2D)) {
+			oid = document.getElementById("oid").value;
+			callUrl = getCallUrl("/drawing/getCreoViewUrlByDrawing?oid=" + oid);
+		} else {
+			oid = document.getElementById("oid").value;
+			callUrl = getCallUrl("/part/getCreoViewUrl?oid=" + oid);
+		}
 		call(callUrl, null, function(res) {
 			if (res.result) {
 				const params = {
