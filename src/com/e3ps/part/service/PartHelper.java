@@ -193,15 +193,15 @@ public class PartHelper {
 		String sortType = (String) params.get("sortType");
 
 		QuerySpec query = new QuerySpec();
-		int idx = query.addClassList(WTPart.class, true);
+		int idx = query.addClassList(WTPart.class, false);
+//		int idx_m = query.appendClassList(WTPartMaster.class, false);
 
 		query.appendSelect(new ClassAttribute(WTPart.class, "thePersistInfo.theObjectIdentifier.id"), new int[] { idx },
 				false);
 
-		// 상태 임시저장 제외
-		if (query.getConditionCount() > 0) {
-			query.appendAnd();
-		}
+//		SearchCondition sc = new SearchCondition(WTPart.class, "masterReference.key.id", WTPartMaster.class,
+//				"thePersistInfo.theObjectIdentifier.id");
+//		query.appendWhere(sc, new int[] { idx, idx_m });
 
 		QuerySpecUtils.toLikeAnd(query, idx, WTPart.class, WTPart.NUMBER, partNumber);
 		QuerySpecUtils.toLikeAnd(query, idx, WTPart.class, WTPart.NAME, partName);
@@ -334,10 +334,10 @@ public class PartHelper {
 		int rowNum = (pager.getCpage() - 1) * pager.getPsize() + 1;
 		while (result.hasMoreElements()) {
 			Object[] obj = (Object[]) result.nextElement();
-			WTPart part = (WTPart) obj[0];
-//			BigDecimal bd = (BigDecimal) obj[0];
-//			String oid = "wt.part.WTPart:" + bd.longValue();
-			PartColumn column = new PartColumn(part, eca);
+//			WTPart part = (WTPart) obj[0];
+			BigDecimal bd = (BigDecimal) obj[0];
+			String oid = "wt.part.WTPart:" + bd.longValue();
+			PartColumn column = new PartColumn(oid, eca);
 			column.setRowNum(rowNum++);
 			list.add(column);
 		}

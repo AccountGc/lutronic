@@ -131,7 +131,6 @@ iframe {
 	<jsp:param value="update" name="mode" />
 	<jsp:param value="true" name="multi" />
 	<jsp:param value="true" name="header" />
-	<jsp:param value="true" name="req" />
 </jsp:include>
 
 <!-- 	관련 CR -->

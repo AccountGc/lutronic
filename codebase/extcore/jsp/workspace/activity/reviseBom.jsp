@@ -149,7 +149,7 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 			</tr>
 		</table>
 
-		<div id="grid_wrap" style="height: 60px; border-top: 1px solid #3180c3;"></div>
+		<div id="grid_wrap" style="height: 80px; border-top: 1px solid #3180c3;"></div>
 		<script type="text/javascript">
 			let myGridiD;
 			const part_result_code = [ {

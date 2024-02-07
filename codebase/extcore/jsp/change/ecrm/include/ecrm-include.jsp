@@ -89,6 +89,16 @@ if (header) {
 		style : "aui-left",
 		width : 250
 	}, {
+		dataField : "model",
+		headerText : "프로젝트 코드 [명]",
+		dataType : "string",
+		width : 220,
+		style : "aui-left",
+		renderer : {
+			type : "TemplateRenderer"
+		},
+		sortable : false
+	}, {
 		dataField : "period",
 		headerText : "보존년한",
 		dataType : "string",

@@ -130,7 +130,6 @@ iframe {
 			<jsp:param value="create" name="mode" />
 			<jsp:param value="true" name="multi" />
 			<jsp:param value="true" name="header" />
-			<jsp:param value="true" name="req" />
 		</jsp:include>
 
 		<!-- 	관련 CR -->
@@ -187,11 +186,11 @@ iframe {
 					return;
 				}
 
-				if (rows105.length === 0) {
-					alert("ECO는 반드시 하나 이상 선택해야합니다.");
-					popup105();
-					return false;
-				}
+// 				if (rows105.length === 0) {
+// 					alert("ECO는 반드시 하나 이상 선택해야합니다.");
+// 					popup105();
+// 					return false;
+// 				}
 
 				if (!confirm("등록하시겠습니까?")) {
 					return false;

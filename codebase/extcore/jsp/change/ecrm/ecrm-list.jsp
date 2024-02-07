@@ -217,6 +217,16 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 					width : 250,
 					sortable : false
 				}, {
+					dataField : "model",
+					headerText : "프로젝트 코드 [명]",
+					dataType : "string",
+					width : 220,
+					style : "aui-left",
+					renderer : {
+						type : "TemplateRenderer"
+					},
+					sortable : false
+				}, {
 					dataField : "period",
 					headerText : "보존년한",
 					dataType : "string",
@@ -281,7 +291,7 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 					filterItemMoreMessage : "필터링 검색이 너무 많습니다. 검색을 이용해주세요.",
 				};
 				myGridID = AUIGrid.create("#grid_wrap", columnLayout, props);
-// 				loadGridData();
+				// 				loadGridData();
 				AUIGrid.bind(myGridID, "contextMenu", _auiContextMenuHandler);
 				AUIGrid.bind(myGridID, "vScrollChange", function(event) {
 					hideContextMenu();

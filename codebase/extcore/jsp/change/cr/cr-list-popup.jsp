@@ -122,13 +122,15 @@ boolean multi = (boolean) request.getAttribute("multi");
 		<td class="indent5">
 			<select name="changeSection" id="changeSection" class="width-200">
 				<option value="">선택</option>
-				<%
-				for (NumberCode section : sectionList) {
-				%>
-				<option value="<%=section.getCode()%>"><%=section.getName()%></option>
-				<%
-				}
-				%>
+				<option value="">영업/마케팅</option>
+				<option value="">원가 절감</option>
+				<option value="">기능/성능 변경</option>
+				<option value="">공정 변경</option>
+				<option value="">자재 변경</option>
+				<option value="">허가/규제 변경</option>
+				<option value="">품질 개선</option>
+				<option value="">라벨링</option>
+				<option value="">기타</option>
 			</select>
 		</td>
 		<th>프로젝트 코드</th>
