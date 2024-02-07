@@ -42,6 +42,7 @@ public class MailUtils {
 	private static final String sendAgreeMailMethod = "sendAgreeMail"; // 합의 메일
 	private static final String sendReceiveMailMethod = "sendReceiveMail"; // 수신 메일
 	private static final String sendExternalMailMethod = "sendExternalMail"; // 외부메일
+	private static final String sendSubmitterMailMethod = "sendSubmitterMail"; // 기안자 메일
 
 	private MailUtils() {
 
@@ -119,7 +120,7 @@ public class MailUtils {
 		String subject = targetName + "의 결재선 지정요청 알림 메일입니다.";
 
 		System.out.println("전송자 = " + toUser.getEMail());
-		
+
 		HashMap<String, String> to = new HashMap<>();
 //		WTUser toUser = (WTUser) SessionHelper.manager.getPrincipal();
 		if (!StringUtil.checkString(toUser.getEMail())) {
@@ -520,6 +521,44 @@ public class MailUtils {
 	}
 
 	/**
+	 * 외부 메일
+	 */
+	public static void sendSubmitterMail(Hashtable<String, String> h) throws Exception {
+		System.out.println("기안자 메일 호출!!");
+		String oid = h.get("oid");
+		String line = h.get("line");
+		ApprovalLine submit = (ApprovalLine) CommonUtil.getObject(line);
+		Persistable per = CommonUtil.getObject(oid);
+
+		WTUser fromUser = (WTUser) SessionHelper.manager.getAdministrator();
+		Hashtable<String, Object> hash = new Hashtable<>();
+
+		String targetName = getTargetName((LifeCycleManaged) per);
+		String subject = targetName + "의 기안자전용 메일입니다.";
+
+		WTUser toUser = (WTUser) submit.getOwnership().getOwner().getPrincipal();
+		HashMap<String, String> to = new HashMap<>();
+		if (!StringUtil.checkString(toUser.getEMail())) {
+			throw new Exception("받는 사람 = " + toUser.getName() + " 이메일 주소가 없습니다.");
+		}
+
+		to.put(toUser.getEMail(), toUser.getName());
+
+		Hashtable<String, String> data = setParseData((LifeCycleManaged) per);
+
+		MailHtmlContentTemplate mhct = MailHtmlContentTemplate.getInstance();
+		String mcontent = mhct.htmlContent(data, "mail_notice.html");
+
+		hash.put("FROM", fromUser);
+		hash.put("TO", to);
+		hash.put("SUBJECT", subject);
+		hash.put("CONTENT", mcontent);
+
+		sendMail(hash);
+		System.out.println("기안자 메일 종료!!");
+	}
+
+	/**
 	 * 결재 요청 메일
 	 */
 	public static void sendApprovalMail(Hashtable<String, String> h) throws Exception {
@@ -645,5 +684,22 @@ public class MailUtils {
 		Object[] argObjects = { hash };
 
 		queue.addEntry(principal, sendExternalMailMethod, className, argClasses, argObjects);
+	}
+
+	/**
+	 * 기안자 메일 전송
+	 */
+	public void sendSubmitterMailMethod(Persistable per, ApprovalLine submit) throws Exception {
+		WTPrincipal principal = SessionHelper.manager.setAdministrator();
+		ProcessingQueue queue = (ProcessingQueue) QueueHelper.manager.getQueue(processQueueName, ProcessingQueue.class);
+
+		Hashtable<String, String> hash = new Hashtable<>();
+		hash.put("oid", per.getPersistInfo().getObjectIdentifier().getStringValue());
+		hash.put("line", submit.getPersistInfo().getObjectIdentifier().getStringValue());
+
+		Class[] argClasses = { Hashtable.class };
+		Object[] argObjects = { hash };
+
+		queue.addEntry(principal, sendSubmitterMailMethod, className, argClasses, argObjects);
 	}
 }

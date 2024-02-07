@@ -167,9 +167,10 @@ WTUser sessionUser = (WTUser) SessionHelper.manager.getPrincipal();
 					</jsp:include>
 				</td>
 				<td class="center" colspan="3">
-					<input type="button" value="재변환" title="재변환" class="blue" onclick="publish('<%=dto.getOid()%>');">
+<%-- 					<input type="button" value="재변환" title="재변환" class="blue" onclick="publish('<%=dto.getOid()%>');"> --%>
+					<input type="button" value="CREO VIEW 3D" title="CREO VIEW 3D" class="gray" onclick="openCreoView('false');">
 					&nbsp;
-					<input type="button" value="CREO VIEW" title="CREO VIEW" class="gray" onclick="openCreoView();">
+					<input type="button" value="CREO VIEW 2D" title="CREO VIEW 2D" class="gray" onclick="openCreoView('true');">
 				</td>
 			</tr>
 		</table>
@@ -497,9 +498,16 @@ WTUser sessionUser = (WTUser) SessionHelper.manager.getPrincipal();
 		_popup(url, 1500, 600, "n");
 	}
 
-	function openCreoView() {
-		const oid = document.getElementById("oid").value;
-		const callUrl = getCallUrl("/part/getCreoViewUrl?oid=" + oid);
+	function openCreoView(is2D) {
+		let oid;
+		let callUrl;
+		if(JSON.parse(is2D)) {
+			oid = document.getElementById("oid").value;
+			callUrl = getCallUrl("/drawing/getCreoViewUrlByDrawing?oid=" + oid);
+		} else {
+			oid = document.getElementById("oid").value;
+			callUrl = getCallUrl("/part/getCreoViewUrl?oid=" + oid);
+		}
 		call(callUrl, null, function(res) {
 			if (res.result) {
 				const params = {

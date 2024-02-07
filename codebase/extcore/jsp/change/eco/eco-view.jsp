@@ -1,9 +1,12 @@
+<%@page import="java.util.HashMap"%>
 <%@page import="java.util.Map"%>
 <%@page import="com.e3ps.change.eco.dto.EcoDTO"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%
 EcoDTO dto = (EcoDTO) request.getAttribute("dto");
 boolean isAdmin = (boolean) request.getAttribute("isAdmin");
+Map<String, Object> contentMap = dto.getContentMap();
+out.println(contentMap);
 %>
 
 <input type="hidden" name="oid" id="oid" value="<%=dto.getOid()%>">
@@ -129,7 +132,7 @@ boolean isAdmin = (boolean) request.getAttribute("isAdmin");
 				<td class="indent5" colspan="3"><%=dto.getModel_name() != null ? dto.getModel_name() : ""%></td>
 			</tr>
 			<tr>
-				<th class="lb">변경사항</th>
+				<th class="lb">변경사유</th>
 				<td colspan="3" class="indent5">
 					<div class="textarea-auto">
 						<textarea rows="5" readonly="readonly" id="eoCommentA" rows="5"><%=dto.getEoCommentA()%></textarea>
@@ -137,7 +140,7 @@ boolean isAdmin = (boolean) request.getAttribute("isAdmin");
 				</td>
 			</tr>
 			<tr>
-				<th class="lb">변경사유</th>
+				<th class="lb">변경사항</th>
 				<td colspan="3" class="indent5">
 					<div class="textarea-auto">
 						<textarea rows="5" readonly="readonly" id="eoCommentB" rows="5"><%=dto.getEoCommentB()%></textarea>
@@ -158,6 +161,18 @@ boolean isAdmin = (boolean) request.getAttribute("isAdmin");
 					<div class="textarea-auto">
 						<textarea rows="5" readonly="readonly" id="eoCommentD" rows="5"><%=dto.getEoCommentD()%></textarea>
 					</div>
+				</td>
+			</tr>
+			<tr>
+				<th class="lb">설계변경부품 내역 파일</th>
+				<td class="indent5">
+				<%
+					if(contentMap != null && contentMap.size() > 0) {
+				%>
+				<a href="<%=contentMap.get("url") %>"><%=contentMap.get("name") %></a>
+				<%
+					}
+				%>
 				</td>
 			</tr>
 			<tr>

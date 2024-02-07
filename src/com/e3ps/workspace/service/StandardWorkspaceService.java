@@ -495,10 +495,14 @@ public class StandardWorkspaceService extends StandardManager implements Workspa
 				master.setState(WorkspaceHelper.STATE_MASTER_APPROVAL_COMPLETE);
 				PersistenceHelper.manager.modify(master);
 
-				afterApprovalAction(per, tapOid);
-
+				 // 외부 메일 전송
 				MailUtils.manager.sendExternalMailMethod(per);
-
+				// 기안자 메일 전송
+				
+				ApprovalLine submit = WorkspaceHelper.manager.getSubmitLine(master);				
+				MailUtils.manager.sendSubmitterMailMethod(per, submit);
+				
+				afterApprovalAction(per, tapOid);
 			}
 
 			trs.commit();
@@ -1277,11 +1281,13 @@ public class StandardWorkspaceService extends StandardManager implements Workspa
 
 			WorkData wd = (WorkData) CommonUtil.getObject(oid);
 
-			QueryResult qr = PersistenceHelper.manager.navigate(wd, "mailUser", WorkDataMailUserLink.class, false);
-			while (qr.hasMoreElements()) {
-				WorkDataMailUserLink link = (WorkDataMailUserLink) qr.nextElement();
-				PersistenceHelper.manager.delete(link);
-			}
+			// 삭제 처리 제외
+			
+//			QueryResult qr = PersistenceHelper.manager.navigate(wd, "mailUser", WorkDataMailUserLink.class, false);
+//			while (qr.hasMoreElements()) {
+//				WorkDataMailUserLink link = (WorkDataMailUserLink) qr.nextElement();
+//				PersistenceHelper.manager.delete(link);
+//			}
 
 			for (String s : data) {
 				MailUser user = (MailUser) CommonUtil.getObject(s);

@@ -25,6 +25,7 @@ import wt.part.WTPart;
 public class ApprovalLineColumn {
 
 	private String oid;
+	private String poid;
 	private int rowNum;
 	private boolean reads;
 	private String name;
@@ -204,5 +205,6 @@ public class ApprovalLineColumn {
 			}
 		}
 		setPersistType(persistType);
+		setPoid(per.getPersistInfo().getObjectIdentifier().getStringValue());
 	}
 }

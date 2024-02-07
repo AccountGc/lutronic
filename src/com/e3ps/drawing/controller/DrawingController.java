@@ -109,6 +109,28 @@ public class DrawingController extends BaseController {
 
 	@Description(value = "크레오 뷰 URL 얻기")
 	@ResponseBody
+	@GetMapping(value = "/getCreoViewUrlByDrawing")
+	public Map<String, Object> getCreoViewUrlByDrawing(HttpServletRequest request, @RequestParam String oid)
+			throws Exception {
+		Map<String, Object> result = new HashMap<>();
+		try {
+
+			EPMDocument epm = (EPMDocument) CommonUtil.getObject(oid);
+			EPMDocument epm2d = PartHelper.manager.getEPMDocument2D(epm);
+			String url = DrawingHelper.manager.getCreoViewUrl(request,
+					epm2d.getPersistInfo().getObjectIdentifier().getStringValue());
+			result.put("result", SUCCESS);
+			result.put("url", url);
+		} catch (Exception e) {
+			e.printStackTrace();
+			result.put("msg", e.toString());
+			result.put("result", FAIL);
+		}
+		return result;
+	}
+
+	@Description(value = "크레오 뷰 URL 얻기")
+	@ResponseBody
 	@GetMapping(value = "/getCreoViewUrl")
 	public Map<String, Object> getCreoViewUrl(HttpServletRequest request, @RequestParam String oid) throws Exception {
 		Map<String, Object> result = new HashMap<>();

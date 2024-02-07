@@ -630,7 +630,7 @@ public class WorkspaceHelper {
 		count.put("approval", (int) approval(params).get("total"));
 		count.put("agree", (int) agree(params).get("total"));
 		count.put("receive", (int) receive(params).get("total"));
-		count.put("complete", (int) complete(params).get("total"));
+//		count.put("complete", (int) complete(params).get("total"));
 		count.put("reject", (int) reject(params).get("total"));
 		count.put("progress", (int) progress(params).get("total"));
 		return count;

@@ -186,8 +186,11 @@ button, button:hover {
 	line-height: 26px;
 	cursor: pointer;
 	outline: 0;
-	background: #e5e5e5;
-	color: #6e7a85;
+	background: #dddddd;
+	/*	color: #6e7a85;*/
+	color : black;
+/*	color : white;*/
+/*	font-weight: 900;*/
 	border: none;
 	-webkit-border-radius: 2px;
 	-moz-border-radius: 2px;

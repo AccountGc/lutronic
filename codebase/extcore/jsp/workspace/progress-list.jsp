@@ -60,7 +60,8 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 						<option value="50">50</option>
 						<option value="100">100</option>
 					</select>
-					<input type="button" value="결재 초기화" title="결재 초기화" onclick="_reset();" class="blue">
+					<input type="button" value="회수(결재선 유지)" title="회수(결재선 유지)" class="gray" onclick="_withdraw('false');">
+					<input type="button" value="회수(결재선 삭제)" title="회수(결재선 삭제)" class="blue" onclick="_withdraw('true');">
 					<input type="button" value="검색" title="검색" onclick="loadGridData();">
 				</td>
 			</tr>
@@ -139,6 +140,7 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 					headerHeight : 30,
 					showRowNumColumn : false,
 					showRowCheckColumn : true,
+					rowCheckToRadio : true,
 					showAutoNoDataMessage : false,
 					selectionMode : "multipleCells",
 					hoverMode : "singleRow",
@@ -152,7 +154,7 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 					enableRowCheckShiftKey : true
 				};
 				myGridID = AUIGrid.create("#grid_wrap", columnLayout, props);
-// 				loadGridData();
+				// 				loadGridData();
 				AUIGrid.bind(myGridID, "contextMenu", auiContextMenuHandler);
 				AUIGrid.bind(myGridID, "vScrollChange", function(event) {
 					hideContextMenu();
@@ -162,7 +164,7 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 				});
 				AUIGrid.bind(myGridID, "sorting", auiSortingHandler);
 			}
-			
+
 			let sortCache = [];
 			let compField;
 			function auiSortingHandler(event) {
@@ -212,36 +214,6 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 				});
 			}
 
-			function _reset() {
-				const checkedItems = AUIGrid.getCheckedRowItems(myGridID);
-				if (checkedItems.length === 0) {
-					alert("결재 초기화 하려는 결재를 선택하세요.");
-					return false;
-				}
-
-				if (!confirm("선택한 결재들을 초기화 하시겠습니까?")) {
-					return false;
-				}
-
-				const arr = new Array();
-				for (let i = checkedItems.length - 1; i >= 0; i--) {
-					const item = checkedItems[i].item;
-					const oid = item.oid;
-					arr.push(oid);
-				}
-				const url = getCallUrl("/workspace/_reset");
-				const params = new Object();
-				params.arr = arr;
-				parent.openLayer();
-				call(url, params, function(data) {
-					alert(data.msg);
-					if (data.result) {
-						loadGridData();
-					}
-					parent.closeLayer();
-				})
-			}
-
 			document.addEventListener("DOMContentLoaded", function() {
 				toFocus("name");
 				const columns = loadColumnLayout("progress-list");
@@ -270,6 +242,37 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 			window.addEventListener("resize", function() {
 				AUIGrid.resize(myGridID);
 			});
+			
+			function _withdraw(remove) {
+				
+				const gridData = AUIGrid.getCheckedRowItems(myGridID);
+				if(gridData.length === 0) {
+					alert("하나의 결재를 선택하세요.");
+					return false;
+				}
+
+				const oid = gridData[0].item.poid;
+				if (JSON.parse(remove)) {
+					if (!confirm("결재선을 초기화 상태로 결재회수를 합니다.\n진행하시겠습니까?")) {
+						return false;
+					}
+				} else {
+					if (!confirm("기존 지정한 결재선 유지한 상태로 결재회수를 합니다.\n진행하시겠습니까?")) {
+						return false;
+					}
+				}
+
+				const url = getCallUrl("/workspace/withdraw?oid=" + oid + "&remove=" + remove);
+				openLayer();
+				call(url, null, function(data) {
+					alert(data.msg);
+					if (data.result) {
+						loadGridData();
+					}
+					closeLayer();
+				}, "GET");
+			}
+
 
 			function exportExcel() {
 				const exceptColumnFields = [ "point" ];

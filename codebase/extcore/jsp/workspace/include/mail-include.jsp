@@ -54,7 +54,16 @@ boolean update = "update".equals(mode);
 		}
 		
 		function load() {
-			document.location.reload();
+			const oid = document.getElementById("oid").value;
+			const url = getCallUrl("/workspace/reloadMail?oid="+oid);
+			AUIGrid.showAjaxLoader(myGridID9);
+			call(url, null, function(data) {
+				AUIGrid.removeAjaxLoader(myGridID9);
+				if(data.result) {
+					AUIGrid.clearGridData(myGridID9);
+					AUIGrid.setGridData(myGridID9, data.list);		
+				}
+			}, "GET");
 		}
 
 		function popup9() {
@@ -129,11 +138,6 @@ boolean update = "update".equals(mode);
 					}
 					parent.closeLayer();
 				})
-// 				arr.forEach(function(dd) {
-// 					const rowIndex = dd.rowIndex;
-// 					const item = dd.item;
-// 					AUIGrid.addRow(myGridID9, item, rowIndex);
-// 				})
 			}
 		}
 	</script>

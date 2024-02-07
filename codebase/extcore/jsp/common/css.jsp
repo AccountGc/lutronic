@@ -10,4 +10,4 @@
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/pretty-checkbox@3.0/dist/pretty-checkbox.min.css">
 
 <!-- axisj -->
-<link rel="stylesheet" href="/Windchill/extcore/component/axisj/AXJ.min.css?v=12341">
+<link rel="stylesheet" href="/Windchill/extcore/component/axisj/AXJ.min.css?v=1212112232341">

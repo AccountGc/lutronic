@@ -25,9 +25,28 @@ import com.e3ps.workspace.dto.ApprovalLineDTO;
 import com.e3ps.workspace.service.WorkDataHelper;
 import com.e3ps.workspace.service.WorkspaceHelper;
 
+import net.sf.json.JSONArray;
+
 @Controller
 @RequestMapping(value = "/workspace/**")
 public class WorkspaceController extends BaseController {
+
+	@Description(value = "외부 메일 다시 가져오기")
+	@ResponseBody
+	@GetMapping(value = "/reloadMail")
+	public Map<String, Object> reloadMail(@RequestParam String oid) throws Exception {
+		Map<String, Object> result = new HashMap<String, Object>();
+		try {
+			JSONArray list = WorkspaceHelper.manager.getExternalMail(oid);
+			result.put("list", list);
+			result.put("result", SUCCESS);
+		} catch (Exception e) {
+			e.printStackTrace();
+			result.put("result", FAIL);
+			result.put("msg", e.toString());
+		}
+		return result;
+	}
 
 	@Description(value = "외부 메일 삭제")
 	@ResponseBody
@@ -44,7 +63,7 @@ public class WorkspaceController extends BaseController {
 		}
 		return result;
 	}
-	
+
 	@Description(value = "외부 메일 저장")
 	@ResponseBody
 	@PostMapping(value = "/mailSave")

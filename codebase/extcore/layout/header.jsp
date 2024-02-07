@@ -137,14 +137,14 @@ int eca = (int) request.getAttribute("eca");
 							</span>
 						</a>
 					</li>
-					<li>
-						<a onclick="moveToPage(this, '/workspace/reject', '> 나의업무 > 반려함');">
-							반려함
-							<span class="label label-info float-right" id="reject">
-								<%=count.get("reject")%>
-							</span>
-						</a>
-					</li>
+<!-- 					<li> -->
+<!-- 						<a onclick="moveToPage(this, '/workspace/reject', '> 나의업무 > 반려함');"> -->
+<!-- 							반려함 -->
+<!-- 							<span class="label label-info float-right" id="reject"> -->
+<%-- 								<%=count.get("reject")%> --%>
+<!-- 							</span> -->
+<!-- 						</a> -->
+<!-- 					</li> -->
 					<!-- 					<li> -->
 					<!-- 						<a onclick="moveToPage(this, '/temprary/list', '> 나의업무 > 임시저장함');">임시저장함</a> -->
 					<!-- 					</li> -->

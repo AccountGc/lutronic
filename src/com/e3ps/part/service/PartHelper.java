@@ -211,12 +211,6 @@ public class PartHelper {
 		QuerySpecUtils.creatorQuery(query, idx, WTPart.class, creatorOid);
 		QuerySpecUtils.toState(query, idx, WTPart.class, state);
 
-		if (query.getConditionCount() > 0) {
-			query.appendAnd();
-		}
-		SearchCondition sc = new SearchCondition(WTPart.class, "state.state", "<>", "TEMPRARY");
-		query.appendWhere(sc, new int[] { idx });
-
 		if (complete) {
 			if (query.getConditionCount() > 0) {
 				query.appendAnd();
@@ -327,6 +321,8 @@ public class PartHelper {
 		if (latest) {
 			QuerySpecUtils.toLatest(query, idx, WTPart.class);
 		}
+
+		System.out.println("query=" + query);
 
 		QuerySpecUtils.toOrderBy(query, idx, WTPart.class, WTPart.MODIFY_TIMESTAMP, true);
 

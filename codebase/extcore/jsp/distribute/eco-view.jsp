@@ -90,7 +90,7 @@ boolean isAdmin = (boolean) request.getAttribute("isAdmin");
 				<td class="indent5" colspan="3"><%=dto.getModel_name()%></td>
 			</tr>
 			<tr>
-				<th class="lb">변경사항</th>
+				<th class="lb">변경사유</th>
 				<td colspan="3" class="indent5">
 					<div class="textarea-auto">
 						<textarea rows="5" readonly="readonly" id="eoCommentA" rows="5"><%=dto.getEoCommentA()%></textarea>
@@ -98,7 +98,7 @@ boolean isAdmin = (boolean) request.getAttribute("isAdmin");
 				</td>
 			</tr>
 			<tr>
-				<th class="lb">변경사유</th>
+				<th class="lb">변경사항</th>
 				<td colspan="3" class="indent5">
 					<div class="textarea-auto">
 						<textarea rows="5" readonly="readonly" id="eoCommentB" rows="5"><%=dto.getEoCommentB()%></textarea>
