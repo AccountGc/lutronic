@@ -268,54 +268,54 @@ public class PartHelper {
 			location = PART_ROOT;
 		}
 
-		if (StringUtil.checkString(location)) {
-			int l = location.indexOf(PART_ROOT);
+//		if (StringUtil.checkString(location)) {
+//			int l = location.indexOf(PART_ROOT);
+//
+//			if (l >= 0) {
+//				if (query.getConditionCount() > 0) {
+//					query.appendAnd();
+//				}
+//				location = location.substring((l + PART_ROOT.length()));
+//				// Folder Search
+//				int folder_idx = query.addClassList(PartLocation.class, false);
+//				query.appendWhere(new SearchCondition(PartLocation.class, PartLocation.PART, WTPart.class,
+//						"thePersistInfo.theObjectIdentifier.id"), new int[] { folder_idx, idx });
+//				query.appendAnd();
+//
+//				query.appendWhere(new SearchCondition(PartLocation.class, "loc", SearchCondition.LIKE, location + "%"),
+//						new int[] { folder_idx });
+//			}
+//		}
 
-			if (l >= 0) {
-				if (query.getConditionCount() > 0) {
-					query.appendAnd();
-				}
-				location = location.substring((l + PART_ROOT.length()));
-				// Folder Search
-				int folder_idx = query.addClassList(PartLocation.class, false);
-				query.appendWhere(new SearchCondition(PartLocation.class, PartLocation.PART, WTPart.class,
-						"thePersistInfo.theObjectIdentifier.id"), new int[] { folder_idx, idx });
-				query.appendAnd();
-
-				query.appendWhere(new SearchCondition(PartLocation.class, "loc", SearchCondition.LIKE, location + "%"),
-						new int[] { folder_idx });
-			}
+		Folder folder = FolderTaskLogic.getFolder(location, WCUtil.getWTContainerRef());
+//		int isQuery = DOCUMENT_ROOT.indexOf(location);
+		if (query.getConditionCount() > 0) {
+			query.appendAnd();
 		}
 
-//		Folder folder = FolderTaskLogic.getFolder(location, WCUtil.getWTContainerRef());
-////		int isQuery = DOCUMENT_ROOT.indexOf(location);
-//		if (query.getConditionCount() > 0) {
-//			query.appendAnd();
-//		}
-//
-////		if (isQuery < 0) {
-//		int f_idx = query.appendClassList(IteratedFolderMemberLink.class, false);
-//		ClassAttribute fca = new ClassAttribute(IteratedFolderMemberLink.class, "roleBObjectRef.key.branchId");
-//		SearchCondition fsc = new SearchCondition(fca, "=", new ClassAttribute(WTPart.class, "iterationInfo.branchId"));
-//		fsc.setFromIndicies(new int[] { f_idx, idx }, 0);
-//		fsc.setOuterJoin(0);
-//		query.appendWhere(fsc, new int[] { f_idx, idx });
-//		query.appendAnd();
-//
-//		query.appendOpenParen();
-//		long fid = folder.getPersistInfo().getObjectIdentifier().getId();
-//		query.appendWhere(new SearchCondition(IteratedFolderMemberLink.class, "roleAObjectRef.key.id", "=", fid),
-//				new int[] { f_idx });
-//
-//		ArrayList<Folder> folders = FolderUtils.getSubFolders(folder, new ArrayList<Folder>());
-//		for (int i = 0; i < folders.size(); i++) {
-//			Folder sub = (Folder) folders.get(i);
-//			query.appendOr();
-//			long sfid = sub.getPersistInfo().getObjectIdentifier().getId();
-//			query.appendWhere(new SearchCondition(IteratedFolderMemberLink.class, "roleAObjectRef.key.id", "=", sfid),
-//					new int[] { f_idx });
-//		}
-//		query.appendCloseParen();
+//		if (isQuery < 0) {
+		int f_idx = query.appendClassList(IteratedFolderMemberLink.class, false);
+		ClassAttribute fca = new ClassAttribute(IteratedFolderMemberLink.class, "roleBObjectRef.key.branchId");
+		SearchCondition fsc = new SearchCondition(fca, "=", new ClassAttribute(WTPart.class, "iterationInfo.branchId"));
+		fsc.setFromIndicies(new int[] { f_idx, idx }, 0);
+		fsc.setOuterJoin(0);
+		query.appendWhere(fsc, new int[] { f_idx, idx });
+		query.appendAnd();
+
+		query.appendOpenParen();
+		long fid = folder.getPersistInfo().getObjectIdentifier().getId();
+		query.appendWhere(new SearchCondition(IteratedFolderMemberLink.class, "roleAObjectRef.key.id", "=", fid),
+				new int[] { f_idx });
+
+		ArrayList<Folder> folders = FolderUtils.getSubFolders(folder, new ArrayList<Folder>());
+		for (int i = 0; i < folders.size(); i++) {
+			Folder sub = (Folder) folders.get(i);
+			query.appendOr();
+			long sfid = sub.getPersistInfo().getObjectIdentifier().getId();
+			query.appendWhere(new SearchCondition(IteratedFolderMemberLink.class, "roleAObjectRef.key.id", "=", sfid),
+					new int[] { f_idx });
+		}
+		query.appendCloseParen();
 
 		// 최신 이터레이션.
 		if (latest) {

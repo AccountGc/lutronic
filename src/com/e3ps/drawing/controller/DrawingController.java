@@ -115,12 +115,19 @@ public class DrawingController extends BaseController {
 		Map<String, Object> result = new HashMap<>();
 		try {
 
-			EPMDocument epm = (EPMDocument) CommonUtil.getObject(oid);
-			EPMDocument epm2d = PartHelper.manager.getEPMDocument2D(epm);
-			String url = DrawingHelper.manager.getCreoViewUrl(request,
-					epm2d.getPersistInfo().getObjectIdentifier().getStringValue());
-			result.put("result", SUCCESS);
-			result.put("url", url);
+			WTPart part = (WTPart) CommonUtil.getObject(oid);
+			if (part != null) {
+				EPMDocument epm = PartHelper.manager.getEPMDocument(part);
+				if (epm != null) {
+					EPMDocument epm2d = PartHelper.manager.getEPMDocument2D(epm);
+					if (epm2d != null) {
+						String url = DrawingHelper.manager.getCreoViewUrl(request,
+								epm2d.getPersistInfo().getObjectIdentifier().getStringValue());
+						result.put("result", SUCCESS);
+						result.put("url", url);
+					}
+				}
+			}
 		} catch (Exception e) {
 			e.printStackTrace();
 			result.put("msg", e.toString());
