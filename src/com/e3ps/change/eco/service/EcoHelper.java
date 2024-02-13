@@ -1003,7 +1003,7 @@ public class EcoHelper {
 			style_UP.setTextWrapped(true);
 			commentACell.setStyle(style_UP);
 			commentACell.putValue(dto.getEoCommentA());
-
+			worksheet.getCells().setRowHeight(36, 350);
 			Row comARow = worksheet.getCells().getRows().get(36);
 			int height = (int) comARow.getHeight();
 			String com = dto.getEoCommentA();
@@ -1219,7 +1219,8 @@ public class EcoHelper {
 			row++;
 
 			// 설계변경 세부내용 (B, 1)
-			worksheet.getCells().setRowHeight(row, 1050 / 20);
+//			worksheet.getCells().setRowHeight(row, 1050 / 20);
+			worksheet.getCells().setRowHeight(row, 300);
 
 			System.out.println("row1111=" + row);
 			Cell commentBCell = worksheet.getCells().getRows().get(row).get(1);
@@ -1317,7 +1318,8 @@ public class EcoHelper {
 			row++;
 
 			// 특기사항 (E, 4)
-			worksheet.getCells().setRowHeight(row, 1050 / 20);
+//			worksheet.getCells().setRowHeight(row, 1050 / 20);
+			worksheet.getCells().setRowHeight(row, 350);
 
 			Cell commentCCell = worksheet.getCells().getRows().get(row).get(4);
 			commentCCell.putValue(dto.getEoCommentC());
@@ -1341,7 +1343,8 @@ public class EcoHelper {
 			row++;
 
 			// 기타사항 (E, 4)
-			worksheet.getCells().setRowHeight(row, 1050 / 20);
+//			worksheet.getCells().setRowHeight(row, 1050 / 20);
+			worksheet.getCells().setRowHeight(row, 350);
 
 			Cell commentDCell = worksheet.getCells().getRows().get(row).get(4);
 			commentDCell.putValue(dto.getEoCommentD());
@@ -1430,6 +1433,62 @@ public class EcoHelper {
 			 */
 
 			startRow = row;
+
+			ApprovalLine submitLine = WorkspaceHelper.manager.getSubmitLine(master);
+			if (row > startRow) {
+				worksheet.getCells().insertRows(row, 1, true);
+				Row copyRow = worksheet.getCells().getRows().get(row);
+				worksheet.autoFitRow(row);
+				for (int i = 0; i < copyRow.getLastCell().getColumn() - 1; i++) {
+					Cell copiedCell = copyRow.get(i);
+					if (i == 0) {
+						continue;
+					}
+
+					worksheet.getCells().merge((row), 1, 1, 2);
+					worksheet.getCells().merge((row), 3, 1, 2);
+					worksheet.getCells().merge((row), 5, 1, 10);
+
+					if (i == 5) {
+						textLeftStyle.setIndentLevel(1);
+						copiedCell.setStyle(textLeftStyle);
+					} else {
+						copiedCell.setStyle(textCenterStyle);
+					}
+				}
+			}
+
+			// 이름 (B, 1)
+			Cell submitNameCell = worksheet.getCells().getRows().get(row).get(1);
+			submitNameCell.putValue(submitLine.getOwnership().getOwner().getFullName());
+
+			// 날짜 (D, 3)
+			String sprocessDate = "";
+			if (submitLine.getCompleteTime() != null) {
+				sprocessDate = submitLine.getCompleteTime().toString().substring(0, 10);
+			}
+
+			Cell submitDateCell = worksheet.getCells().getRows().get(row).get(3);
+			submitDateCell.putValue(sprocessDate);
+
+			// 내용 (F, 5)
+			Cell submitDescCell = worksheet.getCells().getRows().get(row).get(5);
+			submitDescCell.putValue(submitLine.getDescription() != null ? submitLine.getDescription() : "");
+
+			Row scomDescRow = worksheet.getCells().getRows().get(row);
+			int sdescheight = (int) scomDescRow.getHeight();
+			String scomdescd = submitLine.getDescription() != null ? submitLine.getDescription() : "";
+			if (null != scomdescd) {
+				for (int i = 0; i < scomdescd.length(); i++) {
+					char ca = scomdescd.charAt(i);
+					Character careCa = Character.valueOf('\n');
+					if (ca == careCa) {
+						sdescheight += 350;
+					}
+				}
+			}
+//			comDescRow.setHeight((short) descheight / 20);
+			row++;
 
 			// 합의 라인
 			ArrayList<ApprovalLine> agreeLines = WorkspaceHelper.manager.getAgreeLine(master);
@@ -1577,7 +1636,7 @@ public class EcoHelper {
 
 		ArrayList<Map<String, Integer>> complete = new ArrayList<Map<String, Integer>>();
 		ArrayList<Map<String, Integer>> progress = new ArrayList<Map<String, Integer>>();
-		for (int i = 0; i < 5; i++) {
+		for (int i = 0; i < 10; i++) {
 			Map<String, Integer> cMap = new HashMap<>();
 			Map<String, Integer> pMap = new HashMap<>();
 

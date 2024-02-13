@@ -843,6 +843,15 @@ public class WorkspaceHelper {
 				list.add(map);
 			}
 		}
+		
+		
+		
+		// 과거 결재 이력 가져오기
+		if(master == null) {
+			
+		}
+		
+		
 		return JSONArray.fromObject(list);
 	}
 

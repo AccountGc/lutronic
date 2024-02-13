@@ -591,6 +591,7 @@ int eca = (int) request.getAttribute("eca");
 		let popup = false;
 		const value = getCookie(oid);
 		if (!value) {
+			logger("C");
 			popup = true;
 		}
 		return popup;
@@ -598,8 +599,9 @@ int eca = (int) request.getAttribute("eca");
 
 	function getCookie(name) {
 		name = name + "=";
-		// 		alert(name);
+// 		logger(name);
 		const cookie = document.cookie;
+		logger(cookie);
 		let start = cookie.indexOf(name);
 		let value = "";
 		if (start !== -1) {

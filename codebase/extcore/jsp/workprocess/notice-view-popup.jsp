@@ -87,9 +87,9 @@ NoticeDTO dto = (NoticeDTO) request.getAttribute("dto");
 		expire.setDate(expire.getDate() + cDay);
 		cookies = oid + '=' + escape(oid) + '; path=/ ';
 
-		if (typeof cDay != 'undefined') {
+// 		if (typeof cDay != 'undefined') {
 			cookies += ';expires=' + expire.toGMTString() + ';';
-		}
+// 		}
 		document.cookie = cookies;
 		logger(cookies);
 		self.close();

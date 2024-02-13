@@ -6,7 +6,6 @@
 EcoDTO dto = (EcoDTO) request.getAttribute("dto");
 boolean isAdmin = (boolean) request.getAttribute("isAdmin");
 Map<String, Object> contentMap = dto.getContentMap();
-out.println(contentMap);
 %>
 
 <input type="hidden" name="oid" id="oid" value="<%=dto.getOid()%>">
