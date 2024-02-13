@@ -58,6 +58,34 @@ import wt.vc.views.ViewHelper;
 @RequestMapping(value = "/part/**")
 public class PartController extends BaseController {
 
+	
+	@Description(value = "EO 완제품 품목 팝업 페이지")
+	@GetMapping(value = "/complete")
+	public ModelAndView complete(@RequestParam String method, @RequestParam String multi,
+			@RequestParam(required = false) String complete) throws Exception {
+		ArrayList<NumberCode> modelList = NumberCodeHelper.manager.getArrayCodeList("MODEL");
+		ArrayList<NumberCode> deptcodeList = NumberCodeHelper.manager.getArrayCodeList("DEPTCODE");
+		ArrayList<NumberCode> matList = NumberCodeHelper.manager.getArrayCodeList("MAT");
+		ArrayList<NumberCode> productmethodList = NumberCodeHelper.manager.getArrayCodeList("PRODUCTMETHOD");
+		ArrayList<NumberCode> manufactureList = NumberCodeHelper.manager.getArrayCodeList("MANUFACTURE");
+		ArrayList<NumberCode> finishList = NumberCodeHelper.manager.getArrayCodeList("FINISH");
+		List<Map<String, String>> lifecycleList = CommonUtil.getLifeCycleState("LC_PART");
+		ModelAndView model = new ModelAndView();
+		model.addObject("complete", Boolean.parseBoolean(complete));
+		model.addObject("modelList", modelList);
+		model.addObject("deptcodeList", deptcodeList);
+		model.addObject("matList", matList);
+		model.addObject("productmethodList", productmethodList);
+		model.addObject("manufactureList", manufactureList);
+		model.addObject("finishList", finishList);
+		model.addObject("lifecycleList", lifecycleList);
+		model.addObject("method", method);
+		model.addObject("multi", Boolean.parseBoolean(multi));
+		model.setViewName("popup:/part/complete-part-list-popup");
+		return model;
+	}
+
+	
 	@Description(value = "품목 썸네일 팝업")
 	@GetMapping(value = "/viewThumb")
 	public ModelAndView viewThumb(@RequestParam String oid) throws Exception {

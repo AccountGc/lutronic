@@ -258,7 +258,7 @@ public class NumberCodeHelper {
 		QuerySpecUtils.toLikeAnd(query, idx, NumberCode.class, NumberCode.CODE, code);
 		QuerySpecUtils.toLikeAnd(query, idx, NumberCode.class, NumberCode.DESCRIPTION, description);
 		QuerySpecUtils.toEqualsAnd(query, idx, NumberCode.class, NumberCode.CODE_TYPE, codeType);
-		QuerySpecUtils.toBooleanAnd(query, idx, NumberCode.class, NumberCode.DISABLED, false);
+//		QuerySpecUtils.toBooleanAnd(query, idx, NumberCode.class, NumberCode.DISABLED, false);
 		QuerySpecUtils.toEqualsAnd(query, idx, NumberCode.class, "parentReference.key.id", 0L);
 		QuerySpecUtils.toOrderBy(query, idx, NumberCode.class, NumberCode.SORT, false);
 		QueryResult result = PersistenceHelper.manager.find(query);

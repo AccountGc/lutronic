@@ -1982,7 +1982,7 @@ button.dim:active:before {
 }
 .label-info,
 .badge-info {
-  background-color: rgb(99, 233, 35);
+  background-color: rgb(183, 244, 153);
   color: black;
   font-weight:900;
   font-size: 12px !important;

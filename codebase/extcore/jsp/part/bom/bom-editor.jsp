@@ -68,8 +68,17 @@ WTPart root = (WTPart) request.getAttribute("root");
 		<td class="left">
 			<div class="header">
 				<img src="/Windchill/extcore/images/header.png">
-				BOM 편집
+				BOM 편집 &nbsp;&nbsp;
+				<div class="pretty p-switch">
+					<input type="checkbox" name="skip" value="true" onclick="_reload();">
+					<div class="state p-success">
+						<label>
+							<b>더미제외</b>
+						</label>
+					</div>
+				</div>
 			</div>
+
 		</td>
 		<td class="right">
 			<!-- 			<select name="depth" id="depth" onchange="loadDepth();" class="AXSelect width-120"> -->
@@ -87,6 +96,22 @@ WTPart root = (WTPart) request.getAttribute("root");
 	</tr>
 </table>
 
+<table class="search-table">
+	<colgroup>
+		<col width="130">
+		<col width="*">
+	</colgroup>
+	<tr>
+		<th>품목 번호/명</th>
+		<td class="indent5">
+			<input type="text" name="number" id="number" class="width-400" readonly="readonly" onclick="load();">
+			<input type="hidden" name="poid" id="poid">
+			<input type="button" value="품목선택" title="품목선택" onclick="load();" class="blue">
+			<input type="button" value="초기화" title="초기화" onclick="destroy();">
+		</td>
+	</tr>
+</table>
+<br>
 <table>
 	<colgroup>
 		<col width="49%">
@@ -124,22 +149,6 @@ WTPart root = (WTPart) request.getAttribute("root");
 		</td>
 		<td valign="top">&nbsp;</td>
 		<td valign="top">
-			<table class="search-table">
-				<colgroup>
-					<col width="130">
-					<col width="*">
-				</colgroup>
-				<tr>
-					<th>품목 번호/명</th>
-					<td class="indent5">
-						<input type="text" name="number" id="number" class="width-400" readonly="readonly" onclick="load();">
-						<input type="hidden" name="poid" id="poid">
-						<input type="button" value="품목선택" title="품목선택" onclick="load();" class="blue">
-						<input type="button" value="초기화" title="초기화" onclick="destroy();">
-					</td>
-				</tr>
-			</table>
-			<br>
 			<table id="righttable">
 				<colgroup>
 					<col width="40px;"></col>
@@ -170,13 +179,29 @@ WTPart root = (WTPart) request.getAttribute("root");
 	</tr>
 </table>
 <script type="text/javascript">
-	const oid = document.getElementById("oid").value;
-	const skip = false;
 	let CLIPBOARD = null;
 	document.addEventListener("DOMContentLoaded", function() {
+		leftTreeLoad();
+		selectbox("depth");
+	});
+
+	function leftTreeLoad() {
+		const oid = document.getElementById("oid").value;
+		const dummy = document.querySelector("input[name=skip]:checked");
+		let skip;
+		if (dummy !== null) {
+			skip = "true";
+		} else {
+			skip = "false";
+		}
+		const tree = $.ui.fancytree.getTree("#treetable");
+		if (tree !== null) {
+			tree.destroy();
+		}
+
 		$("#treetable").fancytree({
 			extensions : [ "dnd5", "filter", "table", "clones" ],
-// 			checkbox : true,
+			// 			checkbox : true,
 			quicksearch : true,
 			debugLevel : 0,
 			selectMode : 2,
@@ -247,7 +272,6 @@ WTPart root = (WTPart) request.getAttribute("root");
 			lazyLoad : function(event, data) {
 				const node = data.node;
 				const level = node.data.level;
-				const skip = true;
 				const params = {
 					oid : node.data.oid,
 					level : level,
@@ -261,7 +285,7 @@ WTPart root = (WTPart) request.getAttribute("root");
 			},
 			renderColumns : function(event, data) {
 				const node = data.node;
-				const level= node.getIndex() + 1;
+				const level = node.getIndex() + 1;
 				const isCheckOut = node.data.isCheckOut;
 				const isNew = node.data.isNew;
 				if (isNew) {
@@ -361,8 +385,7 @@ WTPart root = (WTPart) request.getAttribute("root");
 				return false;
 			}
 		});
-		selectbox("depth");
-	});
+	}
 
 	// 마우스 우클릭 옵션
 	$("#treetable").contextmenu({
@@ -412,26 +435,26 @@ WTPart root = (WTPart) request.getAttribute("root");
 			uiIcon : "ui-icon-replace",
 			cmd : "replace",
 			children : [ {
-				title : "신규부품교체",
-				cmd : "replace_new",
-				uiIcon : "ui-icon-newpart",
-			}, {
 				title : "기존부품교체",
 				cmd : "replace_exist",
 				uiIcon : "ui-icon-oldpart",
+			}, {
+				title : "신규부품교체",
+				cmd : "replace_new",
+				uiIcon : "ui-icon-newpart",
 			} ]
 		}, {
 			title : "추가",
 			uiIcon : "ui-icon-adds",
 			cmd : "insert",
 			children : [ {
-				title : "신규부품추가",
-				cmd : "new",
-				uiIcon : "ui-icon-newpart",
-			}, {
 				title : "기존부품추가",
 				cmd : "exist",
 				uiIcon : "ui-icon-oldpart",
+			}, {
+				title : "신규부품추가",
+				cmd : "new",
+				uiIcon : "ui-icon-newpart",
 			} ]
 		}, {
 			title : "삭제",
@@ -839,7 +862,7 @@ WTPart root = (WTPart) request.getAttribute("root");
 			node.resetLazy();
 			node.setExpanded(true);
 		}
-		
+
 		setTimeout(function() {
 			const tree = $("#treetable").fancytree("getTree");
 			for (let i = 0; i < refList.length; i++) {
@@ -953,6 +976,13 @@ WTPart root = (WTPart) request.getAttribute("root");
 
 	// 오른쪽 트리 로드
 	function loadTree(arr, callBack) {
+		const dummy = document.querySelector("input[name=skip]:checked");
+		let skip;
+		if (dummy !== null) {
+			skip = "true";
+		} else {
+			skip = "false";
+		}
 		destroy();
 		const item = arr[0].item;
 		const poid = item.part_oid;
@@ -963,7 +993,7 @@ WTPart root = (WTPart) request.getAttribute("root");
 		$("#righttable").fancytree({
 			extensions : [ "dnd5", "table" ],
 			debugLevel : 0,
-// 			checkbox : true,
+			// 			checkbox : true,
 			selectMode : 2,
 			dnd5 : {
 				autoExpandMS : 100,
@@ -995,7 +1025,7 @@ WTPart root = (WTPart) request.getAttribute("root");
 				nodeColumnIdx : 4,
 			},
 			source : $.ajax({
-				url : "/Windchill/plm/bom/loadEditor?oid=" + poid + "&skip=true",
+				url : "/Windchill/plm/bom/loadEditor?oid=" + poid + "&skip=" + skip,
 				type : "POST",
 				cache : false
 			}),
@@ -1008,7 +1038,6 @@ WTPart root = (WTPart) request.getAttribute("root");
 			lazyLoad : function(event, data) {
 				const node = data.node;
 				const level = node.data.level;
-				const skip = true;
 				const params = {
 					oid : node.data.oid,
 					level : level,
@@ -1024,7 +1053,7 @@ WTPart root = (WTPart) request.getAttribute("root");
 				const node = data.node;
 				const list = node.tr.querySelectorAll("td");
 				const thum = node.data.thum;
-				const level= node.getIndex() + 1;
+				const level = node.getIndex() + 1;
 				list[0].style.textAlign = "center";
 				list[0].textContent = level;
 				list[1].style.textAlign = "center";
@@ -1152,5 +1181,9 @@ WTPart root = (WTPart) request.getAttribute("root");
 			},
 		});
 		callBack(true, true, "");
+	}
+
+	function _reload() {
+		leftTreeLoad();
 	}
 </script>

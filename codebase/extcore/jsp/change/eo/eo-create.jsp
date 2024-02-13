@@ -52,7 +52,7 @@
 			<tr>
 				<th class="req lb">완제품 품목</th>
 				<td colspan="3">
-					<jsp:include page="/extcore/jsp/change/include/complete-part-include.jsp">
+					<jsp:include page="/extcore/jsp/change/include/eo-complete-part-include.jsp">
 						<jsp:param value="" name="oid" />
 						<jsp:param value="create" name="mode" />
 						<jsp:param value="true" name="multi" />

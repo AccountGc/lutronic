@@ -431,9 +431,9 @@ function createAUIGrid(columnLayout) {
 		filterItemMoreMessage : "필터링 검색이 너무 많습니다. 검색을 이용해주세요.",
 		<%if (complete) {%>
 		rowCheckDisabledFunction: function (rowIndex, isChecked, item) {
-// 			if (item.state !== "작업 중") {
-// 				return false; // false 반환하면 disabled 처리됨
-// 			}
+			if (item.state !== "작업 중") {
+				return false; // false 반환하면 disabled 처리됨
+			}
 			
 			if(item.number.charAt(0) !== "1") {
 				return false; // false 반환하면 disabled 처리됨
@@ -482,9 +482,9 @@ function auiCellClick(event) {
 	const rowId = item[rowIdField];
 	let complete = false;
 	<%if (complete) {%>
-// 	if (item.state !== "작업 중") {
-// 		complete = true;
-// 	}
+	if (item.state !== "작업 중") {
+		complete = true;
+	}
 	
 	if(item.number.charAt(0) !== "1") {
 		complete = true;

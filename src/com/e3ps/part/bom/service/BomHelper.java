@@ -78,13 +78,23 @@ public class BomHelper {
 		boolean skip = Boolean.parseBoolean((String) params.get("skip"));
 		WTPart root = (WTPart) CommonUtil.getObject(oid);
 		boolean isCheckOut = WorkInProgressHelper.isCheckedOut(root);
+		boolean isWorkCopy = WorkInProgressHelper.isWorkingCopy(root);
+
+		if (isCheckOut) {
+			System.out.println("체크아웃인데 복사본 아니면");
+			if (!isWorkCopy) {
+				System.out.println("복사본 아니면??");
+				root = (WTPart) WorkInProgressHelper.service.workingCopyOf(root);
+			}
+		}
+
 //		// 체크아웃시 체크아웃된 데이터 가져오기
 //		System.out.println("isCheckOut=" + isCheckOut);
-		if (isCheckOut) {
+//		if (isCheckOut) {
+//			return loadEditor(root, skip);
+//		} else {
 			return loadEditor(root, skip);
-		} else {
-			return loadEditor(root, skip);
-		}
+//		}
 	}
 
 	/**
