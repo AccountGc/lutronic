@@ -137,7 +137,7 @@ boolean header = request.getParameter("header") != null ? Boolean.parseBoolean(r
 	}
 
 	function popup104() {
-		const url = getCallUrl("/part/popup?method=insert104&multi=false&complete=true");
+		const url = getCallUrl("/part/complete?method=insert104&multi=false&complete=true");
 		_popup(url, 1400, 700, "n");
 	}
 
