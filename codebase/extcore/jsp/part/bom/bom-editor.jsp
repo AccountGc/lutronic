@@ -96,14 +96,18 @@ WTPart root = (WTPart) request.getAttribute("root");
 	</tr>
 </table>
 
-<table class="search-table">
+<table class="search-table" style="border: none;">
 	<colgroup>
-		<col width="130">
-		<col width="*">
+		<col width="49%">
+		<col width="40px;">
+		<col width="10%">
+		<col width="39%">
 	</colgroup>
 	<tr>
-		<th>품목 번호/명</th>
-		<td class="indent5">
+		<td style="border: none;">&nbsp;</td>
+		<td style="border: none;">&nbsp;</td>
+		<th style="border-top: 2px solid #86bff9;">품목 번호/명</th>
+		<td class="indent5" style="border-top: 2px solid #86bff9;">
 			<input type="text" name="number" id="number" class="width-400" readonly="readonly" onclick="load();">
 			<input type="hidden" name="poid" id="poid">
 			<input type="button" value="품목선택" title="품목선택" onclick="load();" class="blue">

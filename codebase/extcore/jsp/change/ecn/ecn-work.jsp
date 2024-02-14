@@ -11,7 +11,6 @@ ArrayList<NumberCode> modelList = (ArrayList<NumberCode>) request.getAttribute("
 List<Map<String, String>> lifecycleList = (List<Map<String, String>>) request.getAttribute("lifecycleList");
 WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 JSONArray list = (JSONArray) request.getAttribute("list");
-boolean isEdit = (boolean) request.getAttribute("isEdit");
 boolean isAdmin = (boolean) request.getAttribute("isAdmin");
 %>
 <!DOCTYPE html>
@@ -112,13 +111,6 @@ boolean isAdmin = (boolean) request.getAttribute("isAdmin");
 						<option value="50">50</option>
 						<option value="100">100</option>
 					</select>
-					<%
-					if (isEdit) {
-					%>
-					<input type="button" value="저장" title="저장" onclick="save();" class="red">
-					<%
-					}
-					%>
 					<input type="button" value="검색" title="검색" onclick="loadGridData();">
 				</td>
 			</tr>
@@ -134,17 +126,13 @@ boolean isAdmin = (boolean) request.getAttribute("isAdmin");
 			;
 			function _layout() {
 				return [ 
-				<%
-					if(isAdmin) {
-				%>
+				<%if (isAdmin) {%>
 				{
 					dataField : "oid",
 					dataType : "string",
 					width : 100,
 				},
-				<%
-					}
-				%>
+				<%}%>
 				{
 					dataField : "rowNum",
 					headerText : "번호",
@@ -295,7 +283,6 @@ boolean isAdmin = (boolean) request.getAttribute("isAdmin");
 
 			function createAUIGrid(columnLayout) {
 				const props = {
-					editable : true,
 					enableCellMerge : true,
 					headerHeight : 30,
 					showRowNumColumn : false,
@@ -344,27 +331,13 @@ boolean isAdmin = (boolean) request.getAttribute("isAdmin");
 				}
 			}
 
-			function auiCellEditBeginHandler(event) {
-				const item = event.item;
-				const dataField = event.dataField;
-				if (dataField === "worker_oid") {
-		<%if (isEdit) {%>
-			return true;
-		<%} else {%>
-			alert("ECN 담당자는 RA팀장 및 관리자만 가능합니다.");
-					return false;
-		<%}%>
-			}
-				return true;
-			}
-
 			function loadGridData(movePage) {
 				if (movePage === undefined) {
 					document.getElementById("sessionid").value = 0;
 					document.getElementById("curPage").value = 1;
 				}
 				let params = new Object();
-				const url = getCallUrl("/ecn/list");
+				const url = getCallUrl("/ecn/work");
 				const field = [ "sortKey", "sortType", "name", "number", "state", "creatorOid", "createdFrom", "createdTo", "modelcode" ];
 				params = toField(params, field);
 				AUIGrid.showAjaxLoader(myGridID);

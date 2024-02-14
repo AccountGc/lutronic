@@ -19,6 +19,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.e3ps.change.activity.service.ActivityHelper;
 import com.e3ps.change.cr.service.CrHelper;
+import com.e3ps.change.ecn.service.EcnHelper;
 import com.e3ps.change.eco.service.EcoHelper;
 import com.e3ps.change.ecpr.service.EcprHelper;
 import com.e3ps.change.ecrm.service.EcrmHelper;
@@ -89,17 +90,6 @@ public class IndexController extends BaseController {
 		int workData = WorkDataHelper.manager.count();
 		int eca = ActivityHelper.manager.count();
 		Map<String, Integer> count = WorkspaceHelper.manager.count();
-
-//		QueryResult crQr = CrHelper.manager.getMyCr(oid);
-//		QueryResult ecprQr = EcprHelper.manager.getMyEcpr(oid);
-//		QueryResult ecrmQr = EcrmHelper.manager.getMyEcrm(oid);
-//		QueryResult ecoQr = EcoHelper.manager.getMyEco(oid);
-
-//		model.addObject("crQr", crQr);
-//		model.addObject("ecprQr", ecprQr);
-//		model.addObject("ecrmQr", ecrmQr);
-//		model.addObject("ecoQr", ecoQr);
-
 		model.addObject("count", count);
 		model.addObject("workData", workData);
 		model.addObject("eca", eca);
@@ -156,8 +146,10 @@ public class IndexController extends BaseController {
 		boolean isPathological = DepartmentHelper.manager.isPathological(people, new String[] { "병리연구팀" });
 		boolean isClinical = DepartmentHelper.manager.isClinical(people, new String[] { "임상개발팀" });
 		boolean isAdmin = CommonUtil.isAdmin();
-		model.addObject("isAdmin", isAdmin);
+		int ecn = EcnHelper.manager.count();
 
+		model.addObject("ecn", ecn);
+		model.addObject("isAdmin", isAdmin);
 		// 배포
 		model.addObject("isDist", isDist);
 

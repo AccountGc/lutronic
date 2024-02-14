@@ -684,7 +684,7 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 		setTimeout(function() {
 			const sessionName = document.getElementById("sessionName").value;
 			const number = document.getElementById("number").value;
-			exportToExcel(number + "_BOM 리스트", number + "_BOM 리스트", number + "_BOM 리스트", [], sessionName);
+			exportToExcel(number + "_BOM 리스트", number + "_BOM 리스트", number + "_BOM 리스트", ["thumb_2d", "thumb_3d"], sessionName);
 		}, 1000);
 	}
 </script>

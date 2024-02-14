@@ -119,18 +119,9 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 				</td>
 			</tr>
 			<tr>
-				<th>보존기간</th>
+				<th>내부문서번호</th>
 				<td class="indent5">
-					<select name="preseration" id="preseration" class="width-200">
-						<option value="">선택</option>
-						<%
-						for (NumberCode preseration : preserationList) {
-						%>
-						<option value="<%=preseration.getCode()%>"><%=preseration.getName()%></option>
-						<%
-						}
-						%>
-					</select>
+					<input type="text" name="interalnumber" id="interalnumber" class="width-200">
 				</td>
 				<th>REV</th>
 				<td>
@@ -394,23 +385,16 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 			}
 
 			let sortCache = [];
-			let compField;
 			function auiSortingHandler(event) {
 				const sortingFields = event.sortingFields;
-				if (sortingFields.length > 0) {
-					const key = sortingFields[0].dataField;
-					if (compField !== key) {
-						compField = key;
-						const sortType = sortingFields[0].sortType; // 오름차순 1 내림 -1
-						sortCache[0] = {
-							dataField : key,
-							sortType : sortType
-						};
-						document.getElementById("sortKey").value = key;
-						document.getElementById("sortType").value = sortType;
-						loadGridData();
-					}
-				}
+				const key = sortingFields[0].dataField;
+				const sortType = sortingFields[0].sortType; // 오름차순 1 내림 -1
+				sortCache[0] = {
+					dataField : key,
+					sortType : sortType
+				};
+				document.getElementById("sortKey").value = key;
+				document.getElementById("sortType").value = sortType;
 			}
 
 			function _auiContextMenuHandler(event) {
@@ -569,7 +553,7 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 
 				let params = new Object();
 				const url = getCallUrl("/doc/list");
-				const field = [ "sortKey", "sortType", "location", "name", "number", "state", "creatorOid", "createdFrom", "createdTo", "modifiedFrom", "modifiedTo", "preseration", "modelcode", "deptcode", "writer", "description" ];
+				const field = [ "interalnumber", "sortKey", "sortType", "location", "name", "number", "state", "creatorOid", "createdFrom", "createdTo", "modifiedFrom", "modifiedTo", "preseration", "modelcode", "deptcode", "writer", "description" ];
 				params = toField(params, field);
 				const latest = document.querySelector("input[name=latest]:checked").value;
 				params.latest = JSON.parse(latest);
@@ -582,9 +566,8 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 						totalPage = Math.ceil(data.total / data.pageSize);
 						createPagingNavigator(data.total, data.curPage, data.sessionid);
 						AUIGrid.setGridData(myGridID, data.list);
-						if (movePage === undefined) {
+						if (sortCache.length > 0) {
 							AUIGrid.setSorting(myGridID, sortCache);
-							compField = null;
 						}
 					} else {
 						alert(data.msg);

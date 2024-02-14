@@ -187,6 +187,7 @@ public class PartHelper {
 		boolean latest = (boolean) params.get("latest");
 		String preOrder = (String) params.get("preOrder");
 		boolean complete = (boolean) params.get("complete");
+		boolean checkout = (boolean) params.get("checkout");
 
 		// 정렬
 		String sortKey = (String) params.get("sortKey");
@@ -210,6 +211,14 @@ public class PartHelper {
 				modifiedTo);
 		QuerySpecUtils.creatorQuery(query, idx, WTPart.class, creatorOid);
 		QuerySpecUtils.toState(query, idx, WTPart.class, state);
+
+//		if (checkout) {
+//			if (query.getConditionCount() > 0) {
+//				query.appendAnd();
+//			}
+//
+//			SearchCondition sc = VersionControlHelper.getSearchCondition(WTPart.class, true);
+//		}
 
 		if (complete) {
 			if (query.getConditionCount() > 0) {

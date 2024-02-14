@@ -251,8 +251,8 @@ QuantityUnit[] unitList = (QuantityUnit[]) request.getAttribute("unitList");
 					<img src="/Windchill/extcore/images/fileicon/file_excel.gif" title="엑셀 다운로드" onclick="exportExcel();">
 					<img src="/Windchill/extcore/images/save.gif" title="테이블 저장" onclick="saveColumnLayout('drawing-list');">
 					<img src="/Windchill/extcore/images/redo.gif" title="테이블 초기화" onclick="resetColumnLayout('drawing-list');">
-<!-- 					<input type="button" value="일괄다운" title="일괄다운" class="blue" onclick="batch();"> -->
-<!-- 					<input type="button" value="선택" title="선택" class="red" onclick="_select();"> -->
+					<!-- 					<input type="button" value="일괄다운" title="일괄다운" class="blue" onclick="batch();"> -->
+					<!-- 					<input type="button" value="선택" title="선택" class="red" onclick="_select();"> -->
 				</td>
 				<td class="right">
 					<select name="_psize" id="_psize" onchange="loadGridData();">
@@ -438,23 +438,16 @@ QuantityUnit[] unitList = (QuantityUnit[]) request.getAttribute("unitList");
 			}
 
 			let sortCache = [];
-			let compField;
 			function auiSortingHandler(event) {
 				const sortingFields = event.sortingFields;
-				if (sortingFields.length > 0) {
-					const key = sortingFields[0].dataField;
-					if (compField !== key) {
-						compField = key;
-						const sortType = sortingFields[0].sortType; // 오름차순 1 내림 -1
-						sortCache[0] = {
-							dataField : key,
-							sortType : sortType
-						};
-						document.getElementById("sortKey").value = key;
-						document.getElementById("sortType").value = sortType;
-						loadGridData();
-					}
-				}
+				const key = sortingFields[0].dataField;
+				const sortType = sortingFields[0].sortType; // 오름차순 1 내림 -1
+				sortCache[0] = {
+					dataField : key,
+					sortType : sortType
+				};
+				document.getElementById("sortKey").value = key;
+				document.getElementById("sortType").value = sortType;
 			}
 
 			function auiCellClickHandler(event) {
@@ -578,9 +571,8 @@ QuantityUnit[] unitList = (QuantityUnit[]) request.getAttribute("unitList");
 						totalPage = Math.ceil(data.total / data.pageSize);
 						createPagingNavigator(data.total, data.curPage, data.sessionid);
 						AUIGrid.setGridData(myGridID, data.list);
-						if (movePage === undefined) {
+						if (sortCache.length > 0) {
 							AUIGrid.setSorting(myGridID, sortCache);
-							compField = null;
 						}
 					} else {
 						alert(data.msg);

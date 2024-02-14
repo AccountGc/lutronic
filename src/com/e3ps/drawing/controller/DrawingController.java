@@ -64,6 +64,16 @@ import wt.util.WTException;
 @RequestMapping(value = "/drawing/**")
 public class DrawingController extends BaseController {
 
+	@Description(value = "도면 일괄 다운로드 페이지")
+	@GetMapping(value = "/zip")
+	public ModelAndView zip() throws Exception {
+		ModelAndView model = new ModelAndView();
+		boolean isAdmin = CommonUtil.isAdmin();
+		model.addObject("isAdmin", isAdmin);
+		model.setViewName("/extcore/jsp/drawing/drawing-zip");
+		return model;
+	}
+
 	@Description(value = "도면 썸네일 팝업")
 	@GetMapping(value = "/viewThumb")
 	public ModelAndView viewThumb(@RequestParam String oid) throws Exception {

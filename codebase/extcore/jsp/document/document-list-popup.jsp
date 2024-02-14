@@ -138,16 +138,7 @@ String state = (String) request.getAttribute("state");
 	<tr>
 		<th>보존기간</th>
 		<td class="indent5">
-			<select name="preseration" id="preseration" class="width-200">
-				<option value="">선택</option>
-				<%
-				for (NumberCode preseration : preserationList) {
-				%>
-				<option value="<%=preseration.getCode()%>"><%=preseration.getName()%></option>
-				<%
-				}
-				%>
-			</select>
+			<input type="text" name="interalnumber" id="interalnumber" class="width-200">
 		</td>
 		<th>REV</th>
 		<td>
@@ -436,7 +427,7 @@ function loadGridData(movePage) {
 	}
 	let params = new Object();
 	const url = getCallUrl("/doc/list");
-	const field = [ "sortKey", "sortType", "location", "name", "number", "state", "creatorOid", "createdFrom", "createdTo", "modifiedFrom", "modifiedTo", "preseration", "modelcode", "deptcode", "writer", "description" ];
+	const field = ["interalnumber", "sortKey", "sortType", "location", "name", "number", "state", "creatorOid", "createdFrom", "createdTo", "modifiedFrom", "modifiedTo", "preseration", "modelcode", "deptcode", "writer", "description" ];
 	const latest = document.querySelector("input[name=latest]:checked").value;
 	params = toField(params, field);
 	params.latest = JSON.parse(latest);

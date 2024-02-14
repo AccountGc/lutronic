@@ -40,7 +40,7 @@ public class EcnColumn {
 		setPartName(ecn.getPartName());
 		setPartNumber(ecn.getPartNumber());
 		setEcoNumber(ecn.getEco() != null ? ecn.getEco().getEoNumber() : "");
-		setEoid(ecn.getEco().getPersistInfo().getObjectIdentifier().getStringValue());
+		setEoid(ecn.getEco() != null ? ecn.getEco().getPersistInfo().getObjectIdentifier().getStringValue() : "");
 		setNumber(ecn.getEoNumber());
 		setName(ecn.getEoName());
 		setProgress(ecn.getProgress());

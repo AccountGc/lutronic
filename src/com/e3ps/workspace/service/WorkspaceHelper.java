@@ -5,11 +5,9 @@ import java.util.HashMap;
 import java.util.Map;
 
 import com.e3ps.change.ECOChange;
-import com.e3ps.common.mail.MailUtils;
 import com.e3ps.common.util.CommonUtil;
 import com.e3ps.common.util.PageQueryUtils;
 import com.e3ps.common.util.QuerySpecUtils;
-import com.e3ps.common.util.StringUtil;
 import com.e3ps.org.MailUser;
 import com.e3ps.org.MailWTobjectLink;
 import com.e3ps.org.People;
@@ -37,7 +35,9 @@ import wt.lifecycle.LifeCycleManaged;
 import wt.org.WTPrincipalReference;
 import wt.org.WTUser;
 import wt.part.WTPart;
+import wt.query.ClassAttribute;
 import wt.query.QuerySpec;
+import wt.query.SearchCondition;
 import wt.services.ServiceFactory;
 import wt.util.WTAttributeNameIfc;
 
@@ -51,6 +51,7 @@ public class WorkspaceHelper {
 	/*
 	 * 마스터 라인 상태값
 	 */
+	public static final String STATE_MASTER_APPROVAL_AGREE= "합의중";
 	public static final String STATE_MASTER_APPROVAL_APPROVING = "승인중";
 	public static final String STATE_MASTER_APPROVAL_REJECT = "반려됨";
 	public static final String STATE_MASTER_APPROVAL_COMPLETE = "결재완료";
@@ -116,19 +117,28 @@ public class WorkspaceHelper {
 
 		QuerySpec query = new QuerySpec();
 		int idx = query.appendClassList(ApprovalMaster.class, true);
+		int idx_l = query.appendClassList(ApprovalLine.class, true);
 
-		if (!CommonUtil.isAdmin()) {
-			WTUser sessionUser = CommonUtil.sessionUser();
-			QuerySpecUtils.toCreator(query, idx, ApprovalMaster.class,
-					sessionUser.getPersistInfo().getObjectIdentifier().getStringValue());
+		QuerySpecUtils.toInnerJoin(query, ApprovalMaster.class, ApprovalLine.class, WTAttributeNameIfc.ID_NAME,
+				"masterReference.key.id", idx, idx_l);
+
+		WTUser sessionUser = CommonUtil.sessionUser();
+		QuerySpecUtils.toCreator(query, idx_l, ApprovalLine.class,
+				sessionUser.getPersistInfo().getObjectIdentifier().getStringValue());
+
+		if (query.getConditionCount() > 0) {
+			query.appendAnd();
 		}
+		ClassAttribute ca = new ClassAttribute(ApprovalLine.class, ApprovalLine.COMPLETE_TIME);
+		SearchCondition sc = new SearchCondition(ca, SearchCondition.NOT_NULL);
+		query.appendWhere(sc, new int[] { idx_l });
 
 		QuerySpecUtils.toEqualsAnd(query, idx, ApprovalMaster.class, ApprovalMaster.STATE,
 				STATE_MASTER_APPROVAL_COMPLETE);
 		QuerySpecUtils.toTimeGreaterAndLess(query, idx, ApprovalMaster.class, ApprovalMaster.CREATE_TIMESTAMP,
 				receiveFrom, receiveTo);
 		QuerySpecUtils.toLikeAnd(query, idx, ApprovalMaster.class, ApprovalMaster.NAME, name);
-		QuerySpecUtils.toOrderBy(query, idx, ApprovalMaster.class, ApprovalMaster.START_TIME, true);
+//		QuerySpecUtils.toOrderBy(query, idx, ApprovalMaster.class, ApprovalMaster.START_TIME, true);
 
 		boolean sort = QuerySpecUtils.toSort(sortType);
 		QuerySpecUtils.toOrderBy(query, idx, ApprovalMaster.class, toSortkey(sortKey), sort);
@@ -332,24 +342,37 @@ public class WorkspaceHelper {
 
 		QuerySpec query = new QuerySpec();
 		int idx = query.appendClassList(ApprovalMaster.class, true);
+		int idx_l = query.appendClassList(ApprovalLine.class, true);
 
-		if (!CommonUtil.isAdmin()) {
-			WTUser sessionUser = CommonUtil.sessionUser();
-			QuerySpecUtils.toCreator(query, idx, ApprovalMaster.class,
-					sessionUser.getPersistInfo().getObjectIdentifier().getStringValue());
-		}
+		QuerySpecUtils.toInnerJoin(query, ApprovalMaster.class, ApprovalLine.class, WTAttributeNameIfc.ID_NAME,
+				"masterReference.key.id", idx, idx_l);
+
+		WTUser sessionUser = CommonUtil.sessionUser();
+		QuerySpecUtils.toCreator(query, idx_l, ApprovalLine.class,
+				sessionUser.getPersistInfo().getObjectIdentifier().getStringValue());
 
 		if (query.getConditionCount() > 0) {
 			query.appendAnd();
 		}
 
+		ClassAttribute ca = new ClassAttribute(ApprovalLine.class, ApprovalLine.COMPLETE_TIME);
+		SearchCondition sc = new SearchCondition(ca, SearchCondition.NOT_NULL);
+		query.appendWhere(sc, new int[] { idx_l });
+
+		if (query.getConditionCount() > 0) {
+			query.appendAnd();
+		}
+
+		// 마스터 객체 승인중인것만..
 		query.appendOpenParen();
-		QuerySpecUtils.toEquals(query, idx, ApprovalMaster.class, ApprovalMaster.STATE, STATE_APPROVAL_APPROVING);
-		QuerySpecUtils.toEqualsOr(query, idx, ApprovalMaster.class, ApprovalMaster.STATE, STATE_AGREE_READY);
+		QuerySpecUtils.toEquals(query, idx, ApprovalMaster.class, ApprovalMaster.STATE, STATE_MASTER_APPROVAL_APPROVING);
+		QuerySpecUtils.toEqualsOr(query, idx, ApprovalMaster.class, ApprovalMaster.STATE, STATE_MASTER_APPROVAL_AGREE);
 		query.appendCloseParen();
 
 		QuerySpecUtils.toLikeAnd(query, idx, ApprovalMaster.class, ApprovalMaster.NAME, name);
 		QuerySpecUtils.toOrderBy(query, idx, ApprovalMaster.class, ApprovalMaster.START_TIME, true);
+
+		System.out.println(query);
 
 		PageQueryUtils pager = new PageQueryUtils(params, query);
 		PagingQueryResult result = pager.find();
@@ -843,15 +866,12 @@ public class WorkspaceHelper {
 				list.add(map);
 			}
 		}
-		
-		
-		
+
 		// 과거 결재 이력 가져오기
-		if(master == null) {
-			
+		if (master == null) {
+
 		}
-		
-		
+
 		return JSONArray.fromObject(list);
 	}
 

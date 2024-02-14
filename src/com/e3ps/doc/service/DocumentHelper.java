@@ -186,9 +186,9 @@ public class DocumentHelper {
 
 		QuerySpecUtils.toIBAEqualsAnd(query, WTDocument.class, idx, "PRESERATION", preseration);
 		QuerySpecUtils.toIBAEqualsAnd(query, WTDocument.class, idx, "MODEL", model);
-//		QuerySpecUtils.toIBALikeAnd(query, WTDocument.class, idx, "INTERALNUMBER", interalnumber);
+		QuerySpecUtils.toIBALikeAnd(query, WTDocument.class, idx, "INTERALNUMBER", interalnumber);
 		QuerySpecUtils.toIBAEqualsAnd(query, WTDocument.class, idx, "DEPTCODE", deptcode);
-		QuerySpecUtils.toIBAEqualsAnd(query, WTDocument.class, idx, "DSGN", writer);
+		QuerySpecUtils.toIBALikeAnd(query, WTDocument.class, idx, "DSGN", writer);
 
 		if (!StringUtil.checkString(location)) {
 			location = DOCUMENT_ROOT;
@@ -212,7 +212,6 @@ public class DocumentHelper {
 				}
 			}
 		}
-
 
 //		Folder folder = FolderTaskLogic.getFolder(location, WCUtil.getWTContainerRef());
 //		int isQuery = DOCUMENT_ROOT.indexOf(location);
@@ -823,7 +822,6 @@ public class DocumentHelper {
 		Cell dateCell = worksheet.getCells().get(rowNumber, 3);
 		dateCell.putValue(today);
 
-		
 		int rowHeight = 30;
 
 		ApprovalLine submitLine = WorkspaceHelper.manager.getSubmitLine(m);

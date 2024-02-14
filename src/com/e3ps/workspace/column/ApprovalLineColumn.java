@@ -82,6 +82,15 @@ public class ApprovalLineColumn {
 			setState(line.getState());
 			setReceiveTime(line.getCreateTimestamp());
 			setComplete(line.getCompleteTime() != null ? true : false);
+		} else if(AGREE_COLUMN.equals("AGREE_COLUMN")) {
+			setOid(line.getPersistInfo().getObjectIdentifier().getStringValue());
+			setReads(line.getReads());
+			setType(line.getType());
+			setName(line.getName());
+			setRole(line.getRole());
+			setState(line.getState());
+			setSubmiter(master.getOwnership().getOwner().getFullName());
+			setReceiveTime(line.getCreateTimestamp());
 		}
 		persistInfo(master);
 		point(master);

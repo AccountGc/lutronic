@@ -155,7 +155,7 @@ String oid = (String) request.getAttribute("oid");
 				function createAUIGrid900(columnLayout) {
 					const props = {
 						headerHeight : 30,
-						rowIdField : "id",
+// 						rowIdField : "id",
 						showRowNumColumn : true,
 						showAutoNoDataMessage : false,
 						rowNumHeaderText : "번호",
@@ -165,12 +165,17 @@ String oid = (String) request.getAttribute("oid");
 						enableDrop : false,
 						enableFilter : true,
 						showInlineFilter : true,
-// 						displayTreeOpen : true
+						displayTreeOpen : true
 					}
 					myGridID900 = AUIGrid.create("#grid900", columnLayout, props);
-					load900();
+					AUIGrid.bind(myGridID900, "ready", auiReadyHandler);
 					AUIGrid.bind(myGridID900, "selectionChange", auiGridSelectionChangeHandler);
 					AUIGrid.bind(myGridID900, "cellDoubleClick", auiCellDoubleClickHandler);
+					load900();
+				}
+				
+				function auiReadyHandler() {
+					AUIGrid.showItemsOnDepth(myGridID900, 2);
 				}
 				
 				function auiCellDoubleClickHandler(event) {
@@ -275,7 +280,7 @@ String oid = (String) request.getAttribute("oid");
 					AUIGrid.showAjaxLoader(myGridID900);
 					call(url, null, function(data) {
 						AUIGrid.removeAjaxLoader(myGridID900);
-						AUIGrid.addTreeRow(myGridID900, data.list);
+						AUIGrid.setGridData(myGridID900, data.list);
 					}, "GET");
 				}
 
@@ -349,27 +354,6 @@ String oid = (String) request.getAttribute("oid");
 						showInlineFilter : true,
 					}
 					myGridID1000 = AUIGrid.create("#grid1000", columnLayout, props);
-					// 					AUIGrid.bind(myGridID1000, "cellClick", cellClickHandler);
-					// 					const oid = document.getElementById("oid").value;
-					// 					loadDepartmentUser(oid);
-					// 					AUIGrid.bind(_$myGridID, "dropEndBefore", function(event) {
-					// 						event.isMoveMode = false;
-
-					// 						const pids = [ "#agree_wrap", "#approval_wrap", "#receive_wrap" ];
-					// 						const items = event.items;
-					// 						let copy = true;
-					// 						for (let i = 0; i < items.length; i++) {
-					// 							const item = event.items[0];
-					// 							for (let k = 0; k < pids.length; k++) {
-					// 								const notHave = AUIGrid.isUniqueValue(pids[k], "oid", item.oid);
-					// 								if (!notHave) {
-					// 									copy = false;
-					// 									break;
-					// 								}
-					// 							}
-					// 						}
-					// 						return copy;
-					// 					});
 				}
 			</script>
 

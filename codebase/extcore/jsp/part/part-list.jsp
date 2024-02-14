@@ -278,6 +278,15 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 				</td>
 				<td class="right">
 					<div class="pretty p-switch">
+						<input type="checkbox" name="checkout" value="true" onclick="loadGridData();">
+						<div class="state p-success">
+							<label>
+								<b>체크아웃</b>
+							</label>
+						</div>
+					</div>
+					&nbsp;
+					<div class="pretty p-switch">
 						<input type="checkbox" name="comp" value="true" onclick="loadGridData();">
 						<div class="state p-success">
 							<label>
@@ -472,23 +481,16 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 			}
 
 			let sortCache = [];
-			let compField;
 			function auiSortingHandler(event) {
 				const sortingFields = event.sortingFields;
-				if (sortingFields.length > 0) {
-					const key = sortingFields[0].dataField;
-					if (compField !== key) {
-						compField = key;
-						const sortType = sortingFields[0].sortType; // 오름차순 1 내림 -1
-						sortCache[0] = {
-							dataField : key,
-							sortType : sortType
-						};
-						document.getElementById("sortKey").value = key;
-						document.getElementById("sortType").value = sortType;
-						loadGridData();
-					}
-				}
+				const key = sortingFields[0].dataField;
+				const sortType = sortingFields[0].sortType; // 오름차순 1 내림 -1
+				sortCache[0] = {
+					dataField : key,
+					sortType : sortType
+				};
+				document.getElementById("sortKey").value = key;
+				document.getElementById("sortType").value = sortType;
 			}
 
 			function auiCellClickHandler(event) {
@@ -648,6 +650,7 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 				const url = getCallUrl("/part/list");
 				const latest = document.querySelector("input[name=latest]:checked").value;
 				const complete = document.querySelector("input[name=comp]:checked");
+				const checkout = document.querySelector("input[name=checkout]:checked");
 				const preOrder = document.querySelector("input[name=preOrder]:checked").value;
 				params = toField(params, field);
 				params.latest = JSON.parse(latest);
@@ -656,6 +659,12 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 					params.complete = JSON.parse(complete.value);
 				} else {
 					params.complete = false;
+				}
+
+				if (checkout != null) {
+					params.checkout = JSON.parse(checkout.value);
+				} else {
+					params.checkout = false;
 				}
 				params.eca = false;
 				logger(params);
@@ -667,9 +676,8 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 						totalPage = Math.ceil(data.total / data.pageSize);
 						createPagingNavigator(data.total, data.curPage, data.sessionid);
 						AUIGrid.setGridData(myGridID, data.list);
-						if (movePage === undefined) {
+						if (sortCache.length > 0) {
 							AUIGrid.setSorting(myGridID, sortCache);
-							compField = null;
 						}
 					} else {
 						alert(data.msg);

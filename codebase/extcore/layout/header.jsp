@@ -9,7 +9,7 @@
 <%
 // 배포 확인
 boolean isDist = (boolean) request.getAttribute("isDist");
-
+int ecn = (int) request.getAttribute("ecn");
 Map<String, Integer> count = (Map<String, Integer>) request.getAttribute("count");
 boolean isWork = (boolean) request.getAttribute("isWork");
 boolean isDoc = (boolean) request.getAttribute("isDoc");
@@ -84,18 +84,18 @@ int eca = (int) request.getAttribute("eca");
 						</a>
 					</li>
 					<%
-						if(isAdmin || isRa) {
+					if (isAdmin || isRa) {
 					%>
 					<li>
 						<a onclick="moveToPage(this, '/ecn/work', '> 나의업무 > ECA 활동함');">
 							ECN 활동함
 							<span class="label label-info float-right" id="activity">
-								<%=eca%>
+								<%=ecn%>
 							</span>
 						</a>
 					</li>
 					<%
-						}
+					}
 					%>
 					<li>
 						<a onclick="moveToPage(this, '/workspace/approval', '> 나의업무 > 결재함');">
@@ -122,9 +122,7 @@ int eca = (int) request.getAttribute("eca");
 						</a>
 					</li>
 					<li>
-						<a onclick="moveToPage(this, '/workspace/complete', '> 나의업무 > 완료함');">
-							완료함
-						</a>
+						<a onclick="moveToPage(this, '/workspace/complete', '> 나의업무 > 완료함');"> 완료함 </a>
 					</li>
 					<li>
 						<a onclick="moveToPage(this, '/workspace/receive', '> 나의업무 > 수신함');">
@@ -134,14 +132,14 @@ int eca = (int) request.getAttribute("eca");
 							</span>
 						</a>
 					</li>
-<!-- 					<li> -->
-<!-- 						<a onclick="moveToPage(this, '/workspace/reject', '> 나의업무 > 반려함');"> -->
-<!-- 							반려함 -->
-<!-- 							<span class="label label-info float-right" id="reject"> -->
-<%-- 								<%=count.get("reject")%> --%>
-<!-- 							</span> -->
-<!-- 						</a> -->
-<!-- 					</li> -->
+					<!-- 					<li> -->
+					<!-- 						<a onclick="moveToPage(this, '/workspace/reject', '> 나의업무 > 반려함');"> -->
+					<!-- 							반려함 -->
+					<!-- 							<span class="label label-info float-right" id="reject"> -->
+					<%-- 								<%=count.get("reject")%> --%>
+					<!-- 							</span> -->
+					<!-- 						</a> -->
+					<!-- 					</li> -->
 					<!-- 					<li> -->
 					<!-- 						<a onclick="moveToPage(this, '/temprary/list', '> 나의업무 > 임시저장함');">임시저장함</a> -->
 					<!-- 					</li> -->
@@ -237,6 +235,9 @@ int eca = (int) request.getAttribute("eca");
 					</li>
 					<li>
 						<a onclick="moveToPage(this, '/drawing/batch', '> 도면 관리 >주 도면 일괄등록');">주 도면 일괄등록</a>
+					</li>
+					<li>
+						<a onclick="moveToPage(this, '/drawing/zip', '> 도면 관리 >도면 다운로드');">도면 다운로드</a>
 					</li>
 				</ul>
 			</li>
@@ -599,7 +600,7 @@ int eca = (int) request.getAttribute("eca");
 
 	function getCookie(name) {
 		name = name + "=";
-// 		logger(name);
+		// 		logger(name);
 		const cookie = document.cookie;
 		logger(cookie);
 		let start = cookie.indexOf(name);

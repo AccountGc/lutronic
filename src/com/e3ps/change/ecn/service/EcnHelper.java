@@ -44,7 +44,6 @@ public class EcnHelper {
 		Map<String, Object> map = new HashMap<>();
 		ArrayList<EcnColumn> list = new ArrayList<>();
 
-		boolean isAdmin = CommonUtil.isAdmin();
 		People people = CommonUtil.sessionPeople();
 		PeopleDTO dto = new PeopleDTO(people);
 		String department_name = dto.getDepartment_name();
@@ -76,8 +75,7 @@ public class EcnHelper {
 			isRA = true;
 		}
 		// 관리자 아니고 RA 부서 일경우
-		if (!CommonUtil.isAdmin() && isRA) {
-			System.out.println("A");
+		if (!CommonUtil.isAdmin() || isRA) {
 			WTUser sessionUser = CommonUtil.sessionUser();
 			QuerySpecUtils.toEquals(query, idx, EChangeNotice.class, "workerReference.key.id", sessionUser);
 		}
@@ -221,5 +219,26 @@ public class EcnHelper {
 			return link;
 		}
 		return null;
+	}
+
+	/**
+	 * 나의 ECN 개수 표시
+	 */
+	public int count() throws Exception {
+		People people = CommonUtil.sessionPeople();
+		PeopleDTO dto = new PeopleDTO(people);
+		String department_name = dto.getDepartment_name();
+		boolean isRA = false;
+		QuerySpec query = new QuerySpec();
+		int idx = query.appendClassList(EChangeNotice.class, true);
+		if ("".equals(department_name)) {
+			isRA = true;
+		}
+		// 관리자 아니고 RA 부서 일경우
+		if (!CommonUtil.isAdmin() || isRA) {
+			WTUser sessionUser = CommonUtil.sessionUser();
+			QuerySpecUtils.toEquals(query, idx, EChangeNotice.class, "workerReference.key.id", sessionUser);
+		}
+		return PersistenceHelper.manager.find(query).size();
 	}
 }

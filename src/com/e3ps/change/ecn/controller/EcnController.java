@@ -37,7 +37,23 @@ import wt.part.WTPartDescribeLink;
 @Controller
 @RequestMapping(value = "/ecn/**")
 public class EcnController extends BaseController {
-	
+
+	@Description(value = "ECN 활동함 함수")
+	@ResponseBody
+	@PostMapping(value = "/work")
+	public Map<String, Object> work(@RequestBody Map<String, Object> params) {
+		Map<String, Object> result = new HashMap<>();
+		try {
+			result = EcnHelper.manager.list(params);
+			result.put("result", SUCCESS);
+		} catch (Exception e) {
+			e.printStackTrace();
+			result.put("result", FAIL);
+			result.put("msg", e.toString());
+		}
+		return result;
+	}
+
 	@Description(value = "ECN 활동함 페이지")
 	@GetMapping(value = "/work")
 	public ModelAndView work() throws Exception {
