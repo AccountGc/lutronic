@@ -392,7 +392,10 @@ iframe {
 	//내용인쇄
 	function print() {
 		const url = getCallUrl("/doc/print?oid=" + oid);
-		const p = _popup(url, "", "", "f");
+		const isPrint = savePrintHistory(oid);
+		if(isPrint) {
+			const p = _popup(url, "", "", "f");
+		}
 	}
 
 	//수정 및 개정

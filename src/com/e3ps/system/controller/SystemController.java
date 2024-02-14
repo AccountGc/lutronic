@@ -5,6 +5,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.springframework.context.annotation.Description;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -23,6 +25,7 @@ import com.e3ps.doc.service.DocumentClassHelper;
 import com.e3ps.doc.service.DocumentHelper;
 import com.e3ps.system.service.SystemHelper;
 
+import wt.org.MembershipLink;
 import wt.org.WTUser;
 
 @Controller
@@ -76,6 +79,52 @@ public class SystemController extends BaseController {
 		Map<String, Object> result = new HashMap<String, Object>();
 		try {
 			result = SystemHelper.manager.bom(params);
+			result.put("result", SUCCESS);
+		} catch (Exception e) {
+			e.printStackTrace();
+			result.put("result", FAIL);
+			result.put("msg", e.toString());
+		}
+		return result;
+	}
+
+	@Description(value = "프린트 이력 페이지")
+	@GetMapping(value = "/print")
+	public ModelAndView print() throws Exception {
+		ModelAndView model = new ModelAndView();
+		boolean isAdmin = CommonUtil.isAdmin();
+		WTUser sessionUser = CommonUtil.sessionUser();
+		model.addObject("sessionUser", sessionUser);
+		model.addObject("isAdmin", isAdmin);
+		model.setViewName("/extcore/jsp/system/print-logger-list.jsp");
+		return model;
+	}
+
+	@Description(value = "프린트 이력 조회 함수")
+	@ResponseBody
+	@PostMapping(value = "/print")
+	public Map<String, Object> print(@RequestBody Map<String, Object> params) throws Exception {
+		Map<String, Object> result = new HashMap<String, Object>();
+		try {
+			result = SystemHelper.manager.print(params);
+			result.put("result", SUCCESS);
+		} catch (Exception e) {
+			e.printStackTrace();
+			result.put("result", FAIL);
+			result.put("msg", e.toString());
+		}
+		return result;
+	}
+
+	@Description(value = "프린트 이력 저장 함수")
+	@ResponseBody
+	@PostMapping(value = "/savePrintHistory")
+	public Map<String, Object> savePrintHistory(HttpServletRequest request) throws Exception {
+		Map<String, Object> result = new HashMap<String, Object>();
+		try {
+			System.out.println("호출!");
+			boolean isPrint = SystemHelper.service.savePrintHistory(request);
+			result.put("isPrint", isPrint);
 			result.put("result", SUCCESS);
 		} catch (Exception e) {
 			e.printStackTrace();

@@ -4,10 +4,19 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
+import com.e3ps.change.ECPRRequest;
+import com.e3ps.change.ECRMRequest;
+import com.e3ps.change.EChangeOrder;
+import com.e3ps.change.EChangeRequest;
 import com.e3ps.common.util.CommonUtil;
+import com.e3ps.org.People;
+import com.e3ps.org.dto.PeopleDTO;
+import com.e3ps.system.PrintHistory;
 import com.e3ps.system.SAPInterfacePartLogger;
 import com.e3ps.system.SystemFasooLog;
 
+import wt.doc.WTDocument;
+import wt.fc.Persistable;
 import wt.fc.PersistenceHelper;
 import wt.pom.Transaction;
 import wt.services.StandardManager;
@@ -100,5 +109,54 @@ public class StandardSystemService extends StandardManager implements SystemServ
 			if (trs != null)
 				trs.rollback();
 		}
+	}
+
+	@Override
+	public boolean savePrintHistory(HttpServletRequest request) throws Exception {
+		boolean isPrint = true;
+		String oid = request.getParameter("oid");
+		PeopleDTO dto = new PeopleDTO();
+		String ip = request.getRemoteAddr();
+		Transaction trs = new Transaction();
+		try {
+			trs.start();
+
+			Persistable per = CommonUtil.getObject(oid);
+			String targetName = "";
+			if (per instanceof WTDocument) {
+				WTDocument d = (WTDocument) per;
+				targetName = d.getNumber() + " [" + d.getName() + "]";
+			} else if (per instanceof ECPRRequest) {
+				ECPRRequest d = (ECPRRequest) per;
+				targetName = d.getEoNumber() + " [" + d.getEoName() + "]";
+			} else if (per instanceof ECRMRequest) {
+				ECRMRequest d = (ECRMRequest) per;
+				targetName = d.getEoNumber() + " [" + d.getEoName() + "]";
+			} else if (per instanceof EChangeRequest) {
+				EChangeRequest d = (EChangeRequest) per;
+				targetName = d.getEoNumber() + " [" + d.getEoName() + "]";
+			}
+
+			PrintHistory history = PrintHistory.newPrintHistory();
+			history.setIp(ip);
+			history.setName(dto.getName());
+			history.setTargetName(targetName);
+			history.setDepartmentName(dto.getDepartment_name());
+			PersistenceHelper.manager.save(history);
+
+			trs.commit();
+			trs = null;
+		} catch (Exception e) {
+			e.printStackTrace();
+			trs.rollback();
+			isPrint = false;
+			throw e;
+		} finally {
+			if (trs != null) {
+				isPrint = false;
+				trs.rollback();
+			}
+		}
+		return isPrint;
 	}
 }

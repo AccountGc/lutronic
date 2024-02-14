@@ -309,6 +309,9 @@ iframe {
 	function print() {
 		const oid = document.getElementById("oid").value;
 		const url = getCallUrl("/ecpr/print?oid=" + oid);
-		const p = _popup(url, "", "", "f");
+		const isPrint = savePrintHistory(oid);
+		if(isPrint) {
+			const p = _popup(url, "", "", "f");
+		}
 	}
 </script>

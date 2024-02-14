@@ -18,4 +18,9 @@ public interface SystemService {
 	 * SAP 자재 전송 로그
 	 */
 	public abstract void saveSendPartLogger(Map<String, Object> params) throws Exception;
+
+	/**
+	 * 프린트 로그
+	 */
+	public abstract boolean savePrintHistory(HttpServletRequest request) throws Exception;
 }

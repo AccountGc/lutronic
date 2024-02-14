@@ -1003,15 +1003,15 @@ JSONArray unitList = (JSONArray) request.getAttribute("unitList");
 						return false;
 					}
 					
-					if (isNull(item.seq)) {
-						AUIGrid.showToastMessage(myGridID, rowIndex, 4, "SEQ(3자리)를 입력하세요.");
-						return false;
-					}
+// 					if (isNull(item.seq)) {
+// 						AUIGrid.showToastMessage(myGridID, rowIndex, 4, "SEQ(3자리)를 입력하세요.");
+// 						return false;
+// 					}
 					
-					if (isNull(item.etc)) {
-						AUIGrid.showToastMessage(myGridID, rowIndex, 5, "ETC(2자리)를 입력하세요.");
-						return false;
-					}
+// 					if (isNull(item.etc)) {
+// 						AUIGrid.showToastMessage(myGridID, rowIndex, 5, "ETC(2자리)를 입력하세요.");
+// 						return false;
+// 					}
 
 // 					if (isNull(item.partName1)) {
 // 						AUIGrid.showToastMessage(myGridID, rowIndex, 8, "품목명(대제목)을 입력하세요.");

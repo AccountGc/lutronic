@@ -377,6 +377,17 @@ function isPermission(oid) {
 	return permission;
 }
 
+function savePrintHistory(oid) {
+	const authUrl = getCallUrl("/system/savePrintHistory?oid=" + oid);
+	let isPrint;
+	call(authUrl, null, function(data) {
+		if (data.result) {
+			isPrint = data.isPrint;
+		}
+	}, "POST", false);
+	return isPrint;
+}
+
 // 권란 관련 메세지
 function authMsg() {
 	alert("권한이 없습니다.\nPDM 관리자에게 문의하세요.");
