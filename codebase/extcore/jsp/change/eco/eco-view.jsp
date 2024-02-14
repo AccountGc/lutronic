@@ -164,7 +164,7 @@ Map<String, Object> contentMap = dto.getContentMap();
 			</tr>
 			<tr>
 				<th class="lb">설계변경부품 내역 파일</th>
-				<td class="indent5">
+				<td class="indent5" colspan="3">
 				<%
 					if(contentMap != null && contentMap.size() > 0) {
 				%>

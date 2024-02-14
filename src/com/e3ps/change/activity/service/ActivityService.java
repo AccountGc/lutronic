@@ -105,4 +105,10 @@ public interface ActivityService {
 	 * ECA 활동 위임
 	 */
 	public abstract void reassign(EChangeActivity eca, WTUser user) throws Exception;
+	
+	
+	/**
+	 * ECO 대상품목 그리드서 바로 개정 함수
+	 */
+	public abstract void _revise(Map<String, Object> params) throws Exception;
 }

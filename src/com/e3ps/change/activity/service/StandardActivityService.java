@@ -1321,4 +1321,96 @@ public class StandardActivityService extends StandardManager implements Activity
 				trs.rollback();
 		}
 	}
+
+	@Override
+	public void _revise(Map<String, Object> params) throws Exception {
+		String oid = (String) params.get("oid");
+		String part_oid = (String) params.get("part_oid");
+		String link_oid = (String) params.get("link_oid");
+		Transaction trs = new Transaction();
+		try {
+			trs.start();
+
+			EChangeActivity eca = (EChangeActivity) CommonUtil.getObject(oid);
+			EChangeOrder eco = (EChangeOrder) eca.getEo();
+			String message = "[" + eco.getEoNumber() + "]를 통해서 수정되었습니다.";
+			EcoPartLink link = (EcoPartLink) CommonUtil.getObject(link_oid);
+
+			WTPart part = (WTPart) CommonUtil.getObject(part_oid);
+			EPMDocument epm = PartHelper.manager.getEPMDocument(part);
+
+			// 개정
+			WTPart newPart = (WTPart) VersionControlHelper.service.newVersion(part);
+			VersionControlHelper.setNote(part, message);
+			newPart = (WTPart) PersistenceHelper.manager.save(newPart);
+			newPart = (WTPart) PersistenceHelper.manager.refresh(newPart);
+
+			// 라이프사이클 재지정
+
+			LifeCycleTemplateReference lct = LifeCycleHelper.service.getLifeCycleTemplateReference("LC_PART",
+					WCUtil.getWTContainerRef());
+			LifeCycleHelper.service.reassign(newPart, lct);
+
+			// IBA 속성처리
+			removeAttr((IBAHolder) newPart, newPart.getVersionIdentifier().getSeries().getValue());
+			// 기타 부품 연관 처리
+			copyLink(part, newPart);
+
+			// ROHS 물질 연결
+
+			EPMDocument newEpm = null;
+
+			// 개정인데?? 체크인아웃??
+			if (epm != null) {
+				boolean isApproved = epm.getLifeCycleState().toString().equals("APPROVED");
+				if (isApproved) {
+					epm = DrawingHelper.manager.latest((EPMDocumentMaster) epm.getMaster());
+					newEpm = (EPMDocument) VersionControlHelper.service.newVersion(epm);
+					VersionControlHelper.setNote(epm, message);
+					PersistenceHelper.manager.save(newEpm);
+					removeAttr((IBAHolder) newEpm, newEpm.getVersionIdentifier().getSeries().getValue());
+
+					QueryResult qr = PersistenceHelper.manager.navigate(epm, "describes", EPMDescribeLink.class);
+					while (qr.hasMoreElements()) {
+						WTPart p = (WTPart) qr.nextElement();
+						EPMDescribeLink newLink = EPMDescribeLink.newEPMDescribeLink(p, newEpm);
+						PersistenceServerHelper.manager.insert(newLink);
+					}
+				}
+
+				// 2d
+				EPMDocument epm2d = PartHelper.manager.getEPMDocument2D(epm);
+				if (epm2d != null) {
+					epm2d = DrawingHelper.manager.latest((EPMDocumentMaster) epm2d.getMaster());
+					EPMDocument newEpm2d = (EPMDocument) VersionControlHelper.service.newVersion(epm2d);
+					VersionControlHelper.setNote(newEpm2d, message);
+					PersistenceHelper.manager.save(newEpm2d);
+				}
+			}
+
+			// 관련 도면??
+			if (newPart != null) {
+
+			}
+
+			link.setRevise(true);
+			PersistenceHelper.manager.modify(link);
+
+			PartToPartLink pLink = PartToPartLink.newPartToPartLink(part.getMaster(), newPart.getMaster());
+			pLink.setPreVersion(part.getVersionIdentifier().getSeries().getValue());
+			pLink.setAfterVersion(newPart.getVersionIdentifier().getSeries().getValue());
+			pLink.setEco(eco);
+			PersistenceHelper.manager.save(pLink);
+
+			trs.commit();
+			trs = null;
+		} catch (Exception e) {
+			e.printStackTrace();
+			trs.rollback();
+			throw e;
+		} finally {
+			if (trs != null)
+				trs.rollback();
+		}
+	}
 }

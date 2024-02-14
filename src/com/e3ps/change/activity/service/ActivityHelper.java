@@ -469,11 +469,11 @@ public class ActivityHelper {
 					if (!isRevise && !isFour) {
 						map.put("next_oid", "");
 						map.put("group", "");
-//						map.put("next_number", "개정된 데이터가 없습니다.");
-//						map.put("next_name", "개정된 데이터가 없습니다.");
-//						map.put("next_state", "개정된 데이터가 없습니다.");
-//						map.put("next_version", "개정된 데이터가 없습니다.");
-//						map.put("next_creator", "개정된 데이터가 없습니다.");
+						map.put("next_number", "개정된 데이터가 없습니다.");
+						map.put("next_name", "개정된 데이터가 없습니다.");
+						map.put("next_state", "개정된 데이터가 없습니다.");
+						map.put("next_version", "개정된 데이터가 없습니다.");
+						map.put("next_creator", "개정된 데이터가 없습니다.");
 //						map.put("epm_number", "개정된 데이터가 없습니다.");
 //						map.put("reference", "개정된 데이터가 없습니다.");
 						map.put("after", true);
@@ -498,11 +498,11 @@ public class ActivityHelper {
 						} else {
 							map.put("next_oid", "");
 							map.put("group", "");
-//							map.put("next_number", "개정된 데이터가 없습니다.");
-//							map.put("next_name", "개정된 데이터가 없습니다.");
-//							map.put("next_state", "개정된 데이터가 없습니다.");
-//							map.put("next_version", "개정된 데이터가 없습니다.");
-//							map.put("next_creator", "개정된 데이터가 없습니다.");
+							map.put("next_number", "개정된 데이터가 없습니다.");
+							map.put("next_name", "개정된 데이터가 없습니다.");
+							map.put("next_state", "개정된 데이터가 없습니다.");
+							map.put("next_version", "개정된 데이터가 없습니다.");
+							map.put("next_creator", "개정된 데이터가 없습니다.");
 //							map.put("epm_number", "개정된 데이터가 없습니다.");
 //							map.put("reference", "개정된 데이터가 없습니다.");
 							map.put("after", true);
@@ -529,11 +529,11 @@ public class ActivityHelper {
 
 					if (pre_part == null) {
 						map.put("part_oid", "");
-//						map.put("part_number", "개정전 데이터가 없습니다.");
-//						map.put("part_name", "개정전 데이터가 없습니다.");
-//						map.put("part_state", "개정전 데이터가 없습니다.");
-//						map.put("part_version", "개정전 데이터가 없습니다.");
-//						map.put("part_creator", "개정전 데이터가 없습니다.");
+						map.put("part_number", "개정전 데이터가 없습니다.");
+						map.put("part_name", "개정전 데이터가 없습니다.");
+						map.put("part_state", "개정전 데이터가 없습니다.");
+						map.put("part_version", "개정전 데이터가 없습니다.");
+						map.put("part_creator", "개정전 데이터가 없습니다.");
 
 						map.put("preMerge", true);
 						map.put("prev", true);

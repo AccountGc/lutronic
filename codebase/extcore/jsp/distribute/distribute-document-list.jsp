@@ -148,7 +148,7 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 				</td>
 			</tr>
 			<tr>
-				<th>보존기간</th>
+				<th>내부문서번호</th>
 				<td class="indent5">
 					<input type="text" name="interalnumber" id="interalnumber" class="width-200">
 				</td>

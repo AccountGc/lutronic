@@ -361,6 +361,23 @@ public class ActivityController extends BaseController {
 		return result;
 	}
 
+	@Description(value = "ECO 품목 그리드서 개정 함수")
+	@PostMapping(value = "/_revise")
+	@ResponseBody
+	public Map<String, Object> _revise(@RequestBody Map<String, Object> params) throws Exception {
+		Map<String, Object> result = new HashMap<String, Object>();
+		try {
+			ActivityHelper.service._revise(params);
+			result.put("msg", "개정 되었습니다.");
+			result.put("result", SUCCESS);
+		} catch (Exception e) {
+			e.printStackTrace();
+			result.put("result", FAIL);
+			result.put("msg", e.toString());
+		}
+		return result;
+	}
+
 	@Description(value = "ECO 이전 품목 추가 페이지, 설변활동 중")
 	@GetMapping(value = "/prePart")
 	public ModelAndView prePart(@RequestParam String oid) throws Exception {

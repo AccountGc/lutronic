@@ -141,8 +141,8 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 					</div>
 				</td>
 				<td class="right">
-<!-- 					<input type="button" value="이전품목" title="이전품목" class="red" onclick="prePart();"> -->
-<!-- 					<input type="button" value="품목개정" title="품목개정" onclick="revise();" class="gray"> -->
+					<input type="button" value="이전품목" title="이전품목" class="red" onclick="prePart();">
+					<input type="button" value="품목개정" title="품목개정" onclick="revise();" class="gray">
 					<input type="button" value="품목변경" title="품목변경" class="blue" onclick="replace();">
 					<input type="button" value="새로고침" title="새로고침" class="orange" onclick="document.location.reload();">
 				</td>
@@ -251,20 +251,22 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 					cellColMerge : true, // 셀 가로 병합 실행
 					cellColSpan : 5, // 셀 가로 병합 대상은 6개로 설정
 					renderer : {
-						type : "TemplateRenderer"
-					},
-					labelFunction : function(rowIndex, columnIndex, value, headerText, item) {
-						const part_oid = item.part_oid;
-						if(item.preMerge === true) {
-							// 병합
-							return '<button style="width: 50%;" onclick="_prePart(\'' + item.next_number + '\', \'' + item.next_oid + '\');">이전 품목 선택</button>';
-						} else {
-							if (part_oid !== "" && part_oid !== undefined) {
-								// 병합 안함
-								return '<a href="javascript:partView(\'' + part_oid + '\');">' + item.part_number + '</a>';	
+						type : "LinkRenderer",
+						baseUrl : "javascript",
+						jsCallback : function(rowIndex, columnIndex, value, item) {
+							const oid = item.part_oid;
+							if (oid !== "" && oid !== undefined) {
+								const url = getCallUrl("/part/view?oid=" + oid);
+								_popup(url, 1600, 800, "n");
 							}
 						}
-					}					
+					},
+					styleFunction : function(rowIndex, columnIndex, value, headerText, item, dataField) {
+						if (item.preMerge === true) {
+							return "preMerge";
+						}
+						return null;
+					},
 				}, {
 					dataField : "part_name",
 					dataType : "string",
@@ -317,21 +319,21 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 					cellColMerge : true, // 셀 가로 병합 실행
 					cellColSpan : 5, // 셀 가로 병합 대상은 6개로 설정
 					renderer : {
-						type : "TemplateRenderer"
-					},
-					labelFunction : function(rowIndex, columnIndex, value, headerText, item) {
-						const part_oid = item.part_oid;
-						const next_oid = item.next_oid;
-						const link_oid = item.link_oid;
-						if(item.afterMerge === true) {
-							// 병합
-							return '<button style="width: 50%;" onclick="_revise(\'' + part_oid + '\', \'' + link_oid + '\');">품목 개정</button>';
-						} else {
-							if (next_oid !== "" && next_oid !== undefined) {
-								// 병합 안함
-								return '<a href="javascript:partView(\'' + next_oid + '\');">' + item.next_number + '</a>';	
+						type : "LinkRenderer",
+						baseUrl : "javascript",
+						jsCallback : function(rowIndex, columnIndex, value, item) {
+							const oid = item.next_oid;
+							if (oid !== "" && oid !== undefined) {
+								const url = getCallUrl("/part/view?oid=" + oid);
+								_popup(url, 1600, 800, "n");
 							}
 						}
+					},
+					styleFunction : function(rowIndex, columnIndex, value, headerText, item, dataField) {
+						if (item.afterMerge === true) {
+							return "afterMerge";
+						}
+						return null;
 					}
 				}, {
 					dataField : "next_name",
@@ -730,7 +732,6 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 					enableCellMerge : true,
 					editable : true,
 					autoGridHeight : true,
-					mergeByFormatValue : false,
 					cellColMergeFunction : function(rowIndex, columnIndex, item) {
 						if (item.preMerge === true) {
 							return true;
@@ -878,21 +879,6 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 				_popup(url, 1000, 600, "n");
 			}
 
-			
-			// 이전 부품 추가..
-			let next;
-			function _prePart(n, next_oid) {
-				const oid = document.getElementById("oid").value;
-				const isFour = n.substring(0, 1);
-				if (isFour === "4") {
-					alert("4번으로 시작하는 품번은 이전 품목이 존재 할수 없는 품목입니다.");
-					return false;
-				}
-				next = next_oid;
-				const url = getCallUrl("/part/popup?method=prev&multi=false");
-				_popup(url, 1600, 800, "n");
-			}
-			
 			// 이전 부품 추가..
 			function prePart() {
 				const oid = document.getElementById("oid").value;
@@ -927,8 +913,7 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 
 			function prev(arr, callBack) {
 				const checkedItems = AUIGrid.getCheckedRowItems(myGridID);
-// 				const oid = checkedItems[0].item.next_oid;
-				const oid = next;
+				const oid = checkedItems[0].item.next_oid;
 				const item = arr[0].item;
 				const part_oid = item.part_oid;
 				const url = getCallUrl("/activity/prev");
@@ -1188,33 +1173,7 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 					}
 				}, "GET");
 			}
-	
-			function _revise(part_oid, link_oid) {
-				const oid = document.getElementById("oid").value;
-				if(!confirm("개정 하시겠습니까?")) {
-					return false;
-				}
-				const url = getCallUrl("/activity/_revise");
-				const params = {
-					oid : oid,
-					part_oid : part_oid,
-					link_oid : link_oid
-				};
-				parent.openLayer();
-				call(url, params, function(data) {
-					alert(data.msg);
-					if(data.result) {
-						document.location.reload();
-					}
-					parent.closeLayer();
-				})
-			}
 
-			function partView(oid) {
-				const url = getCallUrl("/part/view?oid=" + oid);
-				_popup(url, 1600, 800, "n");
-			}
-			
 			document.addEventListener("DOMContentLoaded", function() {
 				createAUIGrid(columns);
 				AUIGrid.resize(myGridID);
