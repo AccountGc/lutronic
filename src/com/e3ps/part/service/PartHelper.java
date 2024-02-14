@@ -187,7 +187,7 @@ public class PartHelper {
 		boolean latest = (boolean) params.get("latest");
 		String preOrder = (String) params.get("preOrder");
 		boolean complete = (boolean) params.get("complete");
-		boolean checkout = (boolean) params.get("checkout");
+//		boolean checkout = (boolean) params.get("checkout");
 
 		// 정렬
 		String sortKey = (String) params.get("sortKey");

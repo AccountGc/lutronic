@@ -152,9 +152,9 @@ int eca = (int) request.getAttribute("eca");
 					<li>
 						<a onclick="moveToPage(this, '/org/organization', '> 나의업무 > 조직도');">조직도</a>
 					</li>
-					<li>
-						<a onclick="moveToPage(this, '/groupware/manage', '> 나의업무 > 관리자메뉴');">관리자 메뉴</a>
-					</li>
+<!-- 					<li> -->
+<!-- 						<a onclick="moveToPage(this, '/groupware/manage', '> 나의업무 > 관리자메뉴');">관리자 메뉴</a> -->
+<!-- 					</li> -->
 					<li>
 						<a onclick="moveToPage(this, '/system/print', '> 나의업무 > 인쇄 로그');">인쇄 로그</a>
 					</li>					

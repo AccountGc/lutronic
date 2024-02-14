@@ -186,7 +186,7 @@ boolean isAdmin = CommonUtil.isAdmin();
 				<input type="button" value="저장" title="저장" class="blue" onclick="save();">
 				&nbsp;
 				<div class="pretty p-switch">
-					<input type="checkbox" name="dummy" value="true" onclick="reloadData();">
+					<input type="checkbox" name="dummy" checked="checked" value="true" onclick="reloadData();">
 					<div class="state p-success">
 						<label>
 							<b>더미제외</b>
@@ -762,9 +762,8 @@ boolean isAdmin = CommonUtil.isAdmin();
 			},
 		}
 		myGridID510 = AUIGrid.create("#grid510", columnLayout, props);
-		AUIGrid.setGridData(myGridID510,
-<%=AUIGridUtil.include(oid, "part")%>
-	);
+		reloadData();
+<%-- 		AUIGrid.setGridData(myGridID510, <%=AUIGridUtil.include(oid, "part")%>); --%>
 	}
 
 	function summaryData(type) {
