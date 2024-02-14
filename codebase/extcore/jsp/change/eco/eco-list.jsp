@@ -488,7 +488,7 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 						totalPage = Math.ceil(data.total / data.pageSize);
 						createPagingNavigator(data.total, data.curPage, data.sessionid);
 						AUIGrid.setGridData(myGridID, data.list);
-						if (sortCache.length > 0 {
+						if (sortCache.length > 0) {
 							AUIGrid.setSorting(myGridID, sortCache);
 						}
 					} else {

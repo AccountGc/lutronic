@@ -236,25 +236,19 @@ boolean isMulti = Boolean.parseBoolean(multi);
 		AUIGrid.bind(myGridID, "sorting", auiSortingHandler);
 	}
 	
-	let sortCache = [];
-	let compField;
+	let sortCachelet sortCache = [];
 	function auiSortingHandler(event) {
 		const sortingFields = event.sortingFields;
-		if (sortingFields.length > 0) {
-			const key = sortingFields[0].dataField;
-			if (compField !== key) {
-				compField = key;
-				const sortType = sortingFields[0].sortType; // 오름차순 1 내림 -1
-				sortCache[0] = {
-					dataField : key,
-					sortType : sortType
-				};
-				document.getElementById("sortKey").value = key;
-				document.getElementById("sortType").value = sortType;
-				loadGridData();
-			}
-		}
+		const key = sortingFields[0].dataField;
+		const sortType = sortingFields[0].sortType; // 오름차순 1 내림 -1
+		sortCache[0] = {
+			dataField : key,
+			sortType : sortType
+		};
+		document.getElementById("sortKey").value = key;
+		document.getElementById("sortType").value = sortType;
 	}
+
 	
 	function auiCellClick(event) {
 		const item = event.item;
@@ -286,7 +280,7 @@ boolean isMulti = Boolean.parseBoolean(multi);
 		}
 		let params = new Object();
 		const url = getCallUrl("/org/organization");
-		const field = [ "name", "userId", "oid" ];
+		const field = [ "sortType", "sortKey", "name", "userId", "oid" ];
 		params = toField(params, field);
 		const isFire = document.querySelector("input[name=isFire]:checked").value;
 		params.isFire = JSON.parse(isFire);
@@ -300,9 +294,8 @@ boolean isMulti = Boolean.parseBoolean(multi);
 				totalPage = Math.ceil(data.total / data.pageSize);
 				createPagingNavigator(data.total, data.curPage, data.sessionid);
 				AUIGrid.setGridData(myGridID, data.list);
-				if (movePage === undefined) {
+				if (sortCache.length > 0) {
 					AUIGrid.setSorting(myGridID, sortCache);
-					compField = null;
 				}
 			} else {
 				alert(data.msg);
