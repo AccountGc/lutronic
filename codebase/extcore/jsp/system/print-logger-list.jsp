@@ -112,15 +112,6 @@ WTUser user = (WTUser) request.getAttribute("sessionUser");
 			let myGridID;
 			function _layout() {
 				return [ {
-					dataField : "rowNum",
-					headerText : "번호",
-					width : 40,
-					dataType : "numeric",
-					filter : {
-						inline : false
-					},
-					sortable : false
-				}, {
 					dataField : "name",
 					headerText : "이름",
 					dataType : "string",
@@ -151,7 +142,7 @@ WTUser user = (WTUser) request.getAttribute("sessionUser");
 			function createAUIGrid(columnLayout) {
 				const props = {
 					headerHeight : 30,
-					showRowNumColumn : false,
+					showRowNumColumn : true,
 					rowNumHeaderText : "번호",
 					showAutoNoDataMessage : false,
 					selectionMode : "multipleCells",
@@ -189,7 +180,6 @@ WTUser user = (WTUser) request.getAttribute("sessionUser");
 				document.getElementById("sortKey").value = key;
 				document.getElementById("sortType").value = sortType;
 			}
-
 
 			function loadGridData(movePage) {
 				if (movePage === undefined) {

@@ -77,7 +77,7 @@ public class SystemHelper {
 		QuerySpecUtils.toLikeAnd(query, idx, PrintHistory.class, PrintHistory.IP, ip);
 		QuerySpecUtils.toLikeAnd(query, idx, PrintHistory.class, PrintHistory.DEPARTMENT_NAME, departmentName);
 		QuerySpecUtils.toOrderBy(query, idx, PrintHistory.class, PrintHistory.CREATE_TIMESTAMP, true);
-		int rowNum = (pager.getCpage() - 1) * pager.getPsize() + 1;
+		
 		PageQueryUtils pager = new PageQueryUtils(params, query);
 		PagingQueryResult result = pager.find();
 		while (result.hasMoreElements()) {
@@ -86,7 +86,6 @@ public class SystemHelper {
 			Map<String, String> m = new HashMap<>();
 			m.put("name", h.getName());
 			m.put("ip", h.getIp());
-			m.put("rowNum", String.valueOf(rowNum++));
 			m.put("departmentName", h.getDepartmentName());
 			m.put("targetName", h.getTargetName());
 			m.put("createdDate", h.getCreateTimestamp().toString().substring(0, 16));
