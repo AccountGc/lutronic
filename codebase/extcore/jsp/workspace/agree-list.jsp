@@ -240,7 +240,7 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 					enableRowCheckShiftKey : true
 				};
 				myGridID = AUIGrid.create("#grid_wrap", columnLayout, props);
-// 				loadGridData();
+				// 				loadGridData();
 				AUIGrid.bind(myGridID, "contextMenu", auiContextMenuHandler);
 				AUIGrid.bind(myGridID, "vScrollChange", function(event) {
 					hideContextMenu();
@@ -250,7 +250,7 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 				});
 				AUIGrid.bind(myGridID, "sorting", auiSortingHandler);
 			}
-			
+
 			let sortCache = [];
 			function auiSortingHandler(event) {
 				const sortingFields = event.sortingFields;
@@ -263,7 +263,6 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 				document.getElementById("sortKey").value = key;
 				document.getElementById("sortType").value = sortType;
 			}
-
 
 			function loadGridData(movePage) {
 				if (movePage === undefined) {

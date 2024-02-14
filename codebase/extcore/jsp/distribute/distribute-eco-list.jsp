@@ -334,25 +334,19 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 				AUIGrid.bind(myGridID, "sorting", auiSortingHandler);
 			}
 
-			let sortCache = [];
-			let compField;
+			let sorlet sortCache = [];
 			function auiSortingHandler(event) {
 				const sortingFields = event.sortingFields;
-				if (sortingFields.length > 0) {
-					const key = sortingFields[0].dataField;
-					if (compField !== key) {
-						compField = key;
-						const sortType = sortingFields[0].sortType; // 오름차순 1 내림 -1
-						sortCache[0] = {
-							dataField : key,
-							sortType : sortType
-						};
-						document.getElementById("sortKey").value = key;
-						document.getElementById("sortType").value = sortType;
-						loadGridData();
-					}
-				}
+				const key = sortingFields[0].dataField;
+				const sortType = sortingFields[0].sortType; // 오름차순 1 내림 -1
+				sortCache[0] = {
+					dataField : key,
+					sortType : sortType
+				};
+				document.getElementById("sortKey").value = key;
+				document.getElementById("sortType").value = sortType;
 			}
+
 			
 			function loadGridData(movePage) {
 				if (movePage === undefined) {
@@ -361,7 +355,7 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 				}
 				let params = new Object();
 				const url = getCallUrl("/eco/list");
-				const field = [ "name", "number", "modelcode", "creatorOid", "createdFrom", "createdTo", "approveFrom", "approveTo", "state" ];
+				const field = [ "sortKey", "sortType", "name", "number", "modelcode", "creatorOid", "createdFrom", "createdTo", "approveFrom", "approveTo", "state" ];
 				const rows104 = AUIGrid.getGridDataWithState(myGridID104, "gridState");
 				params.rows104 = rows104;
 				params.licensing = $('input[name=licensing]:checked').val();
@@ -375,9 +369,8 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 						totalPage = Math.ceil(data.total / data.pageSize);
 						createPagingNavigator(data.total, data.curPage, data.sessionid);
 						AUIGrid.setGridData(myGridID, data.list);
-						if (movePage === undefined) {
+						if (sortCache.length > 0) {
 							AUIGrid.setSorting(myGridID, sortCache);
-							compField = null;
 						}
 					} else {
 						alert(data.msg);

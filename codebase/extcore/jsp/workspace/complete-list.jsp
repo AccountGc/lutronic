@@ -168,24 +168,18 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 			}
 
 			let sortCache = [];
-			let compField;
 			function auiSortingHandler(event) {
 				const sortingFields = event.sortingFields;
-				if (sortingFields.length > 0) {
-					const key = sortingFields[0].dataField;
-					if (compField !== key) {
-						compField = key;
-						const sortType = sortingFields[0].sortType; // 오름차순 1 내림 -1
-						sortCache[0] = {
-							dataField : key,
-							sortType : sortType
-						};
-						document.getElementById("sortKey").value = key;
-						document.getElementById("sortType").value = sortType;
-						loadGridData();
-					}
-				}
+				const key = sortingFields[0].dataField;
+				const sortType = sortingFields[0].sortType; // 오름차순 1 내림 -1
+				sortCache[0] = {
+					dataField : key,
+					sortType : sortType
+				};
+				document.getElementById("sortKey").value = key;
+				document.getElementById("sortType").value = sortType;
 			}
+
 			
 			function loadGridData(movePage) {
 				if (movePage === undefined) {
@@ -194,7 +188,7 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 				}
 				let params = new Object();
 				const url = getCallUrl("/workspace/complete");
-				const field = [ "name", "receiveFrom", "receiveTo" ];
+				const field = [ "sortKey", "sortType", "name", "receiveFrom", "receiveTo" ];
 				params = toField(params, field);
 				AUIGrid.showAjaxLoader(myGridID);
 				parent.openLayer();
@@ -204,9 +198,8 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 						totalPage = Math.ceil(data.total / data.pageSize);
 						createPagingNavigator(data.total, data.curPage, data.sessionid);
 						AUIGrid.setGridData(myGridID, data.list);
-						if (movePage === undefined) {
+						if (sortCache.length > 0) {
 							AUIGrid.setSorting(myGridID, sortCache);
-							compField = null;
 						}
 					} else {
 						alert(data.msg);
