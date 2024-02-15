@@ -106,9 +106,9 @@ public class StandardWorkspaceService extends StandardManager implements Workspa
 		master.setPersist(per);
 		master.setStartTime(startTime);
 		if (isAgree) {
-			master.setState(WorkspaceHelper.STATE_AGREE_READY);
+			master.setState(WorkspaceHelper.STATE_MASTER_APPROVAL_AGREE);
 		} else {
-			master.setState(WorkspaceHelper.STATE_APPROVAL_APPROVING);
+			master.setState(WorkspaceHelper.STATE_MASTER_APPROVAL_APPROVING);
 		}
 		master = (ApprovalMaster) PersistenceHelper.manager.save(master);
 

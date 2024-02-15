@@ -114,7 +114,7 @@ JSONArray data = WorkspaceHelper.manager.history(oid);
 			hoverMode : "singleRow",
 			enableSorting : false,
 			showAutoNoDataMessage : false,
-			autoGridHeight : true
+			autoGridHeight : true,
 		}
 		myGridID10000 = AUIGrid.create("#grid10000", columnLayout, props);
 		AUIGrid.setGridData(myGridID10000, <%=data%>	);
