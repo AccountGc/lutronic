@@ -27,6 +27,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.e3ps.change.eco.service.EcoHelper;
 import com.e3ps.common.beans.ResultData;
 import com.e3ps.common.code.NumberCode;
 import com.e3ps.common.code.service.NumberCodeHelper;
@@ -64,14 +65,58 @@ import wt.util.WTException;
 @RequestMapping(value = "/drawing/**")
 public class DrawingController extends BaseController {
 
+	@Description(value = "도면 팝업 페이지")
+	@GetMapping(value = "/popup")
+	public ModelAndView popup() throws Exception {
+		ArrayList<NumberCode> modelList = NumberCodeHelper.manager.getArrayCodeList("MODEL");
+		ArrayList<NumberCode> deptcodeList = NumberCodeHelper.manager.getArrayCodeList("DEPTCODE");
+		ArrayList<NumberCode> productmethodList = NumberCodeHelper.manager.getArrayCodeList("PRODUCTMETHOD");
+		ArrayList<NumberCode> manufactureList = NumberCodeHelper.manager.getArrayCodeList("MANUFACTURE");
+		ArrayList<NumberCode> matList = NumberCodeHelper.manager.getArrayCodeList("MAT");
+		ArrayList<NumberCode> finishList = NumberCodeHelper.manager.getArrayCodeList("FINISH");
+		List<Map<String, String>> cadTypeList = DrawingHelper.manager.cadTypeList();
+		List<Map<String, String>> lifecycleList = CommonUtil.getLifeCycleState("LC_PART");
+		QuantityUnit[] unitList = QuantityUnit.getQuantityUnitSet();
+		WTUser sessionUser = (WTUser) SessionHelper.manager.getPrincipal();
+		ModelAndView model = new ModelAndView();
+		model.addObject("modelList", modelList);
+		model.addObject("deptcodeList", deptcodeList);
+		model.addObject("matList", matList);
+		model.addObject("productmethodList", productmethodList);
+		model.addObject("manufactureList", manufactureList);
+		model.addObject("finishList", finishList);
+		model.addObject("sessionUser", sessionUser);
+		model.addObject("cadTypeList", cadTypeList);
+		model.addObject("unitList", unitList);
+		model.addObject("lifecycleList", lifecycleList);
+		model.setViewName("popup:/drawing/drawing-list-popup");
+		return model;
+	}
+
 	@Description(value = "도면 일괄 다운로드 페이지")
 	@GetMapping(value = "/zip")
 	public ModelAndView zip() throws Exception {
 		ModelAndView model = new ModelAndView();
 		boolean isAdmin = CommonUtil.isAdmin();
 		model.addObject("isAdmin", isAdmin);
-		model.setViewName("/extcore/jsp/drawing/drawing-zip");
+		model.setViewName("/extcore/jsp/drawing/drawing-zip.jsp");
 		return model;
+	}
+
+	@Description(value = "도면 일괄 다운로드")
+	@ResponseBody
+	@PostMapping(value = "/zip")
+	public Map<String, Object> zip(@RequestBody Map<String, Object> params) throws Exception {
+		Map<String, Object> result = new HashMap<>();
+		try {
+			result = DrawingHelper.manager.zip(params);
+			result.put("result", SUCCESS);
+		} catch (Exception e) {
+			e.printStackTrace();
+			result.put("result", FAIL);
+			result.put("msg", e.toString());
+		}
+		return result;
 	}
 
 	@Description(value = "도면 썸네일 팝업")

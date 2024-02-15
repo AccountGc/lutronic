@@ -5,7 +5,9 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.math.BigDecimal;
+import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -884,5 +886,120 @@ public class DrawingHelper {
 		sb.append("&u8=1&objref=").append(doid);
 		sb.append("&ContainerOid=").append(product.toString());
 		return sb.toString();
+	}
+
+	public Map<String, Object> zip(Map<String, Object> params) throws Exception {
+		Map<String, Object> result = new HashMap<>();
+		ArrayList<Map<String, Object>> gridData = (ArrayList<Map<String, Object>>) params.get("gridData");
+		boolean dxf = (boolean) params.get("dxf");
+		boolean pdf = (boolean) params.get("pdf");
+		boolean step = (boolean) params.get("step");
+
+		WTUser user = CommonUtil.sessionUser();
+		Timestamp t = new Timestamp(new Date().getTime());
+		String to = t.toString().substring(0, 10);
+		String path = WTProperties.getLocalProperties().getProperty("wt.temp") + File.separator + user.getName() + to;
+
+		for (Map<String, Object> data : gridData) {
+			String part_oid = (String) data.get("part_oid");
+			WTPart root = (WTPart) CommonUtil.getObject(part_oid); // 최상위..
+			ArrayList<WTPart> list = PartHelper.manager.descendants(root);
+			System.out.println("list=" + list.size());
+
+			for (WTPart part : list) {
+				EPMDocument epm = PartHelper.manager.getEPMDocument(part);
+
+				if (epm != null) {
+
+					if (step) {
+						Representation representation = PublishUtils.getRepresentation(epm);
+						if (representation != null) {
+							QueryResult qr = ContentHelper.service.getContentsByRole(representation,
+									ContentRoleType.ADDITIONAL_FILES);
+							if (qr.hasMoreElements()) {
+								ApplicationData dd = (ApplicationData) qr.nextElement();
+								String fname = dd.getFileName();
+								String ext = FileUtil.getExtension(fname);
+								if ("stp".equalsIgnoreCase(ext) || "step".equalsIgnoreCase(ext)) {
+									byte[] buffer = new byte[10240];
+									InputStream is = ContentServerHelper.service.findLocalContentStream(dd);
+									File file = new File(path + File.separator + fname);
+									FileOutputStream fos = new FileOutputStream(file);
+									int j = 0;
+									while ((j = is.read(buffer, 0, 10240)) > 0) {
+										fos.write(buffer, 0, j);
+									}
+									fos.close();
+									is.close();
+								}
+							}
+						}
+					}
+
+					EPMDocument epm2d = PartHelper.manager.getEPMDocument2D(epm);
+
+					if (epm2d != null) {
+						// pdf
+						Representation representation = PublishUtils.getRepresentation(epm2d);
+						if (pdf) {
+							if (representation != null) {
+								QueryResult qr = ContentHelper.service.getContentsByRole(representation,
+										ContentRoleType.ADDITIONAL_FILES);
+								if (qr.hasMoreElements()) {
+									ApplicationData dd = (ApplicationData) qr.nextElement();
+									String fname = dd.getFileName();
+									String ext = FileUtil.getExtension(fname);
+									if ("pdf".equalsIgnoreCase(ext)) {
+										byte[] buffer = new byte[10240];
+										InputStream is = ContentServerHelper.service.findLocalContentStream(dd);
+										File file = new File(path + File.separator + fname);
+										FileOutputStream fos = new FileOutputStream(file);
+										int j = 0;
+										while ((j = is.read(buffer, 0, 10240)) > 0) {
+											fos.write(buffer, 0, j);
+										}
+										fos.close();
+										is.close();
+									}
+								}
+							}
+						}
+
+						if (dxf) {
+							if (representation != null) {
+								QueryResult qr = ContentHelper.service.getContentsByRole(representation,
+										ContentRoleType.SECONDARY);
+								ApplicationData dd = (ApplicationData) qr.nextElement();
+								String fname = dd.getFileName();
+								String ext = FileUtil.getExtension(fname);
+								if ("dxf".equalsIgnoreCase(ext)) {
+									byte[] buffer = new byte[10240];
+									InputStream is = ContentServerHelper.service.findLocalContentStream(dd);
+									File file = new File(path + File.separator + fname);
+									FileOutputStream fos = new FileOutputStream(file);
+									int j = 0;
+									while ((j = is.read(buffer, 0, 10240)) > 0) {
+										fos.write(buffer, 0, j);
+									}
+									fos.close();
+									is.close();
+								}
+							}
+						}
+
+					}
+				}
+			}
+		}
+
+		String savePath = WTProperties.getLocalProperties().getProperty("wt.temp") + File.separator + "zip";
+		File ff = new File(savePath);
+		if (!ff.exists()) {
+			ff.mkdirs();
+		}
+		String zipFileName = user.getName() + ".zip";
+	//	zipDirectory(savePath, zipFileName);
+
+		return result;
 	}
 }
