@@ -1773,7 +1773,7 @@ public class EcoHelper {
 					addDto.setUnit((String) add.get("unit"));
 					addDto.setSendType("추가품목");
 					addDto.setKey(key);
-					if (addKey.contains(key)) {
+					if (!addKey.contains(key)) {
 						addKey.add(key);
 						sendList.add(addDto);
 					}
@@ -1795,7 +1795,7 @@ public class EcoHelper {
 					removeDto.setSendType("삭제품");
 					removeDto.setKey(key);
 
-					if (removeKey.contains(key)) {
+					if (!removeKey.contains(key)) {
 						removeKey.add(key);
 						sendList.add(removeDto);
 					}

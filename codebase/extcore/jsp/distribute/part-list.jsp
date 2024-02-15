@@ -434,7 +434,7 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 				const props = {
 					headerHeight : 30,
 					showRowNumColumn : false,
-					showRowCheckColumn : true,
+// 					showRowCheckColumn : true,
 					showAutoNoDataMessage : false,
 					selectionMode : "multipleCells",
 					hoverMode : "singleRow",
@@ -459,7 +459,7 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 				AUIGrid.bind(myGridID, "sorting", auiSortingHandler);
 			}
 
-			llet sortCache = [];
+			let sortCache = [];
 			function auiSortingHandler(event) {
 				const sortingFields = event.sortingFields;
 				const key = sortingFields[0].dataField;

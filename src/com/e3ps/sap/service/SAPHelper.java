@@ -905,7 +905,7 @@ public class SAPHelper {
 				continue;
 			}
 			WTPart p = (WTPart) obj[1];
-			
+
 			if (SAPHelper.manager.skipEight(part.getNumber())) {
 				continue;
 			}
@@ -921,7 +921,7 @@ public class SAPHelper {
 			if (SAPHelper.manager.skipLength(p.getNumber())) {
 				continue;
 			}
-			
+
 			list.add(obj);
 			sendList(p, list);
 		}
@@ -947,7 +947,7 @@ public class SAPHelper {
 				continue;
 			}
 			WTPart p = (WTPart) obj[1];
-			
+
 			if (SAPHelper.manager.skipEight(part.getNumber())) {
 				continue;
 			}
@@ -963,64 +963,88 @@ public class SAPHelper {
 			if (SAPHelper.manager.skipLength(p.getNumber())) {
 				continue;
 			}
-			
+
 			list.add(obj);
 			sendList(p, list);
 		}
 	}
-	
+
 	/**
 	 * 전송 제외 처리 체크
 	 */
 	public boolean isPass(SAPSendBomDTO dto) throws Exception {
 
-		if (SAPHelper.manager.skipEight(dto.getChildPartNumber())) {
-			return true;
+		if (dto.getChildPartNumber() != null) {
+			if (SAPHelper.manager.skipEight(dto.getChildPartNumber())) {
+				return true;
+			}
 		}
 
-		if (SAPHelper.manager.skipLength(dto.getChildPartNumber())) {
-			return true;
+		if (dto.getChildPartNumber() != null) {
+			if (SAPHelper.manager.skipLength(dto.getChildPartNumber())) {
+				return true;
+			}
 		}
 
-		if (SAPHelper.manager.skipEight(dto.getParentPartNumber())) {
-			return true;
+		if (dto.getParentPartNumber() != null) {
+			if (SAPHelper.manager.skipEight(dto.getParentPartNumber())) {
+				return true;
+			}
 		}
 
-		if (SAPHelper.manager.skipLength(dto.getParentPartNumber())) {
-			return true;
+		if (dto.getParentPartNumber() != null) {
+			if (SAPHelper.manager.skipLength(dto.getParentPartNumber())) {
+				return true;
+			}
 		}
 
-		if (SAPHelper.manager.skipEight(dto.getChildPartNumber())) {
-			return true;
+		if (dto.getChildPartNumber() != null) {
+			if (SAPHelper.manager.skipEight(dto.getChildPartNumber())) {
+				return true;
+			}
 		}
 
-		if (SAPHelper.manager.skipLength(dto.getChildPartNumber())) {
-			return true;
+		if (dto.getChildPartNumber() != null) {
+			if (SAPHelper.manager.skipLength(dto.getChildPartNumber())) {
+				return true;
+			}
 		}
 
-		if (SAPHelper.manager.skipEight(dto.getParentPartNumber())) {
-			return true;
+		if (dto.getParentPartNumber() != null) {
+			if (SAPHelper.manager.skipEight(dto.getParentPartNumber())) {
+				return true;
+			}
 		}
 
-		if (SAPHelper.manager.skipLength(dto.getParentPartNumber())) {
-			return true;
+		if (dto.getParentPartNumber() != null) {
+			if (SAPHelper.manager.skipLength(dto.getParentPartNumber())) {
+				return true;
+			}
 		}
 
 		// 신규
-		if (SAPHelper.manager.skipEight(dto.getNewChildPartNumber())) {
-			return true;
+		if (dto.getNewChildPartNumber() != null) {
+			if (SAPHelper.manager.skipEight(dto.getNewChildPartNumber())) {
+				return true;
+			}
 		}
 
-		if (SAPHelper.manager.skipLength(dto.getNewChildPartNumber())) {
-			return true;
+		if (dto.getNewChildPartNumber() != null) {
+			if (SAPHelper.manager.skipLength(dto.getNewChildPartNumber())) {
+				return true;
+			}
 		}
 
-		if (SAPHelper.manager.skipEight(dto.getNewParentPartNumber())) {
-			return true;
+		if (dto.getNewParentPartNumber() != null) {
+			if (SAPHelper.manager.skipEight(dto.getNewParentPartNumber())) {
+				return true;
+			}
 		}
 
-		if (SAPHelper.manager.skipLength(dto.getNewParentPartNumber())) {
-			return true;
+		if (dto.getNewParentPartNumber() != null) {
+			if (SAPHelper.manager.skipLength(dto.getNewParentPartNumber())) {
+				return true;
+			}
 		}
 		return false;
 	}
