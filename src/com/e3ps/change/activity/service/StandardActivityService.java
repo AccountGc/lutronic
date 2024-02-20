@@ -497,6 +497,8 @@ public class StandardActivityService extends StandardManager implements Activity
 
 				link.setVersion(pp.getVersionIdentifier().getSeries().getValue());
 				PersistenceServerHelper.manager.insert(link);
+				
+				model += IBAUtil.getStringValue(pp, "MODEL");
 			}
 			eco.setModel(model);
 			PersistenceHelper.manager.modify(eco);

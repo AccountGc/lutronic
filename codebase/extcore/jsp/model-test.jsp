@@ -1,3 +1,5 @@
+<%@page import="com.e3ps.common.iba.IBAUtil"%>
+<%@page import="wt.query.OrderBy"%>
 <%@page import="wt.vc.views.ViewHelper"%>
 <%@page import="wt.vc.views.View"%>
 <%@page import="com.e3ps.common.util.StringUtil"%>
@@ -18,7 +20,7 @@
 <%@page import="com.e3ps.change.EChangeOrder"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%
-String oid = "com.e3ps.change.EChangeOrder:";
+String oid = "com.e3ps.change.EChangeOrder:236773446";
 EChangeOrder eco = (EChangeOrder) CommonUtil.getObject(oid);
 
 QueryResult qr = PersistenceHelper.manager.navigate(eco, "part", EcoPartLink.class, false);
@@ -35,6 +37,23 @@ while (qr.hasMoreElements()) {
 }
 
 out.println("=======" + list.size());
+
+for (WTPart pp : list) {
+
+	if (PartHelper.isCollectNumber(pp.getNumber())) {
+		out.println("숫자 아닌게 포함 더미 = " + pp.getNumber() + "<br>");
+		continue;
+	}
+
+	if (!PartHelper.isTopNumber(pp.getNumber())) {
+		out.println("최상위 품번이 아님!! = " + pp.getNumber() + "<br>");
+		continue;
+	}
+	out.println(pp.getNumber());
+	model += IBAUtil.getStringValue(pp, "MODEL");
+	
+	out.println(model);
+}
 %>
 
 <%!public void reverseStructure(WTPart end, ArrayList<WTPart> list) throws Exception {
