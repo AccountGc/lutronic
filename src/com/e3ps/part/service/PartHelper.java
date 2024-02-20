@@ -1271,7 +1271,11 @@ public class PartHelper {
 		while (qr.hasMoreElements()) {
 			EPMReferenceLink ref = (EPMReferenceLink) qr.nextElement();
 			if (ref.getDepType() == PROEDependency.DEP_T_DRAW) {
-				return ref.getReferencedBy();
+				EPMDocument ee = ref.getReferencedBy();
+				if (WorkInProgressHelper.isCheckedOut(ee)) {
+					// 원본..
+					return (EPMDocument) WorkInProgressHelper.service.workingCopyOf(ee);
+				}
 			}
 		}
 		return null;

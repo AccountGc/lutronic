@@ -173,6 +173,7 @@ public class StandardBomService extends StandardManager implements BomService {
 		Map<String, Object> map = new HashMap<>();
 		String poid = (String) params.get("poid");
 		ArrayList<String> arr = (ArrayList<String>) params.get("arr");
+		ArrayList<String> _arr = (ArrayList<String>) params.get("_arr");
 		Transaction trs = new Transaction();
 		try {
 			trs.start();
@@ -188,10 +189,12 @@ public class StandardBomService extends StandardManager implements BomService {
 			}
 
 			// 복사본에... 생성
-			for (String oid : arr) {
+			for (int i = 0; i < arr.size(); i++) {
+				String oid = (String) arr.get(i);
+				String qty = (String) _arr.get(i);
 				WTPart child = (WTPart) CommonUtil.getObject(oid);
 				WTPartUsageLink usageLink = WTPartUsageLink.newWTPartUsageLink(workingCopy, child.getMaster());
-				usageLink.setQuantity(Quantity.newQuantity(1D, QuantityUnit.EA));
+				usageLink.setQuantity(Quantity.newQuantity(Double.parseDouble(qty), QuantityUnit.EA));
 				PersistenceHelper.manager.save(usageLink);
 			}
 
@@ -270,6 +273,8 @@ public class StandardBomService extends StandardManager implements BomService {
 		Map<String, Object> map = new HashMap<>();
 		String poid = (String) params.get("poid");
 		ArrayList<String> arr = (ArrayList<String>) params.get("arr");
+		ArrayList<String> _arr = (ArrayList<String>) params.get("_arr");
+
 		Transaction trs = new Transaction();
 		try {
 			trs.start();
@@ -286,7 +291,9 @@ public class StandardBomService extends StandardManager implements BomService {
 
 			// 복사본에... 생성
 			ArrayList<String> refList = new ArrayList<String>();
-			for (String oid : arr) {
+			for (int i = 0; i < arr.size(); i++) {
+				String oid = (String) arr.get(i);
+				String qty = (String) _arr.get(i);
 
 				if (poid.equals(oid)) {
 					throw new Exception("교체하려는 품목과 교체되는 대상 품목이 일치합니다.");
@@ -294,7 +301,7 @@ public class StandardBomService extends StandardManager implements BomService {
 
 				WTPart child = (WTPart) CommonUtil.getObject(oid);
 				WTPartUsageLink usageLink = WTPartUsageLink.newWTPartUsageLink(workingCopy, child.getMaster());
-				usageLink.setQuantity(Quantity.newQuantity(1D, QuantityUnit.EA));
+				usageLink.setQuantity(Quantity.newQuantity(Double.parseDouble(qty), QuantityUnit.EA));
 				PersistenceHelper.manager.save(usageLink);
 				refList.add("_" + usageLink.getPersistInfo().getObjectIdentifier().getId());
 			}

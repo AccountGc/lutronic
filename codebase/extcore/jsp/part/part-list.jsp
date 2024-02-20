@@ -277,15 +277,15 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 					<img src="/Windchill/extcore/images/redo.gif" title="테이블 초기화" onclick="resetColumnLayout('part-list');">
 				</td>
 				<td class="right">
-					<div class="pretty p-switch">
-						<input type="checkbox" name="checkout" value="true" onclick="loadGridData();">
-						<div class="state p-success">
-							<label>
-								<b>체크아웃</b>
-							</label>
-						</div>
-					</div>
-					&nbsp;
+<!-- 					<div class="pretty p-switch"> -->
+<!-- 						<input type="checkbox" name="checkout" value="true" onclick="loadGridData();"> -->
+<!-- 						<div class="state p-success"> -->
+<!-- 							<label> -->
+<!-- 								<b>체크아웃</b> -->
+<!-- 							</label> -->
+<!-- 						</div> -->
+<!-- 					</div> -->
+<!-- 					&nbsp; -->
 					<div class="pretty p-switch">
 						<input type="checkbox" name="comp" value="true" onclick="loadGridData();">
 						<div class="state p-success">

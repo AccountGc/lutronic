@@ -703,14 +703,17 @@ WTPart root = (WTPart) request.getAttribute("root");
 	// 드랍
 	function drop(node, sourceNodes) {
 		const arr = new Array();
+		const _arr = new Array();
 		for (let i = 0; i < sourceNodes.length; i++) {
 			arr.push(sourceNodes[i].data.oid);
+			_arr.push(String(sourceNodes[i].data.qty));
 		}
 		const poid = node.data.oid; // 모
 		const url = getCallUrl("/bom/drop");
 		const params = {
 			poid : poid,
-			arr : arr
+			arr : arr,
+			_arr : _arr
 		}
 		openLayer();
 		call(url, params, function(data) {
@@ -718,7 +721,6 @@ WTPart root = (WTPart) request.getAttribute("root");
 				const isNew = data.isNew;
 				const resNode = data.resNode;
 				updateNodeNewMarker(node, resNode, data.refList);
-
 			}
 			closeLayer();
 		});
@@ -825,19 +827,23 @@ WTPart root = (WTPart) request.getAttribute("root");
 	function nodePaste(node, copyNodes) {
 		const poid = node.data.oid; // 붙여넣기 되어지는 대상의 부모
 		const arr = new Array();
+		const _arr = new Array();
 		for (let i = 0; i < copyNodes.length; i++) {
 			const oid = copyNodes[i].data.oid;
+			const qty = copyNodes[i].data.qty;
 			const num = copyNodes[i].data.number;
 			if (poid === oid) {
 				alert("붙여넣는 품번 : " + num + " 품목이 상위품번과 같습니다.");
 				return false;
 			}
 			arr.push(oid);
+			_arr.push(String(qty));
 		}
 		const url = getCallUrl("/bom/paste");
 		const params = {
 			poid : poid,
-			arr : arr
+			arr : arr,
+			_arr : _arr
 		};
 		openLayer();
 		call(url, params, function(data) {
