@@ -1272,9 +1272,10 @@ public class PartHelper {
 		QueryResult qr = EPMStructureHelper.service.navigateReferencedBy(m, null, false);
 		while (qr.hasMoreElements()) {
 			EPMReferenceLink ref = (EPMReferenceLink) qr.nextElement();
-			if (ref.getDepType() == PROEDependency.DEP_T_DRAW) {
-				if (AccessControlHelper.manager.hasAccess(ref.getReferencedBy(), AccessPermission.READ))
+			if (AccessControlHelper.manager.hasAccess(ref, AccessPermission.READ)) {
+				if (ref.getDepType() == PROEDependency.DEP_T_DRAW) {
 					return ref.getReferencedBy();
+				}
 			}
 		}
 		return null;
