@@ -6,6 +6,7 @@ import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Vector;
 import java.util.regex.Pattern;
 
 import javax.servlet.http.HttpServletRequest;
@@ -20,13 +21,11 @@ import com.e3ps.common.iba.AttributeKey;
 import com.e3ps.common.iba.IBAUtils;
 import com.e3ps.common.util.AUIGridUtil;
 import com.e3ps.common.util.CommonUtil;
-import com.e3ps.common.util.FolderUtils;
 import com.e3ps.common.util.PageQueryUtils;
 import com.e3ps.common.util.QuerySpecUtils;
 import com.e3ps.common.util.StringUtil;
 import com.e3ps.common.util.WCUtil;
 import com.e3ps.doc.column.DocumentColumn;
-import com.e3ps.drawing.EpmLocation;
 import com.e3ps.drawing.service.DrawingHelper;
 import com.e3ps.part.PartLocation;
 import com.e3ps.part.PartToPartLink;
@@ -40,8 +39,6 @@ import com.ptc.wpcfg.pdmabstr.PROEDependency;
 
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
-import wt.access.AccessControlHelper;
-import wt.access.AccessPermission;
 import wt.clients.folder.FolderTaskLogic;
 import wt.doc.WTDocument;
 import wt.epm.EPMDocument;
@@ -1268,16 +1265,27 @@ public class PartHelper {
 	 * 3D모델과 연결된 2D가져오는 함수
 	 */
 	public EPMDocument getEPMDocument2D(EPMDocument epm) throws Exception {
-		EPMDocumentMaster m = (EPMDocumentMaster) epm.getMaster();
-		QueryResult qr = EPMStructureHelper.service.navigateReferencedBy(m, null, false);
-		while (qr.hasMoreElements()) {
-			EPMReferenceLink ref = (EPMReferenceLink) qr.nextElement();
-			if (AccessControlHelper.manager.hasAccess(ref, AccessPermission.READ)) {
-				if (ref.getDepType() == PROEDependency.DEP_T_DRAW) {
-					return ref.getReferencedBy();
-				}
+//		EPMDocumentMaster m = (EPMDocumentMaster) epm.getMaster();
+//		QueryResult qr = EPMStructureHelper.service.navigateReferencedBy(m, null, false);
+//		while (qr.hasMoreElements()) {
+//			EPMReferenceLink ref = (EPMReferenceLink) qr.nextElement();
+//			if (AccessControlHelper.manager.hasAccess(ref, AccessPermission.READ)) {
+//				if (ref.getDepType() == PROEDependency.DEP_T_DRAW) {
+//					return ref.getReferencedBy();
+//				}
+//			}
+//		}
+//		return null;
+		Vector<EPMReferenceLink> vec = getEPMReferenceList((EPMDocumentMaster) epm.getMaster());
+		for (int h = 0; h < vec.size(); h++) {
+			EPMReferenceLink epmlink = vec.get(h);
+			EPMDocument epm2d = epmlink.getReferencedBy();
+			if (epm2d.getDocType().toString().equals("CADDRAWING")) {
+				return epm2d;
 			}
+
 		}
+
 		return null;
 	}
 
@@ -1704,5 +1712,44 @@ public class PartHelper {
 			list.add(map);
 		}
 		return list;
+	}
+
+	public Vector<EPMReferenceLink> getEPMReferenceList(EPMDocumentMaster master) {
+		Vector<EPMReferenceLink> vec = new Vector<EPMReferenceLink>();
+		try {
+			QuerySpec qs = new QuerySpec();
+			int idxA = qs.addClassList(EPMReferenceLink.class, true);
+			int idxB = qs.addClassList(EPMDocument.class, false);
+
+			// Join
+			qs.appendWhere(new SearchCondition(EPMReferenceLink.class, "roleAObjectRef.key.id", EPMDocument.class,
+					"thePersistInfo.theObjectIdentifier.id"), new int[] { idxA, idxB });
+			qs.appendAnd();
+			qs.appendWhere(new SearchCondition(EPMReferenceLink.class, "roleBObjectRef.key.id", SearchCondition.EQUAL,
+					CommonUtil.getOIDLongValue(master)), new int[] { idxA });
+
+			qs.appendAnd();
+			qs.appendWhere(
+					new SearchCondition(EPMReferenceLink.class, "referenceType", SearchCondition.EQUAL, "DRAWING"),
+					new int[] { idxA }); // DRAWING
+			// 최신 이터레이션
+			qs.appendAnd();
+			qs.appendWhere(VersionControlHelper.getSearchCondition(EPMDocument.class, true), new int[] { idxB });
+
+			// 최신 버전
+			QuerySpecUtils.toLatest(qs, idxB, EPMDocument.class);
+
+			QueryResult rt = PersistenceHelper.manager.find(qs);
+			while (rt.hasMoreElements()) {
+				Object[] oo = (Object[]) rt.nextElement();
+				EPMReferenceLink link = (EPMReferenceLink) oo[0];
+				vec.add(link);
+
+			}
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return vec;
 	}
 }
