@@ -45,6 +45,7 @@ import com.e3ps.change.ecpr.column.EcprColumn;
 import com.e3ps.change.ecrm.column.EcrmColumn;
 import com.e3ps.change.util.EChangeUtils;
 import com.e3ps.common.code.NumberCode;
+import com.e3ps.common.code.dto.NumberCodeDTO;
 import com.e3ps.common.code.service.NumberCodeHelper;
 import com.e3ps.common.iba.IBAUtils;
 import com.e3ps.common.util.AUIGridUtil;
@@ -321,8 +322,37 @@ public class EcoHelper {
 			return JSONArray.fromObject(referenceEcn(eco, list));
 		} else if ("doc".equals(type)) {
 			return JSONArray.fromObject(referenceDoc(eco, list));
+		} else if ("MODEL".equalsIgnoreCase(type)) {
+			// 제품
+			return JSONArray.fromObject(referenceCode(eco, list));
 		}
 		return JSONArray.fromObject(list);
+	}
+
+	/**
+	 * MODEL
+	 */
+	private Object referenceCode(EChangeOrder eco, ArrayList<Map<String, Object>> list) throws Exception {
+		String[] codes = eco.getModel() != null ? eco.getModel().split(",") : null;
+
+		if (codes.length > 0) {
+			QuerySpec query = new QuerySpec();
+			int idx = query.appendClassList(NumberCode.class, true);
+			for (int i = 0; i < codes.length; i++) {
+				QuerySpecUtils.toEqualsOr(query, idx, NumberCode.class, NumberCode.CODE, codes[i]);
+			}
+			QuerySpecUtils.toEqualsAnd(query, idx, NumberCode.class, NumberCode.CODE_TYPE, "MODEL");
+			QuerySpecUtils.toBooleanAnd(query, idx, NumberCode.class, NumberCode.DISABLED, false);
+			QueryResult result = PersistenceHelper.manager.find(query);
+			while (result.hasMoreElements()) {
+				Object[] obj = (Object[]) result.nextElement();
+				NumberCode n = (NumberCode) obj[0];
+				NumberCodeDTO dto = new NumberCodeDTO(n);
+				Map<String, Object> map = AUIGridUtil.dtoToMap(dto);
+				list.add(map);
+			}
+		}
+		return list;
 	}
 
 	/**

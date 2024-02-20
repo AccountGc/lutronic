@@ -400,7 +400,7 @@ public class EoHelper {
 	private Object referenceCode(EChangeOrder eo, ArrayList<Map<String, Object>> list) throws Exception {
 		String[] codes = eo.getModel() != null ? eo.getModel().split(",") : null;
 
-		if (codes != null) {
+		if (codes.length > 0) {
 			QuerySpec query = new QuerySpec();
 			int idx = query.appendClassList(NumberCode.class, true);
 			for (int i = 0; i < codes.length; i++) {

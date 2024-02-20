@@ -18,6 +18,7 @@ import com.e3ps.change.RequestOrderLink;
 import com.e3ps.change.activity.service.ActivityHelper;
 import com.e3ps.change.eco.dto.EcoDTO;
 import com.e3ps.change.util.EChangeUtils;
+import com.e3ps.common.code.NumberCode;
 import com.e3ps.common.content.service.CommonContentHelper;
 import com.e3ps.common.util.CommonUtil;
 import com.e3ps.common.util.DateUtil;
@@ -262,6 +263,7 @@ public class StandardEcoService extends StandardManager implements EcoService {
 		String eoCommentD = dto.getEoCommentD();
 		ArrayList<Map<String, String>> rows200 = dto.getRows200(); // 활동
 //		ArrayList<Map<String, String>> rows500 = dto.getRows500(); // 변경대상 품목
+		ArrayList<Map<String, String>> rows300 = dto.getRows300(); // 모델
 		boolean temprary = dto.isTemprary();
 
 		Transaction trs = new Transaction();
@@ -270,10 +272,23 @@ public class StandardEcoService extends StandardManager implements EcoService {
 
 //			Map<String, Object> dataMap = EcoHelper.manager.dataMap(rows500);
 
+			String model = "";
+			for (int i = 0; i < rows300.size(); i++) {
+				Map<String, String> row300 = rows300.get(i);
+				String oid = row300.get("oid");
+				NumberCode n = (NumberCode) CommonUtil.getObject(oid);
+				if (rows300.size() - 1 == i) {
+					model += n.getCode();
+				} else {
+					model += n.getCode() + ",";
+				}
+			}
+
 			EChangeOrder eco = (EChangeOrder) rf.getReference(dto.getOid()).getObject();
 			eco.setEoName(name);
 			// 설별 활동에서 처리
 //			eco.setModel((String) dataMap.get("model"));
+			eco.setModel(model);
 			eco.setLicensingChange(licensing);
 			eco.setEoCommentA(eoCommentA);
 			eco.setEoCommentB(eoCommentB);

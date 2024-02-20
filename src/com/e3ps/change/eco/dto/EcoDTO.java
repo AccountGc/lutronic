@@ -58,6 +58,7 @@ public class EcoDTO {
 	private ArrayList<Map<String, String>> rows101 = new ArrayList<>(); // 관련 CR
 	private ArrayList<Map<String, String>> rows200 = new ArrayList<>(); // 설변활동
 	private ArrayList<Map<String, String>> rows500 = new ArrayList<>(); // 대상품목
+	private ArrayList<Map<String, String>> rows300 = new ArrayList<>(); // 모델
 
 	private Map<String, Object> contentMap = null;
 
@@ -170,6 +171,11 @@ public class EcoDTO {
 
 		if (isAdmin || check(eco, "APPROVED")) {
 			set_excel(true);
+		}
+
+		// 관리자는 일단 수정 가능하게
+		if (isAdmin) {
+			set_modify(true);
 		}
 	}
 

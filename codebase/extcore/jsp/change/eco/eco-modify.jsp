@@ -70,6 +70,24 @@ if (contentMap != null) {
 			</div>
 		</td>
 	</tr>
+	<%
+		if(isAdmin) {
+	%>
+	<tr>
+		<th class="lb">프로젝트 코드 [명]</th>
+		<td colspan="3" class="indent5 pt5">
+			<jsp:include page="/extcore/jsp/admin/code/include/code-include.jsp">
+				<jsp:param value="<%=dto.getOid()%>" name="oid" />
+				<jsp:param value="update" name="mode" />
+				<jsp:param value="insert300" name="method" />
+				<jsp:param value="MODEL" name="codeType" />
+				<jsp:param value="true" name="multi" />
+			</jsp:include>
+		</td>
+	</tr>	
+	<%
+		}
+	%>
 	<tr>
 		<th class="lb">변경사유</th>
 		<td class="indent5" colspan="3">
@@ -264,6 +282,8 @@ if (contentMap != null) {
 				return false;
 			}
 		}
+		
+		const rows300 = AUIGrid.getGridDataWithState(myGridID300, "gridState");
 
 		const params = {
 			name : name.value,
@@ -276,6 +296,7 @@ if (contentMap != null) {
 			eoCommentD : eoCommentD,
 			rows101 : rows101, // 관련CR
 			rows200 : rows200, // 설변활동
+			rows300 : rows300,
 			temprary : temprary,
 			sendType : sendType,
 			oid : oid
@@ -298,13 +319,16 @@ if (contentMap != null) {
 		toFocus("name");
 		createAUIGrid101(columns101);
 		createAUIGrid200(columns200);
+		createAUIGrid300(columns300);
 		AUIGrid.resize(myGridID101);
 		AUIGrid.resize(myGridID200);
+		AUIGrid.resize(myGridID300);
 		autoTextarea();
 	});
 
 	window.addEventListener("resize", function() {
 		AUIGrid.resize(myGridID101);
+		AUIGrid.resize(myGridID300);
 		// 		AUIGrid.resize(myGridID500);
 		AUIGrid.resize(myGridID200);
 	});
