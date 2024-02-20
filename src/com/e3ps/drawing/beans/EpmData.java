@@ -154,7 +154,7 @@ public class EpmData {
 				while (result.hasMoreElements()) {
 					ApplicationData data = (ApplicationData) result.nextElement();
 					String ext = FileUtil.getExtension(data.getFileName());
-					while ("dxf".equalsIgnoreCase(ext)) {
+					if ("dxf".equalsIgnoreCase(ext)) {
 						String name = data.getFileName().replace("." + ext, "").replace("_drw", "") + "_"
 								+ epm.getName() + "." + ext;
 						Map<String, String> dxf = new HashMap<>();
