@@ -1273,18 +1273,8 @@ public class PartHelper {
 		while (qr.hasMoreElements()) {
 			EPMReferenceLink ref = (EPMReferenceLink) qr.nextElement();
 			if (ref.getDepType() == PROEDependency.DEP_T_DRAW) {
-				EPMDocument ee = ref.getReferencedBy();
-				if (AccessControlHelper.manager.hasAccess(ee, AccessPermission.READ)) {
-					return ee;
-				}
-//				if (WorkInProgressHelper.isCheckedOut(ee)) {
-//					boolean isWorkCopy = WorkInProgressHelper.isWorkingCopy(ee);
-//					if (isWorkCopy) {
-//						return (EPMDocument) WorkInProgressHelper.service.workingCopyOf(ee);
-//					} else {
-//						
-//					}
-//				}
+				if (AccessControlHelper.manager.hasAccess(ref.getReferencedBy(), AccessPermission.READ))
+					return ref.getReferencedBy();
 			}
 		}
 		return null;
