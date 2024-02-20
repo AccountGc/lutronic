@@ -1273,8 +1273,12 @@ public class PartHelper {
 			if (ref.getDepType() == PROEDependency.DEP_T_DRAW) {
 				EPMDocument ee = ref.getReferencedBy();
 				if (WorkInProgressHelper.isCheckedOut(ee)) {
-					// 원본..
-					return (EPMDocument) WorkInProgressHelper.service.workingCopyOf(ee);
+					boolean isWorkCopy = WorkInProgressHelper.isWorkingCopy(ee);
+					if (isWorkCopy) {
+						return (EPMDocument) WorkInProgressHelper.service.workingCopyOf(ee);
+					} else {
+						return ee;
+					}
 				}
 			}
 		}
