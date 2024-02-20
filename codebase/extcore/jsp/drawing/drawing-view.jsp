@@ -1,3 +1,4 @@
+<%@page import="java.util.ArrayList"%>
 <%@page import="com.e3ps.common.util.ThumbnailUtil"%>
 <%@page import="java.util.Map"%>
 <%@page import="com.e3ps.drawing.beans.EpmData"%>
@@ -7,7 +8,7 @@
 boolean isAdmin = (boolean) request.getAttribute("isAdmin");
 EpmData dto = (EpmData) request.getAttribute("dto");
 Map<String, String> pdf = dto.getPdf();
-Map<String, String> dxf = dto.getDxf();
+ArrayList<Map<String, String>> dxfs = dto.getDxfs();
 Map<String, String> step = dto.getStep();
 %>
 <input type="hidden" name="oid" id="oid" value="<%=dto.getOid()%>">
@@ -193,11 +194,12 @@ Map<String, String> step = dto.getStep();
 				<th class="lb">DXF</th>
 				<td class="indent5" colspan="5">
 					<%
-					if (dxf.size() > 0) {
+					for(Map<String, String> dxf : dxfs) {
 					%>
-					<a href="<%=dxf.get("url")%>"><%=dxf.get("name")%></a>
+					<p><a href="<%=dxf.get("url")%>"><%=dxf.get("name")%></a>
 					<%
-					} else {
+					}
+					if(dxfs.size() == 0) {
 					%>
 					<font color="red">
 						<b>DXF 파일이 없습니다.</b>

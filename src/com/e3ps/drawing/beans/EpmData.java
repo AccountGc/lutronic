@@ -1,5 +1,6 @@
 package com.e3ps.drawing.beans;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -11,8 +12,6 @@ import com.ptc.wvs.server.util.PublishUtils;
 
 import lombok.Getter;
 import lombok.Setter;
-import wt.access.AccessControlHelper;
-import wt.access.AccessControlServerHelper;
 import wt.content.ApplicationData;
 import wt.content.ContentHelper;
 import wt.content.ContentRoleType;
@@ -23,7 +22,6 @@ import wt.lifecycle.State;
 import wt.part.WTPart;
 import wt.representation.Representation;
 import wt.util.FileUtil;
-import wt.verification.VerificationHelper;
 
 @Getter
 @Setter
@@ -53,7 +51,7 @@ public class EpmData {
 	private String docType;
 
 	private Map<String, String> pdf = new HashMap<>();
-	private Map<String, String> dxf = new HashMap<>();
+	private ArrayList<Map<String, String>> dxfs = new ArrayList<>();
 	private Map<String, String> step = new HashMap<>();
 
 	public EpmData(EPMDocument epm) throws Exception {
@@ -156,15 +154,17 @@ public class EpmData {
 				while (result.hasMoreElements()) {
 					ApplicationData data = (ApplicationData) result.nextElement();
 					String ext = FileUtil.getExtension(data.getFileName());
-					if ("dxf".equalsIgnoreCase(ext)) {
+					while ("dxf".equalsIgnoreCase(ext)) {
 						String name = data.getFileName().replace("." + ext, "").replace("_drw", "") + "_"
 								+ epm.getName() + "." + ext;
-						this.dxf.put("name", name);
-						this.dxf.put("fileSizeKB", data.getFileSizeKB() + "KB");
-						this.dxf.put("url",
+						Map<String, String> dxf = new HashMap<>();
+						dxf.put("name", name);
+						dxf.put("fileSizeKB", data.getFileSizeKB() + "KB");
+						dxf.put("url",
 								"/Windchill/plm/content/download?oid="
 										+ data.getPersistInfo().getObjectIdentifier().getStringValue() + "&holder="
 										+ representation.getPersistInfo().getObjectIdentifier().getStringValue());
+						this.dxfs.add(dxf);
 					}
 				}
 
