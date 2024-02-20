@@ -472,6 +472,7 @@ public class StandardActivityService extends StandardManager implements Activity
 //				putModel(model, p, mlist);
 //			}
 
+			int i = 0;
 			for (WTPart pp : clist) {
 
 				if (PartHelper.isCollectNumber(pp.getNumber())) {
@@ -497,8 +498,16 @@ public class StandardActivityService extends StandardManager implements Activity
 
 				link.setVersion(pp.getVersionIdentifier().getSeries().getValue());
 				PersistenceServerHelper.manager.insert(link);
-				
-				model += IBAUtil.getStringValue(pp, "MODEL");
+
+				if (i == 0) {
+					model += IBAUtil.getStringValue(pp, "MODEL");
+				} else {
+					String nn = IBAUtil.getStringValue(pp, "MODEL");
+					if (model.indexOf(nn) <= -1) {
+						model += nn + ",";
+					}
+				}
+				i++;
 			}
 			eco.setModel(model);
 			PersistenceHelper.manager.modify(eco);

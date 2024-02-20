@@ -762,7 +762,10 @@ public class StandardEcoService extends StandardManager implements EcoService {
 				if (i == 0) {
 					model += IBAUtil.getStringValue(pp, "MODEL");
 				} else {
-					model += IBAUtil.getStringValue(pp, "MODEL") + ",";
+					String nn = IBAUtil.getStringValue(pp, "MODEL");
+					if (model.indexOf(nn) <= -1) {
+						model += nn + ",";
+					}
 				}
 				i++;
 			}
