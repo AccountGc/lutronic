@@ -31,6 +31,24 @@ import net.sf.json.JSONArray;
 @RequestMapping(value = "/eco/**")
 public class EcoController extends BaseController {
 
+	@Description(value = "ECO 프로젝트 코드 동기화")
+	@ResponseBody
+	@GetMapping(value = "/sync")
+	public Map<String, Object> sync(@RequestParam String oid) throws Exception {
+		Map<String, Object> result = new HashMap<String, Object>();
+		try {
+			EcoHelper.service.sync(oid);
+			result.put("msg", "동기화 되었습니다.");
+			result.put("result", SUCCESS);
+		} catch (Exception e) {
+			e.printStackTrace();
+			result.put("result", FAIL);
+			result.put("msg", e.toString());
+		}
+		return result;
+	}
+
+	
 	@Description(value = "ECO 완제품 연결 삭제 함수")
 	@ResponseBody
 	@DeleteMapping(value = "/deleteLink")

@@ -20,6 +20,7 @@ import com.e3ps.change.eco.dto.EcoDTO;
 import com.e3ps.change.util.EChangeUtils;
 import com.e3ps.common.code.NumberCode;
 import com.e3ps.common.content.service.CommonContentHelper;
+import com.e3ps.common.iba.IBAUtil;
 import com.e3ps.common.util.CommonUtil;
 import com.e3ps.common.util.DateUtil;
 import com.e3ps.common.util.StringUtil;
@@ -27,7 +28,6 @@ import com.e3ps.common.util.WCUtil;
 import com.e3ps.doc.DocumentECOLink;
 import com.e3ps.org.service.MailUserHelper;
 import com.e3ps.part.service.PartHelper;
-import com.e3ps.workspace.ApprovalLine;
 import com.e3ps.workspace.WorkData;
 import com.e3ps.workspace.service.WorkDataHelper;
 import com.e3ps.workspace.service.WorkspaceHelper;
@@ -715,6 +715,59 @@ public class StandardEcoService extends StandardManager implements EcoService {
 			trs.start();
 			EOCompletePartLink link = (EOCompletePartLink) CommonUtil.getObject(oid);
 			PersistenceHelper.manager.delete(link);
+
+			trs.commit();
+			trs = null;
+		} catch (Exception e) {
+			e.printStackTrace();
+			trs.rollback();
+			throw e;
+		} finally {
+			if (trs != null)
+				trs.rollback();
+		}
+	}
+
+	@Override
+	public void sync(String oid) throws Exception {
+		Transaction trs = new Transaction();
+		try {
+			trs.start();
+
+			EChangeOrder eco = (EChangeOrder) CommonUtil.getObject(oid);
+
+			QueryResult qr = PersistenceHelper.manager.navigate(eco, "part", EcoPartLink.class, false);
+			String model = "";
+			ArrayList<WTPart> list = new ArrayList<WTPart>(); // 품목 리스트 담기..
+			while (qr.hasMoreElements()) {
+				EcoPartLink link = (EcoPartLink) qr.nextElement();
+				WTPartMaster m = link.getPart();
+				String v = link.getVersion();
+				WTPart part = PartHelper.manager.getPart(m.getNumber(), v);
+
+				// 대상 품목의 BOM 전개 ..
+				EcoHelper.manager.reverseStructure(part, list);
+			}
+
+			int i = 0;
+			for (WTPart pp : list) {
+
+				if (PartHelper.isCollectNumber(pp.getNumber())) {
+					continue;
+				}
+
+				if (!PartHelper.isTopNumber(pp.getNumber())) {
+					continue;
+				}
+				if (i == 0) {
+					model += IBAUtil.getStringValue(pp, "MODEL");
+				} else {
+					model += IBAUtil.getStringValue(pp, "MODEL") + ",";
+				}
+				i++;
+			}
+			eco.setModel(model);
+			PersistenceHelper.manager.modify(eco);
 
 			trs.commit();
 			trs = null;

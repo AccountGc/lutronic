@@ -31,6 +31,13 @@ Map<String, Object> contentMap = dto.getContentMap();
 			}
 			%>
 			<%
+			if (isAdmin) {
+			%>
+			<input type="button" value="프로젝트코드 동기화" title="프로젝트코드 동기화" class="red" onclick="sync();">
+			<%
+			}
+			%>
+			<%
 			if (dto.is_withdraw()) {
 			%>
 			<input type="button" value="회수(결재선 유지)" title="회수(결재선 유지)" class="gray" onclick="withdraw('false');">
@@ -165,13 +172,13 @@ Map<String, Object> contentMap = dto.getContentMap();
 			<tr>
 				<th class="lb">설계변경부품 내역 파일</th>
 				<td class="indent5" colspan="3">
-				<%
-					if(contentMap != null && contentMap.size() > 0) {
-				%>
-				<a href="<%=contentMap.get("url") %>"><%=contentMap.get("name") %></a>
-				<%
+					<%
+					if (contentMap != null && contentMap.size() > 0) {
+					%>
+					<a href="<%=contentMap.get("url")%>"><%=contentMap.get("name")%></a>
+					<%
 					}
-				%>
+					%>
 				</td>
 			</tr>
 			<tr>
@@ -366,6 +373,24 @@ Map<String, Object> contentMap = dto.getContentMap();
 				document.location.href = '/Windchill/extcore/jsp/common/content/FileDownload.jsp?fileName=' + n + '&originFileName=' + n;
 			}
 			closeLayer();
+		}, "GET");
+	}
+
+	function sync() {
+		if (!confirm("프로젝트 코드를 동기화 하시겠습니까?")) {
+			return false;
+		}
+
+		const oid = document.getElementById("oid").value;
+		const url = getCallUrl("/eco/sync?oid=" + oid);
+		openLayer();
+		call(url, null, function(data) {
+			alert(data.msg);
+			if (data.result) {
+				document.location.reload();
+			} else {
+				clsoeLayer();
+			}
 		}, "GET");
 	}
 

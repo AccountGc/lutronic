@@ -91,6 +91,9 @@ import wt.org.WTPrincipal;
 import wt.org.WTUser;
 import wt.part.WTPart;
 import wt.part.WTPartMaster;
+import wt.part.WTPartUsageLink;
+import wt.query.ClassAttribute;
+import wt.query.OrderBy;
 import wt.query.QuerySpec;
 import wt.query.SearchCondition;
 import wt.queue.ProcessingQueue;
@@ -98,6 +101,8 @@ import wt.queue.QueueHelper;
 import wt.services.ServiceFactory;
 import wt.session.SessionHelper;
 import wt.util.WTProperties;
+import wt.vc.views.View;
+import wt.vc.views.ViewHelper;
 
 public class EcoHelper {
 
@@ -335,7 +340,7 @@ public class EcoHelper {
 	private Object referenceCode(EChangeOrder eco, ArrayList<Map<String, Object>> list) throws Exception {
 		String[] codes = eco.getModel() != null ? eco.getModel().split(",") : null;
 
-		if (codes.length > 0) {
+		if (codes != null && codes.length > 0) {
 			QuerySpec query = new QuerySpec();
 			int idx = query.appendClassList(NumberCode.class, true);
 			for (int i = 0; i < codes.length; i++) {
@@ -2167,5 +2172,61 @@ public class EcoHelper {
 		QuerySpecUtils.toNotEqualsAnd(query, idx, EChangeOrder.class, "state.state", "APPROVED");
 		QuerySpecUtils.toOrderBy(query, idx, EChangeOrder.class, EChangeOrder.CREATE_TIMESTAMP, true);
 		return PagingSessionHelper.openPagingSession(0, 5, query);
+	}
+
+	public void reverseStructure(WTPart end, ArrayList<WTPart> list) throws Exception {
+		if (!list.contains(end)) {
+			list.add(end);
+		}
+		WTPartMaster master = (WTPartMaster) end.getMaster();
+		QuerySpec query = new QuerySpec();
+
+		int idx_usage = query.appendClassList(WTPartUsageLink.class, true);
+		int idx_part = query.appendClassList(WTPart.class, true);
+
+		QuerySpecUtils.toEqualsAnd(query, idx_usage, WTPartUsageLink.class, "roleBObjectRef.key.id", master);
+
+		SearchCondition sc = new SearchCondition(new ClassAttribute(WTPartUsageLink.class, "roleAObjectRef.key.id"),
+				"=", new ClassAttribute(WTPart.class, "thePersistInfo.theObjectIdentifier.id"));
+		sc.setFromIndicies(new int[] { idx_usage, idx_part }, 0);
+		sc.setOuterJoin(0);
+		query.appendAnd();
+		query.appendWhere(sc, new int[] { idx_usage, idx_part });
+		query.appendAnd();
+		query.appendWhere(new SearchCondition(WTPart.class, "iterationInfo.latest", SearchCondition.IS_TRUE, true),
+				new int[] { idx_part });
+
+		String viewName = end.getViewName();
+		if (!StringUtil.checkString(viewName)) {
+			viewName = "Design";
+		}
+
+		View view = ViewHelper.service.getView(viewName);
+		if (view != null) {
+			query.appendAnd();
+			query.appendWhere(new SearchCondition(WTPart.class, "view.key.id", "=",
+					view.getPersistInfo().getObjectIdentifier().getId()), new int[] { idx_part });
+		}
+
+		String state = end.getLifeCycleState().toString();
+		if (state != null) {
+			query.appendAnd();
+			query.appendWhere(new SearchCondition(WTPart.class, "state.state", "=", state), new int[] { idx_part });
+		}
+
+		QuerySpecUtils.toLatest(query, idx_part, WTPart.class);
+
+		query.appendOrderBy(new OrderBy(new ClassAttribute(WTPart.class, "master>number"), true),
+				new int[] { idx_part });
+
+		QueryResult qr = PersistenceHelper.manager.find(query);
+		while (qr.hasMoreElements()) {
+			Object obj[] = (Object[]) qr.nextElement();
+			WTPart p = (WTPart) obj[1];
+			if (!list.contains(p)) {
+				list.add(p);
+			}
+			reverseStructure(p, list);
+		}
 	}
 }

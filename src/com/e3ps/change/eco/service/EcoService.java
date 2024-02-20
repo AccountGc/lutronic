@@ -65,4 +65,9 @@ public interface EcoService {
 	 */
 	public abstract void deleteLink(String oid) throws Exception;
 
+	/**
+	 * 프로젝트 코드 동기화
+	 */
+	public abstract void sync(String oid) throws Exception;
+
 }
