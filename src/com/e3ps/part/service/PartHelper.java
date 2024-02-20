@@ -40,6 +40,8 @@ import com.ptc.wpcfg.pdmabstr.PROEDependency;
 
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
+import wt.access.AccessControlHelper;
+import wt.access.AccessPermission;
 import wt.clients.folder.FolderTaskLogic;
 import wt.doc.WTDocument;
 import wt.epm.EPMDocument;
@@ -1272,14 +1274,17 @@ public class PartHelper {
 			EPMReferenceLink ref = (EPMReferenceLink) qr.nextElement();
 			if (ref.getDepType() == PROEDependency.DEP_T_DRAW) {
 				EPMDocument ee = ref.getReferencedBy();
-				if (WorkInProgressHelper.isCheckedOut(ee)) {
-					boolean isWorkCopy = WorkInProgressHelper.isWorkingCopy(ee);
-					if (isWorkCopy) {
-						return (EPMDocument) WorkInProgressHelper.service.workingCopyOf(ee);
-					} else {
-						return ee;
-					}
+				if (AccessControlHelper.manager.hasAccess(ee, AccessPermission.READ)) {
+					return ee;
 				}
+//				if (WorkInProgressHelper.isCheckedOut(ee)) {
+//					boolean isWorkCopy = WorkInProgressHelper.isWorkingCopy(ee);
+//					if (isWorkCopy) {
+//						return (EPMDocument) WorkInProgressHelper.service.workingCopyOf(ee);
+//					} else {
+//						
+//					}
+//				}
 			}
 		}
 		return null;
