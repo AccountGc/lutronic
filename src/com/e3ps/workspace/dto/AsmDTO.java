@@ -7,6 +7,7 @@ import com.e3ps.workspace.service.AsmHelper;
 import lombok.Getter;
 import lombok.Setter;
 import net.sf.json.JSONArray;
+import wt.doc.WTDocument;
 import wt.org.WTUser;
 
 @Getter
@@ -26,6 +27,7 @@ public class AsmDTO {
 
 	private boolean _delete = false;
 	private boolean _modify = false;
+	private boolean _withdraw = false;
 
 	public AsmDTO() {
 
@@ -62,5 +64,22 @@ public class AsmDTO {
 		if ((isAdmin || isCreator) && isLine) {
 			set_modify(true);
 		}
+
+		if ((check(asm, "APPROVING")) && (isAdmin || isCreator)) {
+			set_withdraw(true);
+		}
 	}
+
+	/**
+	 * 상태값 여부 체크
+	 */
+	private boolean check(AsmApproval asm, String state) throws Exception {
+		boolean check = false;
+		String compare = asm.getLifeCycleState().toString();
+		if (compare.equals(state)) {
+			check = true;
+		}
+		return check;
+	}
+
 }

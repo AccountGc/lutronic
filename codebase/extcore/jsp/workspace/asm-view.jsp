@@ -20,6 +20,14 @@ String type = (String) request.getAttribute("type");
 		</td>
 		<td class="right">
 			<%
+			if (dto.is_withdraw()) {
+			%>
+			<input type="button" value="회수(결재선 유지)" title="회수(결재선 유지)" class="gray" onclick="withdraw('false');">
+			<input type="button" value="회수(결재선 삭제)" title="회수(결재선 삭제)" class="blue" onclick="withdraw('true');">
+			<%
+			}
+			%>
+			<%
 			if (dto.is_modify()) {
 			%>
 			<input type="button" value="수정" title="수정" class="gray" onclick="modify();">

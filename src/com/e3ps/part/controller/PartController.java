@@ -42,7 +42,6 @@ import com.ptc.wvs.server.util.PublishUtils;
 
 import net.sf.json.JSONArray;
 import wt.enterprise.Master;
-import wt.epm.EPMDocument;
 import wt.fc.ReferenceFactory;
 import wt.part.QuantityUnit;
 import wt.part.WTPart;
@@ -58,6 +57,22 @@ import wt.vc.views.ViewHelper;
 @RequestMapping(value = "/part/**")
 public class PartController extends BaseController {
 
+	@Description(value = "MANUFACTURER 변경")
+	@ResponseBody
+	@PostMapping(value = "/_save")
+	public Map<String, Object> _save(@RequestBody Map<String, Object> params) throws Exception {
+		Map<String, Object> result = new HashMap<>();
+		try {
+			PartHelper.service._save(params);
+			result.put("msg", "변경되었습니다.");
+			result.put("result", SUCCESS);
+		} catch (Exception e) {
+			result.put("result", FAIL);
+			result.put("msg", e.toString());
+			e.printStackTrace();
+		}
+		return result;
+	}
 	
 	@Description(value = "EO 완제품 품목 팝업 페이지")
 	@GetMapping(value = "/complete")

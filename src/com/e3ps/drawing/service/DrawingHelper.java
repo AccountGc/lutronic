@@ -889,6 +889,7 @@ public class DrawingHelper {
 	}
 
 	public Map<String, Object> zip(Map<String, Object> params) throws Exception {
+		System.out.println(params);
 		Map<String, Object> result = new HashMap<>();
 		ArrayList<Map<String, Object>> gridData = (ArrayList<Map<String, Object>>) params.get("gridData");
 		boolean dxf = (boolean) params.get("dxf");

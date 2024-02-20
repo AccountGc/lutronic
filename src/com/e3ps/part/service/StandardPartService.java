@@ -4236,4 +4236,28 @@ public class StandardPartService extends StandardManager implements PartService 
 		}
 		return rtnValue;
 	}
+
+	@Override
+	public void _save(Map<String, Object> params) throws Exception {
+		String oid = (String) params.get("oid");
+		String manufacturecode = (String) params.get("manufacturecode");
+		Transaction trs = new Transaction();
+		try {
+			trs.start();
+
+			WTPart part = (WTPart) CommonUtil.getObject(oid);
+
+			IBAUtil.changeIBAValue(part, "MANUFACTURE", manufacturecode);
+
+			trs.commit();
+			trs = null;
+		} catch (Exception e) {
+			e.printStackTrace();
+			trs.rollback();
+			throw e;
+		} finally {
+			if (trs != null)
+				trs.rollback();
+		}
+	}
 }

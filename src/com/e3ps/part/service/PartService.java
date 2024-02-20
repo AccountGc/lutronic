@@ -140,4 +140,9 @@ public interface PartService {
 	 * 품목등록 로더
 	 */
 	public abstract void loaderPart(String path) throws Exception;
+
+	/**
+	 * MANUFACTUER 변경
+	 */
+	public abstract void _save(Map<String, Object> params) throws Exception;
 }

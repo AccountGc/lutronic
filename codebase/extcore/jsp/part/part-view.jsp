@@ -167,7 +167,7 @@ WTUser sessionUser = (WTUser) SessionHelper.manager.getPrincipal();
 					</jsp:include>
 				</td>
 				<td class="center" colspan="3">
-<%-- 					<input type="button" value="재변환" title="재변환" class="blue" onclick="publish('<%=dto.getOid()%>');"> --%>
+					<%-- 					<input type="button" value="재변환" title="재변환" class="blue" onclick="publish('<%=dto.getOid()%>');"> --%>
 					<input type="button" value="CREO VIEW 3D" title="CREO VIEW 3D" class="gray" onclick="openCreoView('false');">
 					&nbsp;
 					<input type="button" value="CREO VIEW 2D" title="CREO VIEW 2D" class="gray" onclick="openCreoView('true');">
@@ -413,6 +413,7 @@ WTUser sessionUser = (WTUser) SessionHelper.manager.getPrincipal();
 			},
 		});
 		selectbox("state");
+		finderCode("manufacture", "MANUFACTURE");
 	});
 
 	function _clean() {
@@ -501,7 +502,7 @@ WTUser sessionUser = (WTUser) SessionHelper.manager.getPrincipal();
 	function openCreoView(is2D) {
 		let oid;
 		let callUrl;
-		if(JSON.parse(is2D)) {
+		if (JSON.parse(is2D)) {
 			oid = document.getElementById("oid").value;
 			callUrl = getCallUrl("/drawing/getCreoViewUrlByDrawing?oid=" + oid);
 		} else {
@@ -549,6 +550,32 @@ WTUser sessionUser = (WTUser) SessionHelper.manager.getPrincipal();
 		} else {
 			return false;
 		}
+	}
+
+	function _save() {
+		const oid = document.getElementById("oid").value;
+		const manufacturecode = document.getElementById("manufacturecode").value;
+		
+		if(manufacturecode === "") {
+			alert("변경할 MANUFACTURER를 선택하세요.");
+			return false;	
+		}
+
+		if (!confirm("변경하시겠습니까?")) {
+			return false;
+		}
+		const url = getCallUrl("/part/_save");
+		const params = {
+			oid : oid,
+			manufacturecode : manufacturecode
+		};
+		openLayer();
+		call(url, params, function(data) {
+			alert(data.msg);
+			if (data.result) {
+				document.location.reload();
+			}
+		});
 	}
 
 	// 재변환

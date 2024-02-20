@@ -11,6 +11,8 @@ import com.ptc.wvs.server.util.PublishUtils;
 
 import lombok.Getter;
 import lombok.Setter;
+import wt.access.AccessControlHelper;
+import wt.access.AccessControlServerHelper;
 import wt.content.ApplicationData;
 import wt.content.ContentHelper;
 import wt.content.ContentRoleType;
@@ -21,6 +23,7 @@ import wt.lifecycle.State;
 import wt.part.WTPart;
 import wt.representation.Representation;
 import wt.util.FileUtil;
+import wt.verification.VerificationHelper;
 
 @Getter
 @Setter
