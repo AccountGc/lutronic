@@ -524,6 +524,7 @@ function loadGridData(movePage) {
 	params.latest = JSON.parse(latest);
 	params.eca = false;
 	params.preOrder = preOrder;
+	params.checkout = false;
 	if(complete !== null) {
 		params.complete = JSON.parse(complete.value);
 	} else {

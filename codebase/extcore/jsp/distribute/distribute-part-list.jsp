@@ -504,6 +504,7 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 				params = toField(params, field);
 				params.latest = JSON.parse(latest);
 				params.preOrder = preOrder;
+				params.checkout = false;
 				if (complete !== null) {
 					params.complete = JSON.parse(complete.value);
 				} else {

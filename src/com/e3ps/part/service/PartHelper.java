@@ -186,7 +186,7 @@ public class PartHelper {
 		boolean latest = (boolean) params.get("latest");
 		String preOrder = (String) params.get("preOrder");
 		boolean complete = (boolean) params.get("complete");
-//		boolean checkout = (boolean) params.get("checkout");
+		boolean checkout = (boolean) params.get("checkout");
 
 		// 정렬
 		String sortKey = (String) params.get("sortKey");
@@ -199,6 +199,10 @@ public class PartHelper {
 		query.appendSelect(new ClassAttribute(WTPart.class, "thePersistInfo.theObjectIdentifier.id"), new int[] { idx },
 				false);
 
+		if (checkout) {
+			QuerySpecUtils.toEqualsAnd(query, idx, WTPart.class, "checkoutInfo.state", "c/o");
+		}
+
 //		SearchCondition sc = new SearchCondition(WTPart.class, "masterReference.key.id", WTPartMaster.class,
 //				"thePersistInfo.theObjectIdentifier.id");
 //		query.appendWhere(sc, new int[] { idx, idx_m });
@@ -210,14 +214,6 @@ public class PartHelper {
 				modifiedTo);
 		QuerySpecUtils.creatorQuery(query, idx, WTPart.class, creatorOid);
 		QuerySpecUtils.toState(query, idx, WTPart.class, state);
-
-//		if (checkout) {
-//			if (query.getConditionCount() > 0) {
-//				query.appendAnd();
-//			}
-//
-//			SearchCondition sc = VersionControlHelper.getSearchCondition(WTPart.class, true);
-//		}
 
 		if (complete) {
 			if (query.getConditionCount() > 0) {
@@ -295,38 +291,8 @@ public class PartHelper {
 			}
 		}
 
-//		Folder folder = FolderTaskLogic.getFolder(location, WCUtil.getWTContainerRef());
-////		int isQuery = DOCUMENT_ROOT.indexOf(location);
-//		if (query.getConditionCount() > 0) {
-//			query.appendAnd();
-//		}
-//
-////		if (isQuery < 0) {
-//		int f_idx = query.appendClassList(IteratedFolderMemberLink.class, false);
-//		ClassAttribute fca = new ClassAttribute(IteratedFolderMemberLink.class, "roleBObjectRef.key.branchId");
-//		SearchCondition fsc = new SearchCondition(fca, "=", new ClassAttribute(WTPart.class, "iterationInfo.branchId"));
-//		fsc.setFromIndicies(new int[] { f_idx, idx }, 0);
-//		fsc.setOuterJoin(0);
-//		query.appendWhere(fsc, new int[] { f_idx, idx });
-//		query.appendAnd();
-//
-//		query.appendOpenParen();
-//		long fid = folder.getPersistInfo().getObjectIdentifier().getId();
-//		query.appendWhere(new SearchCondition(IteratedFolderMemberLink.class, "roleAObjectRef.key.id", "=", fid),
-//				new int[] { f_idx });
-//
-//		ArrayList<Folder> folders = FolderUtils.getSubFolders(folder, new ArrayList<Folder>());
-//		for (int i = 0; i < folders.size(); i++) {
-//			Folder sub = (Folder) folders.get(i);
-//			query.appendOr();
-//			long sfid = sub.getPersistInfo().getObjectIdentifier().getId();
-//			query.appendWhere(new SearchCondition(IteratedFolderMemberLink.class, "roleAObjectRef.key.id", "=", sfid),
-//					new int[] { f_idx });
-//		}
-//		query.appendCloseParen();
-
 		// 최신 이터레이션.
-		if (latest) {
+		if (latest && !checkout) {
 			QuerySpecUtils.toLatest(query, idx, WTPart.class);
 		}
 

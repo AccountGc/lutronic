@@ -522,6 +522,7 @@ function loadGridData(movePage) {
 	params = toField(params, field);
 	params.latest = JSON.parse(latest);
 	params.eca = false;
+	params.checkout = false;
 	params.preOrder = preOrder;
 	if(complete !== null) {
 		params.complete = JSON.parse(complete.value);
