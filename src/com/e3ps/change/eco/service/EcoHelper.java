@@ -2189,8 +2189,7 @@ public class EcoHelper {
 		SearchCondition sc = new SearchCondition(new ClassAttribute(WTPartUsageLink.class, "roleAObjectRef.key.id"),
 				"=", new ClassAttribute(WTPart.class, "thePersistInfo.theObjectIdentifier.id"));
 		sc.setFromIndicies(new int[] { idx_usage, idx_part }, 0);
-		sc.setOuterJoin(0);
-		query.appendAnd();
+		sc.setOuterJoin(0);		query.appendAnd();
 		query.appendWhere(sc, new int[] { idx_usage, idx_part });
 		query.appendAnd();
 		query.appendWhere(new SearchCondition(WTPart.class, "iterationInfo.latest", SearchCondition.IS_TRUE, true),

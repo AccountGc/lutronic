@@ -282,8 +282,14 @@ if (contentMap != null) {
 				return false;
 			}
 		}
-		
+
+		<%
+			if(isAdmin) {
+		%>
 		const rows300 = AUIGrid.getGridDataWithState(myGridID300, "gridState");
+		<%
+			}
+		%>
 
 		const params = {
 			name : name.value,
@@ -296,7 +302,13 @@ if (contentMap != null) {
 			eoCommentD : eoCommentD,
 			rows101 : rows101, // 관련CR
 			rows200 : rows200, // 설변활동
+			<%
+				if(isAdmin) {
+			%>
 			rows300 : rows300,
+			<%
+				}
+			%>
 			temprary : temprary,
 			sendType : sendType,
 			oid : oid
@@ -319,17 +331,28 @@ if (contentMap != null) {
 		toFocus("name");
 		createAUIGrid101(columns101);
 		createAUIGrid200(columns200);
-		createAUIGrid300(columns300);
 		AUIGrid.resize(myGridID101);
 		AUIGrid.resize(myGridID200);
+		<%
+		if(isAdmin) {
+		%>
 		AUIGrid.resize(myGridID300);
+		createAUIGrid300(columns300);
+		<%
+		}
+		%>
 		autoTextarea();
 	});
 
 	window.addEventListener("resize", function() {
 		AUIGrid.resize(myGridID101);
 		AUIGrid.resize(myGridID300);
-		// 		AUIGrid.resize(myGridID500);
+		<%
+			if(isAdmin) {
+		%>
 		AUIGrid.resize(myGridID200);
+		<%
+			}
+		%>
 	});
 </script>

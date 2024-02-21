@@ -76,6 +76,7 @@ String mode = request.getParameter("mode");
 				if (!res.e) {
 					const form = document.querySelector("form");
 					const data = res.secondaryFile;
+					logger(data);
 					const len = data.length;
 					for (let i = 0; i < len; i++) {
 						const secondaryTag = document.createElement("input");

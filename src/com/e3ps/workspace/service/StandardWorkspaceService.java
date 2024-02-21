@@ -200,7 +200,7 @@ public class StandardWorkspaceService extends StandardManager implements Workspa
 			}
 			PersistenceHelper.manager.save(approvalLine);
 
-			if (sort == 0) {
+			if (!isAgree && sort == 0) {
 				MailUtils.manager.sendApprovalMailMethod(per, approvalLine);
 			}
 

@@ -104,6 +104,9 @@ JSONArray data = WorkspaceHelper.manager.history(oid);
 		dataType : "string",
 		style : "aui-left",
 		width : 450,
+		renderer: { // 템플릿 렌더러 사용
+			type: "TemplateRenderer",
+		}
 	}, ]
 	function createAUIGrid10000(columnLayout) {
 		const props = {
@@ -115,6 +118,7 @@ JSONArray data = WorkspaceHelper.manager.history(oid);
 			enableSorting : false,
 			showAutoNoDataMessage : false,
 			autoGridHeight : true,
+			wordWrap: true,
 		}
 		myGridID10000 = AUIGrid.create("#grid10000", columnLayout, props);
 		AUIGrid.setGridData(myGridID10000, <%=data%>	);
