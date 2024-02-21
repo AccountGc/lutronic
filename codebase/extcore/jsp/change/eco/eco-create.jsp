@@ -178,6 +178,15 @@
 			<jsp:param value="true" name="multi" />
 			<jsp:param value="true" name="header" />
 		</jsp:include>
+		
+		
+		<!-- 	관련 ECPR -->
+		<jsp:include page="/extcore/jsp/change/ecpr/include/ecpr-include.jsp">
+			<jsp:param value="" name="oid" />
+			<jsp:param value="create" name="mode" />
+			<jsp:param value="true" name="multi" />
+			<jsp:param value="true" name="header" />
+		</jsp:include>
 
 		<!-- 	설변 활동 -->
 		<jsp:include page="/extcore/jsp/change/activity/include/activity-include.jsp">
@@ -185,6 +194,8 @@
 			<jsp:param value="create" name="mode" />
 			<jsp:param value="true" name="multi" />
 		</jsp:include>
+		
+		
 
 		<table class="button-table">
 			<tr>
@@ -206,7 +217,7 @@
 				const rows101 = AUIGrid.getGridDataWithState(myGridID101, "gridState");
 				const rows200 = AUIGrid.getGridDataWithState(myGridID200, "gridState");
 				const sendType = document.querySelector("input[name=sendType]:checked").value;
-
+				const rows103 = AUIGrid.getGridDataWithState(myGridID103, "gridState");
 				for (let i = 0; i < rows200.length; i++) {
 					const dd = rows200[i];
 					const activeUser_oid = AUIGrid.getCellValue(myGridID200, i, "activeUser_oid");
@@ -267,6 +278,7 @@
 					eoCommentD : eoCommentD,
 					rows101 : rows101, // 관련CR
 					rows200 : rows200, // 설변활동
+					rows103 : rows103
 				};
 				logger(params);
 				const url = getCallUrl("/eco/create");
@@ -287,14 +299,17 @@
 				toFocus("name");
 				createAUIGrid101(columns101);
 				createAUIGrid200(columns200);
+				createAUIGrid103(columns103);
 				AUIGrid.resize(myGridID101);
 				AUIGrid.resize(myGridID200);
+				AUIGrid.resize(myGridID103);
 				autoTextarea();
 			});
 
 			window.addEventListener("resize", function() {
 				AUIGrid.resize(myGridID101);
 				AUIGrid.resize(myGridID200);
+				AUIGrid.resize(myGridID103);
 			});
 		</script>
 	</form>

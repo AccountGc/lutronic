@@ -9,11 +9,13 @@ import java.util.Map;
 import java.util.Vector;
 
 import com.e3ps.change.DocumentActivityLink;
+import com.e3ps.change.ECPRRequest;
 import com.e3ps.change.EChangeActivity;
 import com.e3ps.change.EChangeOrder;
 import com.e3ps.change.EChangeRequest;
 import com.e3ps.change.EOCompletePartLink;
 import com.e3ps.change.EcoPartLink;
+import com.e3ps.change.EcoToEcprLink;
 import com.e3ps.change.RequestOrderLink;
 import com.e3ps.change.activity.service.ActivityHelper;
 import com.e3ps.change.eco.dto.EcoDTO;
@@ -82,6 +84,7 @@ public class StandardEcoService extends StandardManager implements EcoService {
 		String eoCommentC = dto.getEoCommentC();
 		String eoCommentD = dto.getEoCommentD();
 		ArrayList<Map<String, String>> rows200 = dto.getRows200(); // 활동
+//		ArrayList<Map<String, String>> rows103 = dto.getRows103(); // ECPR
 //		ArrayList<Map<String, String>> rows500 = dto.getRows500(); // 변경대상 품목
 		boolean temprary = dto.isTemprary();
 
@@ -136,14 +139,6 @@ public class StandardEcoService extends StandardManager implements EcoService {
 
 			// 관련 CR 및 ECPR
 			saveLink(eco, dto);
-
-			// 완제품 연결
-//			ArrayList<WTPart> plist = (ArrayList<WTPart>) dataMap.get("plist"); // 완제품
-//			saveCompletePart(eco, plist);
-
-			// 변경 대상 품목 링크
-//			ArrayList<WTPart> clist = (ArrayList<WTPart>) dataMap.get("clist"); // 변경대상
-//			saveEcoPart(eco, clist);
 
 			// 설변 활동 생성
 			// 활동이 잇을 경우 상태값 대기모드로 변경한다.
@@ -221,6 +216,17 @@ public class StandardEcoService extends StandardManager implements EcoService {
 				EChangeRequest ecr = (EChangeRequest) CommonUtil.getObject(oid);
 				RequestOrderLink link = RequestOrderLink.newRequestOrderLink(eco, ecr);
 				link.setEcoType(eco.getEoType());
+				PersistenceServerHelper.manager.insert(link);
+			}
+		}
+
+		ArrayList<Map<String, String>> rows103 = dto.getRows103(); // 관련 ECPR
+		for (Map<String, String> row103 : rows103) {
+			String gridState = row103.get("gridState");
+			if ("added".equals(gridState) || !StringUtil.checkString(gridState)) {
+				String oid = row103.get("oid");
+				ECPRRequest ecpr = (ECPRRequest) CommonUtil.getObject(oid);
+				EcoToEcprLink link = EcoToEcprLink.newEcoToEcprLink(eco, ecpr);
 				PersistenceServerHelper.manager.insert(link);
 			}
 		}
@@ -365,6 +371,14 @@ public class StandardEcoService extends StandardManager implements EcoService {
 			RequestOrderLink link = (RequestOrderLink) obj[0];
 			PersistenceHelper.manager.delete(link);
 		}
+		
+		
+		QueryResult rs = PersistenceHelper.manager.navigate(eco, "ecpr", EcoToEcprLink.class, false);
+		while(rs.hasMoreElements()) {
+			EcoToEcprLink link = (EcoToEcprLink)rs.nextElement();
+			PersistenceHelper.manager.delete(link);
+		}
+		
 	}
 
 	/**

@@ -47,7 +47,7 @@ JSONArray data = WorkspaceHelper.manager.history(oid);
 		%>
 	</tr>
 </table>
-<div id="grid10000" style="height: 30px; border-top: 1px solid #3180c3; margin: 5px;"></div>
+<div id="grid10000" style="height: 450px; border-top: 1px solid #3180c3; margin: 5px;"></div>
 <script type="text/javascript">
 	let myGridID10000;
 	const columns10000 = [ {
@@ -102,11 +102,18 @@ JSONArray data = WorkspaceHelper.manager.history(oid);
 		dataField : "description",
 		headerText : "결재의견",
 		dataType : "string",
-		style : "aui-left",
+		style : "aui-left-0",
 		width : 450,
 		renderer: { // 템플릿 렌더러 사용
 			type: "TemplateRenderer",
-		}
+		},
+// 		labelFunction : function(rowIndex, columnIndex, value, headerText, item) {
+// 			let sliced = "";
+// 			for (let i = 0; value !== null && i < value.length; i += 100) {
+// 				sliced += value.slice(i, i + 100) + '<p>';
+// 			}
+// 			return sliced;
+// 		}			
 	}, ]
 	function createAUIGrid10000(columnLayout) {
 		const props = {
@@ -119,6 +126,7 @@ JSONArray data = WorkspaceHelper.manager.history(oid);
 			showAutoNoDataMessage : false,
 			autoGridHeight : true,
 			wordWrap: true,
+// 			usePaging : true,
 		}
 		myGridID10000 = AUIGrid.create("#grid10000", columnLayout, props);
 		AUIGrid.setGridData(myGridID10000, <%=data%>	);

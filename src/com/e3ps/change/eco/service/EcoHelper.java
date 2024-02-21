@@ -54,6 +54,7 @@ import com.e3ps.common.util.PageQueryUtils;
 import com.e3ps.common.util.QuerySpecUtils;
 import com.e3ps.common.util.StringUtil;
 import com.e3ps.doc.DocumentECOLink;
+import com.e3ps.doc.DocumentECPRLink;
 import com.e3ps.doc.column.DocumentColumn;
 import com.e3ps.drawing.service.DrawingHelper;
 import com.e3ps.org.dto.PeopleDTO;
@@ -328,7 +329,6 @@ public class EcoHelper {
 		} else if ("doc".equals(type)) {
 			return JSONArray.fromObject(referenceDoc(eco, list));
 		} else if ("MODEL".equalsIgnoreCase(type)) {
-			// 제품
 			return JSONArray.fromObject(referenceCode(eco, list));
 		}
 		return JSONArray.fromObject(list);
@@ -2189,7 +2189,8 @@ public class EcoHelper {
 		SearchCondition sc = new SearchCondition(new ClassAttribute(WTPartUsageLink.class, "roleAObjectRef.key.id"),
 				"=", new ClassAttribute(WTPart.class, "thePersistInfo.theObjectIdentifier.id"));
 		sc.setFromIndicies(new int[] { idx_usage, idx_part }, 0);
-		sc.setOuterJoin(0);		query.appendAnd();
+		sc.setOuterJoin(0);
+		query.appendAnd();
 		query.appendWhere(sc, new int[] { idx_usage, idx_part });
 		query.appendAnd();
 		query.appendWhere(new SearchCondition(WTPart.class, "iterationInfo.latest", SearchCondition.IS_TRUE, true),

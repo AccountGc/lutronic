@@ -205,6 +205,15 @@ if (contentMap != null) {
 	<jsp:param value="true" name="multi" />
 	<jsp:param value="250" name="height" />
 </jsp:include>
+
+<!-- 	관련 ECPR -->
+<jsp:include page="/extcore/jsp/change/ecpr/include/ecpr-include.jsp">
+	<jsp:param value="<%=dto.getOid()%>" name="oid" />
+	<jsp:param value="update" name="mode" />
+	<jsp:param value="true" name="multi" />
+	<jsp:param value="true" name="header" />
+</jsp:include>
+
 <!-- 설변 활동 -->
 <jsp:include page="/extcore/jsp/change/activity/include/activity-include.jsp">
 	<jsp:param value="<%=dto.getOid()%>" name="oid" />
@@ -282,7 +291,7 @@ if (contentMap != null) {
 				return false;
 			}
 		}
-
+		const rows103 = AUIGrid.getGridDataWithState(myGridID103, "gridState");
 		<%
 			if(isAdmin) {
 		%>
@@ -311,7 +320,8 @@ if (contentMap != null) {
 			%>
 			temprary : temprary,
 			sendType : sendType,
-			oid : oid
+			oid : oid,
+			rows103 : rows103
 		};
 		const url = getCallUrl("/eco/modify");
 		openLayer();
@@ -331,8 +341,10 @@ if (contentMap != null) {
 		toFocus("name");
 		createAUIGrid101(columns101);
 		createAUIGrid200(columns200);
+		createAUIGrid103(columns103);
 		AUIGrid.resize(myGridID101);
 		AUIGrid.resize(myGridID200);
+		AUIGrid.resize(myGridID103);
 		<%
 		if(isAdmin) {
 		%>
@@ -347,6 +359,7 @@ if (contentMap != null) {
 	window.addEventListener("resize", function() {
 		AUIGrid.resize(myGridID101);
 		AUIGrid.resize(myGridID300);
+		AUIGrid.resize(myGridID103);
 		<%
 			if(isAdmin) {
 		%>

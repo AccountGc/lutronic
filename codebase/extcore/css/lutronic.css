@@ -661,6 +661,10 @@ div#loading_layer {
 	/* 	color: blue !important; */
 }
 
+.aui-left-0 {
+	text-align: left !important;
+}
+
 .aui-grid-renderer-base>a {
 	color: blue !important;
 }

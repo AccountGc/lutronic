@@ -177,7 +177,7 @@ if (header) {
 			alert("삭제할 ECPR을 선택하세요.");
 			return false;
 		}
-		AUIGrid.removeCheckedRows(myGridID110);
+		AUIGrid.removeCheckedRows(myGridID103);
 	}
 
 	function insert103(arr, callBack) {
