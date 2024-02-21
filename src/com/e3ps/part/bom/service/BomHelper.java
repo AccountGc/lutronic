@@ -13,6 +13,8 @@ import java.util.zip.ZipOutputStream;
 
 import com.e3ps.common.code.NumberCode;
 import com.e3ps.common.code.service.NumberCodeHelper;
+import com.e3ps.common.iba.AttributeKey;
+import com.e3ps.common.iba.IBAUtil;
 import com.e3ps.common.iba.IBAUtils;
 import com.e3ps.common.util.CommonUtil;
 import com.e3ps.common.util.QuerySpecUtils;
@@ -93,7 +95,7 @@ public class BomHelper {
 //		if (isCheckOut) {
 //			return loadEditor(root, skip);
 //		} else {
-			return loadEditor(root, skip);
+		return loadEditor(root, skip);
 //		}
 	}
 
@@ -274,6 +276,7 @@ public class BomHelper {
 				+ end.getIterationIdentifier().getSeries().getValue());
 		rootNode.put("modifier", end.getModifierFullName());
 		rootNode.put("qty", 1);
+		rootNode.put("ecoNo", IBAUtil.getAttrValue(end, AttributeKey.IBAKey.IBA_CHANGENO));
 
 		settingNode(rootNode, end);
 
@@ -347,6 +350,7 @@ public class BomHelper {
 					+ p.getIterationIdentifier().getSeries().getValue());
 			node.put("modifier", p.getModifierFullName());
 			node.put("qty", link.getQuantity().getAmount());
+			node.put("ecoNo", IBAUtil.getAttrValue(p, AttributeKey.IBAKey.IBA_CHANGENO));
 			settingNode(node, p);
 
 			isCheckOut = WorkInProgressHelper.isCheckedOut(p);
@@ -396,6 +400,7 @@ public class BomHelper {
 				+ end.getIterationIdentifier().getSeries().getValue());
 		rootNode.put("modifier", end.getModifierFullName());
 		rootNode.put("qty", 1);
+		rootNode.put("ecoNo", IBAUtil.getAttrValue(end, AttributeKey.IBAKey.IBA_CHANGENO));
 		settingNode(rootNode, end);
 
 		boolean isCheckOut = WorkInProgressHelper.isCheckedOut(end);
@@ -470,7 +475,7 @@ public class BomHelper {
 					+ p.getIterationIdentifier().getSeries().getValue());
 			node.put("modifier", p.getModifierFullName());
 			node.put("qty", link.getQuantity().getAmount());
-
+			node.put("ecoNo", IBAUtil.getAttrValue(p, AttributeKey.IBAKey.IBA_CHANGENO));
 			settingNode(node, p);
 
 			isCheckOut = WorkInProgressHelper.isCheckedOut(p);
@@ -518,6 +523,7 @@ public class BomHelper {
 				+ root.getIterationIdentifier().getSeries().getValue());
 		rootNode.put("modifier", root.getModifierFullName());
 		rootNode.put("qty", 1);
+		rootNode.put("ecoNo", IBAUtil.getAttrValue(root, AttributeKey.IBAKey.IBA_CHANGENO));
 		settingNode(rootNode, root);
 		boolean isCheckOut = WorkInProgressHelper.isCheckedOut(root);
 //		boolean isWorkCopy = WorkInProgressHelper.isWorkingCopy(root);
@@ -568,6 +574,7 @@ public class BomHelper {
 					+ p.getIterationIdentifier().getSeries().getValue());
 			node.put("modifier", p.getModifierFullName());
 			node.put("qty", link.getQuantity().getAmount());
+			node.put("ecoNo", IBAUtil.getAttrValue(p, AttributeKey.IBAKey.IBA_CHANGENO));
 			settingNode(node, p);
 
 			isCheckOut = WorkInProgressHelper.isCheckedOut(p);
@@ -614,6 +621,7 @@ public class BomHelper {
 				+ root.getIterationIdentifier().getSeries().getValue());
 		rootNode.put("modifier", root.getModifierFullName());
 		rootNode.put("qty", 1);
+		rootNode.put("ecoNo", IBAUtil.getAttrValue(root, AttributeKey.IBAKey.IBA_CHANGENO));
 
 		settingNode(rootNode, root);
 
@@ -660,6 +668,7 @@ public class BomHelper {
 					+ p.getIterationIdentifier().getSeries().getValue());
 			node.put("modifier", p.getModifierFullName());
 			node.put("qty", link.getQuantity().getAmount());
+			node.put("ecoNo", IBAUtil.getAttrValue(p, AttributeKey.IBAKey.IBA_CHANGENO));
 
 			settingNode(node, p);
 
@@ -785,6 +794,7 @@ public class BomHelper {
 					+ p.getIterationIdentifier().getSeries().getValue());
 			node.put("modifier", p.getModifierFullName());
 			node.put("qty", link.getQuantity().getAmount());
+			node.put("ecoNo", IBAUtil.getAttrValue(p, AttributeKey.IBAKey.IBA_CHANGENO));
 			settingMap(node, p);
 			boolean isCheckOut = WorkInProgressHelper.isCheckedOut(p);
 //			boolean isWorkCopy = WorkInProgressHelper.isWorkingCopy(p);
@@ -877,6 +887,7 @@ public class BomHelper {
 					+ p.getIterationIdentifier().getSeries().getValue());
 			node.put("modifier", p.getModifierFullName());
 			node.put("qty", link.getQuantity().getAmount());
+			node.put("ecoNo", IBAUtil.getAttrValue(p, AttributeKey.IBAKey.IBA_CHANGENO));
 			settingMap(node, p);
 			boolean isCheckOut = WorkInProgressHelper.isCheckedOut(p);
 //			boolean isWorkCopy = WorkInProgressHelper.isWorkingCopy(p);
@@ -945,6 +956,7 @@ public class BomHelper {
 					+ p.getIterationIdentifier().getSeries().getValue());
 			node.put("modifier", p.getModifierFullName());
 			node.put("qty", link.getQuantity().getAmount());
+			node.put("ecoNo", IBAUtil.getAttrValue(p, AttributeKey.IBAKey.IBA_CHANGENO));
 			settingMap(node, p);
 			boolean isCheckOut = WorkInProgressHelper.isCheckedOut(p);
 //			boolean isWorkCopy = WorkInProgressHelper.isWorkingCopy(p);
@@ -1005,6 +1017,7 @@ public class BomHelper {
 					+ p.getIterationIdentifier().getSeries().getValue());
 			node.put("modifier", p.getModifierFullName());
 			node.put("qty", link.getQuantity().getAmount());
+			node.put("ecoNo", IBAUtil.getAttrValue(p, AttributeKey.IBAKey.IBA_CHANGENO));
 			settingMap(node, p);
 			boolean isCheckOut = WorkInProgressHelper.isCheckedOut(p);
 //			boolean isWorkCopy = WorkInProgressHelper.isWorkingCopy(p);
