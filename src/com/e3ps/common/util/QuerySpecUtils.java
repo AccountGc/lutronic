@@ -78,12 +78,12 @@ public class QuerySpecUtils {
 		ClassAttribute ca = new ClassAttribute(ControlBranch.class, WTAttributeNameIfc.ID_NAME);
 		query.appendSelect(ca, new int[] { childBranchIdx }, false);
 
-//		if (query.getConditionCount() > 0) {
-//			query.appendAnd();
-//		}
-//
-//		sc = new SearchCondition(ca, SearchCondition.IS_NULL);
-//		query.appendWhere(sc, new int[] { childBranchIdx });
+		if (query.getConditionCount() > 0) {
+			query.appendAnd();
+		}
+
+		sc = new SearchCondition(ca, SearchCondition.IS_NULL);
+		query.appendWhere(sc, new int[] { childBranchIdx });
 
 	}
 
