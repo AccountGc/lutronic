@@ -803,10 +803,12 @@ public class StandardDrawingService extends StandardManager implements DrawingSe
 		if (primaryFile.length() > 0) {
 			File file = new File(fileName);
 			extName = file.getName();
-			ext = FileUtil.getExtension(extName);
+			ext = FileUtil.getExtension(primaryFile);
 			authoringType = EpmUtil.getAuthoringType(extName);
 		}
 		String extentionName = getPrefix(extName);
+//		System.out.println("extentionName=" + extentionName);
+//		System.out.println("extentionNam123123312=" + ext);
 		WTPart part = (WTPart) CommonUtil.getObject(partOid);
 		String number = part.getNumber() + "." + ext;
 		String name = part.getName();
@@ -1969,7 +1971,7 @@ public class StandardDrawingService extends StandardManager implements DrawingSe
 			String extentionName = getPrefix(extName);
 
 			EPMDocument epm = EPMDocument.newEPMDocument();
-			epm.setNumber(number);
+			epm.setNumber(number + "." + extentionName);
 			epm.setName(name);
 			epm.setDescription(description);
 
@@ -2244,7 +2246,7 @@ public class StandardDrawingService extends StandardManager implements DrawingSe
 					System.out.println("fileName :: " + fileName);
 					System.out.println("TempCadName :: " + TempCadName);
 
-					if (!TempCadName.equals(fileName)) {
+					if (!TempCadName.equalsIgnoreCase(fileName)) {
 						throw new Exception(Message.get("파일명이 다릅니다."));
 					}
 				}
