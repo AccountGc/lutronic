@@ -810,7 +810,8 @@ public class StandardDrawingService extends StandardManager implements DrawingSe
 //		System.out.println("extentionName=" + extentionName);
 //		System.out.println("extentionNam123123312=" + ext);
 		WTPart part = (WTPart) CommonUtil.getObject(partOid);
-		String number = part.getNumber() + "." + ext;
+//		String number = part.getNumber() + "." + ext;
+		String number = extentionName + "." + ext;
 		String name = part.getName();
 
 		epm.setNumber(number);
@@ -858,7 +859,7 @@ public class StandardDrawingService extends StandardManager implements DrawingSe
 			file.renameTo(rfile);
 			file = rfile;
 
-			epm.setCADName(fileName);
+			epm.setCADName(number);
 			EPMDocumentType docType = getEPMDocumentType(fileEnd);
 			epm.setDocType(docType);
 		}
