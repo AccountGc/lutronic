@@ -117,7 +117,7 @@ iframe {
 		</td>
 	</tr>
 	<tr>
-		<th>프로젝트코드</th>
+		<th class="lb">프로젝트코드</th>
 		<td class="indent5">
 			<select name="model" id="model" class="width-200">
 				<option value="">선택</option>
@@ -132,9 +132,13 @@ iframe {
 				%>
 			</select>
 		</td>
-		<th class="lb"><%=title%>사유
+		<th>문서번호(구)</th>
+		<td class="indent5">
+			<input type="text" name="oldNumber" id="oldNumber" class="width-200" value="<%=dto.getOldNumber() %>">
+		</td>		
+		<th><%=title%>사유
 		</th>
-		<td class="indent5" colspan="3">
+		<td class="indent5">
 			<input type="text" name="iterationNote" id="iterationNote" class="width-600">
 		</td>
 	</tr>
@@ -252,7 +256,8 @@ iframe {
 		const model = document.getElementById("model").value;
 		const preseration = document.getElementById("preseration").value;
 		const iterationNote = document.getElementById("iterationNote");
-		
+		// 구 문서번호
+		const oldNumber = document.getElementById("oldNumber").value;
 		const url = getCallUrl("/doc/<%=mode%>");
 
 		// 관련문서
@@ -335,6 +340,7 @@ iframe {
 			rows101 : rows101,
 			rows103 : rows103,
 			rows105 : rows105,
+			oldNumber : oldNumber
 		};
 		
 		logger(params);

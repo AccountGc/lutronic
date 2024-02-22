@@ -467,7 +467,7 @@ public class StandardDocumentService extends StandardManager implements Document
 		String content = dto.getContent();
 		String lifecycle = dto.getLifecycle();
 		String iterationNote = dto.getIterationNote();
-
+		String oldNumber = dto.getOldNumber();
 		Transaction trs = new Transaction();
 		try {
 			trs.start();
@@ -489,6 +489,11 @@ public class StandardDocumentService extends StandardManager implements Document
 			latest.getTypeInfoWTDocument().setPtc_rht_1(content);
 
 			PersistenceHelper.manager.save(latest);
+
+			WTDocumentTypeInfo info = latest.getTypeInfoWTDocument();
+			if (StringUtil.checkString(oldNumber)) {
+				info.setPtc_str_3(oldNumber);
+			}
 
 			// 폴더 이동
 			Folder folder = FolderTaskLogic.getFolder(location, WCUtil.getWTContainerRef());
@@ -550,7 +555,7 @@ public class StandardDocumentService extends StandardManager implements Document
 		String content = dto.getContent();
 		String lifecycle = dto.getLifecycle();
 		String iterationNote = dto.getIterationNote();
-
+		String oldNumber = dto.getOldNumber();
 		Transaction trs = new Transaction();
 		try {
 			trs.start();
@@ -578,6 +583,11 @@ public class StandardDocumentService extends StandardManager implements Document
 
 			workCopy.getTypeInfoWTDocument().setPtc_rht_1(content);
 			workCopy = (WTDocument) WorkInProgressHelper.service.checkin(workCopy, iterationNote);
+
+			WTDocumentTypeInfo info = workCopy.getTypeInfoWTDocument();
+			if (StringUtil.checkString(oldNumber)) {
+				info.setPtc_str_3(oldNumber);
+			}
 
 			// 폴더 이동
 			Folder folder = FolderTaskLogic.getFolder(location, WCUtil.getWTContainerRef());
