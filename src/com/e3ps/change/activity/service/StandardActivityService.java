@@ -1407,11 +1407,14 @@ public class StandardActivityService extends StandardManager implements Activity
 			link.setRevise(true);
 			PersistenceHelper.manager.modify(link);
 
-			PartToPartLink pLink = PartToPartLink.newPartToPartLink(part.getMaster(), newPart.getMaster());
-			pLink.setPreVersion(part.getVersionIdentifier().getSeries().getValue());
-			pLink.setAfterVersion(newPart.getVersionIdentifier().getSeries().getValue());
-			pLink.setEco(eco);
-			PersistenceHelper.manager.save(pLink);
+			boolean isSix = part.getNumber().startsWith("6"); // 4로 시작하는것은 무조건 모두 새품번
+			if (!isSix) {
+				PartToPartLink pLink = PartToPartLink.newPartToPartLink(part.getMaster(), newPart.getMaster());
+				pLink.setPreVersion(part.getVersionIdentifier().getSeries().getValue());
+				pLink.setAfterVersion(newPart.getVersionIdentifier().getSeries().getValue());
+				pLink.setEco(eco);
+				PersistenceHelper.manager.save(pLink);
+			}
 
 			trs.commit();
 			trs = null;
