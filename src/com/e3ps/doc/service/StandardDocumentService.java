@@ -817,36 +817,39 @@ public class StandardDocumentService extends StandardManager implements Document
 
 							rtnFile = DocumentHelper.manager.stamping(doc, excelFile, classType1Code);
 						}
+
+						if (rtnFile != null) {
+
+							String temp = WTProperties.getLocalProperties().getProperty("wt.temp");
+							String pdfPath = temp + File.separator + "pdf";
+							File f = new File(pdfPath);
+							if (!f.exists()) {
+								f.mkdirs();
+							}
+							String output = pdfPath + File.separator + doc.getNumber() + "_COVER.pdf";
+							// excel to pdf
+							Workbook wb = new Workbook(rtnFile.getAbsolutePath());
+							wb.save(output, FileFormatType.PDF);
+
+							// 기존 커버 삭제
+							QueryResult result = ContentHelper.service.getContentsByRole(doc,
+									ContentRoleType.toContentRoleType("COVER"));
+							if (result.hasMoreElements()) {
+								ApplicationData data = (ApplicationData) result.nextElement();
+								ContentServerHelper.service.deleteContent(doc, data);
+							}
+
+							// save
+							File pdfFile = new File(output);
+							ApplicationData applicationData = ApplicationData.newApplicationData(doc);
+							applicationData.setRole(ContentRoleType.toContentRoleType("COVER"));
+							PersistenceHelper.manager.save(applicationData);
+							ContentServerHelper.service.updateContent(doc, applicationData, pdfFile.getPath());
+
+							// pdf merge
+							DocumentHelper.manager.mergePdf(doc);
+						}
 					}
-
-					String temp = WTProperties.getLocalProperties().getProperty("wt.temp");
-					String pdfPath = temp + File.separator + "pdf";
-					File f = new File(pdfPath);
-					if (!f.exists()) {
-						f.mkdirs();
-					}
-					String output = pdfPath + File.separator + doc.getNumber() + "_COVER.pdf";
-					// excel to pdf
-					Workbook wb = new Workbook(rtnFile.getAbsolutePath());
-					wb.save(output, FileFormatType.PDF);
-
-					// 기존 커버 삭제
-					QueryResult result = ContentHelper.service.getContentsByRole(doc,
-							ContentRoleType.toContentRoleType("COVER"));
-					if (result.hasMoreElements()) {
-						ApplicationData data = (ApplicationData) result.nextElement();
-						ContentServerHelper.service.deleteContent(doc, data);
-					}
-
-					// save
-					File pdfFile = new File(output);
-					ApplicationData applicationData = ApplicationData.newApplicationData(doc);
-					applicationData.setRole(ContentRoleType.toContentRoleType("COVER"));
-					PersistenceHelper.manager.save(applicationData);
-					ContentServerHelper.service.updateContent(doc, applicationData, pdfFile.getPath());
-
-					// pdf merge
-					DocumentHelper.manager.mergePdf(doc);
 				}
 			}
 			trs.commit();

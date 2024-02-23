@@ -16,12 +16,14 @@ import wt.pom.Transaction;
 import wt.services.ManagerException;
 import wt.services.StandardManager;
 import wt.util.WTException;
+import wt.vc.wip.WorkInProgressServiceEvent;
 
 public class StandardEventService extends StandardManager implements EventService {
 
 	private static final String POST_STORE = PersistenceManagerEvent.POST_STORE;
 	private static final String POST_MODIFY = PersistenceManagerEvent.POST_MODIFY;
 	private static final String STATE_CHANGE = LifeCycleServiceEvent.STATE_CHANGE;
+	private static final String POST_CHECKIN = WorkInProgressServiceEvent.POST_CHECKIN;
 
 	public static StandardEventService newStandardEventService() throws WTException {
 		StandardEventService instance = new StandardEventService();
@@ -35,6 +37,7 @@ public class StandardEventService extends StandardManager implements EventServic
 		getManagerService().addEventListener(listener, PersistenceManagerEvent.generateEventKey(POST_STORE));
 		getManagerService().addEventListener(listener, PersistenceManagerEvent.generateEventKey(POST_MODIFY));
 		getManagerService().addEventListener(listener, LifeCycleServiceEvent.generateEventKey(STATE_CHANGE));
+		getManagerService().addEventListener(listener, WorkInProgressServiceEvent.generateEventKey(POST_CHECKIN));
 	}
 
 	@Override

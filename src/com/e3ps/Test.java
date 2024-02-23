@@ -1,199 +1,149 @@
 package com.e3ps;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.Statement;
+import java.util.Hashtable;
+import java.util.Vector;
 
-import com.e3ps.common.util.CommonUtil;
-import com.e3ps.common.util.StringUtil;
-import com.e3ps.part.PartToPartLink;
-import com.e3ps.part.service.PartHelper;
-import com.ptc.cat.ui.client.action.OpenInCreoViewAction;
-import com.ptc.windchill.enterprise.wvs.common.WVSVisualizationDelegate;
-import com.ptc.windchill.enterprise.wvs.common.utils.CommonClientHelper;
-import com.ptc.wvs.common.ui.VisualizationHelper;
+import com.e3ps.org.Department;
+import com.e3ps.org.People;
 
 import wt.fc.PersistenceHelper;
 import wt.fc.QueryResult;
-import wt.part.WTPart;
-import wt.part.WTPartConfigSpec;
-import wt.part.WTPartHelper;
-import wt.part.WTPartStandardConfigSpec;
-import wt.part.WTPartUsageLink;
-import wt.vc.views.View;
-import wt.vc.views.ViewHelper;
+import wt.load.LoadUser;
+import wt.org.WTUser;
+import wt.pom.Transaction;
+import wt.query.QuerySpec;
+import wt.query.SearchCondition;
 
 public class Test {
 
 	public static void main(String[] args) throws Exception {
-		String afterOid = "wt.part.WTPart:1474443";
-		String preOid = "wt.part.WTPart:1474233";
-		WTPart afterPart = (WTPart) CommonUtil.getObject(afterOid);
-		WTPart prePart = (WTPart) CommonUtil.getObject(preOid);
-		ArrayList<WTPart> removeList = removeList(prePart, afterPart);
-		ArrayList<WTPart> addList = addList(prePart, afterPart);
 
-		for (WTPart remove : removeList) {
-			System.out.println("remove=" + remove.getNumber());
-		}
+		Department department = null;
+		System.out.println("@ syncJuser 시작 @");
 
-		for (WTPart add : addList) {
-			System.out.println("add=" + add.getNumber());
-		}
-		
-		
-		
-	}
+		String url = "jdbc:sqlserver://20.20.100.161:14233;databaseName=ZEUS";
+		String username = "plm";
+		String password = "Pi#szeuS11!";
 
-	private static ArrayList<WTPart> addList(WTPart prePart, WTPart afterPart) throws Exception {
-		ArrayList<Object[]> afters = descendants(afterPart);
-		ArrayList<Object[]> pres = descendants(prePart);
+		Connection connection = null;
+		Statement statement = null;
+		ResultSet resultSet = null;
 
-		ArrayList<Map<String, Object>> mergedList = new ArrayList<>();
-		ArrayList<Map<String, Object>> compList = new ArrayList<Map<String, Object>>();
+		Transaction trs = new Transaction();
 
-		ArrayList<WTPart> removeList = new ArrayList<WTPart>();
+		Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
 
-		for (Object[] pre : pres) {
-			Map<String, Object> mergedData = new HashMap<>();
-			WTPart a = (WTPart) pre[1];
-			mergedData.put("number", a.getNumber());
-			mergedData.put("oid", a.getPersistInfo().getObjectIdentifier().getStringValue());
-			mergedList.add(mergedData);
-		}
+		connection = DriverManager.getConnection(url, username, password);
 
-		for (Object[] after : afters) {
-			WTPart b = (WTPart) after[1];
-			String key = b.getPersistInfo().getObjectIdentifier().getStringValue();
-			boolean isExist = false;
+		statement = connection.createStatement();
+		String query = "SELECT * FROM ZEUS.DBO.vw_userinfo_pdm";
+		resultSet = statement.executeQuery(query);
 
-			for (Map<String, Object> mergedData : mergedList) {
-				String oid = (String) mergedData.get("oid");
-				String _key = oid;
-				if (key.equals(_key)) {
-					isExist = true;
-					break;
+		while (resultSet.next()) {
+			String userId = resultSet.getString("UserId");
+			String userName = resultSet.getString("UserName");
+			String groupCode = resultSet.getString("GroupCode");
+			String groupName = resultSet.getString("GroupName");
+			String email = resultSet.getString("Email");
+			String pw = resultSet.getString("Password");
+
+			boolean exist = isUser(userId);
+			// 유저 있으면 업데이트
+			if (exist) {
+
+				// 없으면 생성
+			} else {
+				Hashtable hash = new Hashtable<>();
+				hash.put("newUser", userId);
+				hash.put("webServerID", userId);
+				hash.put("fullName", userName);
+//                hash.put("Last", last);
+				hash.put("Email", email);
+				hash.put("Locale", "ko");
+				hash.put("Organization", "semi");
+				hash.put("password", password);
+				hash.put("ignore", "x");
+
+				boolean success = LoadUser.createUser(hash, new Hashtable<>(), new Vector<>());
+				// 등록 성공하면 USER 생성
+				if (success) {
+					People p = getUser(userId);
+					WTUser wtuser = getWTUser(userId);
+
+					// USER 테이블 생성
+					if (p == null) {
+						p = People.newPeople();
+//						p.setGroupCode(); // EH
+//						p.setGroupName(); // 장비기술팀
+						p.setId(userId);
+						p.setUser(wtuser);
+						p.setDepartment(null);
+						p.setName(username);
+						PersistenceHelper.manager.save(p);
+						// 업데이트
+					} else {
+						p.setId(userId);
+//						p.setGroupCode(); // EH21
+//						p.setGroupName(); // 장비기술팀2
+						p.setName(username);
+						p.setUser(wtuser);
+						p.setDepartment(null);
+						PersistenceHelper.manager.modify(p);
+					}
 				}
 			}
-
-			if (!isExist) {
-				// partNo가 동일한 데이터가 없으면 mergedList에 데이터를 추가
-				Map<String, Object> mergedData = new HashMap<>();
-				mergedData.put("oid", key);
-				mergedData.put("number", b.getNumber());
-				compList.add(mergedData);
-			}
-		}
-
-		for (Map<String, Object> m : compList) {
-			String oid = (String) m.get("oid");
-			WTPart pp = (WTPart) CommonUtil.getObject(oid);
-
-			QueryResult qr = PersistenceHelper.manager.navigate(pp.getMaster(), "prev", PartToPartLink.class);
-			if (qr.size() > 0) {
-				continue;
-			}
-			removeList.add(pp);
-		}
-		return removeList;
-	}
-
-	private static ArrayList<WTPart> removeList(WTPart prePart, WTPart afterPart) throws Exception {
-		ArrayList<Object[]> afters = descendants(afterPart);
-		ArrayList<Object[]> pres = descendants(prePart);
-
-		ArrayList<Map<String, Object>> mergedList = new ArrayList<>();
-		ArrayList<Map<String, Object>> compList = new ArrayList<Map<String, Object>>();
-
-		ArrayList<WTPart> removeList = new ArrayList<WTPart>();
-
-		for (Object[] after : afters) {
-			Map<String, Object> mergedData = new HashMap<>();
-			WTPart a = (WTPart) after[1];
-			mergedData.put("number", a.getNumber());
-			mergedData.put("oid", a.getPersistInfo().getObjectIdentifier().getStringValue());
-			mergedList.add(mergedData);
-		}
-
-		for (Object[] pre : pres) {
-			WTPart b = (WTPart) pre[1];
-			String key = b.getPersistInfo().getObjectIdentifier().getStringValue();
-			boolean isExist = false;
-
-			for (Map<String, Object> mergedData : mergedList) {
-				String oid = (String) mergedData.get("oid");
-				String _key = oid;
-				if (key.equals(_key)) {
-					isExist = true;
-					break;
-				}
-			}
-
-			if (!isExist) {
-				// partNo가 동일한 데이터가 없으면 mergedList에 데이터를 추가
-				Map<String, Object> mergedData = new HashMap<>();
-				mergedData.put("oid", key);
-				mergedData.put("number", b.getNumber());
-				compList.add(mergedData);
-			}
-		}
-
-		for (Map<String, Object> m : compList) {
-			String oid = (String) m.get("oid");
-			WTPart pp = (WTPart) CommonUtil.getObject(oid);
-
-			QueryResult qr = PersistenceHelper.manager.navigate(pp.getMaster(), "after", PartToPartLink.class);
-			if (qr.size() > 0) {
-				continue;
-			}
-			removeList.add(pp);
-		}
-		return removeList;
-	}
-
-	public static ArrayList<Object[]> descendants(WTPart part) throws Exception {
-		ArrayList<Object[]> list = new ArrayList<Object[]>();
-		// root 추가
-		String viewName = part.getViewName();
-		if (!StringUtil.checkString(viewName)) {
-			viewName = "Design";
-		}
-
-		View view = ViewHelper.service.getView(viewName);
-		WTPartConfigSpec configSpec = WTPartConfigSpec
-				.newWTPartConfigSpec(WTPartStandardConfigSpec.newWTPartStandardConfigSpec(view, null));
-		QueryResult result = WTPartHelper.service.getUsesWTParts(part, configSpec);
-		while (result.hasMoreElements()) {
-			Object obj[] = (Object[]) result.nextElement();
-			if (!(obj[1] instanceof WTPart)) {
-				continue;
-			}
-			WTPart p = (WTPart) obj[1];
-			list.add(obj);
-			descendants(p, list);
-		}
-		return list;
-	}
-
-	private static void descendants(WTPart part, ArrayList<Object[]> list) throws Exception {
-		String viewName = part.getViewName();
-		if (!StringUtil.checkString(viewName)) {
-			viewName = "Design";
-		}
-
-		View view = ViewHelper.service.getView(viewName);
-		WTPartConfigSpec configSpec = WTPartConfigSpec
-				.newWTPartConfigSpec(WTPartStandardConfigSpec.newWTPartStandardConfigSpec(view, null));
-		QueryResult result = WTPartHelper.service.getUsesWTParts(part, configSpec);
-		while (result.hasMoreElements()) {
-			Object obj[] = (Object[]) result.nextElement();
-			if (!(obj[1] instanceof WTPart)) {
-				continue;
-			}
-			WTPart p = (WTPart) obj[1];
-			list.add(obj);
-			descendants(p, list);
 		}
 	}
-	CommonClientHelper
+
+	public static Department getDepartment(String deptCode) throws Exception {
+		QuerySpec query = new QuerySpec();
+		int idx = query.appendClassList(Department.class, true);
+		SearchCondition sc = new SearchCondition(Department.class, Department.CODE, "=", deptCode);
+		query.appendWhere(sc, new int[] { idx });
+		QueryResult qr = PersistenceHelper.manager.find(query);
+		if (qr.hasMoreElements()) {
+			Object[] obj = (Object[]) qr.nextElement();
+			return (Department) obj[0];
+		}
+		return null;
+	}
+
+	public static WTUser getWTUser(String userId) throws Exception {
+		QuerySpec query = new QuerySpec();
+		int idx = query.appendClassList(WTUser.class, true);
+		SearchCondition sc = new SearchCondition(WTUser.class, WTUser.NAME, "=", userId);
+		query.appendWhere(sc, new int[] { idx });
+		QueryResult qr = PersistenceHelper.manager.find(query);
+		if (qr.hasMoreElements()) {
+			Object[] obj = (Object[]) qr.nextElement();
+			return (WTUser) obj[0];
+		}
+		return null;
+	}
+
+	public static People getUser(String userId) throws Exception {
+		QuerySpec query = new QuerySpec();
+		int idx = query.appendClassList(People.class, true);
+		SearchCondition sc = new SearchCondition(People.class, People.ID, "=", userId);
+		query.appendWhere(sc, new int[] { idx });
+		QueryResult qr = PersistenceHelper.manager.find(query);
+		if (qr.hasMoreElements()) {
+			Object[] obj = (Object[]) qr.nextElement();
+			return (People) obj[0];
+		}
+
+		return null;
+	}
+
+	public static boolean isUser(String userId) throws Exception {
+		QuerySpec query = new QuerySpec();
+		int idx = query.appendClassList(WTUser.class, true);
+		SearchCondition sc = new SearchCondition(WTUser.class, WTUser.NAME, "=", userId);
+		query.appendWhere(sc, new int[] { idx });
+		return PersistenceHelper.manager.find(query).size() > 0;
+	}
 }

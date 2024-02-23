@@ -236,7 +236,7 @@ boolean isMulti = Boolean.parseBoolean(multi);
 		AUIGrid.bind(myGridID, "sorting", auiSortingHandler);
 	}
 	
-	let sortCachelet sortCache = [];
+	let sortCache = [];
 	function auiSortingHandler(event) {
 		const sortingFields = event.sortingFields;
 		const key = sortingFields[0].dataField;
