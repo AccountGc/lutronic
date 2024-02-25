@@ -1,4 +1,4 @@
-<%@page import="com.e3ps.org.dto.PeopleDTO"%>
+반<%@page import="com.e3ps.org.dto.PeopleDTO"%>
 <%@page import="com.e3ps.org.People"%>
 <%@page import="com.e3ps.common.util.CommonUtil"%>
 <%@page import="java.util.Map"%>
@@ -132,17 +132,17 @@ int eca = (int) request.getAttribute("eca");
 							</span>
 						</a>
 					</li>
-					<!-- 					<li> -->
-					<!-- 						<a onclick="moveToPage(this, '/workspace/reject', '> 나의업무 > 반려함');"> -->
-					<!-- 							반려함 -->
-					<!-- 							<span class="label label-info float-right" id="reject"> -->
-					<%-- 								<%=count.get("reject")%> --%>
-					<!-- 							</span> -->
-					<!-- 						</a> -->
-					<!-- 					</li> -->
-					<!-- 					<li> -->
-					<!-- 						<a onclick="moveToPage(this, '/temprary/list', '> 나의업무 > 임시저장함');">임시저장함</a> -->
-					<!-- 					</li> -->
+					<li>
+						<a onclick="moveToPage(this, '/workspace/reject', '> 나의업무 > 반려함');">
+							반려함
+							<span class="label label-info float-right" id="reject">
+								<%=count.get("reject")%>
+							</span>
+						</a>
+					</li>
+					<li>
+						<a onclick="moveToPage(this, '/temprary/list', '> 나의업무 > 임시저장함');">임시저장함</a>
+					</li>
 					<li>
 						<a onclick="_popup('/Windchill/plm/groupware/password', 800, 300, 'n');">비밀번호 변경</a>
 					</li>
@@ -152,12 +152,12 @@ int eca = (int) request.getAttribute("eca");
 					<li>
 						<a onclick="moveToPage(this, '/org/organization', '> 나의업무 > 조직도');">조직도</a>
 					</li>
-<!-- 					<li> -->
-<!-- 						<a onclick="moveToPage(this, '/groupware/manage', '> 나의업무 > 관리자메뉴');">관리자 메뉴</a> -->
-<!-- 					</li> -->
+					<!-- 					<li> -->
+					<!-- 						<a onclick="moveToPage(this, '/groupware/manage', '> 나의업무 > 관리자메뉴');">관리자 메뉴</a> -->
+					<!-- 					</li> -->
 					<li>
 						<a onclick="moveToPage(this, '/system/print', '> 나의업무 > 인쇄 로그');">인쇄 로그</a>
-					</li>					
+					</li>
 					<%
 					}
 					%>

@@ -17,7 +17,7 @@ function toUI() {
 	nameTag.setAttribute("readonly", "readonly");
 	// 초기 사용 불가 상태
 	$("#" + classType3Id).bindSelectDisabled(true);
-//	$("#" + modelId).bindSelectDisabled(true);
+	$("#" + modelId).bindSelectDisabled(true);
 	productDisable();
 	const clearSecond = document.getElementById("clearSecond");
 	clearSecond.style.display = "none";
@@ -223,8 +223,7 @@ function last() {
 // 프로젝트 코드 변경
 function preNumberCheck(obj) {
 	const tag = document.querySelector("#" + interalnumberId);
-//	const value = obj.value;
-	const value = document.getElementById("modelcode").value;
+	const value = obj.value;
 	const preFixTag = document.querySelector("#" + preFixId);
 	if (value !== "") {
 		const classType1 = document.getElementById(classType1Id);
@@ -278,11 +277,8 @@ function suffixEnable() {
 
 // 프로젝트 코드 활성화
 function modelEnable() {
-//	$("#" + modelId).bindSelectSetValue("");
-//	$("#" + modelId).bindSelectDisabled(false);
-	finderCode("model", "MODEL", "code");
-	const modelTag = document.querySelector("#" + modelId);
-	modelTag.removeAttribute("readonly");
+	$("#" + modelId).bindSelectSetValue("");
+	$("#" + modelId).bindSelectDisabled(false);
 }
 
 // 값 초기화 + 읽기전용처리
@@ -291,21 +287,17 @@ function clearValue() {
 	const numberTag = document.querySelector("#" + interalnumberId);
 	const preFixTag = document.querySelector("#" + preFixId);
 	const suffixTag = document.querySelector("#" + suffixId);
-	const modelTag = document.querySelector("#" + modelId);
-	document.getElementById("modelcode").value="";
 	modelreq.classList.remove("req");
 	numberTag.value = "";
 	preFixTag.value = "";
 	suffixTag.value = "";
-	modelTag.value = "";
-	modelTag.setAttribute("readonly", "readonly");
 	numberTag.setAttribute("readonly", "readonly");
 	preFixTag.setAttribute("readonly", "readonly");
 	suffixTag.setAttribute("readonly", "readonly");
 	$("#" + classType3Id).bindSelectSetValue("");
-//	$("#" + modelId).bindSelectSetValue("");
+	$("#" + modelId).bindSelectSetValue("");
 	$("#" + classType3Id).bindSelectDisabled(true);
-//	$("#" + modelId).bindSelectDisabled(true);
+	$("#" + modelId).bindSelectDisabled(true);
 	DEXT5.setBodyValue("", "content");
 
 	const classType2Tag = document.getElementById(classType2Id);

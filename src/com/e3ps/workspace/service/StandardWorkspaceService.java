@@ -218,7 +218,7 @@ public class StandardWorkspaceService extends StandardManager implements Workspa
 			receiveLine.setMaster(master);
 			receiveLine.setReads(false);
 			receiveLine.setSort(0);
-			receiveLine.setStartTime(startTime);
+//			receiveLine.setStartTime(startTime);
 			receiveLine.setType(WorkspaceHelper.RECEIVE_LINE);
 			receiveLine.setRole(WorkspaceHelper.WORKING_RECEIVE);
 			receiveLine.setDescription(null);
@@ -485,6 +485,7 @@ public class StandardWorkspaceService extends StandardManager implements Workspa
 				// 모든 수신라인 상태 변경
 				ArrayList<ApprovalLine> ll = WorkspaceHelper.manager.getReceiveLines(master);
 				for (ApprovalLine rLine : ll) {
+					rLine.setStartTime(new Timestamp(new Date().getTime()));
 					rLine.setState(WorkspaceHelper.STATE_RECEIVE_START);
 					PersistenceHelper.manager.modify(rLine);
 					// 모든 수신라인에 메일 전송
@@ -617,26 +618,29 @@ public class StandardWorkspaceService extends StandardManager implements Workspa
 				WTUser sessionUser = CommonUtil.sessionUser();
 				description = sessionUser.getFullName() + " 사용자의 합의반려로 인해 모든 결재가 반려 처리 되었습니다.";
 			}
+			line.setDescription(description);
+			line.setCompleteTime(new Timestamp(new Date().getTime()));
+			PersistenceHelper.manager.modify(line);
 
 			// 기안라인은 제외한다?
-			ArrayList<ApprovalLine> list = WorkspaceHelper.manager.getAllLines(m, true);
-			for (ApprovalLine l : list) {
-				String t = l.getType();
-				// 합의라인
-				if (t.equals(WorkspaceHelper.AGREE_LINE)) {
-					l.setState(WorkspaceHelper.STATE_AGREE_REJECT);
-					// 결재라인
-				} else if (t.equals(WorkspaceHelper.APPROVAL_LINE)) {
-					l.setState(WorkspaceHelper.STATE_APPROVAL_REJECT);
-					// 수신라인
-				} else if (t.equals(WorkspaceHelper.RECEIVE_LINE)) {
-					l.setState(WorkspaceHelper.STATE_RECEIVE_REJECT);
-				}
-				l.setCompleteTime(new Timestamp(new Date().getTime()));
-				l.setDescription(description);
-
-				PersistenceHelper.manager.modify(l);
-			}
+//			ArrayList<ApprovalLine> list = WorkspaceHelper.manager.getAllLines(m, true);
+//			for (ApprovalLine l : list) {
+//				String t = l.getType();
+//				// 합의라인
+//				if (t.equals(WorkspaceHelper.AGREE_LINE)) {
+//					l.setState(WorkspaceHelper.STATE_AGREE_REJECT);
+//					// 결재라인
+//				} else if (t.equals(WorkspaceHelper.APPROVAL_LINE)) {
+//					l.setState(WorkspaceHelper.STATE_APPROVAL_REJECT);
+//					// 수신라인
+//				} else if (t.equals(WorkspaceHelper.RECEIVE_LINE)) {
+//					l.setState(WorkspaceHelper.STATE_RECEIVE_REJECT);
+//				}
+//				l.setCompleteTime(new Timestamp(new Date().getTime()));
+//				l.setDescription(description);
+//
+//				PersistenceHelper.manager.modify(l);
+//			}
 
 			m.setState(WorkspaceHelper.STATE_MASTER_APPROVAL_REJECT);
 			m.setCompleteTime(new Timestamp(new Date().getTime()));

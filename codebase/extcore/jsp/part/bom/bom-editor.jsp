@@ -465,10 +465,6 @@ WTPart root = (WTPart) request.getAttribute("root");
 			cmd : "removeLink",
 			uiIcon : "ui-icon-remove",
 		}, {
-			title : "다중삭제",
-			cmd : "removeMultiLink",
-			uiIcon : "ui-icon-remove",
-		}, {
 			title : "----"
 		}, {
 			title : "체크인",

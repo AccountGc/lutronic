@@ -28,7 +28,7 @@ iframe {
 <%@include file="/extcore/jsp/common/auigrid.jsp"%>
 
 <!-- 채번스크립트 -->
-<script type="text/javascript" src="/Windchill/extcore/jsp/document/js/genNumber.js?v=551"></script>
+<script type="text/javascript" src="/Windchill/extcore/jsp/document/js/genNumber.js?v=523511"></script>
 </head>
 <body>
 	<form>
@@ -112,16 +112,8 @@ iframe {
 			<tr>
 				<th class="lb" id="modelreq">프로젝트코드</th>
 				<td class="indent5">
-					<select name="model" id="model" class="width-200" onchange="preNumberCheck(this);">
-						<option value="">선택</option>
-						<%
-						for (NumberCode model : modelList) {
-						%>
-						<option value="<%=model.getCode()%>"><%=model.getCode()%> [<%=model.getName()%>]</option>
-						<%
-						}
-						%>
-					</select>
+					<input type="text" name="model" id="model" class="width-300" readonly="readonly" onchange="preNumberCheck(this);">
+					<input type="hidden" name="modelcode" id="modelcode">
 				</td>
 				<th id="preq">제품명</th>
 				<td class="indent5">
@@ -268,7 +260,7 @@ iframe {
 				const lifecycle = document.querySelector("input[name=lifecycle]:checked").value;
 				const secondarys = toArray("secondarys");
 				const primary = document.querySelector("input[name=primary]");
-				const model = document.getElementById("model").value;
+				const model = document.getElementById("modelcode").value;
 				const interalnumber = document.getElementById("interalnumber");
 				const preseration = document.getElementById("preseration").value;
 
@@ -419,7 +411,8 @@ iframe {
 
 			document.addEventListener("DOMContentLoaded", function() {
 				selectbox("preseration");
-				selectbox("model");
+// 				selectbox("model");
+// 				finderCode("model", "MODEL", "code");
 				$("#preseration").bindSelectSetValue("PR001");
 				createAUIGrid90(columns90);
 				createAUIGrid91(columns91);
