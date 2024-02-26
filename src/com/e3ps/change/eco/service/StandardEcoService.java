@@ -371,14 +371,13 @@ public class StandardEcoService extends StandardManager implements EcoService {
 			RequestOrderLink link = (RequestOrderLink) obj[0];
 			PersistenceHelper.manager.delete(link);
 		}
-		
-		
+
 		QueryResult rs = PersistenceHelper.manager.navigate(eco, "ecpr", EcoToEcprLink.class, false);
-		while(rs.hasMoreElements()) {
-			EcoToEcprLink link = (EcoToEcprLink)rs.nextElement();
+		while (rs.hasMoreElements()) {
+			EcoToEcprLink link = (EcoToEcprLink) rs.nextElement();
 			PersistenceHelper.manager.delete(link);
 		}
-		
+
 	}
 
 	/**
@@ -669,16 +668,23 @@ public class StandardEcoService extends StandardManager implements EcoService {
 	public void save90(Map<String, Object> params) throws Exception {
 		String oid = (String) params.get("oid");
 		ArrayList<Map<String, Object>> addRows = (ArrayList<Map<String, Object>>) params.get("addRows");
+		ArrayList<Map<String, Object>> removeRows = (ArrayList<Map<String, Object>>) params.get("removeRows");
 		Transaction trs = new Transaction();
 		try {
 			trs.start();
 
 			EChangeOrder eco = (EChangeOrder) CommonUtil.getObject(oid);
 			// 기존꺼 삭제
-			QueryResult qr = PersistenceHelper.manager.navigate(eco, "document", DocumentECOLink.class, false);
-			while (qr.hasMoreElements()) {
-				DocumentECOLink l = (DocumentECOLink) qr.nextElement();
-				PersistenceHelper.manager.delete(l);
+//			QueryResult qr = PersistenceHelper.manager.navigate(eco, "document", DocumentECOLink.class, false);
+//			while (qr.hasMoreElements()) {
+//				DocumentECOLink l = (DocumentECOLink) qr.nextElement();
+//				PersistenceHelper.manager.delete(l);
+//			}
+
+			for (Map<String, Object> m : removeRows) {
+				String s = (String) m.get("loid");
+				DocumentECOLink link = (DocumentECOLink) CommonUtil.getObject(s);
+				PersistenceHelper.manager.delete(link);
 			}
 
 			for (Map<String, Object> m : addRows) {

@@ -334,7 +334,7 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 				AUIGrid.bind(myGridID, "sorting", auiSortingHandler);
 			}
 
-			let sorlet sortCache = [];
+			let sortCache = [];
 			function auiSortingHandler(event) {
 				const sortingFields = event.sortingFields;
 				const key = sortingFields[0].dataField;

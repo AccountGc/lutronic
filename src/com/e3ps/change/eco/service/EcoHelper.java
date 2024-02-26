@@ -364,11 +364,13 @@ public class EcoHelper {
 	 * ECO 관련문서
 	 */
 	private Object referenceDoc(EChangeOrder eco, ArrayList<Map<String, Object>> list) throws Exception {
-		QueryResult result = PersistenceHelper.manager.navigate(eco, "document", DocumentECOLink.class);
+		QueryResult result = PersistenceHelper.manager.navigate(eco, "document", DocumentECOLink.class, false);
 		while (result.hasMoreElements()) {
-			WTDocument d = (WTDocument) result.nextElement();
+			DocumentECOLink link = (DocumentECOLink) result.nextElement();
+			WTDocument d = link.getDocument();
 			DocumentColumn dto = new DocumentColumn(d);
 			Map<String, Object> map = AUIGridUtil.dtoToMap(dto);
+			map.put("loid", link.getPersistInfo().getObjectIdentifier().getStringValue());
 			list.add(map);
 		}
 		return list;
