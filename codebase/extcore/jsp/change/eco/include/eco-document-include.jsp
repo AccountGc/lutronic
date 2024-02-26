@@ -180,7 +180,7 @@ if (header) {
 	}
 	
 	function save90() {
-		const addRows = AUIGrid.getGridData(myGridID90);
+		const addRows = AUIGrid.getAddedRowItems(myGridID90);
 		const removeRows = AUIGrid.getRemovedItems(myGridID90);
 		if(addRows.length === 0) {
 			alert("추가된 문서가 없습니다.");
