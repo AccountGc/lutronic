@@ -514,7 +514,8 @@ public class StandardSAPService extends StandardManager implements SAPService {
 
 					System.out.println("전송타입 = " + dto.getSendType() + " || 이전부모품번 = " + dto.getParentPartNumber()
 							+ ", " + " 이전자식품번 =  " + dto.getChildPartNumber() + ", 신규부모품번 = "
-							+ dto.getNewParentPartNumber() + ", 신규자식품번 = " + dto.getNewChildPartNumber());
+							+ dto.getNewParentPartNumber() + ", 신규자식품번 = " + dto.getNewChildPartNumber() + ", 수량 = "
+							+ dto.getQty());
 
 					bomTable.insertRow(idx);
 					bomTable.setValue("AENNR8", eco.getEoNumber()); // 변경번호 12자리?
