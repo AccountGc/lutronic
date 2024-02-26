@@ -678,12 +678,14 @@ public class SAPHelper {
 	 * 길이 및 정규식 제외
 	 */
 	public boolean skipLength(String number) throws Exception {
-		if (number.length() > 10) {
-			return true;
-		}
+		if (StringUtil.checkString(number)) {
+			if (number.length() > 10) {
+				return true;
+			}
 
-		if (!(Pattern.matches("^[0-9]+$", number))) {
-			return true;
+			if (!(Pattern.matches("^[0-9]+$", number))) {
+				return true;
+			}
 		}
 		return false;
 	}
@@ -692,8 +694,10 @@ public class SAPHelper {
 	 * 8번 품번 제외
 	 */
 	public boolean skipEight(String number) throws Exception {
-		if (number.startsWith("8")) {
-			return true;
+		if (StringUtil.checkString(number)) {
+			if (number.startsWith("8")) {
+				return true;
+			}
 		}
 		// 정규식으로 알파벳 제외한다..
 		return false;

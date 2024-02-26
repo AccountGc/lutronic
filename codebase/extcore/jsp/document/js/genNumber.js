@@ -17,7 +17,8 @@ function toUI() {
 	nameTag.setAttribute("readonly", "readonly");
 	// 초기 사용 불가 상태
 	$("#" + classType3Id).bindSelectDisabled(true);
-//	$("#" + modelId).bindSelectDisabled(true);
+	//	$("#" + modelId).unbindSelector();
+	$("#inputBasic_AX_model").remove();
 	productDisable();
 	const clearSecond = document.getElementById("clearSecond");
 	clearSecond.style.display = "none";
@@ -223,7 +224,7 @@ function last() {
 // 프로젝트 코드 변경
 function preNumberCheck(obj) {
 	const tag = document.querySelector("#" + interalnumberId);
-//	const value = obj.value;
+	//	const value = obj.value;
 	const value = document.getElementById("modelcode").value;
 	const preFixTag = document.querySelector("#" + preFixId);
 	if (value !== "") {
@@ -278,8 +279,8 @@ function suffixEnable() {
 
 // 프로젝트 코드 활성화
 function modelEnable() {
-//	$("#" + modelId).bindSelectSetValue("");
-//	$("#" + modelId).bindSelectDisabled(false);
+	//	$("#" + modelId).bindSelectSetValue("");
+	//	$("#" + modelId).bindSelectDisabled(false);
 	finderCode("model", "MODEL", "code");
 	const modelTag = document.querySelector("#" + modelId);
 	modelTag.removeAttribute("readonly");
@@ -292,7 +293,7 @@ function clearValue() {
 	const preFixTag = document.querySelector("#" + preFixId);
 	const suffixTag = document.querySelector("#" + suffixId);
 	const modelTag = document.querySelector("#" + modelId);
-	document.getElementById("modelcode").value="";
+	document.getElementById("modelcode").value = "";
 	modelreq.classList.remove("req");
 	numberTag.value = "";
 	preFixTag.value = "";
@@ -303,9 +304,10 @@ function clearValue() {
 	preFixTag.setAttribute("readonly", "readonly");
 	suffixTag.setAttribute("readonly", "readonly");
 	$("#" + classType3Id).bindSelectSetValue("");
-//	$("#" + modelId).bindSelectSetValue("");
+	$("#inputBasic_AX_model").remove();
+	//	$("#" + modelId).unbindSelector();
 	$("#" + classType3Id).bindSelectDisabled(true);
-//	$("#" + modelId).bindSelectDisabled(true);
+	//	$("#" + modelId).bindSelectDisabled(true);
 	DEXT5.setBodyValue("", "content");
 
 	const classType2Tag = document.getElementById(classType2Id);

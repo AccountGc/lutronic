@@ -811,7 +811,7 @@ public class StandardDrawingService extends StandardManager implements DrawingSe
 //		System.out.println("extentionNam123123312=" + ext);
 		WTPart part = (WTPart) CommonUtil.getObject(partOid);
 //		String number = part.getNumber() + "." + ext;
-		String number = extentionName + "." + ext;
+		String number = part.getNumber() + "." + ext;
 		String name = part.getName();
 
 		epm.setNumber(number);

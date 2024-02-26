@@ -28,7 +28,7 @@ iframe {
 <%@include file="/extcore/jsp/common/auigrid.jsp"%>
 
 <!-- 채번스크립트 -->
-<script type="text/javascript" src="/Windchill/extcore/jsp/document/js/genNumber.js?v=523511"></script>
+<script type="text/javascript" src="/Windchill/extcore/jsp/document/js/genNumber.js?v=521335141"></script>
 </head>
 <body>
 	<form>
@@ -293,8 +293,7 @@ iframe {
 				const content = DEXT5.getBodyValue("content");
 				// 구 문서번호
 				const oldNumber = document.getElementById("oldNumber").value;
-				
-				
+
 				if (location.value === "/Default/문서") {
 					alert("문서분류를 선택하세요.");
 					folder();
@@ -411,8 +410,8 @@ iframe {
 
 			document.addEventListener("DOMContentLoaded", function() {
 				selectbox("preseration");
-// 				selectbox("model");
-// 				finderCode("model", "MODEL", "code");
+				// 				selectbox("model");
+				// 				finderCode("model", "MODEL", "code");
 				$("#preseration").bindSelectSetValue("PR001");
 				createAUIGrid90(columns90);
 				createAUIGrid91(columns91);
