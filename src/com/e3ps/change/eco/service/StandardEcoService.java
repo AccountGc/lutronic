@@ -770,7 +770,12 @@ public class StandardEcoService extends StandardManager implements EcoService {
 			}
 
 			int i = 0;
+
+			System.out.println("역전개 개수 = " + list.size());
+
 			for (WTPart pp : list) {
+
+				System.out.println("부품 번호 = " + pp.getNumber());
 
 				if (PartHelper.isCollectNumber(pp.getNumber())) {
 					continue;
