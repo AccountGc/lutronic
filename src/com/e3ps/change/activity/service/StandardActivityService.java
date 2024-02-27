@@ -504,7 +504,7 @@ public class StandardActivityService extends StandardManager implements Activity
 				} else {
 					String nn = IBAUtil.getStringValue(pp, "MODEL");
 					if (model.indexOf(nn) <= -1) {
-						model += nn + ",";
+						model += "," + nn;
 					}
 				}
 				i++;
