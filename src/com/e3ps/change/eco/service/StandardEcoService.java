@@ -775,13 +775,13 @@ public class StandardEcoService extends StandardManager implements EcoService {
 
 			for (WTPart pp : list) {
 
-				System.out.println("부품 번호 = " + pp.getNumber());
-
 				if (PartHelper.isCollectNumber(pp.getNumber())) {
+					System.out.println("처음 걸러진 번호 = " + pp.getNumber());
 					continue;
 				}
 
 				if (!PartHelper.isTopNumber(pp.getNumber())) {
+					System.out.println("두번째 걸러진 번호 = " + pp.getNumber());
 					continue;
 				}
 				if (i == 0) {
@@ -793,7 +793,11 @@ public class StandardEcoService extends StandardManager implements EcoService {
 					}
 				}
 				i++;
+
+				System.out.println("넘어온 번호 =  " + pp.getNumber());
 			}
+
+			System.out.println("model=" + model);
 			eco.setModel(model);
 			PersistenceHelper.manager.modify(eco);
 
