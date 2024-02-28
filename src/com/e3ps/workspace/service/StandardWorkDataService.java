@@ -124,7 +124,7 @@ public class StandardWorkDataService extends StandardManager implements WorkData
 						receiveRows);
 			} else {
 				// 상태값 및 날짜 변경들..
-				ArrayList<ApprovalLine> list = WorkspaceHelper.manager.getAllLines(appMaster);
+//				ArrayList<ApprovalLine> list = WorkspaceHelper.manager.getAllLines(appMaster);
 				WorkspaceHelper.service.reworkSubmit(dto, appMaster);
 			}
 

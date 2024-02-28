@@ -903,6 +903,17 @@ public class StandardActivityService extends StandardManager implements Activity
 					QueryResult qr = PersistenceHelper.manager.find(query);
 					// 링크된게 없을 경우에만..
 					if (qr.size() == 0) {
+
+						if (PartHelper.isCollectNumber(mm.getNumber())) {
+							System.out.println("숫자 아닌게 포함 더미!");
+							continue;
+						}
+
+						if (!PartHelper.isTopNumber(mm.getNumber())) {
+							System.out.println("최상위 품번이 아님!!");
+							continue;
+						}
+
 						EOCompletePartLink cLink = EOCompletePartLink.newEOCompletePartLink(mm, eco);
 						cLink.setVersion(endPart.getVersionIdentifier().getSeries().getValue());
 						PersistenceHelper.manager.save(cLink);
@@ -1273,6 +1284,17 @@ public class StandardActivityService extends StandardManager implements Activity
 				QueryResult qr = PersistenceHelper.manager.find(query);
 				// 링크된게 없을 경우에만..
 				if (qr.size() == 0) {
+
+					if (PartHelper.isCollectNumber(mm.getNumber())) {
+						System.out.println("숫자 아닌게 포함 더미!");
+						continue;
+					}
+
+					if (!PartHelper.isTopNumber(mm.getNumber())) {
+						System.out.println("최상위 품번이 아님!!");
+						continue;
+					}
+
 					EOCompletePartLink cLink = EOCompletePartLink.newEOCompletePartLink(mm, eco);
 					cLink.setVersion(endPart.getVersionIdentifier().getSeries().getValue());
 					PersistenceHelper.manager.save(cLink);

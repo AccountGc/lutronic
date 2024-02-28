@@ -193,7 +193,7 @@ iframe {
 				<td colspan="5" class="indent5">
 					<%
 					Map<String, Object> contentMap = dto.getContentMap();
-					if (contentMap != null) {
+					if (contentMap != null && contentMap.size() > 0) {
 					%>
 					<div>
 						<a href="<%=contentMap.get("url")%>">
