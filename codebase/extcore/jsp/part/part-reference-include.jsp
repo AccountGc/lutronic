@@ -22,6 +22,12 @@ String oid = request.getParameter("oid");
 	<jsp:param value="view" name="mode" />
 </jsp:include>
 
+<!-- 관련 EO -->
+<%-- <jsp:include page="/extcore/jsp/change/eo/include/eo-include.jsp"> --%>
+<%-- 	<jsp:param value="<%=oid%>" name="oid" /> --%>
+<%-- 	<jsp:param value="view" name="mode" /> --%>
+<%-- </jsp:include> --%>
+
 <!-- 관련 ECO -->
 <jsp:include page="/extcore/jsp/change/eco/include/eco-include.jsp">
 	<jsp:param value="<%=oid%>" name="oid" />

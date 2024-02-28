@@ -189,30 +189,6 @@ iframe {
 			}
 			%>
 			<tr>
-				<th class="lb">주 첨부파일</th>
-				<td colspan="5" class="indent5">
-					<%
-					Map<String, Object> contentMap = dto.getContentMap();
-					if (contentMap != null && contentMap.size() > 0) {
-					%>
-					<div>
-						<a href="<%=contentMap.get("url")%>">
-							<span style="position: relative; bottom: 2px;"><%=contentMap.get("name")%></span>
-							<img src="<%=contentMap.get("fileIcon")%>" style="position: relative; top: 1px;">
-						</a>
-					</div>
-					<%
-					} else {
-					%>
-					<font color="red">
-						<b>등록된 주 첨부파일이 없습니다.</b>
-					</font>
-					<%
-					}
-					%>
-				</td>
-			</tr>
-			<tr>
 				<th class="lb">첨부파일</th>
 				<td colspan="5" class="indent5">
 					<jsp:include page="/extcore/jsp/common/secondary-view.jsp">

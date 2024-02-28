@@ -31,6 +31,23 @@ import net.sf.json.JSONArray;
 @RequestMapping(value = "/workspace/**")
 public class WorkspaceController extends BaseController {
 
+	@Description(value = "결재선 삭제(중복)")
+	@ResponseBody
+	@PostMapping(value = "/removeLine")
+	public Map<String, Object> removeLine(@RequestBody Map<String, Object> params) throws Exception {
+		Map<String, Object> result = new HashMap<String, Object>();
+		try {
+			WorkspaceHelper.service.removeLine(params);
+			result.put("msg", "삭제 되었습니다.");
+			result.put("result", SUCCESS);
+		} catch (Exception e) {
+			e.printStackTrace();
+			result.put("result", FAIL);
+			result.put("msg", e.toString());
+		}
+		return result;
+	}
+
 	@Description(value = "외부 메일 다시 가져오기")
 	@ResponseBody
 	@GetMapping(value = "/reloadMail")

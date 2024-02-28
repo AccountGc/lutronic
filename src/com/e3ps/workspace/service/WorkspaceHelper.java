@@ -51,7 +51,7 @@ public class WorkspaceHelper {
 	/*
 	 * 마스터 라인 상태값
 	 */
-	public static final String STATE_MASTER_APPROVAL_AGREE= "합의중";
+	public static final String STATE_MASTER_APPROVAL_AGREE = "합의중";
 	public static final String STATE_MASTER_APPROVAL_APPROVING = "승인중";
 	public static final String STATE_MASTER_APPROVAL_REJECT = "반려됨";
 	public static final String STATE_MASTER_APPROVAL_COMPLETE = "결재완료";
@@ -143,7 +143,7 @@ public class WorkspaceHelper {
 		boolean sort = QuerySpecUtils.toSort(sortType);
 		QuerySpecUtils.toOrderBy(query, idx, ApprovalMaster.class, toSortkey(sortKey), sort);
 
-		System.out.println(query);		
+		System.out.println(query);
 		PageQueryUtils pager = new PageQueryUtils(params, query);
 		PagingQueryResult result = pager.find();
 		int rowNum = (pager.getCpage() - 1) * pager.getPsize() + 1;
@@ -366,7 +366,8 @@ public class WorkspaceHelper {
 
 		// 마스터 객체 승인중인것만..
 		query.appendOpenParen();
-		QuerySpecUtils.toEquals(query, idx, ApprovalMaster.class, ApprovalMaster.STATE, STATE_MASTER_APPROVAL_APPROVING);
+		QuerySpecUtils.toEquals(query, idx, ApprovalMaster.class, ApprovalMaster.STATE,
+				STATE_MASTER_APPROVAL_APPROVING);
 		QuerySpecUtils.toEqualsOr(query, idx, ApprovalMaster.class, ApprovalMaster.STATE, STATE_MASTER_APPROVAL_AGREE);
 		query.appendCloseParen();
 
@@ -798,6 +799,7 @@ public class WorkspaceHelper {
 		if (master != null) {
 			ApprovalLine submit = getSubmitLine(master);
 			Map<String, String> data = new HashMap<>();
+			data.put("oid", submit.getPersistInfo().getObjectIdentifier().getStringValue());
 			data.put("type", submit.getType());
 			data.put("role", submit.getRole());
 			data.put("name", submit.getName());
@@ -813,6 +815,7 @@ public class WorkspaceHelper {
 			ArrayList<ApprovalLine> agreeLines = getAgreeLines(master);
 			for (ApprovalLine agreeLine : agreeLines) {
 				Map<String, String> map = new HashMap<>();
+				map.put("oid", agreeLine.getPersistInfo().getObjectIdentifier().getStringValue());
 				map.put("type", agreeLine.getType());
 				map.put("role", agreeLine.getRole());
 				map.put("name", agreeLine.getName());
@@ -830,6 +833,7 @@ public class WorkspaceHelper {
 			ArrayList<ApprovalLine> approvalLines = getApprovalLines(master);
 			for (ApprovalLine approvalLine : approvalLines) {
 				Map<String, String> map = new HashMap<>();
+				map.put("oid", approvalLine.getPersistInfo().getObjectIdentifier().getStringValue());
 				map.put("type", approvalLine.getType());
 				map.put("role", approvalLine.getRole());
 				map.put("name", approvalLine.getName());
@@ -849,6 +853,7 @@ public class WorkspaceHelper {
 			ArrayList<ApprovalLine> receiveLines = getReceiveLines(master);
 			for (ApprovalLine receiveLine : receiveLines) {
 				Map<String, String> map = new HashMap<>();
+				map.put("oid", receiveLine.getPersistInfo().getObjectIdentifier().getStringValue());
 				map.put("type", receiveLine.getType());
 				map.put("role", receiveLine.getRole());
 				map.put("name", receiveLine.getName());

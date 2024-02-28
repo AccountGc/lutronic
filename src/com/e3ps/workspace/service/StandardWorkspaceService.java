@@ -1527,4 +1527,29 @@ public class StandardWorkspaceService extends StandardManager implements Workspa
 				trs.rollback();
 		}
 	}
+
+	@Override
+	public void removeLine(Map<String, Object> params) throws Exception {
+		ArrayList<Map<String, Object>> data = (ArrayList<Map<String, Object>>) params.get("data");
+		Transaction trs = new Transaction();
+		try {
+			trs.start();
+
+			for (Map<String, Object> m : data) {
+				String oid = (String) m.get("oid");
+				ApprovalLine l = (ApprovalLine) CommonUtil.getObject(oid);
+				PersistenceHelper.manager.delete(l);
+			}
+
+			trs.commit();
+			trs = null;
+		} catch (Exception e) {
+			e.printStackTrace();
+			trs.rollback();
+			throw e;
+		} finally {
+			if (trs != null)
+				trs.rollback();
+		}
+	}
 }

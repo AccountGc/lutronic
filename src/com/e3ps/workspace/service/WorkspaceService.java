@@ -143,4 +143,9 @@ public interface WorkspaceService {
 	 * 결재선 유지로 회수후 재기안
 	 */
 	public abstract void reworkSubmit(WorkDataDTO dto, ApprovalMaster appMaster) throws Exception;
+
+	/**
+	 * 중복 결재선 삭제
+	 */
+	public abstract void removeLine(Map<String, Object> params) throws Exception;
 }

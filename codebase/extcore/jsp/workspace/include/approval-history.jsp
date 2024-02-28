@@ -1,3 +1,4 @@
+<%@page import="com.e3ps.common.util.CommonUtil"%>
 <%@page import="com.e3ps.workspace.service.WorkspaceHelper"%>
 <%@page import="net.sf.json.JSONArray"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
@@ -37,7 +38,17 @@ JSONArray data = WorkspaceHelper.manager.history(oid);
 			</div>
 		</td>
 		<%
-		if(popup) {
+		if (CommonUtil.isAdmin()) {
+		%>
+		<td class="right">
+			<input type="button" value="삭제" title="삭제" onclick="removeLine();" class="red">
+		</td>
+		<%
+		}
+		%>
+
+		<%
+		if (popup) {
 		%>
 		<td class="right">
 			<input type="button" value="닫기" title="닫기" class="gray" onclick="self.close();">
@@ -104,20 +115,21 @@ JSONArray data = WorkspaceHelper.manager.history(oid);
 		dataType : "string",
 		style : "aui-left-0",
 		width : 450,
-		renderer: { // 템플릿 렌더러 사용
-			type: "TemplateRenderer",
+		renderer : { // 템플릿 렌더러 사용
+			type : "TemplateRenderer",
 		},
-// 		labelFunction : function(rowIndex, columnIndex, value, headerText, item) {
-// 			let sliced = "";
-// 			for (let i = 0; value !== null && i < value.length; i += 100) {
-// 				sliced += value.slice(i, i + 100) + '<p>';
-// 			}
-// 			return sliced;
-// 		}			
+	// 		labelFunction : function(rowIndex, columnIndex, value, headerText, item) {
+	// 			let sliced = "";
+	// 			for (let i = 0; value !== null && i < value.length; i += 100) {
+	// 				sliced += value.slice(i, i + 100) + '<p>';
+	// 			}
+	// 			return sliced;
+	// 		}			
 	}, ]
 	function createAUIGrid10000(columnLayout) {
 		const props = {
 			headerHeight : 30,
+			showRowCheckColumn : true,
 			showRowNumColumn : true,
 			rowNumHeaderText : "번호",
 			selectionMode : "multipleCells",
@@ -125,24 +137,54 @@ JSONArray data = WorkspaceHelper.manager.history(oid);
 			enableSorting : false,
 			showAutoNoDataMessage : false,
 			autoGridHeight : true,
-			wordWrap: true,
-// 			usePaging : true,
+			wordWrap : true,
+		// 			usePaging : true,
 		}
 		myGridID10000 = AUIGrid.create("#grid10000", columnLayout, props);
-		AUIGrid.setGridData(myGridID10000, <%=data%>	);
+		AUIGrid.setGridData(myGridID10000,
+<%=data%>
+	);
 	}
-	<%
-		if(popup) {
-	%>
+
+	function removeLine() {
+		const data = AUIGrid.getCheckedRowItems(myGridID10000);
+		if (data.length === 0) {
+			alert("삭제할 결재선을 선택하세요.");
+			return false;
+		}
+		
+		const arr = new Array();
+		for(let i=0; i<data.length; i++) {
+			arr.push(data[i].item);
+		}
+
+		if (!confirm("삭제 하시겠습니까?")) {
+			return false;
+		}
+		const url = getCallUrl("/workspace/removeLine");
+		const params = {
+			data : arr
+		};
+		logger(params);
+		openLayer();
+		call(url, params, function(data) {
+			alert(data.msg);
+			if (data.result) {
+				document.location.reload();
+			} else {
+				closeLayer();
+			}
+		}, "POST");
+	}
+<%if (popup) {%>
 	document.addEventListener("DOMContentLoaded", function() {
 		createAUIGrid10000(columns10000);
 		AUIGrid.resize(myGridID10000);
 	})
-	
+
 	window.addEventListener("resize", function() {
 		AUIGrid.resize(myGridID10000);
 	})
-	<%
-		}
-	%>
+<%}%>
+	
 </script>
