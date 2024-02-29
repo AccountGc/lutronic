@@ -110,6 +110,14 @@ iframe {
 				</td>
 			</tr>
 			<tr>
+				<th class="lb" id="required">주 첨부파일</th>
+				<td class="indent5" colspan="3">
+					<jsp:include page="/extcore/jsp/common/attach-primary.jsp">
+						<jsp:param value="" name="oid" />
+					</jsp:include>
+				</td>
+			</tr>
+			<tr>
 				<th class="lb">첨부파일</th>
 				<td class="indent5" colspan="3">
 					<jsp:include page="/extcore/jsp/common/attach-secondary.jsp">
@@ -197,7 +205,7 @@ iframe {
 				if (!confirm("등록하시겠습니까?")) {
 					return false;
 				}
-
+				const primary = document.querySelector("input[name=primary]");
 				const content = DEXT5.getBodyValue("content");
 
 				const params = {
@@ -210,6 +218,7 @@ iframe {
 					rows90 : rows90,
 					rows101 : rows101,
 					rows105 : rows105,
+					primary : primary != null ? primary.value : "",
 				}
 				const url = getCallUrl("/cr/create");
 				logger(params);
