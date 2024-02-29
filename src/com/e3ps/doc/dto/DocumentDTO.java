@@ -51,7 +51,7 @@ public class DocumentDTO {
 	private String modifier;
 	private String modifiedDate;
 	private String lctName;
-	
+
 	// IBA
 	private String writer;
 	private String model_name;
@@ -322,8 +322,13 @@ public class DocumentDTO {
 		}
 
 		// 최신버전이고 결재선 지정상태일 경우 승인가능
-		if (isLatest() && (check(doc, "BATCHAPPROVAL") || check(doc, "INWORK") || check(doc, "LINE_REGISTER")
-				|| check(doc, "RETURN"))) {
+//		if (isLatest() && (check(doc, "BATCHAPPROVAL") || check(doc, "INWORK") || check(doc, "LINE_REGISTER")
+//				|| check(doc, "RETURN"))) {
+//			set_modify(true);
+//		}
+
+		// 최신버전이고 결재선 지정상태일 경우 승인가능
+		if (isLatest() && !check(doc, "APPROVED") && (isCreator || isAdmin)) {
 			set_modify(true);
 		}
 

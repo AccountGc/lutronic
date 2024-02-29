@@ -118,6 +118,12 @@ if (method == null) {
 		const item = checkedItems[0].item;
 		const oid = item.oid;
 		const location = item.location;
+
+		if(location.indexOf("03. 2023년(이전문서)") > -1) {
+			alert("등록 할 수 없는 폴더 입니다.");
+			return false;
+		}
+		
 		opener.document.getElementById("location").value = location;
 		opener.document.getElementById("locationText").innerText = location;
 		self.close();
