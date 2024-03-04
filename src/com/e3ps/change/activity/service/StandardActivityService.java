@@ -455,6 +455,16 @@ public class StandardActivityService extends StandardManager implements Activity
 				reverseStructure(part, list);
 			}
 
+			QueryResult result = PersistenceHelper.manager.navigate(eco, "completePart", EOCompletePartLink.class,
+					false);
+			while (result.hasMoreElements()) {
+				EOCompletePartLink link = (EOCompletePartLink) result.nextElement();
+				WTPartMaster m = link.getCompletePart();
+				String v = link.getVersion();
+				WTPart part = PartHelper.manager.getPart(m.getNumber(), v);
+				list.add(part);
+			}
+
 			// 완제품만 넣을것..
 			ArrayList<WTPart> clist = new ArrayList<WTPart>();
 			ArrayList<String> mlist = new ArrayList<String>();

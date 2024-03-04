@@ -26,6 +26,7 @@ boolean isAdmin = (boolean) request.getAttribute("isAdmin");
 			<%
 			}
 			%>
+			<input type="button" value="일괄다운로드" title="일괄다운로드" onclick="download();">
 			<%
 			if (dto.is_withdraw()) {
 			%>
@@ -201,6 +202,24 @@ boolean isAdmin = (boolean) request.getAttribute("isAdmin");
 		_popup(url, 1200, 600, "n");
 	}
 
+	function download() {
+
+		if (!confirm("일괄 다운로드 하시겠습니까?")) {
+			return false;
+		}
+
+		const oid = document.getElementById("oid").value;
+		const url = getCallUrl("/eo/download?oid=" + oid);
+		openLayer();
+		call(url, null, function(data) {
+			if (data.result) {
+				const n = data.name;
+				document.location.href = '/Windchill/extcore/jsp/common/content/FileDownload2.jsp?fileName=' + n + '&originFileName=' + n;
+			}
+			closeLayer();
+		}, "GET");
+	}
+	
 	document.addEventListener("DOMContentLoaded", function() {
 		$("#tabs").tabs({
 			active : 0,

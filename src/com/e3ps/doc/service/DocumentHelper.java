@@ -37,10 +37,12 @@ import com.e3ps.common.iba.IBAUtil;
 import com.e3ps.common.iba.IBAUtils;
 import com.e3ps.common.util.AUIGridUtil;
 import com.e3ps.common.util.CommonUtil;
+import com.e3ps.common.util.DateUtil;
 import com.e3ps.common.util.PageQueryUtils;
 import com.e3ps.common.util.QuerySpecUtils;
 import com.e3ps.common.util.StringUtil;
 import com.e3ps.common.util.WCUtil;
+import com.e3ps.common.util.ZipUtil;
 import com.e3ps.doc.DocLocation;
 import com.e3ps.doc.DocumentCRLink;
 import com.e3ps.doc.DocumentClass;
@@ -1133,5 +1135,89 @@ public class DocumentHelper {
 		Object[] argObjects = { hash };
 
 		queue.addEntry(principal, createCoverMethod, className, argClasses, argObjects);
+	}
+
+	/**
+	 * 일괄 다운로드
+	 */
+	public Map<String, Object> download(String oid) throws Exception {
+		Map<String, Object> result = new HashMap<>();
+		WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
+		String today = DateUtil.getToDay();
+		String id = user.getName();
+
+		String path = WTProperties.getLocalProperties().getProperty("wt.temp") + File.separator + "pdm" + File.separator
+				+ today + File.separator + id;
+
+		File ff = new File(path);
+		if (!ff.exists()) {
+			ff.mkdirs();
+		}
+
+		WTDocument doc = (WTDocument) CommonUtil.getObject(oid);
+
+		QueryResult qr = ContentHelper.service.getContentsByRole(doc, ContentRoleType.PRIMARY);
+		while (qr.hasMoreElements()) {
+			ApplicationData dd = (ApplicationData) qr.nextElement();
+			byte[] buffer = new byte[10240];
+			InputStream is = ContentServerHelper.service.findLocalContentStream(dd);
+			String name = dd.getFileName();
+			File file = new File(path + File.separator + name);
+			FileOutputStream fos = new FileOutputStream(file);
+			int j = 0;
+			while ((j = is.read(buffer, 0, 10240)) > 0) {
+				fos.write(buffer, 0, j);
+			}
+			fos.close();
+			is.close();
+		}
+
+		qr.reset();
+		qr = ContentHelper.service.getContentsByRole(doc, ContentRoleType.SECONDARY);
+		while (qr.hasMoreElements()) {
+			ApplicationData dd = (ApplicationData) qr.nextElement();
+			byte[] buffer = new byte[10240];
+			InputStream is = ContentServerHelper.service.findLocalContentStream(dd);
+			String name = dd.getFileName();
+			File file = new File(path + File.separator + name);
+			FileOutputStream fos = new FileOutputStream(file);
+			int j = 0;
+			while ((j = is.read(buffer, 0, 10240)) > 0) {
+				fos.write(buffer, 0, j);
+			}
+			fos.close();
+			is.close();
+		}
+		
+		qr.reset();
+		qr = ContentHelper.service.getContentsByRole(doc, ContentRoleType.toContentRoleType("MERGE"));
+		while (qr.hasMoreElements()) {
+			ApplicationData dd = (ApplicationData) qr.nextElement();
+			byte[] buffer = new byte[10240];
+			InputStream is = ContentServerHelper.service.findLocalContentStream(dd);
+			String name = dd.getFileName();
+			File file = new File(path + File.separator + name);
+			FileOutputStream fos = new FileOutputStream(file);
+			int j = 0;
+			while ((j = is.read(buffer, 0, 10240)) > 0) {
+				fos.write(buffer, 0, j);
+			}
+			fos.close();
+			is.close();
+		}
+
+		String nn = "DOC-" + id + ".zip";
+
+		ZipUtil.compress(today + File.separator + id, nn);
+
+		File[] fs = ff.listFiles();
+		for (File f : fs) {
+			f.delete();
+			System.out.println("파일 삭제!");
+		}
+
+		result.put("name", nn);
+
+		return result;
 	}
 }

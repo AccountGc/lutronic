@@ -56,10 +56,10 @@ boolean isAdmin = (boolean) request.getAttribute("isAdmin");
 				<col width="450">
 			</colgroup>
 			<tr>
-				<th class="lb">ECO 제목</th>
-				<td class="indent5"><%=dto.getName()%></td>
 				<th>ECO 번호</th>
 				<td class="indent5"><%=dto.getNumber()%></td>
+				<th class="lb">ECO 제목</th>
+				<td class="indent5"><%=dto.getName()%></td>
 			</tr>
 			<tr>
 				<th class="lb">상태</th>

@@ -28,6 +28,7 @@ import com.e3ps.common.code.NumberCode;
 import com.e3ps.common.code.service.NumberCodeHelper;
 import com.e3ps.common.util.CommonUtil;
 import com.e3ps.controller.BaseController;
+import com.e3ps.doc.service.DocumentHelper;
 import com.e3ps.workspace.ApprovalLine;
 import com.e3ps.workspace.ApprovalMaster;
 import com.e3ps.workspace.service.WorkspaceHelper;
@@ -186,5 +187,22 @@ public class EcrmController extends BaseController {
 		model.addObject("dto", dto);
 		model.setViewName("popup:/change/ecrm/ecrm-print");
 		return model;
+	}
+	
+	
+	@Description(value = "일괄 다운로드")
+	@ResponseBody
+	@GetMapping(value = "/download")
+	public Map<String, Object> download(@RequestParam String oid) throws Exception {
+		Map<String, Object> result = new HashMap<>();
+		try {
+			result = EcrmHelper.manager.download(oid);
+			result.put("result", SUCCESS);
+		} catch (Exception e) {
+			e.printStackTrace();
+			result.put("result", FAIL);
+			result.put("msg", e.toString());
+		}
+		return result;
 	}
 }

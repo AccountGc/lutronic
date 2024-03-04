@@ -1,5 +1,8 @@
 package com.e3ps.change.cr.service;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -17,15 +20,21 @@ import com.e3ps.common.code.dto.NumberCodeDTO;
 import com.e3ps.common.code.service.NumberCodeHelper;
 import com.e3ps.common.util.AUIGridUtil;
 import com.e3ps.common.util.CommonUtil;
+import com.e3ps.common.util.DateUtil;
 import com.e3ps.common.util.PageQueryUtils;
 import com.e3ps.common.util.QuerySpecUtils;
 import com.e3ps.common.util.StringUtil;
+import com.e3ps.common.util.ZipUtil;
 import com.e3ps.doc.DocumentEOLink;
 import com.e3ps.doc.column.DocumentColumn;
 import com.e3ps.rohs.ROHSMaterial;
 import com.ibm.icu.text.DecimalFormat;
 
 import net.sf.json.JSONArray;
+import wt.content.ApplicationData;
+import wt.content.ContentHelper;
+import wt.content.ContentRoleType;
+import wt.content.ContentServerHelper;
 import wt.doc.WTDocument;
 import wt.fc.PagingQueryResult;
 import wt.fc.PagingSession;
@@ -37,7 +46,9 @@ import wt.query.QueryException;
 import wt.query.QuerySpec;
 import wt.query.SearchCondition;
 import wt.services.ServiceFactory;
+import wt.session.SessionHelper;
 import wt.util.WTException;
+import wt.util.WTProperties;
 
 public class CrHelper {
 
@@ -417,5 +428,87 @@ public class CrHelper {
 		QuerySpecUtils.toNotEqualsAnd(query, idx, EChangeRequest.class, "state.state", "APPROVED");
 		QuerySpecUtils.toOrderBy(query, idx, EChangeRequest.class, EChangeRequest.CREATE_TIMESTAMP, true);
 		return PagingSessionHelper.openPagingSession(0, 5, query);
+	}
+
+	/**
+	 * 일괄 다운로드
+	 */
+	public Map<String, Object> download(String oid) throws Exception {
+		Map<String, Object> result = new HashMap<>();
+		WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
+		String today = DateUtil.getToDay();
+		String id = user.getName();
+
+		String path = WTProperties.getLocalProperties().getProperty("wt.temp") + File.separator + "pdm" + File.separator
+				+ today + File.separator + id;
+
+		File ff = new File(path);
+		if (!ff.exists()) {
+			ff.mkdirs();
+		}
+
+		EChangeRequest cr = (EChangeRequest) CommonUtil.getObject(oid);
+
+		QueryResult qr = ContentHelper.service.getContentsByRole(cr, ContentRoleType.PRIMARY);
+		while (qr.hasMoreElements()) {
+			ApplicationData dd = (ApplicationData) qr.nextElement();
+			byte[] buffer = new byte[10240];
+			InputStream is = ContentServerHelper.service.findLocalContentStream(dd);
+			String name = dd.getFileName();
+			File file = new File(path + File.separator + name);
+			FileOutputStream fos = new FileOutputStream(file);
+			int j = 0;
+			while ((j = is.read(buffer, 0, 10240)) > 0) {
+				fos.write(buffer, 0, j);
+			}
+			fos.close();
+			is.close();
+		}
+
+		qr.reset();
+		qr = ContentHelper.service.getContentsByRole(cr, ContentRoleType.SECONDARY);
+		while (qr.hasMoreElements()) {
+			ApplicationData dd = (ApplicationData) qr.nextElement();
+			byte[] buffer = new byte[10240];
+			InputStream is = ContentServerHelper.service.findLocalContentStream(dd);
+			String name = dd.getFileName();
+			File file = new File(path + File.separator + name);
+			FileOutputStream fos = new FileOutputStream(file);
+			int j = 0;
+			while ((j = is.read(buffer, 0, 10240)) > 0) {
+				fos.write(buffer, 0, j);
+			}
+			fos.close();
+			is.close();
+		}
+
+		qr.reset();
+		qr = ContentHelper.service.getContentsByRole(cr, ContentRoleType.toContentRoleType("ECR"));
+		while (qr.hasMoreElements()) {
+			ApplicationData dd = (ApplicationData) qr.nextElement();
+			byte[] buffer = new byte[10240];
+			InputStream is = ContentServerHelper.service.findLocalContentStream(dd);
+			String name = dd.getFileName();
+			File file = new File(path + File.separator + name);
+			FileOutputStream fos = new FileOutputStream(file);
+			int j = 0;
+			while ((j = is.read(buffer, 0, 10240)) > 0) {
+				fos.write(buffer, 0, j);
+			}
+			fos.close();
+			is.close();
+		}
+
+		String nn = "CR-" + id + ".zip";
+
+		ZipUtil.compress(today + File.separator + id, nn);
+
+		File[] fs = ff.listFiles();
+		for (File f : fs) {
+			f.delete();
+			System.out.println("파일 삭제!");
+		}
+		result.put("name", nn);
+		return result;
 	}
 }

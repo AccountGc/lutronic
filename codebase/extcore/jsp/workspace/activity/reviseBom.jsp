@@ -141,8 +141,8 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 					</div>
 				</td>
 				<td class="right">
-<!-- 					<input type="button" value="이전품목" title="이전품목" class="red" onclick="prePart();"> -->
-<!-- 					<input type="button" value="품목개정" title="품목개정" onclick="revise();" class="gray"> -->
+					<!-- 					<input type="button" value="이전품목" title="이전품목" class="red" onclick="prePart();"> -->
+					<input type="button" value="일괄개정" title="일괄개정" onclick="revise();" class="gray">
 					<input type="button" value="품목변경" title="품목변경" class="blue" onclick="replace();">
 					<input type="button" value="새로고침" title="새로고침" class="orange" onclick="document.location.reload();">
 				</td>

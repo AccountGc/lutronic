@@ -1,6 +1,8 @@
 package com.e3ps.change.eco.service;
 
 import java.io.File;
+import java.io.FileOutputStream;
+import java.io.InputStream;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Date;
@@ -50,9 +52,11 @@ import com.e3ps.common.code.service.NumberCodeHelper;
 import com.e3ps.common.iba.IBAUtils;
 import com.e3ps.common.util.AUIGridUtil;
 import com.e3ps.common.util.CommonUtil;
+import com.e3ps.common.util.DateUtil;
 import com.e3ps.common.util.PageQueryUtils;
 import com.e3ps.common.util.QuerySpecUtils;
 import com.e3ps.common.util.StringUtil;
+import com.e3ps.common.util.ZipUtil;
 import com.e3ps.doc.DocumentECOLink;
 import com.e3ps.doc.DocumentECPRLink;
 import com.e3ps.doc.column.DocumentColumn;
@@ -79,6 +83,7 @@ import wt.content.ApplicationData;
 import wt.content.ContentHelper;
 import wt.content.ContentItem;
 import wt.content.ContentRoleType;
+import wt.content.ContentServerHelper;
 import wt.doc.WTDocument;
 import wt.epm.EPMDocument;
 import wt.epm.EPMDocumentMaster;
@@ -2229,5 +2234,87 @@ public class EcoHelper {
 			}
 			reverseStructure(p, list);
 		}
+	}
+
+	/**
+	 * 일괄 다운로드
+	 */
+	public Map<String, Object> download(String oid) throws Exception {
+		Map<String, Object> result = new HashMap<>();
+		WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
+		String today = DateUtil.getToDay();
+		String id = user.getName();
+
+		String path = WTProperties.getLocalProperties().getProperty("wt.temp") + File.separator + "pdm" + File.separator
+				+ today + File.separator + id;
+
+		File ff = new File(path);
+		if (!ff.exists()) {
+			ff.mkdirs();
+		}
+
+		EChangeOrder eco = (EChangeOrder) CommonUtil.getObject(oid);
+
+		QueryResult qr = ContentHelper.service.getContentsByRole(eco, ContentRoleType.PRIMARY);
+		while (qr.hasMoreElements()) {
+			ApplicationData dd = (ApplicationData) qr.nextElement();
+			byte[] buffer = new byte[10240];
+			InputStream is = ContentServerHelper.service.findLocalContentStream(dd);
+			String name = dd.getFileName();
+			File file = new File(path + File.separator + name);
+			FileOutputStream fos = new FileOutputStream(file);
+			int j = 0;
+			while ((j = is.read(buffer, 0, 10240)) > 0) {
+				fos.write(buffer, 0, j);
+			}
+			fos.close();
+			is.close();
+		}
+
+		qr.reset();
+		qr = ContentHelper.service.getContentsByRole(eco, ContentRoleType.SECONDARY);
+		while (qr.hasMoreElements()) {
+			ApplicationData dd = (ApplicationData) qr.nextElement();
+			byte[] buffer = new byte[10240];
+			InputStream is = ContentServerHelper.service.findLocalContentStream(dd);
+			String name = dd.getFileName();
+			File file = new File(path + File.separator + name);
+			FileOutputStream fos = new FileOutputStream(file);
+			int j = 0;
+			while ((j = is.read(buffer, 0, 10240)) > 0) {
+				fos.write(buffer, 0, j);
+			}
+			fos.close();
+			is.close();
+		}
+		
+		qr.reset();
+		qr = ContentHelper.service.getContentsByRole(eco, ContentRoleType.toContentRoleType("ECO"));
+		while (qr.hasMoreElements()) {
+			ApplicationData dd = (ApplicationData) qr.nextElement();
+			byte[] buffer = new byte[10240];
+			InputStream is = ContentServerHelper.service.findLocalContentStream(dd);
+			String name = dd.getFileName();
+			File file = new File(path + File.separator + name);
+			FileOutputStream fos = new FileOutputStream(file);
+			int j = 0;
+			while ((j = is.read(buffer, 0, 10240)) > 0) {
+				fos.write(buffer, 0, j);
+			}
+			fos.close();
+			is.close();
+		}
+
+		String nn = "ECO-" + id + ".zip";
+
+		ZipUtil.compress(today + File.separator + id, nn);
+
+		File[] fs = ff.listFiles();
+		for (File f : fs) {
+			f.delete();
+			System.out.println("파일 삭제!");
+		}
+		result.put("name", nn);
+		return result;
 	}
 }

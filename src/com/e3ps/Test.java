@@ -1,5 +1,8 @@
 package com.e3ps;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.InputStream;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
@@ -7,9 +10,16 @@ import java.sql.Statement;
 import java.util.Hashtable;
 import java.util.Vector;
 
+import com.e3ps.common.util.CommonUtil;
+import com.e3ps.common.util.DateUtil;
 import com.e3ps.org.Department;
 import com.e3ps.org.People;
 
+import wt.content.ApplicationData;
+import wt.content.ContentHelper;
+import wt.content.ContentRoleType;
+import wt.content.ContentServerHelper;
+import wt.doc.WTDocument;
 import wt.fc.PersistenceHelper;
 import wt.fc.QueryResult;
 import wt.load.LoadUser;
@@ -17,133 +27,58 @@ import wt.org.WTUser;
 import wt.pom.Transaction;
 import wt.query.QuerySpec;
 import wt.query.SearchCondition;
+import wt.session.SessionHelper;
+import wt.util.WTProperties;
 
 public class Test {
 
 	public static void main(String[] args) throws Exception {
 
-		Department department = null;
-		System.out.println("@ syncJuser 시작 @");
+		WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
+		String today = DateUtil.getToDay();
+		String id = user.getName();
 
-		String url = "jdbc:sqlserver://20.20.100.161:14233;databaseName=ZEUS";
-		String username = "plm";
-		String password = "Pi#szeuS11!";
+		String path = WTProperties.getLocalProperties().getProperty("wt.temp") + File.separator + today + File.separator
+				+ id;
 
-		Connection connection = null;
-		Statement statement = null;
-		ResultSet resultSet = null;
+		String oid = "wt.doc.WTDocument:1574033";
+		WTDocument doc = (WTDocument) CommonUtil.getObject(oid);
 
-		Transaction trs = new Transaction();
-
-		Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
-
-		connection = DriverManager.getConnection(url, username, password);
-
-		statement = connection.createStatement();
-		String query = "SELECT * FROM ZEUS.DBO.vw_userinfo_pdm";
-		resultSet = statement.executeQuery(query);
-
-		while (resultSet.next()) {
-			String userId = resultSet.getString("UserId");
-			String userName = resultSet.getString("UserName");
-			String groupCode = resultSet.getString("GroupCode");
-			String groupName = resultSet.getString("GroupName");
-			String email = resultSet.getString("Email");
-			String pw = resultSet.getString("Password");
-
-			boolean exist = isUser(userId);
-			// 유저 있으면 업데이트
-			if (exist) {
-
-				// 없으면 생성
-			} else {
-				Hashtable hash = new Hashtable<>();
-				hash.put("newUser", userId);
-				hash.put("webServerID", userId);
-				hash.put("fullName", userName);
-//                hash.put("Last", last);
-				hash.put("Email", email);
-				hash.put("Locale", "ko");
-				hash.put("Organization", "semi");
-				hash.put("password", password);
-				hash.put("ignore", "x");
-
-				boolean success = LoadUser.createUser(hash, new Hashtable<>(), new Vector<>());
-				// 등록 성공하면 USER 생성
-				if (success) {
-					People p = getUser(userId);
-					WTUser wtuser = getWTUser(userId);
-
-					// USER 테이블 생성
-					if (p == null) {
-						p = People.newPeople();
-//						p.setGroupCode(); // EH
-//						p.setGroupName(); // 장비기술팀
-						p.setId(userId);
-						p.setUser(wtuser);
-						p.setDepartment(null);
-						p.setName(username);
-						PersistenceHelper.manager.save(p);
-						// 업데이트
-					} else {
-						p.setId(userId);
-//						p.setGroupCode(); // EH21
-//						p.setGroupName(); // 장비기술팀2
-						p.setName(username);
-						p.setUser(wtuser);
-						p.setDepartment(null);
-						PersistenceHelper.manager.modify(p);
-					}
-				}
+		QueryResult qr = ContentHelper.service.getContentsByRole(doc, ContentRoleType.PRIMARY);
+		while (qr.hasMoreElements()) {
+			ApplicationData dd = (ApplicationData) qr.nextElement();
+			byte[] buffer = new byte[10240];
+			InputStream is = ContentServerHelper.service.findLocalContentStream(dd);
+			String name = dd.getFileName();
+			File file = new File(path + File.separator + name);
+			FileOutputStream fos = new FileOutputStream(file);
+			int j = 0;
+			while ((j = is.read(buffer, 0, 10240)) > 0) {
+				fos.write(buffer, 0, j);
 			}
-		}
-	}
-
-	public static Department getDepartment(String deptCode) throws Exception {
-		QuerySpec query = new QuerySpec();
-		int idx = query.appendClassList(Department.class, true);
-		SearchCondition sc = new SearchCondition(Department.class, Department.CODE, "=", deptCode);
-		query.appendWhere(sc, new int[] { idx });
-		QueryResult qr = PersistenceHelper.manager.find(query);
-		if (qr.hasMoreElements()) {
-			Object[] obj = (Object[]) qr.nextElement();
-			return (Department) obj[0];
-		}
-		return null;
-	}
-
-	public static WTUser getWTUser(String userId) throws Exception {
-		QuerySpec query = new QuerySpec();
-		int idx = query.appendClassList(WTUser.class, true);
-		SearchCondition sc = new SearchCondition(WTUser.class, WTUser.NAME, "=", userId);
-		query.appendWhere(sc, new int[] { idx });
-		QueryResult qr = PersistenceHelper.manager.find(query);
-		if (qr.hasMoreElements()) {
-			Object[] obj = (Object[]) qr.nextElement();
-			return (WTUser) obj[0];
-		}
-		return null;
-	}
-
-	public static People getUser(String userId) throws Exception {
-		QuerySpec query = new QuerySpec();
-		int idx = query.appendClassList(People.class, true);
-		SearchCondition sc = new SearchCondition(People.class, People.ID, "=", userId);
-		query.appendWhere(sc, new int[] { idx });
-		QueryResult qr = PersistenceHelper.manager.find(query);
-		if (qr.hasMoreElements()) {
-			Object[] obj = (Object[]) qr.nextElement();
-			return (People) obj[0];
+			fos.close();
+			is.close();
 		}
 
-		return null;
-	}
+		qr.reset();
+		qr = ContentHelper.service.getContentsByRole(doc, ContentRoleType.SECONDARY);
+		while (qr.hasMoreElements()) {
+			ApplicationData dd = (ApplicationData) qr.nextElement();
+			byte[] buffer = new byte[10240];
+			InputStream is = ContentServerHelper.service.findLocalContentStream(dd);
+			String name = dd.getFileName();
+			File file = new File(path + File.separator + name);
+			FileOutputStream fos = new FileOutputStream(file);
+			int j = 0;
+			while ((j = is.read(buffer, 0, 10240)) > 0) {
+				fos.write(buffer, 0, j);
+			}
+			fos.close();
+			is.close();
+		}
 
-	public static boolean isUser(String userId) throws Exception {
-		QuerySpec query = new QuerySpec();
-		int idx = query.appendClassList(WTUser.class, true);
-		SearchCondition sc = new SearchCondition(WTUser.class, WTUser.NAME, "=", userId);
-		query.appendWhere(sc, new int[] { idx });
-		return PersistenceHelper.manager.find(query).size() > 0;
+		System.out.println("종료!");
+
+		System.exit(0);
 	}
 }

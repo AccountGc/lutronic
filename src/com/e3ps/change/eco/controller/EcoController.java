@@ -24,6 +24,7 @@ import com.e3ps.common.code.NumberCode;
 import com.e3ps.common.code.service.NumberCodeHelper;
 import com.e3ps.common.util.CommonUtil;
 import com.e3ps.controller.BaseController;
+import com.e3ps.doc.service.DocumentHelper;
 
 import net.sf.json.JSONArray;
 
@@ -337,6 +338,23 @@ public class EcoController extends BaseController {
 			EcoHelper.service.removeLink(params);
 			result.put("result", SUCCESS);
 			result.put("msg", DELETE_MSG);
+		} catch (Exception e) {
+			e.printStackTrace();
+			result.put("result", FAIL);
+			result.put("msg", e.toString());
+		}
+		return result;
+	}
+	
+	
+	@Description(value = "일괄 다운로드")
+	@ResponseBody
+	@GetMapping(value = "/download")
+	public Map<String, Object> download(@RequestParam String oid) throws Exception {
+		Map<String, Object> result = new HashMap<>();
+		try {
+			result = EcoHelper.manager.download(oid);
+			result.put("result", SUCCESS);
 		} catch (Exception e) {
 			e.printStackTrace();
 			result.put("result", FAIL);

@@ -30,6 +30,7 @@ Map<String, Object> contentMap = dto.getContentMap();
 			<%
 			}
 			%>
+			<input type="button" value="일괄다운로드" title="일괄다운로드" onclick="download();">
 			<%
 			if (isAdmin) {
 			%>
@@ -104,10 +105,10 @@ Map<String, Object> contentMap = dto.getContentMap();
 				<col width="450">
 			</colgroup>
 			<tr>
-				<th class="lb">ECO 제목</th>
-				<td class="indent5"><%=dto.getName()%></td>
 				<th>ECO 번호</th>
 				<td class="indent5"><%=dto.getNumber()%></td>
+				<th class="lb">ECO 제목</th>
+				<td class="indent5"><%=dto.getName()%></td>
 			</tr>
 			<tr>
 				<th class="lb">상태</th>
@@ -413,5 +414,23 @@ Map<String, Object> contentMap = dto.getContentMap();
 				clsoeLayer();
 			}
 		}, "DELETE");
+	}
+	
+	function download() {
+
+		if (!confirm("일괄 다운로드 하시겠습니까?")) {
+			return false;
+		}
+
+		const oid = document.getElementById("oid").value;
+		const url = getCallUrl("/eco/download?oid=" + oid);
+		openLayer();
+		call(url, null, function(data) {
+			if (data.result) {
+				const n = data.name;
+				document.location.href = '/Windchill/extcore/jsp/common/content/FileDownload2.jsp?fileName=' + n + '&originFileName=' + n;
+			}
+			closeLayer();
+		}, "GET");
 	}
 </script>

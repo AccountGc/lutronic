@@ -769,6 +769,15 @@ public class StandardEcoService extends StandardManager implements EcoService {
 				EcoHelper.manager.reverseStructure(part, list);
 			}
 
+			QueryResult rs = PersistenceHelper.manager.navigate(eco, "completePart", EOCompletePartLink.class, false);
+			while (rs.hasMoreElements()) {
+				EOCompletePartLink link = (EOCompletePartLink) rs.nextElement();
+				WTPartMaster m = link.getCompletePart();
+				String v = link.getVersion();
+				WTPart part = PartHelper.manager.getPart(m.getNumber(), v);
+				list.add(part);
+			}
+
 			int i = 0;
 
 			System.out.println("역전개 개수 = " + list.size());

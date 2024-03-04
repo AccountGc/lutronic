@@ -35,6 +35,7 @@ iframe {
 			<%
 			}
 			%>
+			<input type="button" value="일괄다운로드" title="일괄다운로드" onclick="download();">
 			<%
 			if (dto.is_withdraw()) {
 			%>
@@ -313,5 +314,23 @@ iframe {
 		if(isPrint) {
 			const p = _popup(url, "", "", "f");
 		}
+	}
+	
+	function download() {
+
+		if (!confirm("일괄 다운로드 하시겠습니까?")) {
+			return false;
+		}
+
+		const oid = document.getElementById("oid").value;
+		const url = getCallUrl("/ecpr/download?oid=" + oid);
+		openLayer();
+		call(url, null, function(data) {
+			if (data.result) {
+				const n = data.name;
+				document.location.href = '/Windchill/extcore/jsp/common/content/FileDownload2.jsp?fileName=' + n + '&originFileName=' + n;
+			}
+			closeLayer();
+		}, "GET");
 	}
 </script>

@@ -51,6 +51,13 @@ if (method == null) {
 			showInlineFilter : true,
 			filterLayerWidth : 320,
 			filterItemMoreMessage : "필터링 검색이 너무 많습니다. 검색을 이용해주세요.",
+			rowCheckDisabledFunction: function (rowIndex, isChecked, item) {
+				const location = item.location;
+				if(location.indexOf("03. 2023년(이전문서)") > -1) {
+					return false; 
+				}
+				return true;
+			},
 		}
 		myGridID = AUIGrid.create("#grid_wrap", columnLayout, props);
 		tree();
@@ -81,6 +88,11 @@ if (method == null) {
 		const rowIdField = AUIGrid.getProp(event.pid, "rowIdField"); // rowIdField 얻기
 		const rowId = item[rowIdField];
 
+		const location = item.location;
+		if(location.indexOf("03. 2023년(이전문서)") > -1) {
+			return false; 
+		}
+		
 		// 이미 체크 선택되었는지 검사
 		if (AUIGrid.isCheckedRowById(event.pid, rowId)) {
 			// 엑스트라 체크박스 체크해제 추가

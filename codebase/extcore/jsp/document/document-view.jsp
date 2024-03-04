@@ -35,6 +35,7 @@ iframe {
 			</div>
 		</td>
 		<td class="right">
+			<input type="button" value="일괄다운로드" title="일괄다운로드" onclick="download();">
 			<%
 			if (dto.is_publish()) {
 			%>
@@ -393,7 +394,7 @@ iframe {
 	function print() {
 		const url = getCallUrl("/doc/print?oid=" + oid);
 		const isPrint = savePrintHistory(oid);
-		if(isPrint) {
+		if (isPrint) {
 			const p = _popup(url, "", "", "f");
 		}
 	}
@@ -464,6 +465,24 @@ iframe {
 			}
 			closeLayer();
 		}, "GET")
+	}
+
+	function download() {
+
+		if (!confirm("일괄 다운로드 하시겠습니까?")) {
+			return false;
+		}
+
+		const oid = document.getElementById("oid").value;
+		const url = getCallUrl("/doc/download?oid=" + oid);
+		openLayer();
+		call(url, null, function(data) {
+			if (data.result) {
+				const n = data.name;
+				document.location.href = '/Windchill/extcore/jsp/common/content/FileDownload2.jsp?fileName=' + n + '&originFileName=' + n;
+			}
+			closeLayer();
+		}, "GET");
 	}
 
 	document.addEventListener("DOMContentLoaded", function() {

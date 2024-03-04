@@ -24,6 +24,7 @@ import com.e3ps.common.code.NumberCode;
 import com.e3ps.common.code.service.NumberCodeHelper;
 import com.e3ps.common.util.CommonUtil;
 import com.e3ps.controller.BaseController;
+import com.e3ps.doc.service.DocumentHelper;
 import com.e3ps.part.column.PartColumn;
 import com.e3ps.part.service.PartHelper;
 import com.e3ps.sap.service.SAPHelper;
@@ -206,6 +207,23 @@ public class EoController extends BaseController {
 			e.printStackTrace();
 			result.put("msg", e.toString());
 			result.put("result", FAIL);
+		}
+		return result;
+	}
+	
+	
+	@Description(value = "일괄 다운로드")
+	@ResponseBody
+	@GetMapping(value = "/download")
+	public Map<String, Object> download(@RequestParam String oid) throws Exception {
+		Map<String, Object> result = new HashMap<>();
+		try {
+			result = EoHelper.manager.download(oid);
+			result.put("result", SUCCESS);
+		} catch (Exception e) {
+			e.printStackTrace();
+			result.put("result", FAIL);
+			result.put("msg", e.toString());
 		}
 		return result;
 	}

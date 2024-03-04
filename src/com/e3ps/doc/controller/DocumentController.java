@@ -18,6 +18,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.e3ps.admin.form.FormTemplate;
 import com.e3ps.admin.form.service.FormTemplateHelper;
+import com.e3ps.change.eco.service.EcoHelper;
 import com.e3ps.common.code.NumberCode;
 import com.e3ps.common.code.service.NumberCodeHelper;
 import com.e3ps.common.util.CommonUtil;
@@ -499,4 +500,21 @@ public class DocumentController extends BaseController {
 		return result;
 	}
 
+	
+	@Description(value = "일괄 다운로드")
+	@ResponseBody
+	@GetMapping(value = "/download")
+	public Map<String, Object> download(@RequestParam String oid) throws Exception {
+		Map<String, Object> result = new HashMap<>();
+		try {
+			result = DocumentHelper.manager.download(oid);
+			result.put("result", SUCCESS);
+		} catch (Exception e) {
+			e.printStackTrace();
+			result.put("result", FAIL);
+			result.put("msg", e.toString());
+		}
+		return result;
+	}
 }
+
