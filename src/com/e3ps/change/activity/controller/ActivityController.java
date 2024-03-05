@@ -529,4 +529,38 @@ public class ActivityController extends BaseController {
 		}
 		return result;
 	}
+
+	@Description(value = "설계변경 활동 품목 추가")
+	@ResponseBody
+	@PostMapping(value = "/insert100")
+	public Map<String, Object> insert100(@RequestBody Map<String, Object> params) throws Exception {
+		Map<String, Object> result = new HashMap<String, Object>();
+		try {
+			result = ActivityHelper.service.insert100(params);
+			result.put("msg", "품목이 추가 되었습니다.");
+			result.put("result", SUCCESS);
+		} catch (Exception e) {
+			e.printStackTrace();
+			result.put("result", FAIL);
+			result.put("msg", e.toString());
+		}
+		return result;
+	}
+
+	@Description(value = "설계변경 활동 품목 삭제")
+	@ResponseBody
+	@PostMapping(value = "/remove100")
+	public Map<String, Object> remove100(@RequestBody Map<String, Object> params) throws Exception {
+		Map<String, Object> result = new HashMap<String, Object>();
+		try {
+			ActivityHelper.service.remove100(params);
+			result.put("msg", "삭제 되었습니다.");
+			result.put("result", SUCCESS);
+		} catch (Exception e) {
+			e.printStackTrace();
+			result.put("result", FAIL);
+			result.put("msg", e.toString());
+		}
+		return result;
+	}
 }

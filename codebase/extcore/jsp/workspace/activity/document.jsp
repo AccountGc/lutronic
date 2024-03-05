@@ -101,7 +101,7 @@ if ("CHANGE".equals(eco.getEoType())) {
 					</div>
 				</td>
 				<td class="right">
-					<input type="button" value="직접등록" title="직접등록" class="blue" onclick="link();">
+<!-- 					<input type="button" value="직접등록" title="직접등록" class="blue" onclick="link();"> -->
 					<input type="button" value="링크등록" title="링크등록" onclick="popup00();">
 				</td>
 			</tr>

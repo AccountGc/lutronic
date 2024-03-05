@@ -452,13 +452,13 @@ public class StandardEtcService extends StandardManager implements EtcService {
 		String primary = dto.getPrimary();
 		ArrayList<String> secondarys = dto.getSecondarys();
 
-		if (StringUtil.checkString(primary)) {
-			File vault = CommonContentHelper.manager.getFileFromCacheId(primary);
-			ApplicationData applicationData = ApplicationData.newApplicationData(doc);
-			applicationData.setRole(ContentRoleType.PRIMARY);
-			PersistenceHelper.manager.save(applicationData);
-			ContentServerHelper.service.updateContent(doc, applicationData, vault.getPath());
-		}
+//		if (StringUtil.checkString(primary)) {
+//			File vault = CommonContentHelper.manager.getFileFromCacheId(primary);
+//			ApplicationData applicationData = ApplicationData.newApplicationData(doc);
+//			applicationData.setRole(ContentRoleType.PRIMARY);
+//			PersistenceHelper.manager.save(applicationData);
+//			ContentServerHelper.service.updateContent(doc, applicationData, vault.getPath());
+//		}
 
 		for (int i = 0; i < secondarys.size(); i++) {
 			String cacheId = secondarys.get(i);

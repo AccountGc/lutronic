@@ -143,14 +143,6 @@ if ("modify".equals(mode)) {
 		</td>
 	</tr>
 	<tr>
-		<th class="req lb">주 첨부파일</th>
-		<td class="indent5" colspan="5">
-			<jsp:include page="/extcore/jsp/common/attach-primary.jsp">
-				<jsp:param value="<%=dto.getOid()%>" name="oid" />
-			</jsp:include>
-		</td>
-	</tr>
-	<tr>
 		<th class="lb">첨부파일</th>
 		<td class="indent5" colspan="5">
 			<jsp:include page="/extcore/jsp/common/attach-secondary.jsp">
@@ -253,7 +245,6 @@ if ("modify".equals(mode)) {
 		const description = document.getElementById("description");
 		const lifecycle = document.querySelector("input[name=lifecycle]:checked").value;
 		const secondarys = toArray("secondarys");
-		const primary = document.querySelector("input[name=primary]");
 		const model = document.getElementById("model").value;
 		const writer = document.getElementById("writer").value;
 		const preseration = document.getElementById("preseration").value;
@@ -279,10 +270,6 @@ if ("modify".equals(mode)) {
 			return false;
 		}
 		
-		if (primary == null) {
-			alert("주 첨부파일을 첨부해주세요.");
-			return false;
-		}
 		
 		if (!confirm("<%=title%>하시겠습니까?")) {
 			return false;
@@ -294,7 +281,6 @@ if ("modify".equals(mode)) {
 			lifecycle : lifecycle,
 			description : description.value,
 			secondarys : secondarys,
-			primary : primary==null ? '' : primary.value,
 			location : location.value,
 			model_code : model,
 			writer : writer,
