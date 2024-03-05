@@ -37,6 +37,7 @@ import com.e3ps.doc.DocumentToDocumentLink;
 import com.e3ps.doc.dto.DocumentDTO;
 import com.e3ps.org.dto.PeopleDTO;
 import com.e3ps.workspace.AppPerLink;
+import com.e3ps.workspace.ApprovalMaster;
 import com.e3ps.workspace.AsmApproval;
 import com.e3ps.workspace.WorkData;
 import com.e3ps.workspace.service.WorkDataHelper;
@@ -596,12 +597,19 @@ public class StandardDocumentService extends StandardManager implements Document
 			LifeCycleHelper.service.reassign(workCopy,
 					LifeCycleHelper.service.getLifeCycleTemplateReference(lifecycle, WCUtil.getWTContainerRef())); // Lifecycle
 
+			ApprovalMaster mm = WorkspaceHelper.manager.getMaster(doc);
+
 			// 일괄결재 일경우 결재선 지정을 안만든다..
 			if ("LC_Default_NonWF".equals(lifecycle)) {
 				workCopy = (WTDocument) PersistenceHelper.manager.refresh(workCopy);
 				LifeCycleHelper.service.setLifeCycleState(workCopy, State.toState("BATCHAPPROVAL"));
 			} else {
-				WorkDataHelper.service.create(workCopy);
+				if (mm == null) {
+					WorkDataHelper.service.create(workCopy);
+				} else {
+					mm.setPersist(workCopy);
+					PersistenceHelper.manager.modify(mm);
+				}
 			}
 
 			// 첨부 파일 클리어
