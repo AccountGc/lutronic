@@ -884,6 +884,11 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 					alert("삭제할 품목을 선택하세요.");
 					return false;
 				}
+				
+				if(!confirm("선택한 품목을 ECA활동에서 삭제하시겠습니까?")) {
+					return false;
+				}
+				
 				const arr = new Array();
 				for(let i=0; i<checkedItems.length; i++) {
 					const oid = checkedItems[i].item.link_oid;
@@ -899,9 +904,8 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 					alert(data.msg);
 					if(data.result) {
 						document.location.reload();
-					} else {
-						parent.openLayer();
 					}
+					parent.openLayer();
 				})
 			}
 			
