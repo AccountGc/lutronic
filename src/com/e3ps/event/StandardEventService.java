@@ -24,6 +24,7 @@ public class StandardEventService extends StandardManager implements EventServic
 	private static final String STATE_CHANGE = LifeCycleServiceEvent.STATE_CHANGE;
 	private static final String POST_CHECKIN = WorkInProgressServiceEvent.POST_CHECKIN;
 	private static final String NEW_VERSION = VersionControlServiceEvent.NEW_VERSION;
+	private static final String NEW_ITERATION = VersionControlServiceEvent.NEW_ITERATION;
 
 	public static StandardEventService newStandardEventService() throws WTException {
 		StandardEventService instance = new StandardEventService();
@@ -38,6 +39,8 @@ public class StandardEventService extends StandardManager implements EventServic
 		getManagerService().addEventListener(listener, PersistenceManagerEvent.generateEventKey(POST_MODIFY));
 		getManagerService().addEventListener(listener, LifeCycleServiceEvent.generateEventKey(STATE_CHANGE));
 		getManagerService().addEventListener(listener, WorkInProgressServiceEvent.generateEventKey(POST_CHECKIN));
+		getManagerService().addEventListener(listener, VersionControlServiceEvent.generateEventKey(NEW_VERSION));
+		getManagerService().addEventListener(listener, VersionControlServiceEvent.generateEventKey(NEW_ITERATION));
 	}
 
 	@Override

@@ -33,6 +33,7 @@ public class EventListener extends ServiceEventListenerAdapter {
 	private static final String STATE_CHANGE = LifeCycleServiceEvent.STATE_CHANGE;
 	private static final String POST_CHECKIN = WorkInProgressServiceEvent.POST_CHECKIN;
 	private static final String NEW_VERSION = VersionControlServiceEvent.NEW_VERSION;
+	private static final String NEW_ITERATION = VersionControlServiceEvent.NEW_ITERATION;
 
 	public EventListener(String s) {
 		super(s);
@@ -49,9 +50,24 @@ public class EventListener extends ServiceEventListenerAdapter {
 
 		System.out.println("type=" + type + ", target=" + target);
 
+		if (target instanceof EPMDocumentMaster) {
+			EPMDocumentMaster mm = (EPMDocumentMaster) target;
+			if (type.equals(POST_STORE)) {
+
+			}
+		}
+
 		if (target instanceof EPMDocument) {
 			EPMDocument e = (EPMDocument) target;
 			System.out.println("첫번째 체크인 일경우 머가 나오는지type=" + type);
+
+			if (type.equals(NEW_VERSION)) {
+				System.out.println("l222oc=" + e.getLocation());
+			}
+
+			if (type.equals(NEW_ITERATION)) {
+				System.out.println("lo333c=" + e.getLocation());
+			}
 
 			if (type.equals(POST_MODIFY)) {
 				System.out.println("loc=" + e.getLocation());
@@ -62,6 +78,7 @@ public class EventListener extends ServiceEventListenerAdapter {
 			}
 
 			if (type.equals(POST_STORE)) {
+				e = (EPMDocument) PersistenceHelper.manager.refresh(e);
 				System.out.println("loc3=" + e.getLocation());
 			}
 

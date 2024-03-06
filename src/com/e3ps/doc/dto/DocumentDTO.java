@@ -204,7 +204,12 @@ public class DocumentDTO {
 		// 과거 데이터는 어떻게 할것인지..
 		String classType1 = doc.getTypeInfoWTDocument().getPtc_str_2();
 		String oldNumber = doc.getTypeInfoWTDocument().getPtc_str_3();
-		setOldNumber(oldNumber);
+		if (!StringUtil.isNull(oldNumber)) {
+			setOldNumber(oldNumber);
+		} else {
+			setOldNumber(IBAUtil.getStringValue(doc, "INTERALNUMBER"));
+		}
+
 		if (StringUtil.checkString(classType1)) {
 			DocumentClassType dct = DocumentClassType.toDocumentClassType(classType1);
 			if (dct != null) {
@@ -254,7 +259,7 @@ public class DocumentDTO {
 		setModel_code(model_code);
 		setModel_name(model_name);
 		// 내부문서번호
-		setInteralnumber(IBAUtil.getStringValue(doc, "INTERALNUMBER"));
+//		setInteralnumber(IBAUtil.getStringValue(doc, "INTERALNUMBER"));
 		// 결재타입
 		String approvalType_code = IBAUtil.getStringValue(doc, "APPROVALTYPE");
 		String approvalType_name = "BATCH".equals(approvalType_code) ? "일괄결재" : "기본결재";
