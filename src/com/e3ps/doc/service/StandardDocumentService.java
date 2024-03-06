@@ -565,6 +565,7 @@ public class StandardDocumentService extends StandardManager implements Document
 
 			// 기존 결재선 지정 삭제..
 			WorkData wd = WorkDataHelper.manager.getWorkData(doc);
+			System.out.println("wd=" + wd);
 			if (wd != null) {
 				System.out.println("기존 결재선 삭제!");
 				PersistenceHelper.manager.delete(wd);
@@ -604,6 +605,7 @@ public class StandardDocumentService extends StandardManager implements Document
 				workCopy = (WTDocument) PersistenceHelper.manager.refresh(workCopy);
 				LifeCycleHelper.service.setLifeCycleState(workCopy, State.toState("BATCHAPPROVAL"));
 			} else {
+				System.out.println("mm=" + mm);
 				if (mm == null) {
 					WorkDataHelper.service.create(workCopy);
 				} else {

@@ -105,7 +105,7 @@ Map<String, Object> contentMap = dto.getContentMap();
 				<col width="450">
 			</colgroup>
 			<tr>
-				<th>ECO 번호</th>
+				<th class="lb">ECO 번호</th>
 				<td class="indent5"><%=dto.getNumber()%></td>
 				<th class="lb">ECO 제목</th>
 				<td class="indent5"><%=dto.getName()%></td>
@@ -233,6 +233,19 @@ Map<String, Object> contentMap = dto.getContentMap();
 			activate : function(event, ui) {
 				const tabId = ui.newPanel.prop("id");
 				switch (tabId) {
+				case "tabs-1":
+					const isCreated90 = AUIGrid.isCreated(myGridID90); // 다운로드이력
+					if (isCreated90) {
+						AUIGrid.resize(myGridID90);
+					} else {
+						createAUIGrid90(columns90);
+					}
+					const isCreated700 = AUIGrid.isCreated(myGridID700); // 다운로드이력
+					if (isCreated700) {
+						AUIGrid.resize(myGridID700);
+					} else {
+						createAUIGrid90(columns700);
+					}
 				case "tabs-0":
 					const isCreated101 = AUIGrid.isCreated(myGridID101); // 다운로드이력
 					if (isCreated101) {
@@ -257,12 +270,6 @@ Map<String, Object> contentMap = dto.getContentMap();
 						AUIGrid.resize(myGridID111);
 					} else {
 						createAUIGrid111(columns111);
-					}
-					const isCreated90 = AUIGrid.isCreated(myGridID90); // 다운로드이력
-					if (isCreated90) {
-						AUIGrid.resize(myGridID90);
-					} else {
-						createAUIGrid90(columns90);
 					}
 					break;
 				case "tabs-2":
@@ -313,7 +320,7 @@ Map<String, Object> contentMap = dto.getContentMap();
 	window.addEventListener("resize", function() {
 		AUIGrid.resize(myGridID101);
 		AUIGrid.resize(myGridID90);
-		AUIGrid.resize(myGridID1010);
+// 		AUIGrid.resize(myGridID1010);
 		AUIGrid.resize(myGridID700);
 		AUIGrid.resize(myGridID500);
 		AUIGrid.resize(myGridID510);
@@ -397,7 +404,11 @@ Map<String, Object> contentMap = dto.getContentMap();
 
 	function _delete() {
 
-		if (!confirm("삭제 하시겠습니까?")) {
+		if (!confirm("해당 ECO를 정말 삭제 하시겠습니까?")) {
+			return false;
+		}
+		
+		if(!confirm("정말로 삭제를 하시겠습니까?")) {
 			return false;
 		}
 

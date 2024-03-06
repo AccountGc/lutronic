@@ -14,6 +14,7 @@ import wt.events.KeyedEvent;
 import wt.fc.PersistenceHelper;
 import wt.fc.PersistenceManagerEvent;
 import wt.fc.QueryResult;
+import wt.lifecycle.LifeCycleManaged;
 import wt.lifecycle.LifeCycleServiceEvent;
 import wt.org.WTUser;
 import wt.query.ClassAttribute;
@@ -22,6 +23,7 @@ import wt.query.QuerySpec;
 import wt.query.SearchCondition;
 import wt.services.ServiceEventListenerAdapter;
 import wt.session.SessionHelper;
+import wt.vc.VersionControlServiceEvent;
 import wt.vc.wip.WorkInProgressServiceEvent;
 
 public class EventListener extends ServiceEventListenerAdapter {
@@ -30,6 +32,7 @@ public class EventListener extends ServiceEventListenerAdapter {
 	private static final String POST_MODIFY = PersistenceManagerEvent.POST_MODIFY;
 	private static final String STATE_CHANGE = LifeCycleServiceEvent.STATE_CHANGE;
 	private static final String POST_CHECKIN = WorkInProgressServiceEvent.POST_CHECKIN;
+	private static final String NEW_VERSION = VersionControlServiceEvent.NEW_VERSION;
 
 	public EventListener(String s) {
 		super(s);
@@ -44,7 +47,25 @@ public class EventListener extends ServiceEventListenerAdapter {
 		Object target = keyedEvent.getEventTarget();
 		String type = keyedEvent.getEventType();
 
-//		if (target instanceof EPMDocument) {
+		System.out.println("type=" + type + ", target=" + target);
+
+		if (target instanceof EPMDocument) {
+			EPMDocument e = (EPMDocument) target;
+			System.out.println("첫번째 체크인 일경우 머가 나오는지type=" + type);
+
+			if (type.equals(POST_MODIFY)) {
+				System.out.println("loc=" + e.getLocation());
+			}
+
+			if (type.equals(NEW_VERSION)) {
+				System.out.println("loc2=" + e.getLocation());
+			}
+
+			if (type.equals(POST_STORE)) {
+				System.out.println("loc3=" + e.getLocation());
+			}
+
+		}
 //			if (type.equals(POST_CHECKIN)) {
 //
 //				EPMDocument epm = (EPMDocument) target;

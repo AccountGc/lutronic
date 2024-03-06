@@ -1,7 +1,5 @@
 package com.e3ps.event;
 
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-
 import com.e3ps.org.Department;
 import com.e3ps.org.People;
 import com.e3ps.org.WTUserPeopleLink;
@@ -16,6 +14,7 @@ import wt.pom.Transaction;
 import wt.services.ManagerException;
 import wt.services.StandardManager;
 import wt.util.WTException;
+import wt.vc.VersionControlServiceEvent;
 import wt.vc.wip.WorkInProgressServiceEvent;
 
 public class StandardEventService extends StandardManager implements EventService {
@@ -24,6 +23,7 @@ public class StandardEventService extends StandardManager implements EventServic
 	private static final String POST_MODIFY = PersistenceManagerEvent.POST_MODIFY;
 	private static final String STATE_CHANGE = LifeCycleServiceEvent.STATE_CHANGE;
 	private static final String POST_CHECKIN = WorkInProgressServiceEvent.POST_CHECKIN;
+	private static final String NEW_VERSION = VersionControlServiceEvent.NEW_VERSION;
 
 	public static StandardEventService newStandardEventService() throws WTException {
 		StandardEventService instance = new StandardEventService();

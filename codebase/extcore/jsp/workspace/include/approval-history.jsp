@@ -41,7 +41,7 @@ JSONArray data = WorkspaceHelper.manager.history(oid);
 		if (CommonUtil.isAdmin()) {
 		%>
 		<td class="right">
-			<input type="button" value="삭제" title="삭제" onclick="removeLine();" class="red">
+			<input type="button" value="결재선삭제" title="결재선삭제" onclick="removeLine();" class="red">
 		</td>
 		<%
 		}
@@ -158,7 +158,7 @@ JSONArray data = WorkspaceHelper.manager.history(oid);
 			arr.push(data[i].item);
 		}
 
-		if (!confirm("삭제 하시겠습니까?")) {
+		if (!confirm("선택한 결재선을 삭제 하시겠습니까?")) {
 			return false;
 		}
 		const url = getCallUrl("/workspace/removeLine");
