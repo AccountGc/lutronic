@@ -905,7 +905,7 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 					if(data.result) {
 						document.location.reload();
 					}
-					parent.openLayer();
+					parent.closeLayer();
 				})
 			}
 			
