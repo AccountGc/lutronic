@@ -290,12 +290,6 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 						}
 						return null;
 					}
-				// 				}, {
-				// 					dataField : "writer",
-				// 					headerText : "작성자",
-				// 					dataType : "string",
-				// 					width : 100,
-				// 					sortable : false
 				}, {
 					dataField : "creator",
 					headerText : "등록자",
@@ -311,30 +305,6 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 					headerText : "수정일",
 					dataType : "date",
 					width : 100,
-				// 				}, {
-				// 					dataField : "primary",
-				// 					headerText : "주 첨부파일",
-				// 					dataType : "string",
-				// 					width : 80,
-				// 					sortable : false,
-				// 					renderer : {
-				// 						type : "TemplateRenderer"
-				// 					},
-				// 					filter : {
-				// 						inline : false
-				// 					},
-				// 				}, {
-				// 					dataField : "secondary",
-				// 					headerText : "첨부파일",
-				// 					dataType : "string",
-				// 					width : 100,
-				// 					sortable : false,
-				// 					renderer : {
-				// 						type : "TemplateRenderer"
-				// 					},
-				// 					filter : {
-				// 						inline : false
-				// 					},
 				} ]
 			}
 
@@ -375,9 +345,46 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 					dataField : key,
 					sortType : sortType
 				};
-				document.getElementById("sortKey").value = key;
-				document.getElementById("sortType").value = sortType;
+				
+				const _sortType = document.getElementById("sortType").value;
+				if(Number(_sortType) !== Number(sortType)) {
+					document.getElementById("sortKey").value = key;
+					document.getElementById("sortType").value = sortType;
+					loadGridData();
+				}
 			}
+			
+			function loadGridData(movePage) {
+				if (movePage === undefined) {
+					document.getElementById("sessionid").value = 0;
+					document.getElementById("curPage").value = 1;
+				}
+
+				let params = new Object();
+				const url = getCallUrl("/doc/list");
+				const field = [ "interalnumber", "sortKey", "sortType", "location", "name", "number", "state", "creatorOid", "createdFrom", "createdTo", "modifiedFrom", "modifiedTo", "preseration", "modelcode", "deptcode", "writer", "description" ];
+				params = toField(params, field);
+				const latest = document.querySelector("input[name=latest]:checked").value;
+				params.latest = JSON.parse(latest);
+				AUIGrid.showAjaxLoader(myGridID);
+				parent.openLayer();
+				logger(params);
+				call(url, params, function(data) {
+					AUIGrid.removeAjaxLoader(myGridID);
+					if (data.result) {
+						totalPage = Math.ceil(data.total / data.pageSize);
+						createPagingNavigator(data.total, data.curPage, data.sessionid);
+						AUIGrid.setGridData(myGridID, data.list);
+						if (sortCache.length > 0) {
+							AUIGrid.setSorting(myGridID, sortCache);
+						}
+					} else {
+						alert(data.msg);
+					}
+					parent.closeLayer();
+				});
+			}
+
 
 			function _auiContextMenuHandler(event) {
 				const item = event.item;
@@ -525,37 +532,6 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 					const p = _popup(url, "", "", "f");
 					break;
 				}
-			}
-
-			function loadGridData(movePage) {
-				if (movePage === undefined) {
-					document.getElementById("sessionid").value = 0;
-					document.getElementById("curPage").value = 1;
-				}
-
-				let params = new Object();
-				const url = getCallUrl("/doc/list");
-				const field = [ "interalnumber", "sortKey", "sortType", "location", "name", "number", "state", "creatorOid", "createdFrom", "createdTo", "modifiedFrom", "modifiedTo", "preseration", "modelcode", "deptcode", "writer", "description" ];
-				params = toField(params, field);
-				const latest = document.querySelector("input[name=latest]:checked").value;
-				params.latest = JSON.parse(latest);
-				AUIGrid.showAjaxLoader(myGridID);
-				parent.openLayer();
-				logger(params);
-				call(url, params, function(data) {
-					AUIGrid.removeAjaxLoader(myGridID);
-					if (data.result) {
-						totalPage = Math.ceil(data.total / data.pageSize);
-						createPagingNavigator(data.total, data.curPage, data.sessionid);
-						AUIGrid.setGridData(myGridID, data.list);
-						if (sortCache.length > 0) {
-							AUIGrid.setSorting(myGridID, sortCache);
-						}
-					} else {
-						alert(data.msg);
-					}
-					parent.closeLayer();
-				});
 			}
 
 			function first(obj) {
