@@ -332,10 +332,13 @@ QuantityUnit[] unitList = (QuantityUnit[]) request.getAttribute("unitList");
 					dataType : "string",
 					width : 50,
 					renderer : {
-						type : "ImageRenderer",
-						altField : null,
-						imgHeight : 16,
+						type : "TemplateRenderer"
 					},
+// 					renderer : {
+// 						type : "ImageRenderer",
+// 						altField : null,
+// 						imgHeight : 16,
+// 					},
 					filter : {
 						inline : false
 					},
