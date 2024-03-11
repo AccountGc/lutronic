@@ -439,7 +439,7 @@ public class DrawingHelper {
 
 		}
 		if (checkout) {
-			QuerySpecUtils.toEqualsAnd(query, idx, WTPart.class, "checkoutInfo.state", "c/o");
+			QuerySpecUtils.toEqualsAnd(query, idx, EPMDocument.class, "checkoutInfo.state", "c/o");
 		}
 		// 최신 이터레이션
 		if (latest && !checkout) {
