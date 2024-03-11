@@ -68,7 +68,6 @@ public class EpmColumn {
 		setLocation(epm.getLocation());
 		setVersion(epm.getVersionIdentifier().getSeries().getValue() + "."
 				+ epm.getIterationIdentifier().getSeries().getValue());
-//		setVersion(setVersionInfo(epm));
 		setState(epm.getLifeCycleState().getDisplay());
 		setCreator(epm.getCreatorFullName());
 		setCreatedDate(epm.getCreateTimestamp());
@@ -108,7 +107,7 @@ public class EpmColumn {
 	private void iconInfo(EPMDocument epm) throws Exception {
 		IconDelegateFactory factory = IconDelegateFactory.getInstance();
 		IconDelegate delegate = factory.getIconDelegate(epm);
-		IconSelector selector = delegate.getStandardIconSelector();
+		IconSelector selector = delegate.getOpenIconSelector();
 		setIcon("/Windchill/" + selector.getIconKey());
 	}
 }

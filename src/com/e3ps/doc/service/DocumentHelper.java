@@ -393,7 +393,9 @@ public class DocumentHelper {
 
 		}
 
-		QueryResult rs = PersistenceHelper.manager.navigate(doc, "activity", DocumentActivityLink.class);
+		WTDocumentMaster m = (WTDocumentMaster) doc.getMaster();
+
+		QueryResult rs = PersistenceHelper.manager.navigate(m, "activity", DocumentActivityLink.class);
 		while (rs.hasMoreElements()) {
 			EChangeActivity eca = (EChangeActivity) rs.nextElement();
 			QueryResult qr = PersistenceHelper.manager.navigate(eca, "eo", EOActivityLink.class);
