@@ -298,7 +298,7 @@ public class PartHelper {
 
 		System.out.println("query=" + query);
 
-		QuerySpecUtils.toOrderBy(query, idx, WTPart.class, WTPart.MODIFY_TIMESTAMP, true);
+//		QuerySpecUtils.toOrderBy(query, idx, WTPart.class, WTPart.MODIFY_TIMESTAMP, true);
 
 		boolean sort = QuerySpecUtils.toSort(sortType);
 		QuerySpecUtils.toOrderBy(query, idx, WTPart.class, toSortKey(sortKey), sort);
