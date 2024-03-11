@@ -114,7 +114,7 @@ public class DrawingHelper {
 		String createdTo = StringUtil.checkNull((String) params.get("createdTo"));
 		String modifiedFrom = StringUtil.checkNull((String) params.get("modifiedFrom"));
 		String modifiedTo = StringUtil.checkNull((String) params.get("modifiedTo"));
-
+		boolean checkout = (boolean) params.get("checkout");
 		// 정렬
 		String sortKey = (String) params.get("sortKey");
 		String sortType = (String) params.get("sortType");
@@ -438,8 +438,11 @@ public class DrawingHelper {
 			query.appendCloseParen();
 
 		}
+		if (checkout) {
+			QuerySpecUtils.toEqualsAnd(query, idx, WTPart.class, "checkoutInfo.state", "c/o");
+		}
 		// 최신 이터레이션
-		if (latest) {
+		if (latest && !checkout) {
 			QuerySpecUtils.toLatest(query, idx, EPMDocument.class);
 		}
 
@@ -999,7 +1002,7 @@ public class DrawingHelper {
 			ff.mkdirs();
 		}
 		String zipFileName = user.getName() + ".zip";
-	//	zipDirectory(savePath, zipFileName);
+		// zipDirectory(savePath, zipFileName);
 
 		return result;
 	}

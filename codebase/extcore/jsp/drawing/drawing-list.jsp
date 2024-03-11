@@ -255,6 +255,15 @@ QuantityUnit[] unitList = (QuantityUnit[]) request.getAttribute("unitList");
 					<!-- 					<input type="button" value="선택" title="선택" class="red" onclick="_select();"> -->
 				</td>
 				<td class="right">
+					<div class="pretty p-switch">
+						<input type="checkbox" name="checkout" value="true" onclick="loadGridData();">
+						<div class="state p-success">
+							<label>
+								<b>체크아웃</b>
+							</label>
+						</div>
+					</div>
+					&nbsp;
 					<select name="_psize" id="_psize" onchange="loadGridData();">
 						<option value="10">10</option>
 						<option value="20" selected="selected">20</option>
@@ -561,6 +570,13 @@ QuantityUnit[] unitList = (QuantityUnit[]) request.getAttribute("unitList");
 				const field = [ "sortKey", "sortType", "location", "cadDivision", "cadType", "number", "name", "createdFrom", "createdTo", "modifiedFrom", "modifiedTo", "creatorOid", "state", "modelcode", "productmethod", "deptcode", "unit", "weight1", "weight2", "manufacture", "mat", "finish",
 						"remarks", "specification" ];
 				const latest = document.querySelector("input[name=latest]:checked").value;
+				const checkout = document.querySelector("input[name=checkout]:checked");
+				if (checkout != null) {
+					params.checkout = JSON.parse(checkout.value);
+				} else {
+					params.checkout = false;
+				}
+				
 				params = toField(params, field);
 				params.latest = JSON.parse(latest);
 				AUIGrid.showAjaxLoader(myGridID);
