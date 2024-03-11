@@ -11,6 +11,7 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 
 import lombok.Getter;
 import lombok.Setter;
+import wt.enterprise.BasicTemplateProcessor;
 import wt.epm.EPMDocument;
 import wt.fc.IconDelegate;
 import wt.fc.IconDelegateFactory;
@@ -105,9 +106,10 @@ public class EpmColumn {
 	 * 도면 아이콘 세팅
 	 */
 	private void iconInfo(EPMDocument epm) throws Exception {
-		IconDelegateFactory factory = IconDelegateFactory.getInstance();
-		IconDelegate delegate = factory.getIconDelegate(epm);
-		IconSelector selector = delegate.getOpenIconSelector();
-		setIcon("/Windchill/" + selector.getIconKey());
+//		IconDelegateFactory factory = IconDelegateFactory.getInstance();
+//		IconDelegate delegate = factory.getIconDelegate(epm);
+//		IconSelector selector = delegate.getOpenIconSelector();
+//		setIcon("/Windchill/" + selector.getIconKey());
+		setIcon(BasicTemplateProcessor.getObjectIconImgTag(epm));
 	}
 }
