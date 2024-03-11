@@ -1443,8 +1443,9 @@ public class StandardActivityService extends StandardManager implements Activity
 			link.setRevise(true);
 			PersistenceHelper.manager.modify(link);
 
-			boolean isSix = part.getNumber().startsWith("6"); // 4로 시작하는것은 무조건 모두 새품번
-			if (!isSix) {
+			boolean isSix = part.getNumber().startsWith("6"); // 6로 시작하는것은 무조건 모두 새품번
+			boolean isSeven = part.getNumber().startsWith("7"); // 7시작하는것은 무조건 모두 새품번
+			if (!isSix && !isSeven) {
 				PartToPartLink pLink = PartToPartLink.newPartToPartLink(part.getMaster(), newPart.getMaster());
 				pLink.setPreVersion(part.getVersionIdentifier().getSeries().getValue());
 				pLink.setAfterVersion(newPart.getVersionIdentifier().getSeries().getValue());
@@ -1534,6 +1535,7 @@ public class StandardActivityService extends StandardManager implements Activity
 				// ???
 				boolean isFour = part.getNumber().startsWith("4"); // 4로 시작하는것은 무조건 모두 새품번
 				boolean isSix = part.getNumber().startsWith("6");
+				boolean isSeven = part.getNumber().startsWith("7");
 				// 승인된 데이터는 왼쪽으로
 				if (isApproved) {
 					link.setRightPart(false);
@@ -1553,7 +1555,7 @@ public class StandardActivityService extends StandardManager implements Activity
 				// 오른쪽으로 작업중 넣었을 경우
 				if (isRight) {
 					WTPart prevPart = ActivityHelper.manager.prevPart(part.getNumber());
-					if (!isSix) {
+					if (!isSix && !isSeven) {
 						if (prevPart != null) {
 							PartToPartLink pLink = PartToPartLink.newPartToPartLink(prevPart.getMaster(),
 									part.getMaster());
