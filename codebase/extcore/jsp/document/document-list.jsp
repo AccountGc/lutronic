@@ -271,24 +271,6 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 					width : 250,
 					sortable : false
 				}, {
-					// 					dataField : "classType1_name",
-					// 					headerText : "대분류",
-					// 					dataType : "string",
-					// 					width : 100,
-					// 					sortable : false
-					// 				}, {
-					// 					dataField : "classType2_name",
-					// 					headerText : "중분류",
-					// 					dataType : "string",
-					// 					width : 200,
-					// 					sortable : false
-					// 				}, {
-					// 					dataField : "classType3_name",
-					// 					headerText : "소분류",
-					// 					dataType : "string",
-					// 					width : 100,
-					// 					sortable : false
-					// 				}, {
 					dataField : "version",
 					headerText : "REV",
 					dataType : "string",

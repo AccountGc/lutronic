@@ -487,6 +487,7 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 					const grid = AUIGrid.getItemsByValue(myGridID, "_$depth", i + 1);
 					for (let j = 0; j < grid.length; j++) {
 						const item = grid[j];
+						logger(item);
 						const isLazy = item.isLazy;
 						const _$lazyRequested = item._$lazyRequested;
 						if (isLazy && !_$lazyRequested) {

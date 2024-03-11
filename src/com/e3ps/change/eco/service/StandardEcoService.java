@@ -64,6 +64,7 @@ import wt.util.WTException;
 import wt.vc.VersionControlHelper;
 import wt.vc.baseline.BaselineHelper;
 import wt.vc.baseline.ManagedBaseline;
+import wt.vc.wip.WorkInProgressHelper;
 
 public class StandardEcoService extends StandardManager implements EcoService {
 
@@ -587,15 +588,25 @@ public class StandardEcoService extends StandardManager implements EcoService {
 
 					if (part != null) {
 
+						if (WorkInProgressHelper.isCheckedOut(part)) {
+							throw new Exception("체크아웃된 품목 = " + part.getNumber());
+						}
+
 						// 부품 승인
 						LifeCycleHelper.service.setLifeCycleState(part, approved);
 						// 3D 승인
 						EPMDocument epm = PartHelper.manager.getEPMDocument(part);
 						if (epm != null) {
+							if (WorkInProgressHelper.isCheckedOut(epm)) {
+								throw new Exception("체크아웃된 3D = " + epm.getNumber());
+							}
 							LifeCycleHelper.service.setLifeCycleState(epm, approved);
 							// 2D 승인
 							EPMDocument epm2D = PartHelper.manager.getEPMDocument2D(epm);
 							if (epm2D != null) {
+								if (WorkInProgressHelper.isCheckedOut(epm)) {
+									throw new Exception("체크아웃된 2D = " + epm2D.getNumber());
+								}
 								LifeCycleHelper.service.setLifeCycleState(epm2D, approved);
 							}
 						}

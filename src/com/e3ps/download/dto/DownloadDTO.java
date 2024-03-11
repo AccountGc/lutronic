@@ -82,36 +82,36 @@ public class DownloadDTO {
 		String info = "";
 		if (per instanceof WTPart) {
 			WTPart part = (WTPart) per;
-			info = "[품목] " + part.getNumber() + " - (" + part.getName() + ")";
+			info = "[품목] " + part.getNumber() + " - (" + history.getName() + ")";
 		} else if (per instanceof EPMDocument) {
 			EPMDocument epm = (EPMDocument) per;
-			info = "[도면] " + epm.getNumber() + " - (" + epm.getName() + ")";
+			info = "[도면] " + epm.getNumber() + " - (" + history.getName() + ")";
 		} else if (per instanceof WTDocument) {
 			WTDocument doc = (WTDocument) per;
 			String docType = doc.getDocType().toString();
 			if ("$$MMDocument".equals(docType)) {
-				info = "[금형문서] " + doc.getNumber() + " - (" + doc.getName() + ")";
+				info = "[금형문서] " + doc.getNumber() + " - (" + history.getName() + ")";
 			} else if ("$$ROHS".equals(docType)) {
-				info = "[ROHS] " + doc.getNumber() + " - (" + doc.getName() + ")";
+				info = "[ROHS] " + doc.getNumber() + " - (" + history.getName() + ")";
 			} else {
-				info = "[문서] " + doc.getNumber() + " - (" + doc.getName() + ")";
+				info = "[문서] " + doc.getNumber() + " - (" + history.getName() + ")";
 			}
 		} else if (per instanceof EChangeOrder) {
 			EChangeOrder e = (EChangeOrder) per;
 			if (e.getEoType().equals("CHANGE")) {
-				info = "[ECO] " + e.getEoNumber() + " - (" + e.getEoName() + ")";
+				info = "[ECO] " + e.getEoNumber() + " - (" + history.getName() + ")";
 			} else {
-				info = "[EO] " + e.getEoNumber() + " - (" + e.getEoName() + ")";
+				info = "[EO] " + e.getEoNumber() + " - (" + history.getName() + ")";
 			}
 		} else if (per instanceof EChangeRequest) {
 			EChangeRequest cr = (EChangeRequest) per;
-			info = "[CR] " + cr.getEoNumber() + " - (" + cr.getEoName() + ")";
+			info = "[CR] " + cr.getEoNumber() + " - (" + history.getName() + ")";
 		} else if (per instanceof ECPRRequest) {
 			ECPRRequest ecpr = (ECPRRequest) per;
-			info = "[ECPR] " + ecpr.getEoNumber() + " - (" + ecpr.getEoName() + ")";
+			info = "[ECPR] " + ecpr.getEoNumber() + " - (" + history.getName() + ")";
 		} else if (per instanceof ECRMRequest) {
 			ECRMRequest ecrm = (ECRMRequest) per;
-			info = "[ECRM] " + ecrm.getEoNumber() + " - (" + ecrm.getEoName() + ")";
+			info = "[ECRM] " + ecrm.getEoNumber() + " - (" + history.getName() + ")";
 		}
 		setInfo(info);
 	}

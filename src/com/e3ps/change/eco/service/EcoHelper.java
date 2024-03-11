@@ -60,6 +60,7 @@ import com.e3ps.common.util.ZipUtil;
 import com.e3ps.doc.DocumentECOLink;
 import com.e3ps.doc.DocumentECPRLink;
 import com.e3ps.doc.column.DocumentColumn;
+import com.e3ps.download.service.DownloadHistoryHelper;
 import com.e3ps.drawing.service.DrawingHelper;
 import com.e3ps.org.dto.PeopleDTO;
 import com.e3ps.org.service.OrgHelper;
@@ -2287,7 +2288,7 @@ public class EcoHelper {
 			fos.close();
 			is.close();
 		}
-		
+
 		qr.reset();
 		qr = ContentHelper.service.getContentsByRole(eco, ContentRoleType.toContentRoleType("ECO"));
 		while (qr.hasMoreElements()) {
@@ -2315,6 +2316,7 @@ public class EcoHelper {
 			System.out.println("파일 삭제!");
 		}
 		result.put("name", nn);
+		DownloadHistoryHelper.service.create(oid,nn, "ECO 첨부파일 일괄 다운로드");
 		return result;
 	}
 }

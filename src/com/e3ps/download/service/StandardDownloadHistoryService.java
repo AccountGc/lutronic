@@ -53,4 +53,33 @@ public class StandardDownloadHistoryService extends StandardManager implements D
 				trs.rollback();
 		}
 	}
+
+	@Override
+	public void create(String oid, String name, String message) throws Exception {
+		Transaction trs = new Transaction();
+		try {
+			trs.start();
+
+			Persistable per = CommonUtil.getObject(oid);
+
+			// 링크인데.. 중복으로 나올 가능성은 적어 보이는데..
+			DownloadHistory history = DownloadHistory.newDownloadHistory();
+			WTUser user = CommonUtil.sessionUser();
+			history.setName(name + " [" + message + "]");
+			history.setPersist(per);
+			history.setCnt(1);
+			history.setUser(user);
+			PersistenceHelper.manager.save(history);
+
+			trs.commit();
+			trs = null;
+		} catch (Exception e) {
+			e.printStackTrace();
+			trs.rollback();
+			throw e;
+		} finally {
+			if (trs != null)
+				trs.rollback();
+		}
+	}
 }

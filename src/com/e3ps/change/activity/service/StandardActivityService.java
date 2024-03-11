@@ -1533,7 +1533,7 @@ public class StandardActivityService extends StandardManager implements Activity
 				boolean isApproved = part.getLifeCycleState().toString().equals("APPROVED");
 				// ???
 				boolean isFour = part.getNumber().startsWith("4"); // 4로 시작하는것은 무조건 모두 새품번
-
+				boolean isSix = part.getNumber().startsWith("6");
 				// 승인된 데이터는 왼쪽으로
 				if (isApproved) {
 					link.setRightPart(false);
@@ -1553,12 +1553,15 @@ public class StandardActivityService extends StandardManager implements Activity
 				// 오른쪽으로 작업중 넣었을 경우
 				if (isRight) {
 					WTPart prevPart = ActivityHelper.manager.prevPart(part.getNumber());
-					if (prevPart != null) {
-						PartToPartLink pLink = PartToPartLink.newPartToPartLink(prevPart.getMaster(), part.getMaster());
-						pLink.setPreVersion(prevPart.getVersionIdentifier().getSeries().getValue());
-						pLink.setAfterVersion(part.getVersionIdentifier().getSeries().getValue());
-						pLink.setEco(eco);
-						PersistenceHelper.manager.save(pLink);
+					if (!isSix) {
+						if (prevPart != null) {
+							PartToPartLink pLink = PartToPartLink.newPartToPartLink(prevPart.getMaster(),
+									part.getMaster());
+							pLink.setPreVersion(prevPart.getVersionIdentifier().getSeries().getValue());
+							pLink.setAfterVersion(part.getVersionIdentifier().getSeries().getValue());
+							pLink.setEco(eco);
+							PersistenceHelper.manager.save(pLink);
+						}
 					}
 				}
 

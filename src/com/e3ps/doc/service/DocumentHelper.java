@@ -24,9 +24,13 @@ import com.aspose.cells.TextAlignmentType;
 import com.aspose.cells.Workbook;
 import com.aspose.cells.Worksheet;
 import com.aspose.pdf.Document;
+import com.e3ps.change.DocumentActivityLink;
+import com.e3ps.change.ECOChange;
 import com.e3ps.change.ECPRRequest;
+import com.e3ps.change.EChangeActivity;
 import com.e3ps.change.EChangeOrder;
 import com.e3ps.change.EChangeRequest;
+import com.e3ps.change.EOActivityLink;
 import com.e3ps.change.cr.column.CrColumn;
 import com.e3ps.change.eco.column.EcoColumn;
 import com.e3ps.change.ecpr.column.EcprColumn;
@@ -51,6 +55,7 @@ import com.e3ps.doc.DocumentECPRLink;
 import com.e3ps.doc.DocumentEOLink;
 import com.e3ps.doc.DocumentToDocumentLink;
 import com.e3ps.doc.column.DocumentColumn;
+import com.e3ps.download.service.DownloadHistoryHelper;
 import com.e3ps.org.dto.PeopleDTO;
 import com.e3ps.org.service.OrgHelper;
 import com.e3ps.part.column.PartColumn;
@@ -385,6 +390,23 @@ public class DocumentHelper {
 			EcoColumn dto = new EcoColumn(eco);
 			Map<String, Object> map = AUIGridUtil.dtoToMap(dto);
 			list.add(map);
+
+		}
+
+		QueryResult rs = PersistenceHelper.manager.navigate(doc, "activity", DocumentActivityLink.class);
+		while (rs.hasMoreElements()) {
+			EChangeActivity eca = (EChangeActivity) rs.nextElement();
+			QueryResult qr = PersistenceHelper.manager.navigate(eca, "eo", EOActivityLink.class);
+
+			while (qr.hasMoreElements()) {
+				ECOChange eo = (ECOChange) qr.nextElement();
+				EChangeOrder eco = (EChangeOrder) eo;
+				if (eco.getEoType().equals("CHANGE")) {
+					EcoColumn dto = new EcoColumn(eco);
+					Map<String, Object> map = AUIGridUtil.dtoToMap(dto);
+					list.add(map);
+				}
+			}
 		}
 		return list;
 	}
@@ -1188,7 +1210,7 @@ public class DocumentHelper {
 			fos.close();
 			is.close();
 		}
-		
+
 		qr.reset();
 		qr = ContentHelper.service.getContentsByRole(doc, ContentRoleType.toContentRoleType("MERGE"));
 		while (qr.hasMoreElements()) {
@@ -1217,6 +1239,8 @@ public class DocumentHelper {
 		}
 
 		result.put("name", nn);
+
+		DownloadHistoryHelper.service.create(oid, nn, "문서 첨부파일 일괄 다운로드");
 
 		return result;
 	}

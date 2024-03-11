@@ -27,6 +27,7 @@ import com.e3ps.common.util.PageQueryUtils;
 import com.e3ps.common.util.QuerySpecUtils;
 import com.e3ps.common.util.ZipUtil;
 import com.e3ps.doc.column.DocumentColumn;
+import com.e3ps.download.service.DownloadHistoryHelper;
 import com.ibm.icu.text.DecimalFormat;
 
 import net.sf.json.JSONArray;
@@ -380,6 +381,7 @@ public class EcrmHelper {
 			System.out.println("파일 삭제!");
 		}
 		result.put("name", nn);
+		DownloadHistoryHelper.service.create(oid, nn, "ECRM 첨부파일 일괄 다운로드");
 		return result;
 	}
 }

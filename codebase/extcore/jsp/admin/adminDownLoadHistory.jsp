@@ -219,7 +219,7 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 				const field = [ "managerOid", "createdFrom", "createdTo", "type" ];
 				params = toField(params, field);
 				if (params.type == "") {
-					params.type = "EPMDocument";
+					params.type = "wt.epm.EPMDocument";
 				}
 				var url = getCallUrl("/admin/downLoadHistory");
 				parent.openLayer();
@@ -286,13 +286,19 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 					jsCallback : function(rowIndex, columnIndex, value, item) {
 						const menuType = item.menuType;
 						if (menuType == '도면관리') {
-							gotoView('EPMDocument');
+							gotoView('wt.epm.EPMDocument');
 						} else if (menuType == '품목관리') {
-							gotoView('WTPart');
-						} else if (menuType == '설계변경') {
-							gotoView('change');
+							gotoView('wt.part.WTPart');
+						} else if (menuType == 'CR') {
+							gotoView('com.e3ps.change.EChangeRequest');
+						} else if(menuType == 'EO/ECO') {
+							gotoView('com.e3ps.change.EChangeOrder');
+						} else if(menuType == 'ECPR') {
+							gotoView('com.e3ps.change.ECPRRequest');
+						} else if(menuType == 'ECRM') {
+							gotoView('com.e3ps.change.ECRMRequest');
 						} else if (menuType == '문서관리') {
-							gotoView('WTDocument');
+							gotoView('wt.doc.WTDocument');
 						}
 					}
 				},
@@ -315,7 +321,13 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 				}, {
 					"menuType" : "품목관리"
 				}, {
-					"menuType" : "설계변경"
+					"menuType" : "CR"
+				}, {
+					"menuType" : "EO/ECO"
+				}, {
+					"menuType" : "ECPR"
+				}, {
+					"menuType" : "ECRM"
 				}, {
 					"menuType" : "문서관리"
 				} ];

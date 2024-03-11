@@ -10,4 +10,9 @@ public interface DownloadHistoryService {
 	 */
 	public abstract void create(String oid) throws Exception;
 
+	/**
+	 * 일괄 결재 다운 로드 이력
+	 */
+	public abstract void create(String oid, String name, String message) throws Exception;
+
 }
