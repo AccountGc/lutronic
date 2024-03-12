@@ -48,7 +48,7 @@ public class EventListener extends ServiceEventListenerAdapter {
 		Object target = keyedEvent.getEventTarget();
 		String type = keyedEvent.getEventType();
 
-		System.out.println("type=" + type + ", target=" + target);
+//		System.out.println("type=" + type + ", target=" + target);
 
 		if (target instanceof EPMDocumentMaster) {
 			EPMDocumentMaster mm = (EPMDocumentMaster) target;
@@ -61,26 +61,26 @@ public class EventListener extends ServiceEventListenerAdapter {
 			EPMDocument e = (EPMDocument) target;
 			System.out.println("첫번째 체크인 일경우 머가 나오는지type=" + type);
 
-			if (type.equals(NEW_VERSION)) {
-				System.out.println("l222oc=" + e.getLocation());
-			}
-
-			if (type.equals(NEW_ITERATION)) {
-				System.out.println("lo333c=" + e.getLocation());
-			}
-
-			if (type.equals(POST_MODIFY)) {
-				System.out.println("loc=" + e.getLocation());
-			}
-
-			if (type.equals(NEW_VERSION)) {
-				System.out.println("loc2=" + e.getLocation());
-			}
-
-			if (type.equals(POST_STORE)) {
-				e = (EPMDocument) PersistenceHelper.manager.refresh(e);
-				System.out.println("loc3=" + e.getLocation());
-			}
+//			if (type.equals(NEW_VERSION)) {
+//				System.out.println("l222oc=" + e.getLocation());
+//			}
+//
+//			if (type.equals(NEW_ITERATION)) {
+//				System.out.println("lo333c=" + e.getLocation());
+//			}
+//
+//			if (type.equals(POST_MODIFY)) {
+//				System.out.println("loc=" + e.getLocation());
+//			}
+//
+//			if (type.equals(NEW_VERSION)) {
+//				System.out.println("loc2=" + e.getLocation());
+//			}
+//
+//			if (type.equals(POST_STORE)) {
+//				e = (EPMDocument) PersistenceHelper.manager.refresh(e);
+//				System.out.println("loc3=" + e.getLocation());
+//			}
 
 		}
 //			if (type.equals(POST_CHECKIN)) {
