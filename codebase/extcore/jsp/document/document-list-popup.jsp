@@ -418,17 +418,17 @@ function auiCellClick(event) {
 	}
 	<%}%>
 }
-
 function loadGridData(movePage) {
 	if (movePage === undefined) {
 		document.getElementById("sessionid").value = 0;
 		document.getElementById("curPage").value = 1;
 	}
+
 	let params = new Object();
 	const url = getCallUrl("/doc/list");
-	const field = ["interalnumber", "sortKey", "sortType", "location", "name", "number", "state", "creatorOid", "createdFrom", "createdTo", "modifiedFrom", "modifiedTo", "preseration", "modelcode", "deptcode", "writer", "description" ];
-	const latest = document.querySelector("input[name=latest]:checked").value;
+	const field = [ "interalnumber", "sortKey", "sortType", "location", "name", "number", "state", "creatorOid", "createdFrom", "createdTo", "modifiedFrom", "modifiedTo", "preseration", "modelcode", "deptcode", "writer", "description" ];
 	params = toField(params, field);
+	const latest = document.querySelector("input[name=latest]:checked").value;
 	params.latest = JSON.parse(latest);
 	AUIGrid.showAjaxLoader(myGridID);
 	openLayer();
@@ -439,9 +439,8 @@ function loadGridData(movePage) {
 			totalPage = Math.ceil(data.total / data.pageSize);
 			createPagingNavigator(data.total, data.curPage, data.sessionid);
 			AUIGrid.setGridData(myGridID, data.list);
-			if (movePage === undefined) {
+			if (sortCache.length > 0) {
 				AUIGrid.setSorting(myGridID, sortCache);
-				compField = null;
 			}
 		} else {
 			alert(data.msg);
@@ -449,6 +448,7 @@ function loadGridData(movePage) {
 		closeLayer();
 	});
 }
+
 
 document.addEventListener("DOMContentLoaded", function() {
 	toFocus("number");

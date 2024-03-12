@@ -339,6 +339,7 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 			let sortCache = [];
 			function auiSortingHandler(event) {
 				const sortingFields = event.sortingFields;
+				logger(event);
 				const key = sortingFields[0].dataField;
 				const sortType = sortingFields[0].sortType; // 오름차순 1 내림 -1
 				sortCache[0] = {
