@@ -16,10 +16,17 @@ public class Test2 {
 
 	public static void main(String[] args) throws Exception {
 
-
-		PersistenceServerHelper.isPersistedInTransaction(null)
-
+		int list = 2;
+		int loop = 2 / 45;
+		int gap = 2 % 45;
+		System.out.println(loop);
+		System.out.println(gap);
+		if(gap > 0) {
+			loop = loop + 1;
+		}
 		
+		System.out.println(loop);
+
 		System.exit(0);
 
 	}

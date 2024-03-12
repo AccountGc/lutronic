@@ -1765,6 +1765,9 @@ public class EcoHelper {
 		} else {
 			ecoTable.setValue("AETXT_L", ""); // 변경 내역 전체 내용
 		}
+
+		ArrayList<String> check = new ArrayList<>();
+
 		JCoTable bomTable = function.getTableParameterList().getTable("ET_BOM");
 		QueryResult qr = PersistenceHelper.manager.navigate(eco, "part", EcoPartLink.class, false);
 		while (qr.hasMoreElements()) {
@@ -1893,6 +1896,12 @@ public class EcoHelper {
 				bomTable.setValue("MEINS", dto.getUnit()); // 단위
 				bomTable.setValue("AENNR12", eco.getEoNumber() + df.format(idx)); // 변경번호 12자리
 				idx++;
+
+				String key1 = dto.getParentPartNumber() + "," + dto.getChildPartNumber();
+				String key2 = dto.getNewParentPartNumber() + "," + dto.getNewChildPartNumber();
+
+				check.add(key1);
+				check.add(key2);
 			}
 		}
 		function.execute(destination);
@@ -1904,6 +1913,9 @@ public class EcoHelper {
 		JCoTable rtnTable = function.getTableParameterList().getTable("ET_BOM");
 		rtnTable.firstRow();
 		ArrayList<Map<String, Object>> rtnList = new ArrayList<Map<String, Object>>();
+
+		ArrayList<String> duplicate = new ArrayList<>();
+
 		for (int i = 0; i < rtnTable.getNumRows(); i++, rtnTable.nextRow()) {
 			Map<String, Object> rtnMap = new HashMap<>();
 			Object ZIFSTA = rtnTable.getValue("ZIFSTA");
@@ -1922,15 +1934,29 @@ public class EcoHelper {
 			rtnMap.put("ZIFSTA", ZIFSTA);
 			rtnMap.put("ZIFMSG", ZIFMSG);
 
+			String key1 = MATNR_OLD + "," + IDNRK_OLD;
+			String key2 = MATNR_NEW + "." + IDNRK_NEW;
+
+			if (check.contains(key1)) {
+				duplicate.add(key1);
+			}
+
+			if (check.contains(key2)) {
+				duplicate.add(key2);
+			}
+
 			if (StringUtil.checkString((String) ZIFMSG)) {
 				rtnMap.put("ERROR", "실패");
 			} else {
 				rtnMap.put("ERROR", "성공");
 			}
-
 			rtnList.add(rtnMap);
-
 		}
+
+		for (String s : duplicate) {
+			System.out.println("중복 = " + s);
+		}
+
 		System.out.println("[ SAP JCO ] RETURN - TYPE:" + r_type);
 		System.out.println("[ SAP JCO ] RETURN - MESSAGE:" + r_msg);
 
@@ -2316,7 +2342,7 @@ public class EcoHelper {
 			System.out.println("파일 삭제!");
 		}
 		result.put("name", nn);
-		DownloadHistoryHelper.service.create(oid,nn, "ECO 첨부파일 일괄 다운로드");
+		DownloadHistoryHelper.service.create(oid, nn, "ECO 첨부파일 일괄 다운로드");
 		return result;
 	}
 }
