@@ -37,6 +37,7 @@ import com.e3ps.workspace.dto.WorkDataDTO;
 import wt.doc.WTDocument;
 import wt.fc.Persistable;
 import wt.fc.PersistenceHelper;
+import wt.fc.PersistenceServerHelper;
 import wt.fc.QueryResult;
 import wt.fc.WTObject;
 import wt.lifecycle.LifeCycleHelper;
@@ -1515,6 +1516,30 @@ public class StandardWorkspaceService extends StandardManager implements Workspa
 			}
 
 			afterRegisterAction(appMaster);
+
+			boolean isAgreeApprovalLine = WorkspaceHelper.manager.isAgreeApprovalLine(appMaster);
+			// 합의가 모두 끝난 상태..
+			if (!isAgreeApprovalLine) {
+				ArrayList<ApprovalLine> aList = WorkspaceHelper.manager.getApprovalLines(appMaster);
+				for (ApprovalLine line : aList) {
+
+					if (line.getCompleteTime() != null) {
+						int idx = line.getSort();
+						ApprovalLine nextLine = WorkspaceHelper.manager.getNextAppLine(appMaster, idx + 2);
+						System.out.println("nextLine=" + nextLine);
+						if (nextLine != null) {
+							if (nextLine.getCompleteTime() != null) {
+								continue;
+							} else {
+								nextLine.setStartTime(new Timestamp(new Date().getTime()));
+								nextLine.setState(WorkspaceHelper.STATE_APPROVAL_APPROVING);
+								nextLine = (ApprovalLine) PersistenceHelper.manager.modify(nextLine);
+								break;
+							}
+						}
+					}
+				}
+			}
 
 			trs.commit();
 			trs = null;

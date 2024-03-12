@@ -5,24 +5,21 @@ import java.util.ArrayList;
 import com.e3ps.common.mail.MailUtils;
 import com.e3ps.common.util.CommonUtil;
 
+import wt.content.ContentHelper;
+import wt.content.ContentServerHelper;
 import wt.doc.WTDocument;
+import wt.fc.PersistenceHelper;
+import wt.fc.PersistenceServerHelper;
 import wt.org.WTUser;
 
 public class Test2 {
 
 	public static void main(String[] args) throws Exception {
 
-		String oid = "wt.doc.WTDocument:1532391";
-		WTDocument doc = (WTDocument) CommonUtil.getObject(oid);
 
-		WTUser user = (WTUser) CommonUtil.getObject("wt.org.WTUser:11");
+		PersistenceServerHelper.isPersistedInTransaction(null)
 
-		ArrayList<WTUser> ll = new ArrayList<>();
-
-		ll.add(user);
-
-		MailUtils.manager.sendAgreeMailTest(doc, ll);
-
+		
 		System.exit(0);
 
 	}

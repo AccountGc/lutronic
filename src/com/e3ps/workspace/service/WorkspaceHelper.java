@@ -31,6 +31,7 @@ import wt.fc.PagingQueryResult;
 import wt.fc.Persistable;
 import wt.fc.PersistenceHelper;
 import wt.fc.QueryResult;
+import wt.iba.value.StringValue;
 import wt.lifecycle.LifeCycleManaged;
 import wt.org.WTPrincipalReference;
 import wt.org.WTUser;
@@ -1264,13 +1265,35 @@ public class WorkspaceHelper {
 		QuerySpecUtils.toEqualsAnd(query, idx, ApprovalLine.class, ApprovalLine.TYPE, APPROVAL_LINE);
 		QuerySpecUtils.toEqualsAnd(query, idx, ApprovalLine.class, ApprovalLine.SORT, lastLine.getSort() - 1);
 
-		System.out.println(query);
 		QueryResult qr = PersistenceHelper.manager.find(query);
 		if (qr.hasMoreElements()) {
 			Object[] obj = (Object[]) qr.nextElement();
 			ApprovalLine preLine = (ApprovalLine) obj[0];
 			return preLine;
 		}
+		return null;
+	}
+
+	public ApprovalLine getNextAppLine(ApprovalMaster m, int sort) throws Exception {
+		QuerySpec query = new QuerySpec();
+
+		int idx = query.appendClassList(ApprovalLine.class, true);
+		int idx_m = query.appendClassList(ApprovalMaster.class, true);
+
+		QuerySpecUtils.toInnerJoin(query, ApprovalLine.class, ApprovalMaster.class, "masterReference.key.id",
+				WTAttributeNameIfc.ID_NAME, idx, idx_m);
+		QuerySpecUtils.toEqualsAnd(query, idx, ApprovalLine.class, "masterReference.key.id", m);
+		QuerySpecUtils.toEqualsAnd(query, idx, ApprovalLine.class, ApprovalLine.ROLE, WORKING_APPROVAL);
+		QuerySpecUtils.toEqualsAnd(query, idx, ApprovalLine.class, ApprovalLine.TYPE, APPROVAL_LINE);
+		QuerySpecUtils.toEqualsAnd(query, idx, ApprovalLine.class, ApprovalLine.SORT, sort);
+
+		QueryResult result = PersistenceHelper.manager.find(query);
+		System.out.println(query);
+		if (result.hasMoreElements()) {
+			Object[] obj = (Object[]) result.nextElement();
+			return (ApprovalLine) obj[0];
+		}
+
 		return null;
 	}
 }
