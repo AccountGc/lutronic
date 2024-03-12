@@ -1897,8 +1897,8 @@ public class EcoHelper {
 				bomTable.setValue("AENNR12", eco.getEoNumber() + df.format(idx)); // 변경번호 12자리
 				idx++;
 
-				String key1 = dto.getParentPartNumber() + "," + dto.getChildPartNumber();
-				String key2 = dto.getNewParentPartNumber() + "," + dto.getNewChildPartNumber();
+				String key1 = dto.getParentPartNumber() + "&" + dto.getChildPartNumber();
+				String key2 = dto.getNewParentPartNumber() + "&" + dto.getNewChildPartNumber();
 
 				check.add(key1);
 				check.add(key2);
@@ -1934,8 +1934,8 @@ public class EcoHelper {
 			rtnMap.put("ZIFSTA", ZIFSTA);
 			rtnMap.put("ZIFMSG", ZIFMSG);
 
-			String key1 = MATNR_OLD + "," + IDNRK_OLD;
-			String key2 = MATNR_NEW + "." + IDNRK_NEW;
+			String key1 = MATNR_OLD + "&" + IDNRK_OLD;
+			String key2 = MATNR_NEW + "&" + IDNRK_NEW;
 
 			if (check.contains(key1)) {
 				duplicate.add(key1);
@@ -1952,6 +1952,8 @@ public class EcoHelper {
 			}
 			rtnList.add(rtnMap);
 		}
+
+		System.out.println("duplicate=" + duplicate.size());
 
 		for (String s : duplicate) {
 			System.out.println("중복 = " + s);
