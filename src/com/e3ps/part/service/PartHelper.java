@@ -778,9 +778,22 @@ public class PartHelper {
 	 * 관련 ECO
 	 */
 	private Object referenceEco(WTPart part, ArrayList<Map<String, Object>> list) throws Exception {
-		QueryResult qr = PersistenceHelper.manager.navigate((WTPartMaster) part.getMaster(), "eco", EcoPartLink.class);
+		WTPartMaster m = (WTPartMaster) part.getMaster();
+		QuerySpec query = new QuerySpec();
+		int idx = query.appendClassList(EcoPartLink.class, true);
+		int idx_e = query.appendClassList(EChangeOrder.class, false);
+		QuerySpecUtils.toInnerJoin(query, EcoPartLink.class, EChangeOrder.class, "roleBObjectRef.key.id",
+				WTAttributeNameIfc.ID_NAME, idx, idx_e);
+		QuerySpecUtils.toEquals(query, idx, EcoPartLink.class, "roleAObjectRef.key.id",
+				m.getPersistInfo().getObjectIdentifier().getId());
+		QuerySpecUtils.toOrderBy(query, idx_e, EChangeOrder.class, EChangeOrder.EO_APPROVE_DATE, false);
+		QueryResult qr = PersistenceHelper.manager.find(query);
+//		QueryResult qr = PersistenceHelper.manager.navigate((WTPartMaster) part.getMaster(), "eco", EcoPartLink.class);
 		while (qr.hasMoreElements()) {
-			EChangeOrder eco = (EChangeOrder) qr.nextElement();
+			Object[] obj = (Object[]) qr.nextElement();
+			EcoPartLink link = (EcoPartLink) obj[0];
+//			EChangeOrder eco = (EChangeOrder) qr.nextElement();
+			EChangeOrder eco = link.getEco();
 			EcoColumn data = new EcoColumn(eco);
 			Map<String, Object> map = AUIGridUtil.dtoToMap(data);
 			list.add(map);

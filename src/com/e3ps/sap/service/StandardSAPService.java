@@ -792,4 +792,14 @@ public class StandardSAPService extends StandardManager implements SAPService {
 
 		System.out.println("ECN SAP SEND END!!");
 	}
+
+	@Override
+	public void resendSapToEco(EChangeOrder eco) throws Exception {
+		System.out.println("ECO SAP 재전송 시작");
+		// 신규로 발생한 자재 전송??
+		sendToSapEcoPart(eco);
+		// ECO BOM
+		sendToSapEcoBom(eco);
+		System.out.println("ECO SAP 재전송 종료");
+	}
 }

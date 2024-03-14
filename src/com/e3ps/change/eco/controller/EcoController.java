@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.e3ps.change.EChangeOrder;
 import com.e3ps.change.activity.service.ActivityHelper;
 import com.e3ps.change.eco.dto.EcoDTO;
 import com.e3ps.change.eco.service.EcoHelper;
@@ -25,6 +26,7 @@ import com.e3ps.common.code.service.NumberCodeHelper;
 import com.e3ps.common.util.CommonUtil;
 import com.e3ps.controller.BaseController;
 import com.e3ps.doc.service.DocumentHelper;
+import com.e3ps.sap.service.SAPHelper;
 
 import net.sf.json.JSONArray;
 
@@ -49,7 +51,6 @@ public class EcoController extends BaseController {
 		return result;
 	}
 
-	
 	@Description(value = "ECO 완제품 연결 삭제 함수")
 	@ResponseBody
 	@DeleteMapping(value = "/deleteLink")
@@ -66,7 +67,7 @@ public class EcoController extends BaseController {
 		}
 		return result;
 	}
-	
+
 	@Description(value = "ECO 산출물")
 	@GetMapping(value = "/output")
 	public ModelAndView output(@RequestParam String method, @RequestParam String multi,
@@ -345,8 +346,7 @@ public class EcoController extends BaseController {
 		}
 		return result;
 	}
-	
-	
+
 	@Description(value = "일괄 다운로드")
 	@ResponseBody
 	@GetMapping(value = "/download")
@@ -362,7 +362,7 @@ public class EcoController extends BaseController {
 		}
 		return result;
 	}
-	
+
 	@Description(value = "ECO 리스트 엑셀 다운로드")
 	@ResponseBody
 	@GetMapping(value = "/excelList")
@@ -379,4 +379,20 @@ public class EcoController extends BaseController {
 		return result;
 	}
 
+	@Description(value = "ECO SAP 재전송")
+	@ResponseBody
+	@GetMapping(value = "/resend")
+	public Map<String, Object> resend(@RequestParam String oid) throws Exception {
+		Map<String, Object> result = new HashMap<>();
+		try {
+			EChangeOrder eco = (EChangeOrder) CommonUtil.getObject(oid);
+			SAPHelper.service.resendSapToEco(eco);
+			result.put("result", SUCCESS);
+		} catch (Exception e) {
+			e.printStackTrace();
+			result.put("result", FAIL);
+			result.put("msg", e.toString());
+		}
+		return result;
+	}
 }

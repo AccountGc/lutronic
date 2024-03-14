@@ -2476,4 +2476,8 @@ public class EcoHelper {
 		result.put("name", newFile.getName());
 		return result;
 	}
+
+	public void resend(String oid) throws Exception {
+
+	}
 }

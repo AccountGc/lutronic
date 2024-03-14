@@ -3,6 +3,15 @@ package com.e3ps;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
+import java.util.HashMap;
+import java.util.Map;
+
+import wt.epm.workspaces.EPMWorkspace;
+import wt.epm.workspaces.EPMWorkspaceHelper;
+import wt.fc.ReferenceFactory;
+import wt.fc.collections.WTHashSet;
+import wt.fc.collections.WTKeyedHashMap;
+import wt.iba.definition.service.IBADefinitionObjectsFactory;
 
 public class Test2 {
 
@@ -44,6 +53,26 @@ public class Test2 {
 				}
 			}
 		}
+
+//		ReferenceFactory rf = new ReferenceFactory();
+//		EPMWorkspace workspace = (EPMWorkspace) rf.getReference("wt.epm.workspaces.EPMWorkspace:1111").getObject();
+//
+//		WTKeyedHashMap wtHashMap = new WTKeyedHashMap();
+//		Map<Long, HashMap<String[], IBADefinitionObjectsFactory>> map = new HashMap<>();
+//		wtHashMap.put(EPMDocuemnt 데이터, map);
+//		
+//		EPMWorkspaceHelper.manager.setAttributes(workspace, wtHashMap);
+//
+//
+//		WTHashSet set = new WTHashSet();
+//		set.add(0L); // IDA2A2 깂
+//		set.add(1L);
+//		EPMWorkspaceHelper.manager.getTargetFolder(set, true);
+//		
+//		WTHashSet data = new WTHashSet();
+//		data.add(EPMDocument 데이터들);
+//		
+//		EPMWorkspaceHelper.manager.getTargetLocation(workspace, data, true);
 
 		System.exit(0);
 	}
