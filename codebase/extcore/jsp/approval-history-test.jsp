@@ -1,3 +1,5 @@
+<%@page import="java.sql.ResultSet"%>
+<%@page import="java.sql.Statement"%>
 <%@page import="java.sql.DriverManager"%>
 <%@page import="java.sql.Connection"%>
 <%@page import="java.sql.SQLException"%>
@@ -16,20 +18,25 @@ String password = "dbadmin";
 
 // JDBC 연결 변수
 Connection connection = null;
-
+Statement st = null;
+ResultSet rs = null;
 try {
 	// 오라클 JDBC 드라이버 로드
 	Class.forName("oracle.jdbc.driver.OracleDriver");
 
 	// 데이터베이스에 연결
 	connection = DriverManager.getConnection(url, username, password);
+	st = connection.createStatement();
 
-	if (connection != null) {
-		out.println("Oracle 데이터베이스에 성공적으로 연결되었습니다.");
-		// 여기에 추가적인 작업을 수행할 수 있습니다.
-	} else {
-		out.println("Oracle 데이터베이스에 연결하는데 실패했습니다.");
+	String sql = "SELECT * FROM WFITEMUSERLINK";
+
+	rs = st.executeQuery(sql);
+	while (rs.next()) {
+		String ida2a2 = (String) rs.getString("ida2a2");
+		String name = (String) rs.getString("name");
+		
 	}
+
 } catch (ClassNotFoundException e) {
 	System.out.println("JDBC 드라이버를 찾을 수 없습니다.");
 	e.printStackTrace();

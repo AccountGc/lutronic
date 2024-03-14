@@ -2347,4 +2347,133 @@ public class EcoHelper {
 		DownloadHistoryHelper.service.create(oid, nn, "ECO 첨부파일 일괄 다운로드");
 		return result;
 	}
+
+	public Map<String, Object> excelList() throws Exception {
+		Map<String, Object> result = new HashMap<>();
+
+		String wtHome = WTProperties.getServerProperties().getProperty("wt.home");
+		String path = WTProperties.getServerProperties().getProperty("wt.temp");
+
+		File orgFile = new File(wtHome + "/codebase/com/e3ps/change/eco/dto/eco_list.xlsx");
+
+		File newFile = CommonUtil.copyFile(orgFile, new File(path + "/ECO 리스트.xlsx"));
+
+		Workbook workbook = new Workbook(newFile.getPath());
+		Worksheet worksheet = workbook.getWorksheets().get(0);
+		worksheet.setName("ECO 리스트"); // 시트 이름
+
+		QuerySpec query = new QuerySpec();
+		int idx = query.appendClassList(EChangeOrder.class, true);
+		QuerySpecUtils.toEqualsAnd(query, idx, EChangeOrder.class, EChangeOrder.EO_TYPE, "CHANGE");
+		QuerySpecUtils.toOrderBy(query, idx, EChangeOrder.class, EChangeOrder.EO_APPROVE_DATE, true);
+		QuerySpecUtils.toOrderBy(query, idx, EChangeOrder.class, EChangeOrder.CREATE_TIMESTAMP, false);
+		QueryResult qr = PersistenceHelper.manager.find(query);
+
+		int rowIndex = 1;
+
+		Style center = workbook.createStyle();
+		center.setHorizontalAlignment(TextAlignmentType.CENTER);
+
+		Style left = workbook.createStyle();
+		left.setHorizontalAlignment(TextAlignmentType.LEFT);
+
+		while (qr.hasMoreElements()) {
+			Object[] obj = (Object[]) qr.nextElement();
+			EChangeOrder eco = (EChangeOrder) obj[0];
+
+			Cell rowCell = worksheet.getCells().get(rowIndex, 0);
+			rowCell.setStyle(center);
+			rowCell.putValue(rowIndex);
+
+			Cell numberCell = worksheet.getCells().get(rowIndex, 1);
+			numberCell.setStyle(center);
+			numberCell.putValue(eco.getEoNumber());
+
+			Cell nameCell = worksheet.getCells().get(rowIndex, 2);
+			nameCell.setStyle(left);
+			nameCell.putValue(eco.getEoName());
+
+			Cell projectCell = worksheet.getCells().get(rowIndex, 3);
+			projectCell.setStyle(left);
+
+			String display = "";
+			if (StringUtil.checkString(eco.getModel())) {
+				String[] ss = eco.getModel().split(",");
+				for (int i = 0; i < ss.length; i++) {
+					String s = ss[i];
+					if (s.length() > 0) {
+						if (ss.length - 1 == i) {
+							NumberCode n = NumberCodeHelper.manager.getNumberCode(s, "MODEL");
+							if (n != null) {
+								display += s + " [" + n.getName() + "]";
+							}
+						} else {
+							NumberCode n = NumberCodeHelper.manager.getNumberCode(s, "MODEL");
+							if (n != null) {
+								display += s + " [" + n.getName() + "], ";
+							}
+						}
+					}
+				}
+			}
+
+			projectCell.putValue(display);
+
+			Cell ecoTypeCell = worksheet.getCells().get(rowIndex, 4);
+			ecoTypeCell.setStyle(center);
+
+			String sendType = eco.getSendType();
+			if ("ECO".equals(sendType)) {
+				ecoTypeCell.putValue("ECO");
+			} else if ("SCO".equals(sendType)) {
+				ecoTypeCell.putValue("SCO");
+			} else if ("ORDER".equals(sendType)) {
+				ecoTypeCell.putValue("선구매");
+			}
+
+			Cell licensingCell = worksheet.getCells().get(rowIndex, 5);
+			licensingCell.setStyle(center);
+
+			if ("NONE".equals(eco.getLicensingChange())) {
+				licensingCell.putValue("N/A");
+			} else if ("LI002".equals(eco.getLicensingChange())) {
+				licensingCell.putValue("불필요");
+			} else if ("LI001".equals(eco.getLicensingChange())) {
+				licensingCell.putValue("필요");
+			}
+
+			Cell riskTypeCell = worksheet.getCells().get(rowIndex, 6);
+			riskTypeCell.setStyle(center);
+			if ("NONE".equals(eco.getRiskType())) {
+				riskTypeCell.putValue("N/A");
+			} else if ("0".equals(eco.getRiskType())) {
+				riskTypeCell.putValue("불필요");
+			} else if ("1".equals(eco.getRiskType())) {
+				riskTypeCell.putValue("필요");
+			}
+
+			Cell stateCell = worksheet.getCells().get(rowIndex, 7);
+			stateCell.setStyle(center);
+			stateCell.putValue(eco.getLifeCycleState().getDisplay());
+
+			Cell creatorCell = worksheet.getCells().get(rowIndex, 8);
+			creatorCell.setStyle(center);
+			creatorCell.putValue(eco.getCreatorFullName());
+
+			Cell createdDateCell = worksheet.getCells().get(rowIndex, 9);
+			createdDateCell.setStyle(center);
+			createdDateCell.putValue(eco.getCreateTimestamp().toString().substring(0, 10));
+
+			Cell approveDateCell = worksheet.getCells().get(rowIndex, 10);
+			approveDateCell.setStyle(center);
+			approveDateCell.putValue(eco.getEoApproveDate());
+
+			rowIndex++;
+		}
+
+		String fullPath = path + "/ECO 리스트.xlsx";
+		workbook.save(fullPath);
+		result.put("name", newFile.getName());
+		return result;
+	}
 }
