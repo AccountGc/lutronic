@@ -784,7 +784,7 @@ public class PartHelper {
 		int idx_e = query.appendClassList(EChangeOrder.class, false);
 		QuerySpecUtils.toInnerJoin(query, EcoPartLink.class, EChangeOrder.class, "roleBObjectRef.key.id",
 				WTAttributeNameIfc.ID_NAME, idx, idx_e);
-		QuerySpecUtils.toEquals(query, idx, EcoPartLink.class, "roleAObjectRef.key.id",
+		QuerySpecUtils.toEqualsAnd(query, idx, EcoPartLink.class, "roleAObjectRef.key.id",
 				m.getPersistInfo().getObjectIdentifier().getId());
 		QuerySpecUtils.toOrderBy(query, idx_e, EChangeOrder.class, EChangeOrder.EO_APPROVE_DATE, false);
 		QueryResult qr = PersistenceHelper.manager.find(query);
