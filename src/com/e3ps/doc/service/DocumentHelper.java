@@ -197,6 +197,10 @@ public class DocumentHelper {
 		QuerySpecUtils.toIBAEqualsAnd(query, WTDocument.class, idx, "DEPTCODE", deptcode);
 		QuerySpecUtils.toIBALikeAnd(query, WTDocument.class, idx, "DSGN", writer);
 
+		if (!StringUtil.isNull(classType1)) {
+			QuerySpecUtils.toEqualsAnd(query, idx, WTDocument.class, "typeInfoWTDocument.ptc_str_2", classType1);
+		}
+
 		if (!StringUtil.checkString(location)) {
 			location = DOCUMENT_ROOT;
 		}

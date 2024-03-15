@@ -17,6 +17,7 @@ List<Map<String, String>> lifecycleList = (List<Map<String, String>>) request.ge
 String method = (String) request.getAttribute("method");
 boolean multi = (boolean) request.getAttribute("multi");
 String state = (String) request.getAttribute("state");
+ArrayList<Map<String, String>> classTypes1 = (ArrayList<Map<String, String>>) request.getAttribute("classTypes1");
 %>
 <style type="text/css">
 .approved {
@@ -426,7 +427,7 @@ function loadGridData(movePage) {
 
 	let params = new Object();
 	const url = getCallUrl("/doc/list");
-	const field = [ "interalnumber", "sortKey", "sortType", "location", "name", "number", "state", "creatorOid", "createdFrom", "createdTo", "modifiedFrom", "modifiedTo", "preseration", "modelcode", "deptcode", "writer", "description" ];
+	const field = ["classType1","interalnumber", "sortKey", "sortType", "location", "name", "number", "state", "creatorOid", "createdFrom", "createdTo", "modifiedFrom", "modifiedTo", "preseration", "modelcode", "deptcode", "writer", "description" ];
 	params = toField(params, field);
 	const latest = document.querySelector("input[name=latest]:checked").value;
 	params.latest = JSON.parse(latest);
@@ -461,6 +462,7 @@ document.addEventListener("DOMContentLoaded", function() {
 	AUIGrid.resize(myGridID);
 	_createAUIGrid(_columns);
 	AUIGrid.resize(_myGridID);
+	selectbox("classType1");
 	selectbox("state");
 	finderUser("creator");
 	twindate("created");

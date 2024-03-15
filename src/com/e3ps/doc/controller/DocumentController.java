@@ -128,9 +128,9 @@ public class DocumentController extends BaseController {
 		List<Map<String, String>> lifecycleList = CommonUtil.getLifeCycleState("LC_Default");
 		// 문서 대분류
 //		ArrayList<Map<String, String>> classTypes1 = DocumentClassHelper.manager.getClassTypes1();
-
+		ArrayList<Map<String, String>> classTypes1 = DocumentClassHelper.manager.getClassTypes1();
 		ModelAndView model = new ModelAndView();
-//		model.addObject("classTypes1", classTypes1);
+		model.addObject("classTypes1", classTypes1);
 		model.addObject("preserationList", preserationList);
 		model.addObject("deptcodeList", deptcodeList);
 		model.addObject("modelList", modelList);
@@ -164,10 +164,10 @@ public class DocumentController extends BaseController {
 		ArrayList<NumberCode> deptcodeList = NumberCodeHelper.manager.getArrayCodeList("DEPTCODE");
 		ArrayList<NumberCode> modelList = NumberCodeHelper.manager.getArrayCodeList("MODEL");
 		List<Map<String, String>> lifecycleList = CommonUtil.getLifeCycleState("LC_Default");
-//		ArrayList<Map<String, String>> classTypes1 = DocumentClassHelper.manager.getClassTypes1();
+		ArrayList<Map<String, String>> classTypes1 = DocumentClassHelper.manager.getClassTypes1();
 
 		ModelAndView model = new ModelAndView();
-//		model.addObject("classTypes1", classTypes1);
+		model.addObject("classTypes1", classTypes1);
 		model.addObject("state", state);
 		model.addObject("preserationList", preserationList);
 		model.addObject("deptcodeList", deptcodeList);

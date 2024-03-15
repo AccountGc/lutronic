@@ -14,6 +14,7 @@ ArrayList<NumberCode> preserationList = (ArrayList<NumberCode>) request.getAttri
 ArrayList<NumberCode> deptcodeList = (ArrayList<NumberCode>) request.getAttribute("deptcodeList");
 List<Map<String, String>> lifecycleList = (List<Map<String, String>>) request.getAttribute("lifecycleList");
 WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
+ArrayList<Map<String, String>> classTypes1 = (ArrayList<Map<String, String>>) request.getAttribute("classTypes1");
 %>
 <!DOCTYPE html>
 <html>
@@ -100,9 +101,25 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 				</td>
 			</tr>
 			<tr>
-				<th>작성자</th>
+				<!-- 				<th>작성자</th> -->
+				<!-- 				<td class="indent5"> -->
+				<!-- 					<input type="text" name="writer" id="writer" class="width-200"> -->
+				<!-- 				</td> -->
+				<th>대분류</th>
 				<td class="indent5">
-					<input type="text" name="writer" id="writer" class="width-200">
+					<select name="classType1" id="classType1" class="width-200" onchange="first(this);">
+						<option value="">선택</option>
+						<%
+						for (Map<String, String> map : classTypes1) {
+							String value = map.get("value");
+							String name = map.get("name");
+							String clazz = map.get("clazz");
+						%>
+						<option value="<%=value%>" data-clazz="<%=clazz%>"><%=name%></option>
+						<%
+						}
+						%>
+					</select>
 				</td>
 				<th>수정일</th>
 				<td class="indent5">
@@ -346,15 +363,15 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 					dataField : key,
 					sortType : sortType
 				};
-				
+
 				const _sortType = document.getElementById("sortType").value;
-				if(Number(_sortType) !== Number(sortType)) {
+				if (Number(_sortType) !== Number(sortType)) {
 					document.getElementById("sortKey").value = key;
 					document.getElementById("sortType").value = sortType;
 					loadGridData();
 				}
 			}
-			
+
 			function loadGridData(movePage) {
 				if (movePage === undefined) {
 					document.getElementById("sessionid").value = 0;
@@ -363,7 +380,7 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 
 				let params = new Object();
 				const url = getCallUrl("/doc/list");
-				const field = [ "interalnumber", "sortKey", "sortType", "location", "name", "number", "state", "creatorOid", "createdFrom", "createdTo", "modifiedFrom", "modifiedTo", "preseration", "modelcode", "deptcode", "writer", "description" ];
+				const field = [ "classType1", "interalnumber", "sortKey", "sortType", "location", "name", "number", "state", "creatorOid", "createdFrom", "createdTo", "modifiedFrom", "modifiedTo", "preseration", "modelcode", "deptcode", "writer", "description" ];
 				params = toField(params, field);
 				const latest = document.querySelector("input[name=latest]:checked").value;
 				params.latest = JSON.parse(latest);
@@ -385,7 +402,6 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 					parent.closeLayer();
 				});
 			}
-
 
 			function _auiContextMenuHandler(event) {
 				const item = event.item;
@@ -600,6 +616,7 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 				_createAUIGrid(_columns);
 				AUIGrid.resize(_myGridID);
 				selectbox("state");
+				selectbox("classType1");
 				finderUser("creator");
 				twindate("created");
 				twindate("modified");
