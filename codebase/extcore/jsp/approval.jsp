@@ -35,7 +35,7 @@ try {
 
 	rs = st.executeQuery(sql);
 	while (rs.next()) {
-		Blob blob = rs.getBlob(0);
+		Blob blob = rs.getBlob(1);
 		byte[] bytes = blob.getBytes(1, (int)blob.length());
 		blob.free();
 		
