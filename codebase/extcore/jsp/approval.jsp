@@ -46,7 +46,7 @@ while (qr.hasMoreElements()) {
 		QuerySpec qs = new QuerySpec();
 		int idx_l = qs.appendClassList(WFItemUserLink.class, true);
 
-		SearchCondition sc = new SearchCondition(WFItemUserLink.class, "", "=",
+		SearchCondition sc = new SearchCondition(WFItemUserLink.class, "roleBObjectRef.key.id", "=",
 				item.getPersistInfo().getObjectIdentifier().getId());
 		qs.appendWhere(sc, new int[] { idx_l });
 
