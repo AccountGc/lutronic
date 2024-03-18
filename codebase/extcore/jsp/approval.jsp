@@ -35,14 +35,18 @@ try {
 
 	rs = st.executeQuery(sql);
 	while (rs.next()) {
+		String comment = "";
 		Blob blob = rs.getBlob(1);
-		byte[] bytes = blob.getBytes(1, (int)blob.length());
-		blob.free();
-		
-		String comment = Base64.getEncoder().encodeToString(bytes);
+		if (blob != null) {
+	byte[] bytes = blob.getBytes(1, (int) blob.length());
+	blob.free();
+
+	comment = Base64.getEncoder().encodeToString(bytes);
+
+	// 		String ida2a2 = (String) rs.getString("ida2a2");
+	// 		String name = (String) rs.getString("name");
+		}
 		out.println(comment);
-// 		String ida2a2 = (String) rs.getString("ida2a2");
-// 		String name = (String) rs.getString("name");
 	}
 
 } catch (ClassNotFoundException e) {
