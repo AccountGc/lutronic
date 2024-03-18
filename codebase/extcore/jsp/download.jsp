@@ -1,3 +1,5 @@
+<%@page import="wt.workflow.worklist.Role"%>
+<%@page import="wt.workflow.engine.WfProcess"%>
 <%@page import="wt.content.ContentServerHelper"%>
 <%@page import="java.io.InputStream"%>
 <%@page import="java.io.FileOutputStream"%>
