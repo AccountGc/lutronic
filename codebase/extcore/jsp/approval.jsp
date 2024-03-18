@@ -1,3 +1,5 @@
+<%@page import="wt.fc.WTObject"%>
+<%@page import="com.e3ps.groupware.workprocess.WFItem"%>
 <%@page import="com.e3ps.groupware.workprocess.WFItemUserLink"%>
 <%@page import="wt.query.QuerySpec"%>
 <%@page import="java.util.Base64"%>
@@ -24,6 +26,8 @@ while (qr.hasMoreElements()) {
 	Object[] obj = (Object[]) qr.nextElement();
 	WFItemUserLink link = (WFItemUserLink) obj[0];
 	String comment = (String) link.getComment();
-	out.println(comment);
+	WFItem item = link.getWfitem();
+	WTObject wtobj = item.getWfObject();
+	out.println(wtobj + "<br>");
 }
 %>
