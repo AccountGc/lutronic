@@ -25,7 +25,6 @@
 String oid = "wt.part.WTPart:239201538";
 WTPart part = (WTPart) CommonUtil.getObject(oid);
 
-
 WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 String today = DateUtil.getToDay();
 String id = user.getName();
