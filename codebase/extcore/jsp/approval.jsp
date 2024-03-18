@@ -3,7 +3,6 @@
 <%@page import="wt.query.ClassAttribute"%>
 <%@page import="wt.query.OrderBy"%>
 <%@page import="wt.util.WTAttributeNameIfc"%>
-<%@page import="wt.epm.navigator.filter.ClassAttribute"%>
 <%@page import="com.e3ps.groupware.workprocess.AsmApproval"%>
 <%@page import="com.e3ps.change.EChangeOrder"%>
 <%@page import="com.e3ps.change.EChangeRequest"%>
@@ -20,7 +19,6 @@
 <%@page import="java.sql.DriverManager"%>
 <%@page import="java.sql.Connection"%>
 <%@page import="java.sql.SQLException"%>
-<%@page import="com.e3ps.workspace.AsmApproval"%>
 <%@page import="com.e3ps.workspace.AppPerLink"%>
 <%@page import="wt.fc.PersistenceHelper"%>
 <%@page import="wt.fc.QueryResult"%>
