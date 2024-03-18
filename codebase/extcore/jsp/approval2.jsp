@@ -29,7 +29,8 @@ for (WFItemUserLink link : list) {
 		Timestamp completeDate = link.getProcessDate();
 
 		out.println(
-		"결재자 = " + user.getFullName() + ", 활동명 = " + actName + ", 의견 = " + comment + ", 완료일 = " + completeDate);
+		"결재자 = " + user.getFullName() + ", 활동명 = " + actName + ", 의견 = " + comment + ", 완료일 = " + completeDate
+				+ "<br>");
 	}
 }
 %>
