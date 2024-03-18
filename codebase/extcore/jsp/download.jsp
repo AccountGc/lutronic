@@ -1,3 +1,7 @@
+<%@page import="com.e3ps.common.util.ZipUtil"%>
+<%@page import="com.e3ps.common.util.DateUtil"%>
+<%@page import="wt.session.SessionHelper"%>
+<%@page import="wt.org.WTUser"%>
 <%@page import="wt.workflow.worklist.Role"%>
 <%@page import="wt.workflow.engine.WfProcess"%>
 <%@page import="wt.content.ContentServerHelper"%>
@@ -23,8 +27,15 @@
 String oid = "wt.part.WTPart:239201538";
 WTPart part = (WTPart) CommonUtil.getObject(oid);
 
-String temp = WTProperties.getLocalProperties().getProperty("wt.temp");
-File dir = new File(temp + File.separator + "drawing");
+
+WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
+String today = DateUtil.getToDay();
+String id = user.getName();
+
+String path = WTProperties.getLocalProperties().getProperty("wt.temp") + File.separator + "drawing" + File.separator
+		+ today + File.separator + id;
+
+File dir = new File(path);
 if(!dir.exists()) {
 	dir.mkdirs();
 }
@@ -92,6 +103,16 @@ for (WTPart node : list) {
 
 		}
 	}
+	String nn = "BOM-" + id + ".zip";
 
+	ZipUtil.compress(today + File.separator + id, nn);
+
+	File[] fs = dir.listFiles();
+	for (File f : fs) {
+		f.delete();
+		System.out.println("파일 삭제!");
+	}
+	System.exit(0);
+	
 }
 %>
