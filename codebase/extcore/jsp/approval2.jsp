@@ -23,14 +23,14 @@ ArrayList<WFItemUserLink> list = get(item);
 
 for (WFItemUserLink link : list) {
 	if (wtobj instanceof EChangeOrder) {
+		EChangeOrder eco = (EChangeOrder) wtobj;
 		WTUser user = link.getUser(); // 사용자...
 		String actName = link.getActivityName(); // 기안,결재,합의,수신
 		String comment = (String) link.getComment(); // 읩견
 		Timestamp completeDate = link.getProcessDate();
 
-		out.println(
-		"결재자 = " + user.getFullName() + ", 활동명 = " + actName + ", 의견 = " + comment + ", 완료일 = " + completeDate
-				+ "<br>");
+		out.println("ECO 번호 = " + eco.getEoNumber() + ", 결재자 = " + user.getFullName() + ", 활동명 = " + actName + ", 의견 = "
+		+ comment + ", 완료일 = " + completeDate + "<br>");
 	}
 }
 %>
