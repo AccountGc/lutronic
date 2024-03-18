@@ -1770,6 +1770,8 @@ public class EcoHelper {
 
 		JCoTable bomTable = function.getTableParameterList().getTable("ET_BOM");
 		QueryResult qr = PersistenceHelper.manager.navigate(eco, "part", EcoPartLink.class, false);
+
+		System.out.println("ECO 품목 = " + qr.size());
 		while (qr.hasMoreElements()) {
 			EcoPartLink link = (EcoPartLink) qr.nextElement();
 			WTPartMaster master = link.getPart();
@@ -1795,10 +1797,14 @@ public class EcoHelper {
 
 			ArrayList<SAPSendBomDTO> sendList = new ArrayList<SAPSendBomDTO>();
 			// 둘다 있을 경우
+
+			System.out.println("pre_part=" + pre_part + ", next_part=" + next_part);
 			if (pre_part != null && next_part != null) {
 				ArrayList<Object[]> rights = SAPHelper.manager.sendList(next_part);
 				ArrayList<Object[]> lefts = SAPHelper.manager.sendList(pre_part);
 
+				System.out.println("오른쪽 = " + rights.size());
+				System.out.println("왼쪽 = " + lefts.size());
 				ArrayList<Map<String, Object>> addList = SAPHelper.manager.addList(lefts, rights);
 				ArrayList<Map<String, Object>> removeList = SAPHelper.manager.removeList(lefts, rights);
 
@@ -1953,7 +1959,7 @@ public class EcoHelper {
 			rtnList.add(rtnMap);
 		}
 
-		System.out.println("duplicate=" + duplicate.size());
+//		System.out.println("duplicate=" + duplicate.size());
 
 		for (String s : duplicate) {
 			System.out.println("중복 = " + s);
@@ -1964,6 +1970,7 @@ public class EcoHelper {
 
 		if ("E".equals(r_type)) {
 			rs.put("isValidate", false);
+			rs.put("r_msg", r_msg);
 		} else {
 			rs.put("isValidate", true);
 		}

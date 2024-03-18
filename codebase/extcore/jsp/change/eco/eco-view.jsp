@@ -352,9 +352,10 @@ Map<String, Object> contentMap = dto.getContentMap();
 					// 					let p = _popup(url, 1100, 550, "n");
 					// 					p.rtnList = data.rtnList;
 				} else {
-					const url = getCallUrl("/eco/resultPage");
-					let p = _popup(url, 1100, 550, "n");
-					p.rtnList = data.rtnList;
+					alert(data.r_msg);
+// 					const url = getCallUrl("/eco/resultPage");
+// 					let p = _popup(url, 1100, 550, "n");
+// 					p.rtnList = data.rtnList;
 				}
 			}
 			closeLayer();
