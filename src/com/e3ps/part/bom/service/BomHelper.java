@@ -1618,15 +1618,15 @@ public class BomHelper {
 
 				}
 			}
-			String nn = n + "_BOM-" + id + ".zip";
+		}
+		String nn = n + "_BOM-" + id + ".zip";
 
-			ZipUtil.compress(today + File.separator + n + "_" + id, nn);
+		ZipUtil.compress(today + File.separator + n + "_" + id, nn);
 
-			File[] fs = dir.listFiles();
-			for (File f : fs) {
-//		 		f.delete();
-				System.out.println("파일 삭제!");
-			}
+		File[] fs = dir.listFiles();
+		for (File f : fs) {
+	 		f.delete();
+			System.out.println("파일 삭제!");
 		}
 		return result;
 	}
