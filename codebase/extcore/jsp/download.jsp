@@ -106,9 +106,9 @@ for (WTPart node : list) {
 
 	File[] fs = dir.listFiles();
 	for (File f : fs) {
-		f.delete();
+// 		f.delete();
 		System.out.println("파일 삭제!");
 	}
-	
+ 	
 }
 %>
