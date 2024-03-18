@@ -20,6 +20,7 @@ import com.e3ps.common.util.QuerySpecUtils;
 import com.e3ps.common.util.StringUtil;
 import com.e3ps.common.util.ThumbnailUtil;
 import com.e3ps.common.util.ZipUtil;
+import com.e3ps.download.service.DownloadHistoryHelper;
 import com.e3ps.part.bom.util.BomComparator;
 import com.e3ps.part.service.PartHelper;
 import com.ptc.wvs.server.util.PublishUtils;
@@ -1628,6 +1629,11 @@ public class BomHelper {
 	 		f.delete();
 			System.out.println("파일 삭제!");
 		}
+		
+		result.put("name", nn);
+
+		DownloadHistoryHelper.service.create(oid, nn, n + "도면 일괄 다운로드");
+		
 		return result;
 	}
 }
