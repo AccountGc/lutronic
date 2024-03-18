@@ -1,3 +1,4 @@
+<%@page import="com.e3ps.common.util.QuerySpecUtils"%>
 <%@page import="com.e3ps.change.EChangeOrder"%>
 <%@page import="java.sql.Timestamp"%>
 <%@page import="wt.org.WTUser"%>
@@ -42,6 +43,10 @@ for (WFItemUserLink link : list) {
 
 		SearchCondition sc = new SearchCondition(WFItemUserLink.class, "roleBObjectRef.key.id", "=",
 				item.getPersistInfo().getObjectIdentifier().getId());
+		qs.appendWhere(sc, new int[] { idx_l });
+		qs.appendAnd();
+
+		sc = new SearchCondition(WFItemUserLink.class, WFItemUserLink.DISABLED, SearchCondition.IS_TRUE);
 		qs.appendWhere(sc, new int[] { idx_l });
 
 		ClassAttribute ca = new ClassAttribute(WFItemUserLink.class, WFItemUserLink.CREATE_TIMESTAMP);
