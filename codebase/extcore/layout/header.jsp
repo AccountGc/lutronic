@@ -239,9 +239,9 @@ int eca = (int) request.getAttribute("eca");
 					<li>
 						<a onclick="moveToPage(this, '/drawing/batch', '> 도면 관리 >주 도면 일괄등록');">주 도면 일괄등록</a>
 					</li>
-					<li>
-						<a onclick="moveToPage(this, '/drawing/zip', '> 도면 관리 >도면 다운로드');">도면 다운로드</a>
-					</li>
+<!-- 					<li> -->
+<!-- 						<a onclick="moveToPage(this, '/drawing/zip', '> 도면 관리 >도면 다운로드');">도면 다운로드</a> -->
+<!-- 					</li> -->
 				</ul>
 			</li>
 			<%
