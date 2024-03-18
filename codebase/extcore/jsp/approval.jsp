@@ -41,7 +41,8 @@ try {
 	byte[] bytes = blob.getBytes(1, (int) blob.length());
 	blob.free();
 
-	comment = Base64.getEncoder().encodeToString(bytes);
+	comment = new String(bytes, "UTF-8");
+// 	comment = Base64.getEncoder().encodeToString(bytes);
 
 	// 		String ida2a2 = (String) rs.getString("ida2a2");
 	// 		String name = (String) rs.getString("name");
