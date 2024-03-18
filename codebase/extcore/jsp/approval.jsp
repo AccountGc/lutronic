@@ -31,7 +31,7 @@ try {
 	connection = DriverManager.getConnection(url, username, password);
 	st = connection.createStatement();
 
-	String sql = "SELECT WTCOMMENT FROM WFITEMUSERLINK";
+	String sql = "SELECT WFCOMMENT FROM WFITEMUSERLINK";
 
 	rs = st.executeQuery(sql);
 	while (rs.next()) {
