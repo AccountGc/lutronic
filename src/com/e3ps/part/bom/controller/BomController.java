@@ -18,6 +18,7 @@ import org.springframework.web.servlet.ModelAndView;
 import com.e3ps.change.util.EChangeUtils;
 import com.e3ps.common.util.CommonUtil;
 import com.e3ps.controller.BaseController;
+import com.e3ps.doc.service.DocumentHelper;
 import com.e3ps.part.bom.service.BomHelper;
 
 import net.sf.json.JSONArray;
@@ -352,6 +353,22 @@ public class BomController extends BaseController {
 				result.put("msg", SAVE_MSG);
 				result.put("result", SUCCESS);
 			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			result.put("result", FAIL);
+			result.put("msg", e.toString());
+		}
+		return result;
+	}
+	
+	@Description(value = "일괄 다운로드")
+	@ResponseBody
+	@GetMapping(value = "/download")
+	public Map<String, Object> download(@RequestParam String oid) throws Exception {
+		Map<String, Object> result = new HashMap<>();
+		try {
+			result = BomHelper.manager.download(oid);
+			result.put("result", SUCCESS);
 		} catch (Exception e) {
 			e.printStackTrace();
 			result.put("result", FAIL);

@@ -117,7 +117,8 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 				}
 				%>
 			</select>
-			<input type="button" value="도면일괄다운" title="도면일괄다운" class="red" onclick="batch();">
+<!-- 			<input type="button" value="도면일괄다운" title="도면일괄다운" class="red" onclick="batch();"> -->
+			<input type="button" value="도면일괄다운" title="도면일괄다운" onclick="download();">
 			<input type="button" value="닫기" title="닫기" class="gray" onclick="self.close();">
 		</td>
 	</tr>
@@ -645,6 +646,24 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 
 	function excel() {
 		alert("개발 진행중");
+	}
+	
+	function download() {
+
+		if (!confirm("도면일괄 다운로드 하시겠습니까?")) {
+			return false;
+		}
+
+		const oid = document.getElementById("oid").value;
+		const url = getCallUrl("/bom/download?oid=" + oid);
+		openLayer();
+		call(url, null, function(data) {
+			if (data.result) {
+				const n = data.name;
+				document.location.href = '/Windchill/extcore/jsp/common/content/FileDownload2.jsp?fileName=' + n + '&originFileName=' + n;
+			}
+			closeLayer();
+		}, "GET");
 	}
 
 	function exportExcel() {

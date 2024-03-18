@@ -1,15 +1,13 @@
 package com.e3ps.part.bom.service;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.regex.Pattern;
-import java.util.zip.ZipEntry;
-import java.util.zip.ZipOutputStream;
 
 import com.e3ps.common.code.NumberCode;
 import com.e3ps.common.code.service.NumberCodeHelper;
@@ -17,20 +15,28 @@ import com.e3ps.common.iba.AttributeKey;
 import com.e3ps.common.iba.IBAUtil;
 import com.e3ps.common.iba.IBAUtils;
 import com.e3ps.common.util.CommonUtil;
+import com.e3ps.common.util.DateUtil;
 import com.e3ps.common.util.QuerySpecUtils;
 import com.e3ps.common.util.StringUtil;
 import com.e3ps.common.util.ThumbnailUtil;
+import com.e3ps.common.util.ZipUtil;
 import com.e3ps.part.bom.util.BomComparator;
 import com.e3ps.part.service.PartHelper;
+import com.ptc.wvs.server.util.PublishUtils;
 
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
+import wt.content.ApplicationData;
+import wt.content.ContentHelper;
+import wt.content.ContentRoleType;
+import wt.content.ContentServerHelper;
 import wt.doc.WTDocument;
 import wt.epm.EPMDocument;
 import wt.fc.PersistenceHelper;
 import wt.fc.PersistenceServerHelper;
 import wt.fc.QueryResult;
 import wt.lifecycle.State;
+import wt.org.WTUser;
 import wt.part.WTPart;
 import wt.part.WTPartBaselineConfigSpec;
 import wt.part.WTPartConfigSpec;
@@ -42,14 +48,16 @@ import wt.part.WTPartUsageLink;
 import wt.query.ClassAttribute;
 import wt.query.QuerySpec;
 import wt.query.SearchCondition;
+import wt.representation.Representation;
 import wt.services.ServiceFactory;
+import wt.session.SessionHelper;
+import wt.util.FileUtil;
+import wt.util.WTProperties;
 import wt.vc.baseline.Baseline;
 import wt.vc.baseline.BaselineMember;
 import wt.vc.views.View;
 import wt.vc.views.ViewHelper;
 import wt.vc.wip.WorkInProgressHelper;
-import wt.vc.wip.WorkInProgressServerHelper;
-import wt.vc.wip.Workable;
 
 public class BomHelper {
 
@@ -1112,7 +1120,7 @@ public class BomHelper {
 	/**
 	 * BOM 첨부파일, 도면 일괄 다운로드
 	 */
-	public File batch(Map<String, Object> params) throws Exception {
+//	public File batch(Map<String, Object> params) throws Exception {
 //		ArrayList<String> arr = (ArrayList<String>) params.get("arr");
 //		String target = (String) params.get("target");
 //		String reason = (String) params.get("reason");
@@ -1183,7 +1191,7 @@ public class BomHelper {
 //			fos.close();
 //		}
 //		return rtnFile;
-	}
+//	}
 
 	/**
 	 * 정전개 하위가 잇는지 없는지 판단 - 베이스라인
@@ -1527,5 +1535,99 @@ public class BomHelper {
 		} else {
 			node.put("manufacture", manufacture_code + ":" + manufacture.getName());
 		}
+	}
+
+	/**
+	 * 도면 일괄 다운로드
+	 */
+	public Map<String, Object> download(String oid) throws Exception {
+		Map<String, Object> result = new HashMap<>();
+		WTPart part = (WTPart) CommonUtil.getObject(oid);
+		WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
+		String today = DateUtil.getToDay();
+		String id = user.getName();
+
+		String n = part.getNumber();
+
+		String path = WTProperties.getLocalProperties().getProperty("wt.temp") + File.separator + "pdm" + File.separator
+				+ today + File.separator + n + "_" + id;
+
+		File dir = new File(path);
+		if (!dir.exists()) {
+			dir.mkdirs();
+		}
+
+		ArrayList<WTPart> list = PartHelper.manager.descendants(part);
+		for (WTPart node : list) {
+			// out.println("번호 = " + node.getNumber() + "<br>");
+
+			EPMDocument epm = PartHelper.manager.getEPMDocument(node);
+			if (epm != null) {
+				EPMDocument d = PartHelper.manager.getEPMDocument2D(epm);
+				if (d != null) {
+					Representation representation = PublishUtils.getRepresentation(d);
+					if (representation != null) {
+						QueryResult qr = ContentHelper.service.getContentsByRole(representation,
+								ContentRoleType.ADDITIONAL_FILES);
+						while (qr.hasMoreElements()) {
+							ApplicationData data = (ApplicationData) qr.nextElement();
+							String ext = FileUtil.getExtension(data.getFileName());
+							if ("pdf".equalsIgnoreCase(ext)) {
+								String name = data.getFileName();
+								name = name.replace("." + ext, "").replace("step_", "").replace("_prt", "")
+										.replace("_asm", "").replace("pdf_", "").replace("_drw", "") + "_" + d.getName()
+										+ "." + ext;
+
+								byte[] buffer = new byte[10240];
+								InputStream is = ContentServerHelper.service.findLocalContentStream(data);
+								File file = new File(dir.getPath() + File.separator + name);
+								FileOutputStream fos = new FileOutputStream(file);
+								int j = 0;
+								while ((j = is.read(buffer, 0, 10240)) > 0) {
+									fos.write(buffer, 0, j);
+								}
+								fos.close();
+								is.close();
+							}
+						}
+
+						qr.reset();
+						qr = ContentHelper.service.getContentsByRole(representation, ContentRoleType.SECONDARY);
+						while (qr.hasMoreElements()) {
+							ApplicationData data = (ApplicationData) qr.nextElement();
+							String ext = FileUtil.getExtension(data.getFileName());
+							if ("dxf".equalsIgnoreCase(ext)) {
+								String name = data.getFileName();
+								name = name.replace("." + ext, "").replace("step_", "").replace("_prt", "")
+										.replace("_asm", "").replace("pdf_", "").replace("_drw", "") + "_" + d.getName()
+										+ "." + ext;
+
+								byte[] buffer = new byte[10240];
+								InputStream is = ContentServerHelper.service.findLocalContentStream(data);
+								File file = new File(dir.getPath() + File.separator + name);
+								FileOutputStream fos = new FileOutputStream(file);
+								int j = 0;
+								while ((j = is.read(buffer, 0, 10240)) > 0) {
+									fos.write(buffer, 0, j);
+								}
+								fos.close();
+								is.close();
+							}
+						}
+					}
+
+				}
+			}
+			String nn = n + "_BOM-" + id + ".zip";
+
+			ZipUtil.compress(today + File.separator + n + "_" + id, nn);
+
+			File[] fs = dir.listFiles();
+			for (File f : fs) {
+//		 		f.delete();
+				System.out.println("파일 삭제!");
+			}
+		}
+		return result;
 	}
 }
