@@ -1,3 +1,6 @@
+<%@page import="java.util.Base64"%>
+<%@page import="java.io.InputStream"%>
+<%@page import="java.sql.Blob"%>
 <%@page import="java.sql.ResultSet"%>
 <%@page import="java.sql.Statement"%>
 <%@page import="java.sql.DriverManager"%>
@@ -28,13 +31,18 @@ try {
 	connection = DriverManager.getConnection(url, username, password);
 	st = connection.createStatement();
 
-	String sql = "SELECT * FROM WFITEMUSERLINK";
+	String sql = "SELECT WTCOMMENT FROM WFITEMUSERLINK";
 
 	rs = st.executeQuery(sql);
 	while (rs.next()) {
-		String ida2a2 = (String) rs.getString("ida2a2");
-		String name = (String) rs.getString("name");
+		Blob blob = rs.getBlob(0);
+		byte[] bytes = blob.getBytes(1, (int)blob.length());
+		blob.free();
 		
+		String comment = Base64.getEncoder().encodeToString(bytes);
+		out.println(comment);
+// 		String ida2a2 = (String) rs.getString("ida2a2");
+// 		String name = (String) rs.getString("name");
 	}
 
 } catch (ClassNotFoundException e) {
