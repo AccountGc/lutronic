@@ -28,7 +28,6 @@ public class ZipUtil {
 	public static void compress(String path, String zipFileName) throws Exception {
 		// Zip.compress("d:\\test", "d:\\test.zip");
 		File file = new File(root + File.separator + path); // 특정 저장될 폴더
-		System.out.println("file=" + file.getPath());
 		if (!file.exists()) {
 			file.mkdirs(); // 폴더 없을시 생성
 		}

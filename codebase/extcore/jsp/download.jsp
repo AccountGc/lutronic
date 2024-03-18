@@ -29,11 +29,11 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 String today = DateUtil.getToDay();
 String id = user.getName();
 
-String path = WTProperties.getLocalProperties().getProperty("wt.temp") + File.separator + "drawing" + File.separator
+String path = WTProperties.getLocalProperties().getProperty("wt.temp") + File.separator + "pdm" + File.separator
 		+ today + File.separator + id;
 
 File dir = new File(path);
-if(!dir.exists()) {
+if (!dir.exists()) {
 	dir.mkdirs();
 }
 
