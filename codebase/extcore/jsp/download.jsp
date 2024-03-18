@@ -109,7 +109,6 @@ for (WTPart node : list) {
 		f.delete();
 		System.out.println("파일 삭제!");
 	}
-	System.exit(0);
 	
 }
 %>
