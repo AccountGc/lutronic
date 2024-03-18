@@ -23,6 +23,9 @@ WTPart part = (WTPart) CommonUtil.getObject(oid);
 
 String temp = WTProperties.getLocalProperties().getProperty("wt.temp");
 File dir = new File(temp + File.separator + "drawing");
+if(!dir.exists()) {
+	dir.mkdirs();
+}
 
 ArrayList<WTPart> list = PartHelper.manager.descendants(part);
 for (WTPart node : list) {
