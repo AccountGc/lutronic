@@ -1,3 +1,8 @@
+<%@page import="wt.content.ContentServerHelper"%>
+<%@page import="java.io.InputStream"%>
+<%@page import="java.io.FileOutputStream"%>
+<%@page import="java.io.File"%>
+<%@page import="wt.util.WTProperties"%>
 <%@page import="wt.util.FileUtil"%>
 <%@page import="wt.content.ApplicationData"%>
 <%@page import="wt.content.ContentHelper"%>
@@ -16,6 +21,9 @@
 String oid = "wt.part.WTPart:239201538";
 WTPart part = (WTPart) CommonUtil.getObject(oid);
 
+String temp = WTProperties.getLocalProperties().getProperty("wt.temp");
+File dir = new File(temp + File.separator + "drawing");
+
 ArrayList<WTPart> list = PartHelper.manager.descendants(part);
 for (WTPart node : list) {
 	// 	out.println("번호 = " + node.getNumber() + "<br>");
@@ -32,8 +40,22 @@ for (WTPart node : list) {
 			ApplicationData data = (ApplicationData) qr.nextElement();
 			String ext = FileUtil.getExtension(data.getFileName());
 			if ("pdf".equalsIgnoreCase(ext)) {
+				String name = data.getFileName();
+				name = name.replace("." + ext, "").replace("step_", "").replace("_prt", "").replace("_asm", "")
+						.replace("pdf_", "").replace("_drw", "") + "_" + d.getName() + "." + ext;
 				out.println("PDF = " + data.getFileName() + " 드로잉 = " + d.getNumber() + " 부품 = "
 						+ node.getNumber() + "<br>");
+				
+				byte[] buffer = new byte[10240];
+				InputStream is = ContentServerHelper.service.findLocalContentStream(data);
+				File file = new File(dir.getPath() + File.separator + name);
+				FileOutputStream fos = new FileOutputStream(file);
+				int j = 0;
+				while ((j = is.read(buffer, 0, 10240)) > 0) {
+					fos.write(buffer, 0, j);
+				}
+				fos.close();
+				is.close();
 			}
 		}
 
@@ -43,8 +65,22 @@ for (WTPart node : list) {
 			ApplicationData data = (ApplicationData) qr.nextElement();
 			String ext = FileUtil.getExtension(data.getFileName());
 			if ("dxf".equalsIgnoreCase(ext)) {
+				String name = data.getFileName();
+				name = name.replace("." + ext, "").replace("step_", "").replace("_prt", "").replace("_asm", "")
+						.replace("pdf_", "").replace("_drw", "") + "_" + d.getName() + "." + ext;
 				out.println("DXF = " + data.getFileName() + " 드로잉 = " + d.getNumber() + " 부품 = "
 						+ node.getNumber() + "<br>");
+				
+				byte[] buffer = new byte[10240];
+				InputStream is = ContentServerHelper.service.findLocalContentStream(data);
+				File file = new File(dir.getPath() + File.separator + name);
+				FileOutputStream fos = new FileOutputStream(file);
+				int j = 0;
+				while ((j = is.read(buffer, 0, 10240)) > 0) {
+					fos.write(buffer, 0, j);
+				}
+				fos.close();
+				is.close();
 			}
 		}
 	}
