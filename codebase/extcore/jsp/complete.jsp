@@ -45,6 +45,7 @@ while (qr.hasMoreElements()) {
 
 		QueryResult rs = PersistenceHelper.manager.navigate(mm, "eco", EOCompletePartLink.class);
 		if (rs.size() > 0) {
+	out.println("중복 완제품 = " + mm.getNumber() + "<br>");
 	continue;
 		}
 
