@@ -29,27 +29,26 @@ while (qr.hasMoreElements()) {
 
 	String part_oid = part.getPersistInfo().getObjectIdentifier().getStringValue();
 	JSONArray end = PartHelper.manager.end(part_oid, null);
-	out.println("end=" + end.size());
 	for (int i = 0; i < end.size(); i++) {
 		Map<String, String> map = (Map<String, String>) end.get(i);
 		String s = map.get("oid");
 		WTPart endPart = (WTPart) CommonUtil.getObject(s);
 		WTPartMaster mm = (WTPartMaster) endPart.getMaster();
 
-		QueryResult rs = PersistenceHelper.manager.navigate(mm, "eco", EOCompletePartLink.class);
-		if (rs.size() > 0) {
-	continue;
-		}
+		// 		QueryResult rs = PersistenceHelper.manager.navigate(mm, "eco", EOCompletePartLink.class);
+		// 		if (rs.size() > 0) {
+		// 	continue;
+		// 		}
 
 		if (PartHelper.isCollectNumber(mm.getNumber())) {
-	System.out.println("숫자 아닌게 포함 더미!");
 	continue;
 		}
 
 		if (!PartHelper.isTopNumber(mm.getNumber())) {
-	System.out.println("최상위 품번이 아님!!");
 	continue;
 		}
+
+		out.println("등록되는 완제품=" + mm.getNumber() + "<br>");
 
 		EOCompletePartLink cLink = EOCompletePartLink.newEOCompletePartLink(mm, eco);
 		cLink.setVersion(endPart.getVersionIdentifier().getSeries().getValue());
