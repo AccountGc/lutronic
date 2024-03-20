@@ -33,6 +33,8 @@ while (qr.hasMoreElements()) {
 	EcoHelper.manager.reverseStructure(part, list);
 }
 
+out.println("list = " + list.size() + "<br>");
+
 for (WTPart pp : list) {
 
 	if (PartHelper.isCollectNumber(pp.getNumber())) {
@@ -45,10 +47,10 @@ for (WTPart pp : list) {
 		continue;
 	}
 
-	QueryResult rs = PersistenceHelper.manager.navigate(eco, "completePart", EOCompletePartLink.class, false);
-	if (rs.size() > 0) {
-		continue;
-	}
+	// 	QueryResult rs = PersistenceHelper.manager.navigate(eco, "completePart", EOCompletePartLink.class, false);
+	// 	if (rs.size() > 0) {
+	// 		continue;
+	// 	}
 
 	out.println("등록되는 완제품=" + pp.getNumber() + "<br>");
 
