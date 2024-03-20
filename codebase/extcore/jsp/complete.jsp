@@ -1,3 +1,5 @@
+<%@page import="java.util.ArrayList"%>
+<%@page import="com.e3ps.change.eco.service.EcoHelper"%>
 <%@page import="java.util.Map"%>
 <%@page import="net.sf.json.JSONArray"%>
 <%@page import="com.e3ps.part.service.PartHelper"%>
@@ -21,39 +23,37 @@ while (result.hasMoreElements()) {
 }
 
 QueryResult qr = PersistenceHelper.manager.navigate(eco, "part", EcoPartLink.class, false);
+ArrayList<WTPart> list = new ArrayList<WTPart>(); // 품목 리스트 담기..
 while (qr.hasMoreElements()) {
 	EcoPartLink link = (EcoPartLink) qr.nextElement();
 	WTPartMaster m = link.getPart();
 	String v = link.getVersion();
 	WTPart part = PartHelper.manager.getPart(m.getNumber(), v);
 
-	String part_oid = part.getPersistInfo().getObjectIdentifier().getStringValue();
-	JSONArray end = PartHelper.manager.end(part_oid, null);
-	for (int i = 0; i < end.size(); i++) {
-		Map<String, String> map = (Map<String, String>) end.get(i);
-		String s = map.get("oid");
-		WTPart endPart = (WTPart) CommonUtil.getObject(s);
-		WTPartMaster mm = (WTPartMaster) endPart.getMaster();
+	EcoHelper.manager.reverseStructure(part, list);
+}
 
-		if (PartHelper.isCollectNumber(mm.getNumber())) {
-	continue;
-		}
+for (WTPart pp : list) {
 
-		if (!PartHelper.isTopNumber(mm.getNumber())) {
-	continue;
-		}
-
-		QueryResult rs = PersistenceHelper.manager.navigate(mm, "eco", EOCompletePartLink.class);
-		if (rs.size() > 0) {
-	out.println("중복 완제품 = " + mm.getNumber() + "<br>");
-	continue;
-		}
-
-		out.println("등록되는 완제품=" + mm.getNumber() + "<br>");
-
-		EOCompletePartLink cLink = EOCompletePartLink.newEOCompletePartLink(mm, eco);
-		cLink.setVersion(endPart.getVersionIdentifier().getSeries().getValue());
-		PersistenceHelper.manager.save(cLink);
+	if (PartHelper.isCollectNumber(pp.getNumber())) {
+		System.out.println("처음 걸러진 번호 = " + pp.getNumber());
+		continue;
 	}
+
+	if (!PartHelper.isTopNumber(pp.getNumber())) {
+		System.out.println("두번째 걸러진 번호 = " + pp.getNumber());
+		continue;
+	}
+
+	QueryResult rs = PersistenceHelper.manager.navigate(eco, "completePart", EOCompletePartLink.class, false);
+	if (rs.size() > 0) {
+		continue;
+	}
+
+	out.println("등록되는 완제품=" + pp.getNumber() + "<br>");
+
+	EOCompletePartLink cLink = EOCompletePartLink.newEOCompletePartLink((WTPartMaster) pp.getMaster(), eco);
+	cLink.setVersion(pp.getVersionIdentifier().getSeries().getValue());
+	PersistenceHelper.manager.save(cLink);
 }
 %>
