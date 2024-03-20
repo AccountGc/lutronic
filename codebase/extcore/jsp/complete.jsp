@@ -11,7 +11,7 @@
 <%@page import="com.e3ps.change.EChangeOrder"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%
-String oid = "com.e3ps.change.EChangeOrder:";
+String oid = "com.e3ps.change.EChangeOrder:208027737";
 EChangeOrder eco = (EChangeOrder) CommonUtil.getObject(oid);
 
 QueryResult result = PersistenceHelper.manager.navigate(eco, "completePart", EOCompletePartLink.class, false);
