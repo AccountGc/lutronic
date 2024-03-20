@@ -39,21 +39,23 @@ public class LoginHistoryHelper {
 		QuerySpecUtils.toOrderBy(query, idx, LoginHistory.class, "thePersistInfo.createStamp", true);
 		PageQueryUtils pager = new PageQueryUtils(params, query);
 		PagingQueryResult result = pager.find();
-
 		while (result.hasMoreElements()) {
 			Object[] o = (Object[]) result.nextElement();
 			LoginHistory history = (LoginHistory) o[0];
 			Map<String, Object> data = new HashMap<String, Object>();
 			WTUser user = OrganizationServicesMgr.getUser(history.getId());
-			PeopleDTO dto = new PeopleDTO(user);
-			data.put("oid", history.getPersistInfo().getObjectIdentifier().toString());
-			data.put("ip", history.getIp());
-			data.put("name", history.getName());
-			data.put("id", history.getId());
-			data.put("duty", dto.getDuty());
-			data.put("department_name", dto.getDepartment_name());
-			data.put("createDate", history.getPersistInfo().getCreateStamp().toString());
-			list.add(data);
+			System.out.println("user=" + user);
+			if (user != null) {
+				PeopleDTO dto = new PeopleDTO(user);
+				data.put("oid", history.getPersistInfo().getObjectIdentifier().toString());
+				data.put("ip", history.getIp());
+				data.put("name", history.getName());
+				data.put("id", history.getId());
+				data.put("duty", dto.getDuty());
+				data.put("department_name", dto.getDepartment_name());
+				data.put("createDate", history.getPersistInfo().getCreateStamp().toString());
+				list.add(data);
+			}
 		}
 
 		map.put("list", list);
