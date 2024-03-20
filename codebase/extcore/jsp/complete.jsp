@@ -35,16 +35,16 @@ while (qr.hasMoreElements()) {
 		WTPart endPart = (WTPart) CommonUtil.getObject(s);
 		WTPartMaster mm = (WTPartMaster) endPart.getMaster();
 
-		// 		QueryResult rs = PersistenceHelper.manager.navigate(mm, "eco", EOCompletePartLink.class);
-		// 		if (rs.size() > 0) {
-		// 	continue;
-		// 		}
-
 		if (PartHelper.isCollectNumber(mm.getNumber())) {
 	continue;
 		}
 
 		if (!PartHelper.isTopNumber(mm.getNumber())) {
+	continue;
+		}
+
+		QueryResult rs = PersistenceHelper.manager.navigate(mm, "eco", EOCompletePartLink.class);
+		if (rs.size() > 0) {
 	continue;
 		}
 
