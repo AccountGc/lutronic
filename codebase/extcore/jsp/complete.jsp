@@ -29,6 +29,7 @@ while (qr.hasMoreElements()) {
 
 	String part_oid = part.getPersistInfo().getObjectIdentifier().getStringValue();
 	JSONArray end = PartHelper.manager.end(part_oid, null);
+	out.println("end=" + end.size());
 	for (int i = 0; i < end.size(); i++) {
 		Map<String, String> map = (Map<String, String>) end.get(i);
 		String s = map.get("oid");
