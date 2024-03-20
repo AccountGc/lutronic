@@ -32,29 +32,45 @@ for (WFItemUserLink link : list) {
 
 		out.println("ECO 번호 = " + eco.getEoNumber() + ", 결재자 = " + user.getFullName() + ", 활동명 = " + actName + ", 의견 = "
 		+ comment + ", 완료일 = " + completeDate + "<br>");
+
+		if ("기안".equals(actName.trim())) {
+	createStartLine(wtobj, user, comment, completeDate);
+		} else if ("결재".equals(actName.trim())) {
+
+		} else if ("수신".equals(actName.trim())) {
+
+		} else if ("합의".equals(actName.trim())) {
+
+		}
+
 	}
 }
 %>
 
-<%!public static ArrayList<WFItemUserLink> get(WFItem item) throws Exception {
-		ArrayList<WFItemUserLink> list = new ArrayList<WFItemUserLink>();
-		QuerySpec qs = new QuerySpec();
-		int idx_l = qs.appendClassList(WFItemUserLink.class, true);
+<%!public static void createStartLine(WTObject wtobj, WTUser user, String comment, Timestamp completeDate)
+			throws Exception {
 
-		SearchCondition sc = new SearchCondition(WFItemUserLink.class, "roleBObjectRef.key.id", "=",
-				item.getPersistInfo().getObjectIdentifier().getId());
-		qs.appendWhere(sc, new int[] { idx_l });
-		qs.appendAnd();
-
-		sc = new SearchCondition(WFItemUserLink.class, WFItemUserLink.DISABLED, SearchCondition.IS_TRUE);
-		qs.appendWhere(sc, new int[] { idx_l });
-
-		ClassAttribute ca = new ClassAttribute(WFItemUserLink.class, WFItemUserLink.CREATE_TIMESTAMP);
-		OrderBy by = new OrderBy(ca, true);
-		QueryResult rs = PersistenceHelper.manager.find(qs);
-		while (rs.hasMoreElements()) {
-			Object[] obj = (Object[]) rs.nextElement();
-			list.add((WFItemUserLink) obj[0]);
-		}
-		return list;
 	}%>
+
+<%!public static ArrayList<WFItemUserLink> get(WFItem item) throws Exception {
+	ArrayList<WFItemUserLink> list = new ArrayList<WFItemUserLink>();
+	QuerySpec qs = new QuerySpec();
+	int idx_l = qs.appendClassList(WFItemUserLink.class, true);
+
+	SearchCondition sc = new SearchCondition(WFItemUserLink.class, "roleBObjectRef.key.id", "=",
+			item.getPersistInfo().getObjectIdentifier().getId());
+	qs.appendWhere(sc, new int[] { idx_l });
+	qs.appendAnd();
+
+	sc = new SearchCondition(WFItemUserLink.class, WFItemUserLink.DISABLED, SearchCondition.IS_FALSE);
+	qs.appendWhere(sc, new int[] { idx_l });
+
+	ClassAttribute ca = new ClassAttribute(WFItemUserLink.class, WFItemUserLink.CREATE_TIMESTAMP);
+	OrderBy by = new OrderBy(ca, true);
+	QueryResult rs = PersistenceHelper.manager.find(qs);
+	while (rs.hasMoreElements()) {
+		Object[] obj = (Object[]) rs.nextElement();
+		list.add((WFItemUserLink) obj[0]);
+	}
+	return list;
+}%>

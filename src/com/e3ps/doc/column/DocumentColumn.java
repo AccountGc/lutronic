@@ -70,7 +70,7 @@ public class DocumentColumn {
 		setModel(keyToValue(IBAUtils.getStringValue(doc, "MODEL"), "MODEL"));
 		setName(doc.getName());
 		setLocation(doc.getLocation());
-		setVersion(doc.getVersionIdentifier().getSeries().getValue());
+		setVersion(doc.getVersionIdentifier().getSeries().getValue() + "." + doc.getIterationIdentifier().getSeries().getValue());
 		setState(doc.getLifeCycleState().getDisplay());
 //		setWriter(IBAUtils.getStringValue(doc, "DSGN"));
 		setCreator(doc.getCreatorFullName());
