@@ -832,4 +832,25 @@ public class StandardEcoService extends StandardManager implements EcoService {
 				trs.rollback();
 		}
 	}
+
+	@Override
+	public void complete(String oid) throws Exception {
+		EChangeOrder eco = (EChangeOrder) CommonUtil.getObject(oid);
+		Transaction trs = new Transaction();
+		try {
+			trs.start();
+			
+			
+
+			trs.commit();
+			trs = null;
+		} catch (Exception e) {
+			e.printStackTrace();
+			trs.rollback();
+			throw e;
+		} finally {
+			if (trs != null)
+				trs.rollback();
+		}
+	}
 }

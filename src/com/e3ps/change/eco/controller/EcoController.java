@@ -50,6 +50,23 @@ public class EcoController extends BaseController {
 		}
 		return result;
 	}
+	
+	@Description(value = "ECO 완제품 동기화")
+	@ResponseBody
+	@GetMapping(value = "/complete")
+	public Map<String, Object> complete(@RequestParam String oid) throws Exception {
+		Map<String, Object> result = new HashMap<String, Object>();
+		try {
+			EcoHelper.service.complete(oid);
+			result.put("msg", "동기화 되었습니다.");
+			result.put("result", SUCCESS);
+		} catch (Exception e) {
+			e.printStackTrace();
+			result.put("result", FAIL);
+			result.put("msg", e.toString());
+		}
+		return result;
+	}
 
 	@Description(value = "ECO 완제품 연결 삭제 함수")
 	@ResponseBody

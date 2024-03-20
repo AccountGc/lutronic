@@ -35,6 +35,7 @@ Map<String, Object> contentMap = dto.getContentMap();
 			<%
 			if (isAdmin) {
 			%>
+<!-- 			<input type="button" value="완제품 동기화" title="완제품 동기화" onclick="complete();"> -->
 			<input type="button" value="프로젝트코드 동기화" title="프로젝트코드 동기화" class="red" onclick="sync();">
 			<%
 			}
@@ -386,6 +387,26 @@ Map<String, Object> contentMap = dto.getContentMap();
 		}, "GET");
 	}
 
+	
+	function complete() {
+		if (!confirm("완제품 동기화 하시겠습니까?")) {
+			return false;
+		}
+
+		const oid = document.getElementById("oid").value;
+		const url = getCallUrl("/eco/complete?oid=" + oid);
+		openLayer();
+		call(url, null, function(data) {
+			alert(data.msg);
+			if (data.result) {
+				document.location.reload();
+			} else {
+				clsoeLayer();
+			}
+		}, "GET");
+	}
+	}
+	
 	function sync() {
 		if (!confirm("프로젝트 코드를 동기화 하시겠습니까?")) {
 			return false;

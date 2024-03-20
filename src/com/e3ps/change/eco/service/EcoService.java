@@ -70,4 +70,9 @@ public interface EcoService {
 	 */
 	public abstract void sync(String oid) throws Exception;
 
+	/**
+	 * 완제품 동기화
+	 */
+	public abstract void complete(String oid) throws Exception;
+
 }
