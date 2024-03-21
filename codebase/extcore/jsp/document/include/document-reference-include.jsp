@@ -5,7 +5,7 @@ String oid = request.getParameter("oid");
 <!-- 관련 품목 -->
 <jsp:include page="/extcore/jsp/part/include/part-include.jsp">
 	<jsp:param value="<%=oid%>" name="oid" />
-	<jsp:param value="doc" name="type" />
+	<jsp:param value="part" name="type" />
 	<jsp:param value="view" name="mode" />
 	<jsp:param value="true" name="multi" />
 </jsp:include>
