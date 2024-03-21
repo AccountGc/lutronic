@@ -9,6 +9,13 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.regex.Pattern;
 
+import com.aspose.cells.Cell;
+import com.aspose.cells.Picture;
+import com.aspose.cells.PlacementType;
+import com.aspose.cells.Style;
+import com.aspose.cells.TextAlignmentType;
+import com.aspose.cells.Workbook;
+import com.aspose.cells.Worksheet;
 import com.e3ps.common.code.NumberCode;
 import com.e3ps.common.code.service.NumberCodeHelper;
 import com.e3ps.common.iba.AttributeKey;
@@ -21,6 +28,8 @@ import com.e3ps.common.util.StringUtil;
 import com.e3ps.common.util.ThumbnailUtil;
 import com.e3ps.common.util.ZipUtil;
 import com.e3ps.download.service.DownloadHistoryHelper;
+import com.e3ps.org.service.OrgHelper;
+import com.e3ps.part.bom.column.BomColumn;
 import com.e3ps.part.bom.util.BomComparator;
 import com.e3ps.part.service.PartHelper;
 import com.ptc.wvs.server.util.PublishUtils;
@@ -1626,14 +1635,206 @@ public class BomHelper {
 
 		File[] fs = dir.listFiles();
 		for (File f : fs) {
-	 		f.delete();
+			f.delete();
 			System.out.println("파일 삭제!");
 		}
-		
+
 		result.put("name", nn);
 
 		DownloadHistoryHelper.service.create(oid, nn, n + "도면 일괄 다운로드");
-		
+
 		return result;
+	}
+
+	public Map<String, Object> excelList(String oid) throws Exception {
+		Map<String, Object> result = new HashMap<>();
+
+		WTPart root = (WTPart) CommonUtil.getObject(oid);
+		String wtHome = WTProperties.getServerProperties().getProperty("wt.home");
+		String path = WTProperties.getServerProperties().getProperty("wt.temp");
+
+		File orgFile = new File(wtHome + "/codebase/com/e3ps/part/bom/column/bom_list.xlsx");
+
+		File newFile = CommonUtil.copyFile(orgFile, new File(path + "/" + root.getNumber() + "_BOM_리스트.xlsx"));
+
+		Workbook workbook = new Workbook(newFile.getPath());
+		Worksheet worksheet = workbook.getWorksheets().get(0);
+		worksheet.setName(root.getNumber() + "_BOM_리스트"); // 시트 이름
+
+		int rowIndex = 4;
+
+		Style center = workbook.createStyle();
+		center.setHorizontalAlignment(TextAlignmentType.CENTER);
+
+		Style left = workbook.createStyle();
+		left.setHorizontalAlignment(TextAlignmentType.LEFT);
+
+		ArrayList<BomColumn> list = descendants(root);
+
+		Cell headerCell = worksheet.getCells().get(0, 0);
+		headerCell.setStyle(center);
+		headerCell.putValue(root.getNumber());
+
+		for (BomColumn dd : list) {
+
+			Cell rowCell = worksheet.getCells().get(rowIndex, 0);
+			rowCell.setStyle(center);
+			rowCell.putValue(rowIndex);
+
+			Cell _3dCell = worksheet.getCells().get(rowIndex, 1);
+			_3dCell.setStyle(center);
+			_3dCell.putValue("");
+			
+//			String signPath = OrgHelper.manager.getSignPath(eco.getCreatorName());
+//			if (signPath != null) {
+//				int picIndex = worksheet.getPictures().add(15, 8, signPath);
+//				Picture picture = worksheet.getPictures().get(picIndex);
+//				picture.setHeightCM(2.5);
+//				picture.setWidthCM(2.5);
+//				picture.setAutoSize(true);
+//
+//				int cellRowIndex = 15; // Specify the row index of the cell
+//				int cellColumnIndex = 8; // Specify the column index of the cell
+//				int cellWidth = worksheet.getCells().getColumnWidthPixel(cellColumnIndex);
+//				int cellHeight = worksheet.getCells().getRowHeightPixel(cellRowIndex);
+//				int imageWidth = (int) picture.getWidthInch() * 96; // Convert width from cm to pixels
+//				int imageHeight = (int) picture.getHeightInch() * 96; // Convert height from cm to pixels
+//
+//				int deltaX = (cellWidth - imageWidth) / 2;
+////				int deltaY = (cellHeight - imageHeight) / 2;
+//
+//				picture.setPlacement(PlacementType.FREE_FLOATING);
+//				picture.setUpperDeltaX(deltaX);
+////				picture.setUpperDeltaY(deltaY);
+//			}
+			
+			
+
+			Cell _2dCell = worksheet.getCells().get(rowIndex, 2);
+			_2dCell.setStyle(center);
+			_2dCell.putValue("");
+
+			Cell levelCell = worksheet.getCells().get(rowIndex, 3);
+			levelCell.setStyle(center);
+			levelCell.putValue(dd.getLevel());
+
+			Cell numberCell = worksheet.getCells().get(rowIndex, 4);
+			numberCell.setStyle(center);
+			numberCell.putValue(dd.getNumber());
+
+			String[] endRtn = getDwgInfo(dd.getPart());
+
+			Cell dwgNoCell = worksheet.getCells().get(rowIndex, 5);
+			dwgNoCell.setStyle(center);
+			dwgNoCell.putValue(endRtn[0]);
+
+			Cell nameCell = worksheet.getCells().get(rowIndex, 6);
+			left.setIndentLevel(dd.getLevel());
+			nameCell.setStyle(left);
+			nameCell.putValue(dd.getName());
+
+			Cell revCell = worksheet.getCells().get(rowIndex, 7);
+			revCell.setStyle(center);
+			revCell.putValue(dd.getRev());
+
+			Cell oemCell = worksheet.getCells().get(rowIndex, 8);
+			oemCell.setStyle(center);
+			oemCell.putValue(dd.getOemInfo());
+
+			Cell stateCell = worksheet.getCells().get(rowIndex, 9);
+			stateCell.setStyle(center);
+			stateCell.putValue(dd.getState());
+
+			Cell modifierCell = worksheet.getCells().get(rowIndex, 10);
+			modifierCell.setStyle(center);
+			modifierCell.putValue(dd.getModifier());
+
+			Cell specCell = worksheet.getCells().get(rowIndex, 11);
+			specCell.setStyle(center);
+			specCell.putValue(dd.getSpec());
+
+			Cell qtyCell = worksheet.getCells().get(rowIndex, 12);
+			qtyCell.setStyle(center);
+			qtyCell.putValue(dd.getQty() + "개");
+
+			Cell ecoCell = worksheet.getCells().get(rowIndex, 13);
+			ecoCell.setStyle(center);
+			ecoCell.putValue(dd.getEcoNo());
+
+			Cell projectCell = worksheet.getCells().get(rowIndex, 14);
+			projectCell.setStyle(center);
+			projectCell.putValue(dd.getProjectCode());
+
+			Cell deptCell = worksheet.getCells().get(rowIndex, 15);
+			deptCell.setStyle(center);
+			deptCell.putValue(dd.getDept());
+
+			Cell manuCell = worksheet.getCells().get(rowIndex, 16);
+			manuCell.setStyle(center);
+			manuCell.putValue(dd.getManufacture());
+
+			Cell methodCell = worksheet.getCells().get(rowIndex, 17);
+			methodCell.setStyle(center);
+			methodCell.putValue(dd.getMethod());
+
+			rowIndex++;
+		}
+
+		String fullPath = path + "/" + root.getNumber() + "_BOM_리스트.xlsx";
+		workbook.save(fullPath);
+		result.put("name", newFile.getName());
+		return result;
+	}
+
+	public ArrayList<BomColumn> descendants(WTPart part) throws Exception {
+		ArrayList<BomColumn> list = new ArrayList<BomColumn>();
+		BomColumn root = new BomColumn(part);
+		// root 추가
+		list.add(root);
+		String viewName = part.getViewName();
+		if (!StringUtil.checkString(viewName)) {
+			viewName = "Design";
+		}
+
+		View view = ViewHelper.service.getView(viewName);
+		WTPartConfigSpec configSpec = WTPartConfigSpec
+				.newWTPartConfigSpec(WTPartStandardConfigSpec.newWTPartStandardConfigSpec(view, null));
+		QueryResult result = WTPartHelper.service.getUsesWTParts(part, configSpec);
+		int level = 2;
+		while (result.hasMoreElements()) {
+			Object obj[] = (Object[]) result.nextElement();
+			if (!(obj[1] instanceof WTPart)) {
+				continue;
+			}
+			WTPart p = (WTPart) obj[1];
+			WTPartUsageLink link = (WTPartUsageLink) obj[0];
+			BomColumn dd = new BomColumn(p, link, level);
+			list.add(dd);
+			descendants(p, list, level + 1);
+		}
+		return list;
+	}
+
+	private void descendants(WTPart p, ArrayList<BomColumn> list, int level) throws Exception {
+		String viewName = p.getViewName();
+		if (!StringUtil.checkString(viewName)) {
+			viewName = "Design";
+		}
+
+		View view = ViewHelper.service.getView(viewName);
+		WTPartConfigSpec configSpec = WTPartConfigSpec
+				.newWTPartConfigSpec(WTPartStandardConfigSpec.newWTPartStandardConfigSpec(view, null));
+		QueryResult result = WTPartHelper.service.getUsesWTParts(p, configSpec);
+		while (result.hasMoreElements()) {
+			Object obj[] = (Object[]) result.nextElement();
+			if (!(obj[1] instanceof WTPart)) {
+				continue;
+			}
+			WTPart child = (WTPart) obj[1];
+			WTPartUsageLink link = (WTPartUsageLink) obj[0];
+			BomColumn dd = new BomColumn(child, link, level);
+			list.add(dd);
+			descendants(child, list, level + 1);
+		}
 	}
 }

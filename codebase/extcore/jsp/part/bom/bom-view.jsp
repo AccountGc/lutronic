@@ -117,7 +117,7 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 				}
 				%>
 			</select>
-<!-- 			<input type="button" value="도면일괄다운" title="도면일괄다운" class="red" onclick="batch();"> -->
+			<!-- 			<input type="button" value="도면일괄다운" title="도면일괄다운" class="red" onclick="batch();"> -->
 			<input type="button" value="도면일괄다운" title="도면일괄다운" onclick="download();">
 			<input type="button" value="닫기" title="닫기" class="gray" onclick="self.close();">
 		</td>
@@ -176,17 +176,17 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 		headerText : "도면번호",
 		dataType : "string",
 		width : 140,
-// 		renderer : {
-// 			type : "LinkRenderer",
-// 			baseUrl : "javascript",
-// 			jsCallback : function(rowIndex, columnIndex, value, item) {
-// 				const oid = item.dwg_oid;
-// 				if(oid !== "") {
-// 					const url = getCallUrl("/drawing/view?oid=" + oid);
-// 					_popup(url, 1600, 800, "n");
-// 				}
-// 			}
-// 		},
+		// 		renderer : {
+		// 			type : "LinkRenderer",
+		// 			baseUrl : "javascript",
+		// 			jsCallback : function(rowIndex, columnIndex, value, item) {
+		// 				const oid = item.dwg_oid;
+		// 				if(oid !== "") {
+		// 					const url = getCallUrl("/drawing/view?oid=" + oid);
+		// 					_popup(url, 1600, 800, "n");
+		// 				}
+		// 			}
+		// 		},
 		styleFunction : function(rowIndex, columnIndex, value, headerText, item, dataField) {
 			if (value == "AP") {
 				return "ap";
@@ -282,7 +282,7 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 			editable : false,
 			treeColumnIndex : 3,
 			enableFilter : true,
-// 			flat2tree : true,
+			// 			flat2tree : true,
 			forceTreeView : true,
 			enableSorting : false,
 			fixedColumnCount : 4,
@@ -323,18 +323,18 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 		});
 		AUIGrid.bind(myGridID, "cellClick", auiCellClickHandler);
 	}
-	
+
 	function auiCellClickHandler(event) {
 		const dataField = event.dataField;
-// 		const oid = event.item.oid;
-// 		logger(event);
-// 		if(event.treeIcon) {
-// 			return false;
-// 		}
-// 		if("number" === dataField) {
-// 			const url = getCallUrl("/part/view?oid=" + oid);
-// 			_popup(url, 1600, 800, "n");
-// 		}
+		// 		const oid = event.item.oid;
+		// 		logger(event);
+		// 		if(event.treeIcon) {
+		// 			return false;
+		// 		}
+		// 		if("number" === dataField) {
+		// 			const url = getCallUrl("/part/view?oid=" + oid);
+		// 			_popup(url, 1600, 800, "n");
+		// 		}
 	}
 
 	function auiContextHandler(event) {
@@ -645,9 +645,23 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 	}
 
 	function excel() {
-		alert("개발 진행중");
+
+		if (!confirm("BOM 엑셀(뷰포함) 리스트를 다운받습니다.")) {
+			return false;
+		}
+
+		const oid = document.getElementById("oid").value;
+		const url = getCallUrl("/bom/excelList?oid=" + oid);
+		parent.openLayer();
+		call(url, null, function(data) {
+			if (data.result) {
+				const n = data.name;
+				document.location.href = '/Windchill/extcore/jsp/common/content/FileDownload.jsp?fileName=' + n + '&originFileName=' + n;
+			}
+			parent.closeLayer();
+		}, "GET");
 	}
-	
+
 	function download() {
 
 		if (!confirm("도면일괄 다운로드 하시겠습니까?")) {
@@ -704,7 +718,7 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 		setTimeout(function() {
 			const sessionName = document.getElementById("sessionName").value;
 			const number = document.getElementById("number").value;
-			exportToExcel(number + "_BOM 리스트", number + "_BOM 리스트", number + "_BOM 리스트", ["thumb_2d", "thumb_3d"], sessionName);
+			exportToExcel(number + "_BOM 리스트", number + "_BOM 리스트", number + "_BOM 리스트", [ "thumb_2d", "thumb_3d" ], sessionName);
 		}, 1000);
 	}
 </script>

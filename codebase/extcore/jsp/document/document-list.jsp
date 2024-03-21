@@ -634,11 +634,6 @@ ArrayList<Map<String, String>> classTypes1 = (ArrayList<Map<String, String>>) re
 				exportToExcel("문서 리스트", "문서", "문서 리스트", exceptColumnFields, sessionName);
 			}
 			
-			function exportExcel() {
-				const sessionName = document.getElementById("sessionName").value;
-				exportToExcel("ECO 리스트", "ECO", "ECO 리스트", [], sessionName);
-			}
-			
 			function excel() {
 
 				if (!confirm("문서 리스트를 다운받습니다.")) {

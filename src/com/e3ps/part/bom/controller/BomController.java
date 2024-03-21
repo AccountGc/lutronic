@@ -376,4 +376,20 @@ public class BomController extends BaseController {
 		}
 		return result;
 	}
+	
+	@Description(value = "BOM(뷰) 리스트 엑셀 다운로드")
+	@ResponseBody
+	@GetMapping(value = "/excelList")
+	public Map<String, Object> excelList(@RequestParam String oid) throws Exception {
+		Map<String, Object> result = new HashMap<>();
+		try {
+			result = BomHelper.manager.excelList(oid);
+			result.put("result", SUCCESS);
+		} catch (Exception e) {
+			e.printStackTrace();
+			result.put("result", FAIL);
+			result.put("msg", e.toString());
+		}
+		return result;
+	}
 }
