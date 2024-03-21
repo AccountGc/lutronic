@@ -1,5 +1,6 @@
 package com.e3ps.part.service;
 
+import java.io.File;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Enumeration;
@@ -11,13 +12,23 @@ import java.util.regex.Pattern;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.springframework.context.annotation.Description;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.aspose.cells.Cell;
+import com.aspose.cells.Style;
+import com.aspose.cells.TextAlignmentType;
+import com.aspose.cells.Workbook;
+import com.aspose.cells.Worksheet;
 import com.e3ps.change.EChangeOrder;
 import com.e3ps.change.EcoPartLink;
 import com.e3ps.change.eco.column.EcoColumn;
+import com.e3ps.change.eco.service.EcoHelper;
 import com.e3ps.common.folder.beans.CommonFolderHelper;
 import com.e3ps.common.iba.AttributeKey;
+import com.e3ps.common.iba.IBAUtil;
 import com.e3ps.common.iba.IBAUtils;
 import com.e3ps.common.util.AUIGridUtil;
 import com.e3ps.common.util.CommonUtil;
@@ -73,6 +84,7 @@ import wt.query.QuerySpec;
 import wt.query.SearchCondition;
 import wt.services.ServiceFactory;
 import wt.util.WTAttributeNameIfc;
+import wt.util.WTProperties;
 import wt.vc.VersionControlHelper;
 import wt.vc.baseline.Baseline;
 import wt.vc.baseline.BaselineMember;
@@ -1731,4 +1743,86 @@ public class PartHelper {
 		}
 		return vec;
 	}
+
+	public Map<String, Object> excelList() throws Exception {
+		Map<String, Object> result = new HashMap<>();
+
+		String wtHome = WTProperties.getServerProperties().getProperty("wt.home");
+		String path = WTProperties.getServerProperties().getProperty("wt.temp");
+
+		File orgFile = new File(wtHome + "/codebase/com/e3ps/part/dto/doc_list.xlsx");
+
+		File newFile = CommonUtil.copyFile(orgFile, new File(path + "/품목 리스트.xlsx"));
+
+		Workbook workbook = new Workbook(newFile.getPath());
+		Worksheet worksheet = workbook.getWorksheets().get(0);
+		worksheet.setName("품목 리스트"); // 시트 이름
+
+		QuerySpec query = new QuerySpec();
+		int idx = query.appendClassList(WTPart.class, true);
+		QuerySpecUtils.toLatest(query, idx, WTPart.class);
+		QuerySpecUtils.toOrderBy(query, idx, WTPart.class, WTPart.CREATE_TIMESTAMP, false);
+		QueryResult qr = PersistenceHelper.manager.find(query);
+
+		int rowIndex = 1;
+
+		Style center = workbook.createStyle();
+		center.setHorizontalAlignment(TextAlignmentType.CENTER);
+
+		Style left = workbook.createStyle();
+		left.setHorizontalAlignment(TextAlignmentType.LEFT);
+
+		while (qr.hasMoreElements()) {
+			Object[] obj = (Object[]) qr.nextElement();
+			WTPart part = (WTPart) obj[0];
+
+			Cell rowCell = worksheet.getCells().get(rowIndex, 0);
+			rowCell.setStyle(center);
+			rowCell.putValue(rowIndex);
+
+			Cell numberCell = worksheet.getCells().get(rowIndex, 1);
+			numberCell.setStyle(center);
+			numberCell.putValue(part.getNumber());
+
+			Cell nameCell = worksheet.getCells().get(rowIndex, 2);
+			nameCell.setStyle(left);
+			nameCell.putValue(part.getName());
+
+			Cell locationCell = worksheet.getCells().get(rowIndex, 3);
+			locationCell.setStyle(center);
+			locationCell.putValue(part.getLocation());
+
+			Cell revCell = worksheet.getCells().get(rowIndex, 4);
+			revCell.setStyle(center);
+			revCell.putValue(part.getVersionIdentifier().getSeries().getValue() + "."
+					+ part.getIterationIdentifier().getSeries().getValue());
+
+			Cell oemCell = worksheet.getCells().get(rowIndex, 5);
+			oemCell.setStyle(center);
+			oemCell.putValue(IBAUtil.getAttrValue(part, "REMARKS"));
+
+			Cell stateCell = worksheet.getCells().get(rowIndex, 6);
+			stateCell.setStyle(center);
+			stateCell.putValue(part.getLifeCycleState().getDisplay());
+
+			Cell creatorCell = worksheet.getCells().get(rowIndex, 7);
+			creatorCell.setStyle(center);
+			creatorCell.putValue(part.getCreatorFullName());
+
+			Cell createdDateCell = worksheet.getCells().get(rowIndex, 8);
+			createdDateCell.setStyle(center);
+			createdDateCell.putValue(part.getCreateTimestamp().toString().substring(0, 10));
+
+			Cell modifyCell = worksheet.getCells().get(rowIndex, 9);
+			modifyCell.setStyle(center);
+			modifyCell.putValue(part.getModifyTimestamp().toString().substring(0, 10));
+			rowIndex++;
+		}
+
+		String fullPath = path + "/품목 리스트.xlsx";
+		workbook.save(fullPath);
+		result.put("name", newFile.getName());
+		return result;
+	}
+
 }

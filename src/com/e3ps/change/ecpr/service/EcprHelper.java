@@ -7,6 +7,11 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.aspose.cells.Cell;
+import com.aspose.cells.Style;
+import com.aspose.cells.TextAlignmentType;
+import com.aspose.cells.Workbook;
+import com.aspose.cells.Worksheet;
 import com.e3ps.change.CrToEcprLink;
 import com.e3ps.change.ECPRRequest;
 import com.e3ps.change.ECRMRequest;
@@ -18,6 +23,7 @@ import com.e3ps.change.cr.column.CrColumn;
 import com.e3ps.change.cr.service.CrHelper;
 import com.e3ps.change.eco.column.EcoColumn;
 import com.e3ps.change.ecpr.column.EcprColumn;
+import com.e3ps.change.ecrm.service.EcrmHelper;
 import com.e3ps.common.code.NumberCode;
 import com.e3ps.common.code.dto.NumberCodeDTO;
 import com.e3ps.common.code.service.NumberCodeHelper;
@@ -455,6 +461,123 @@ public class EcprHelper {
 		}
 		result.put("name", nn);
 		DownloadHistoryHelper.service.create(oid, nn, "ECPR 첨부파일 일괄 다운로드");
+		return result;
+	}
+
+	public Map<String, Object> excelList() throws Exception {
+		Map<String, Object> result = new HashMap<>();
+
+		String wtHome = WTProperties.getServerProperties().getProperty("wt.home");
+		String path = WTProperties.getServerProperties().getProperty("wt.temp");
+
+		File orgFile = new File(wtHome + "/codebase/com/e3ps/change/ecpr/dto/cr_list.xlsx");
+
+		File newFile = CommonUtil.copyFile(orgFile, new File(path + "/ECPR 리스트.xlsx"));
+
+		Workbook workbook = new Workbook(newFile.getPath());
+		Worksheet worksheet = workbook.getWorksheets().get(0);
+		worksheet.setName("ECPR 리스트"); // 시트 이름
+
+		QuerySpec query = new QuerySpec();
+		int idx = query.appendClassList(ECPRRequest.class, true);
+		QuerySpecUtils.toOrderBy(query, idx, ECPRRequest.class, ECPRRequest.CREATE_TIMESTAMP, false);
+		QueryResult qr = PersistenceHelper.manager.find(query);
+
+		int rowIndex = 1;
+
+		Style center = workbook.createStyle();
+		center.setHorizontalAlignment(TextAlignmentType.CENTER);
+
+		Style left = workbook.createStyle();
+		left.setHorizontalAlignment(TextAlignmentType.LEFT);
+
+		while (qr.hasMoreElements()) {
+			Object[] obj = (Object[]) qr.nextElement();
+			ECPRRequest ecpr = (ECPRRequest) obj[0];
+
+			Cell rowCell = worksheet.getCells().get(rowIndex, 0);
+			rowCell.setStyle(center);
+			rowCell.putValue(rowIndex);
+
+			Cell numberCell = worksheet.getCells().get(rowIndex, 1);
+			numberCell.setStyle(center);
+			numberCell.putValue(ecpr.getEoNumber());
+
+			Cell nameCell = worksheet.getCells().get(rowIndex, 2);
+			nameCell.setStyle(left);
+			nameCell.putValue(ecpr.getEoName());
+
+			Cell projectCell = worksheet.getCells().get(rowIndex, 3);
+			projectCell.setStyle(left);
+
+			String display = "";
+			if (StringUtil.checkString(ecpr.getModel())) {
+				String[] ss = ecpr.getModel().split(",");
+				for (int i = 0; i < ss.length; i++) {
+					String s = ss[i];
+					if (s.length() > 0) {
+						if (ss.length - 1 == i) {
+							NumberCode n = NumberCodeHelper.manager.getNumberCode(s, "MODEL");
+							if (n != null) {
+								display += s + " [" + n.getName() + "]";
+							}
+						} else {
+							NumberCode n = NumberCodeHelper.manager.getNumberCode(s, "MODEL");
+							if (n != null) {
+								display += s + " [" + n.getName() + "], ";
+							}
+						}
+					}
+				}
+			}
+
+			projectCell.putValue(display);
+
+			Cell changeSectionCell = worksheet.getCells().get(rowIndex, 4);
+			changeSectionCell.setStyle(center);
+			changeSectionCell.putValue(EcprHelper.manager.displayToSection(ecpr.getChangeSection()));
+
+			NumberCode period = NumberCodeHelper.manager.getNumberCode(ecpr.getPeriod(), "PRESERATION");
+			if (period != null) {
+				Cell periodCell = worksheet.getCells().get(rowIndex, 5);
+				periodCell.setStyle(center);
+				periodCell.putValue(period.getName());
+			}
+
+			Cell departCell = worksheet.getCells().get(rowIndex, 6);
+			departCell.setStyle(center);
+			departCell.putValue(ecpr.getCreateDepart());
+
+			Cell writerCell = worksheet.getCells().get(rowIndex, 7);
+			writerCell.setStyle(center);
+			writerCell.putValue(ecpr.getWriter());
+
+			Cell writeDateCell = worksheet.getCells().get(rowIndex, 8);
+			writeDateCell.setStyle(center);
+			writeDateCell.putValue(ecpr.getCreateDate());
+
+			Cell stateCell = worksheet.getCells().get(rowIndex, 9);
+			stateCell.setStyle(center);
+			stateCell.putValue(ecpr.getLifeCycleState().getDisplay());
+
+			Cell creatorCell = worksheet.getCells().get(rowIndex, 10);
+			creatorCell.setStyle(center);
+			creatorCell.putValue(ecpr.getCreatorFullName());
+
+			Cell createdDateCell = worksheet.getCells().get(rowIndex, 11);
+			createdDateCell.setStyle(center);
+			createdDateCell.putValue(ecpr.getCreateTimestamp().toString().substring(0, 10));
+
+			Cell approveDateCell = worksheet.getCells().get(rowIndex, 12);
+			approveDateCell.setStyle(center);
+			approveDateCell.putValue(ecpr.getEoApproveDate());
+
+			rowIndex++;
+		}
+
+		String fullPath = path + "/ECPR 리스트.xlsx";
+		workbook.save(fullPath);
+		result.put("name", newFile.getName());
 		return result;
 	}
 }

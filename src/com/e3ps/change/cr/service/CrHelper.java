@@ -7,6 +7,11 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.aspose.cells.Cell;
+import com.aspose.cells.Style;
+import com.aspose.cells.TextAlignmentType;
+import com.aspose.cells.Workbook;
+import com.aspose.cells.Worksheet;
 import com.e3ps.change.CrToDocumentLink;
 import com.e3ps.change.ECPRRequest;
 import com.e3ps.change.EChangeOrder;
@@ -510,7 +515,117 @@ public class CrHelper {
 			System.out.println("파일 삭제!");
 		}
 		result.put("name", nn);
-		DownloadHistoryHelper.service.create(oid,nn, "CR 첨부파일 일괄 다운로드");
+		DownloadHistoryHelper.service.create(oid, nn, "CR 첨부파일 일괄 다운로드");
+		return result;
+	}
+
+	public Map<String, Object> excelList() throws Exception {
+		Map<String, Object> result = new HashMap<>();
+
+		String wtHome = WTProperties.getServerProperties().getProperty("wt.home");
+		String path = WTProperties.getServerProperties().getProperty("wt.temp");
+
+		File orgFile = new File(wtHome + "/codebase/com/e3ps/change/cr/dto/cr_list.xlsx");
+
+		File newFile = CommonUtil.copyFile(orgFile, new File(path + "/CR 리스트.xlsx"));
+
+		Workbook workbook = new Workbook(newFile.getPath());
+		Worksheet worksheet = workbook.getWorksheets().get(0);
+		worksheet.setName("CR 리스트"); // 시트 이름
+
+		QuerySpec query = new QuerySpec();
+		int idx = query.appendClassList(EChangeRequest.class, true);
+		QuerySpecUtils.toOrderBy(query, idx, EChangeOrder.class, EChangeOrder.CREATE_TIMESTAMP, false);
+		QueryResult qr = PersistenceHelper.manager.find(query);
+
+		int rowIndex = 1;
+
+		Style center = workbook.createStyle();
+		center.setHorizontalAlignment(TextAlignmentType.CENTER);
+
+		Style left = workbook.createStyle();
+		left.setHorizontalAlignment(TextAlignmentType.LEFT);
+
+		while (qr.hasMoreElements()) {
+			Object[] obj = (Object[]) qr.nextElement();
+			EChangeRequest cr = (EChangeRequest) obj[0];
+
+			Cell rowCell = worksheet.getCells().get(rowIndex, 0);
+			rowCell.setStyle(center);
+			rowCell.putValue(rowIndex);
+
+			Cell numberCell = worksheet.getCells().get(rowIndex, 1);
+			numberCell.setStyle(center);
+			numberCell.putValue(cr.getEoNumber());
+
+			Cell nameCell = worksheet.getCells().get(rowIndex, 2);
+			nameCell.setStyle(left);
+			nameCell.putValue(cr.getEoName());
+
+			Cell projectCell = worksheet.getCells().get(rowIndex, 3);
+			projectCell.setStyle(left);
+
+			String display = "";
+			if (StringUtil.checkString(cr.getModel())) {
+				String[] ss = cr.getModel().split(",");
+				for (int i = 0; i < ss.length; i++) {
+					String s = ss[i];
+					if (s.length() > 0) {
+						if (ss.length - 1 == i) {
+							NumberCode n = NumberCodeHelper.manager.getNumberCode(s, "MODEL");
+							if (n != null) {
+								display += s + " [" + n.getName() + "]";
+							}
+						} else {
+							NumberCode n = NumberCodeHelper.manager.getNumberCode(s, "MODEL");
+							if (n != null) {
+								display += s + " [" + n.getName() + "], ";
+							}
+						}
+					}
+				}
+			}
+
+			projectCell.putValue(display);
+
+			Cell changeSectionCell = worksheet.getCells().get(rowIndex, 4);
+			changeSectionCell.setStyle(center);
+			changeSectionCell.putValue(cr.getChangeSection());
+
+			Cell departCell = worksheet.getCells().get(rowIndex, 5);
+			departCell.setStyle(center);
+			departCell.putValue(cr.getCreateDepart());
+
+			Cell writerCell = worksheet.getCells().get(rowIndex, 6);
+			writerCell.setStyle(center);
+			writerCell.putValue(cr.getWriter());
+
+			Cell writeDateCell = worksheet.getCells().get(rowIndex, 7);
+			writeDateCell.setStyle(center);
+			writeDateCell.putValue(cr.getCreateDate());
+
+			Cell stateCell = worksheet.getCells().get(rowIndex, 8);
+			stateCell.setStyle(center);
+			stateCell.putValue(cr.getLifeCycleState().getDisplay());
+
+			Cell creatorCell = worksheet.getCells().get(rowIndex, 9);
+			creatorCell.setStyle(center);
+			creatorCell.putValue(cr.getCreatorFullName());
+
+			Cell createdDateCell = worksheet.getCells().get(rowIndex, 10);
+			createdDateCell.setStyle(center);
+			createdDateCell.putValue(cr.getCreateTimestamp().toString().substring(0, 10));
+
+			Cell approveDateCell = worksheet.getCells().get(rowIndex, 11);
+			approveDateCell.setStyle(center);
+			approveDateCell.putValue(cr.getEoApproveDate());
+
+			rowIndex++;
+		}
+
+		String fullPath = path + "/CR 리스트.xlsx";
+		workbook.save(fullPath);
+		result.put("name", newFile.getName());
 		return result;
 	}
 }

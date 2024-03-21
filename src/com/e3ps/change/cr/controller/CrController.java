@@ -38,6 +38,22 @@ import wt.doc.WTDocument;
 @RequestMapping(value = "/cr/**")
 public class CrController extends BaseController {
 
+	@Description(value = "CR 리스트 엑셀 다운로드")
+	@ResponseBody
+	@GetMapping(value = "/excelList")
+	public Map<String, Object> excelList() throws Exception {
+		Map<String, Object> result = new HashMap<>();
+		try {
+			result = CrHelper.manager.excelList();
+			result.put("result", SUCCESS);
+		} catch (Exception e) {
+			e.printStackTrace();
+			result.put("result", FAIL);
+			result.put("msg", e.toString());
+		}
+		return result;
+	}
+
 	@Description(value = "CR 검색 페이지")
 	@GetMapping(value = "/list")
 	public ModelAndView list() throws Exception {

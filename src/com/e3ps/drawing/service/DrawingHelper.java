@@ -17,7 +17,13 @@ import java.util.zip.ZipOutputStream;
 
 import javax.servlet.http.HttpServletRequest;
 
+import com.aspose.cells.Cell;
+import com.aspose.cells.Style;
+import com.aspose.cells.TextAlignmentType;
+import com.aspose.cells.Workbook;
+import com.aspose.cells.Worksheet;
 import com.e3ps.common.iba.AttributeKey;
+import com.e3ps.common.iba.IBAUtil;
 import com.e3ps.common.message.Message;
 import com.e3ps.common.util.CommonUtil;
 import com.e3ps.common.util.PageQueryUtils;
@@ -1006,4 +1012,86 @@ public class DrawingHelper {
 
 		return result;
 	}
+
+	public Map<String, Object> excelList() throws Exception {
+		Map<String, Object> result = new HashMap<>();
+
+		String wtHome = WTProperties.getServerProperties().getProperty("wt.home");
+		String path = WTProperties.getServerProperties().getProperty("wt.temp");
+
+		File orgFile = new File(wtHome + "/codebase/com/e3ps/drawing/beans/epm_list.xlsx");
+
+		File newFile = CommonUtil.copyFile(orgFile, new File(path + "/도면 리스트.xlsx"));
+
+		Workbook workbook = new Workbook(newFile.getPath());
+		Worksheet worksheet = workbook.getWorksheets().get(0);
+		worksheet.setName("도면 리스트"); // 시트 이름
+
+		QuerySpec query = new QuerySpec();
+		int idx = query.appendClassList(EPMDocument.class, true);
+		QuerySpecUtils.toLatest(query, idx, EPMDocument.class);
+		QuerySpecUtils.toOrderBy(query, idx, EPMDocument.class, EPMDocument.CREATE_TIMESTAMP, false);
+		QueryResult qr = PersistenceHelper.manager.find(query);
+
+		int rowIndex = 1;
+
+		Style center = workbook.createStyle();
+		center.setHorizontalAlignment(TextAlignmentType.CENTER);
+
+		Style left = workbook.createStyle();
+		left.setHorizontalAlignment(TextAlignmentType.LEFT);
+
+		while (qr.hasMoreElements()) {
+			Object[] obj = (Object[]) qr.nextElement();
+			EPMDocument epm = (EPMDocument) obj[0];
+
+			Cell rowCell = worksheet.getCells().get(rowIndex, 0);
+			rowCell.setStyle(center);
+			rowCell.putValue(rowIndex);
+
+			Cell cadTypeCell = worksheet.getCells().get(rowIndex, 1);
+			cadTypeCell.setStyle(center);
+			cadTypeCell.putValue(epm.getDocType().getDisplay());
+
+			Cell numberCell = worksheet.getCells().get(rowIndex, 2);
+			numberCell.setStyle(center);
+			numberCell.putValue(epm.getNumber());
+
+			Cell nameCell = worksheet.getCells().get(rowIndex, 3);
+			nameCell.setStyle(left);
+			nameCell.putValue(epm.getName());
+
+			Cell locationCell = worksheet.getCells().get(rowIndex, 4);
+			locationCell.setStyle(center);
+			locationCell.putValue(epm.getLocation());
+
+			Cell revCell = worksheet.getCells().get(rowIndex, 5);
+			revCell.setStyle(center);
+			revCell.putValue(epm.getVersionIdentifier().getSeries().getValue() + "."
+					+ epm.getIterationIdentifier().getSeries().getValue());
+
+			Cell stateCell = worksheet.getCells().get(rowIndex, 6);
+			stateCell.setStyle(center);
+			stateCell.putValue(epm.getLifeCycleState().getDisplay());
+
+			Cell creatorCell = worksheet.getCells().get(rowIndex, 7);
+			creatorCell.setStyle(center);
+			creatorCell.putValue(epm.getCreatorFullName());
+
+			Cell createdDateCell = worksheet.getCells().get(rowIndex, 8);
+			createdDateCell.setStyle(center);
+			createdDateCell.putValue(epm.getCreateTimestamp().toString().substring(0, 10));
+
+			Cell modifyCell = worksheet.getCells().get(rowIndex, 9);
+			modifyCell.setStyle(center);
+			modifyCell.putValue(epm.getModifyTimestamp().toString().substring(0, 10));
+			rowIndex++;
+		}
+
+		String fullPath = path + "/도면 리스트.xlsx";
+		workbook.save(fullPath);
+		result.put("name", newFile.getName());
+		return result;
+	}
+
 }

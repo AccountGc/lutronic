@@ -148,7 +148,7 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 		<table class="button-table">
 			<tr>
 				<td class="left">
-					<img src="/Windchill/extcore/images/fileicon/file_excel.gif" title="엑셀 다운로드" onclick="exportExcel();">
+					<img src="/Windchill/extcore/images/fileicon/file_excel.gif" title="엑셀 다운로드" onclick="excel();">
 					<img src="/Windchill/extcore/images/save.gif" title="테이블 저장" onclick="saveColumnLayout('ecrm-list');">
 					<img src="/Windchill/extcore/images/redo.gif" title="테이블 초기화" onclick="resetColumnLayout('ecrm-list');">
 					<input type="button" value="등록" title="등록" class="blue" onclick="create();">
@@ -532,6 +532,28 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 			function exportExcel() {
 				const sessionName = document.getElementById("sessionName").value;
 				exportToExcel("ECRM 리스트", "ECRM", "ECRM 리스트", [], sessionName);
+			}
+			
+			function exportExcel() {
+				const sessionName = document.getElementById("sessionName").value;
+				exportToExcel("ECO 리스트", "ECO", "ECO 리스트", [], sessionName);
+			}
+			
+			function excel() {
+
+				if (!confirm("ECRM 리스트를 다운받습니다.")) {
+					return false;
+				}
+
+				const url = getCallUrl("/ecrm/excelList");
+				parent.openLayer();
+				call(url, null, function(data) {
+					if (data.result) {
+						const n = data.name;
+						document.location.href = '/Windchill/extcore/jsp/common/content/FileDownload.jsp?fileName=' + n + '&originFileName=' + n;
+					}
+					parent.closeLayer();
+				}, "GET");
 			}
 		</script>
 	</form>

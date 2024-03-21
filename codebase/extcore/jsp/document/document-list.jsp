@@ -179,7 +179,7 @@ ArrayList<Map<String, String>> classTypes1 = (ArrayList<Map<String, String>>) re
 		<table class="button-table">
 			<tr>
 				<td class="left">
-					<img src="/Windchill/extcore/images/fileicon/file_excel.gif" title="엑셀 다운로드" onclick="exportExcel();">
+					<img src="/Windchill/extcore/images/fileicon/file_excel.gif" title="엑셀 다운로드" onclick="excel();">
 					<img src="/Windchill/extcore/images/save.gif" title="테이블 저장" onclick="saveColumnLayout('document-list');">
 					<img src="/Windchill/extcore/images/redo.gif" title="테이블 초기화" onclick="resetColumnLayout('document-list');">
 				</td>
@@ -632,6 +632,28 @@ ArrayList<Map<String, String>> classTypes1 = (ArrayList<Map<String, String>>) re
 				const exceptColumnFields = [ "primary", "secondary" ];
 				const sessionName = document.getElementById("sessionName").value;
 				exportToExcel("문서 리스트", "문서", "문서 리스트", exceptColumnFields, sessionName);
+			}
+			
+			function exportExcel() {
+				const sessionName = document.getElementById("sessionName").value;
+				exportToExcel("ECO 리스트", "ECO", "ECO 리스트", [], sessionName);
+			}
+			
+			function excel() {
+
+				if (!confirm("문서 리스트를 다운받습니다.")) {
+					return false;
+				}
+
+				const url = getCallUrl("/doc/excelList");
+				parent.openLayer();
+				call(url, null, function(data) {
+					if (data.result) {
+						const n = data.name;
+						document.location.href = '/Windchill/extcore/jsp/common/content/FileDownload.jsp?fileName=' + n + '&originFileName=' + n;
+					}
+					parent.closeLayer();
+				}, "GET");
 			}
 
 			document.addEventListener("keydown", function(event) {

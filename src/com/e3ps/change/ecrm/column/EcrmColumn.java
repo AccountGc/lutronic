@@ -6,6 +6,7 @@ import com.e3ps.change.ECRMRequest;
 import com.e3ps.change.EChangeRequest;
 import com.e3ps.change.cr.service.CrHelper;
 import com.e3ps.change.ecpr.service.EcprHelper;
+import com.e3ps.change.ecrm.service.EcrmHelper;
 import com.e3ps.common.code.NumberCode;
 import com.e3ps.common.code.service.NumberCodeHelper;
 import com.e3ps.common.util.CommonUtil;
@@ -47,7 +48,7 @@ public class EcrmColumn {
 		setName(ecrm.getEoName());
 		setNumber(ecrm.getEoNumber());
 		setModel(CrHelper.manager.displayToModel(ecrm.getModel()));
-		setChangeSection(EcprHelper.manager.displayToSection(ecrm.getChangeSection()));
+		setChangeSection(EcrmHelper.manager.displayToSection(ecrm.getChangeSection()));
 		setCreateDepart(ecrm.getCreateDepart());
 		setWriter(ecrm.getWriter());
 		setWriteDate(ecrm.getCreateDate());

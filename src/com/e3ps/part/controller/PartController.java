@@ -57,6 +57,22 @@ import wt.vc.views.ViewHelper;
 @RequestMapping(value = "/part/**")
 public class PartController extends BaseController {
 
+	@Description(value = "품목 리스트 엑셀 다운로드")
+	@ResponseBody
+	@GetMapping(value = "/excelList")
+	public Map<String, Object> excelList() throws Exception {
+		Map<String, Object> result = new HashMap<>();
+		try {
+			result = PartHelper.manager.excelList();
+			result.put("result", SUCCESS);
+		} catch (Exception e) {
+			e.printStackTrace();
+			result.put("result", FAIL);
+			result.put("msg", e.toString());
+		}
+		return result;
+	}
+	
 	@Description(value = "MANUFACTURER 변경")
 	@ResponseBody
 	@PostMapping(value = "/_save")

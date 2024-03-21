@@ -37,6 +37,7 @@ import com.e3ps.change.ecpr.column.EcprColumn;
 import com.e3ps.change.eo.column.EoColumn;
 import com.e3ps.common.aspose.AsposeUtils;
 import com.e3ps.common.code.NumberCode;
+import com.e3ps.common.code.service.NumberCodeHelper;
 import com.e3ps.common.iba.IBAUtil;
 import com.e3ps.common.iba.IBAUtils;
 import com.e3ps.common.util.AUIGridUtil;
@@ -1248,6 +1249,104 @@ public class DocumentHelper {
 
 		DownloadHistoryHelper.service.create(oid, nn, "문서 첨부파일 일괄 다운로드");
 
+		return result;
+	}
+
+	public Map<String, Object> excelList() throws Exception {
+		Map<String, Object> result = new HashMap<>();
+
+		String wtHome = WTProperties.getServerProperties().getProperty("wt.home");
+		String path = WTProperties.getServerProperties().getProperty("wt.temp");
+
+		File orgFile = new File(wtHome + "/codebase/com/e3ps/doc/dto/doc_list.xlsx");
+
+		File newFile = CommonUtil.copyFile(orgFile, new File(path + "/문서 리스트.xlsx"));
+
+		Workbook workbook = new Workbook(newFile.getPath());
+		Worksheet worksheet = workbook.getWorksheets().get(0);
+		worksheet.setName("문서 리스트"); // 시트 이름
+
+		QuerySpec query = new QuerySpec();
+		int idx = query.appendClassList(WTDocument.class, true);
+
+		query.setAdvancedQueryEnabled(true);
+		query.setDescendantQuery(false);
+
+		if (query.getConditionCount() > 0) {
+			query.appendAnd();
+		}
+
+		query.appendOpenParen();
+		query.appendWhere(
+				new SearchCondition(WTDocument.class, WTDocument.DOC_TYPE, SearchCondition.NOT_EQUAL, "$$MMDocument"),
+				new int[] { idx });
+		query.appendAnd();
+		query.appendWhere(
+				new SearchCondition(WTDocument.class, WTDocument.DOC_TYPE, SearchCondition.NOT_EQUAL, "$$ROHS"),
+				new int[] { idx });
+		query.appendCloseParen();
+		QuerySpecUtils.toLatest(query, idx, WTDocument.class);
+		QuerySpecUtils.toOrderBy(query, idx, WTDocument.class, WTDocument.CREATE_TIMESTAMP, false);
+		QueryResult qr = PersistenceHelper.manager.find(query);
+
+		int rowIndex = 1;
+
+		Style center = workbook.createStyle();
+		center.setHorizontalAlignment(TextAlignmentType.CENTER);
+
+		Style left = workbook.createStyle();
+		left.setHorizontalAlignment(TextAlignmentType.LEFT);
+
+		while (qr.hasMoreElements()) {
+			Object[] obj = (Object[]) qr.nextElement();
+			WTDocument doc = (WTDocument) obj[0];
+
+			Cell rowCell = worksheet.getCells().get(rowIndex, 0);
+			rowCell.setStyle(center);
+			rowCell.putValue(rowIndex);
+
+			Cell numberCell = worksheet.getCells().get(rowIndex, 1);
+			numberCell.setStyle(center);
+			numberCell.putValue(doc.getNumber());
+
+			Cell nameCell = worksheet.getCells().get(rowIndex, 2);
+			nameCell.setStyle(left);
+			nameCell.putValue(doc.getName());
+
+			Cell projectCell = worksheet.getCells().get(rowIndex, 3);
+			projectCell.setStyle(left);
+			projectCell.putValue(IBAUtils.getStringValue(doc, "MODEL"));
+
+			Cell locationCell = worksheet.getCells().get(rowIndex, 4);
+			locationCell.setStyle(center);
+			locationCell.putValue(doc.getLocation());
+
+			Cell revCell = worksheet.getCells().get(rowIndex, 5);
+			revCell.setStyle(center);
+			revCell.putValue(doc.getVersionIdentifier().getSeries().getValue() + "."
+					+ doc.getIterationIdentifier().getSeries().getValue());
+
+			Cell stateCell = worksheet.getCells().get(rowIndex, 6);
+			stateCell.setStyle(center);
+			stateCell.putValue(doc.getLifeCycleState().getDisplay());
+
+			Cell creatorCell = worksheet.getCells().get(rowIndex, 7);
+			creatorCell.setStyle(center);
+			creatorCell.putValue(doc.getCreatorFullName());
+
+			Cell createdDateCell = worksheet.getCells().get(rowIndex, 8);
+			createdDateCell.setStyle(center);
+			createdDateCell.putValue(doc.getCreateTimestamp().toString().substring(0, 10));
+
+			Cell modifyCell = worksheet.getCells().get(rowIndex, 9);
+			modifyCell.setStyle(center);
+			modifyCell.putValue(doc.getModifyTimestamp().toString().substring(0, 10));
+			rowIndex++;
+		}
+
+		String fullPath = path + "/문서 리스트.xlsx";
+		workbook.save(fullPath);
+		result.put("name", newFile.getName());
 		return result;
 	}
 }

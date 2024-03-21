@@ -516,5 +516,21 @@ public class DocumentController extends BaseController {
 		}
 		return result;
 	}
+	
+	@Description(value = "문서 리스트 엑셀 다운로드")
+	@ResponseBody
+	@GetMapping(value = "/excelList")
+	public Map<String, Object> excelList() throws Exception {
+		Map<String, Object> result = new HashMap<>();
+		try {
+			result = DocumentHelper.manager.excelList();
+			result.put("result", SUCCESS);
+		} catch (Exception e) {
+			e.printStackTrace();
+			result.put("result", FAIL);
+			result.put("msg", e.toString());
+		}
+		return result;
+	}
 }
 

@@ -8,6 +8,7 @@ String oid = request.getParameter("oid");
 	<jsp:param value="view" name="mode" />
 	<jsp:param value="true" name="multi" />
 	<jsp:param value="false" name="header" />
+	<jsp:param value="rohs" name="type" />
 </jsp:include>
 
 

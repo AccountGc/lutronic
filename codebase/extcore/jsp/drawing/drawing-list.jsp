@@ -248,7 +248,7 @@ QuantityUnit[] unitList = (QuantityUnit[]) request.getAttribute("unitList");
 		<table class="button-table">
 			<tr>
 				<td class="left">
-					<img src="/Windchill/extcore/images/fileicon/file_excel.gif" title="엑셀 다운로드" onclick="exportExcel();">
+					<img src="/Windchill/extcore/images/fileicon/file_excel.gif" title="엑셀 다운로드" onclick="excel();">
 					<img src="/Windchill/extcore/images/save.gif" title="테이블 저장" onclick="saveColumnLayout('drawing-list');">
 					<img src="/Windchill/extcore/images/redo.gif" title="테이블 초기화" onclick="resetColumnLayout('drawing-list');">
 					<!-- 					<input type="button" value="일괄다운" title="일괄다운" class="blue" onclick="batch();"> -->
@@ -731,6 +731,28 @@ QuantityUnit[] unitList = (QuantityUnit[]) request.getAttribute("unitList");
 				} else {
 					return false;
 				}
+			}
+			
+			function exportExcel() {
+				const sessionName = document.getElementById("sessionName").value;
+				exportToExcel("ECO 리스트", "ECO", "ECO 리스트", [], sessionName);
+			}
+			
+			function excel() {
+
+				if (!confirm("도면 리스트를 다운받습니다.")) {
+					return false;
+				}
+
+				const url = getCallUrl("/drawing/excelList");
+				parent.openLayer();
+				call(url, null, function(data) {
+					if (data.result) {
+						const n = data.name;
+						document.location.href = '/Windchill/extcore/jsp/common/content/FileDownload.jsp?fileName=' + n + '&originFileName=' + n;
+					}
+					parent.closeLayer();
+				}, "GET");
 			}
 
 			function spread(target) {

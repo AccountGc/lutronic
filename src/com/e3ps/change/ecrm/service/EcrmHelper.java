@@ -7,6 +7,11 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.aspose.cells.Cell;
+import com.aspose.cells.Style;
+import com.aspose.cells.TextAlignmentType;
+import com.aspose.cells.Workbook;
+import com.aspose.cells.Worksheet;
 import com.e3ps.change.ECPRRequest;
 import com.e3ps.change.ECRMRequest;
 import com.e3ps.change.EChangeOrder;
@@ -20,11 +25,13 @@ import com.e3ps.change.eco.column.EcoColumn;
 import com.e3ps.change.ecrm.column.EcrmColumn;
 import com.e3ps.common.code.NumberCode;
 import com.e3ps.common.code.dto.NumberCodeDTO;
+import com.e3ps.common.code.service.NumberCodeHelper;
 import com.e3ps.common.util.AUIGridUtil;
 import com.e3ps.common.util.CommonUtil;
 import com.e3ps.common.util.DateUtil;
 import com.e3ps.common.util.PageQueryUtils;
 import com.e3ps.common.util.QuerySpecUtils;
+import com.e3ps.common.util.StringUtil;
 import com.e3ps.common.util.ZipUtil;
 import com.e3ps.doc.column.DocumentColumn;
 import com.e3ps.download.service.DownloadHistoryHelper;
@@ -383,5 +390,141 @@ public class EcrmHelper {
 		result.put("name", nn);
 		DownloadHistoryHelper.service.create(oid, nn, "ECRM 첨부파일 일괄 다운로드");
 		return result;
+	}
+
+	public Map<String, Object> excelList() throws Exception {
+		Map<String, Object> result = new HashMap<>();
+
+		String wtHome = WTProperties.getServerProperties().getProperty("wt.home");
+		String path = WTProperties.getServerProperties().getProperty("wt.temp");
+
+		File orgFile = new File(wtHome + "/codebase/com/e3ps/change/ecrm/dto/cr_list.xlsx");
+
+		File newFile = CommonUtil.copyFile(orgFile, new File(path + "/ECRM 리스트.xlsx"));
+
+		Workbook workbook = new Workbook(newFile.getPath());
+		Worksheet worksheet = workbook.getWorksheets().get(0);
+		worksheet.setName("ECRM 리스트"); // 시트 이름
+
+		QuerySpec query = new QuerySpec();
+		int idx = query.appendClassList(ECRMRequest.class, true);
+		QuerySpecUtils.toOrderBy(query, idx, ECRMRequest.class, ECRMRequest.CREATE_TIMESTAMP, false);
+		QueryResult qr = PersistenceHelper.manager.find(query);
+
+		int rowIndex = 1;
+
+		Style center = workbook.createStyle();
+		center.setHorizontalAlignment(TextAlignmentType.CENTER);
+
+		Style left = workbook.createStyle();
+		left.setHorizontalAlignment(TextAlignmentType.LEFT);
+
+		while (qr.hasMoreElements()) {
+			Object[] obj = (Object[]) qr.nextElement();
+			ECRMRequest ecrm = (ECRMRequest) obj[0];
+
+			Cell rowCell = worksheet.getCells().get(rowIndex, 0);
+			rowCell.setStyle(center);
+			rowCell.putValue(rowIndex);
+
+			Cell numberCell = worksheet.getCells().get(rowIndex, 1);
+			numberCell.setStyle(center);
+			numberCell.putValue(ecrm.getEoNumber());
+
+			Cell nameCell = worksheet.getCells().get(rowIndex, 2);
+			nameCell.setStyle(left);
+			nameCell.putValue(ecrm.getEoName());
+
+			Cell changeSectionCell = worksheet.getCells().get(rowIndex, 3);
+			changeSectionCell.setStyle(center);
+			changeSectionCell.putValue(EcrmHelper.manager.displayToSection(ecrm.getChangeSection()));
+
+			Cell projectCell = worksheet.getCells().get(rowIndex, 4);
+			projectCell.setStyle(left);
+
+			String display = "";
+			if (StringUtil.checkString(ecrm.getModel())) {
+				String[] ss = ecrm.getModel().split(",");
+				for (int i = 0; i < ss.length; i++) {
+					String s = ss[i];
+					if (s.length() > 0) {
+						if (ss.length - 1 == i) {
+							NumberCode n = NumberCodeHelper.manager.getNumberCode(s, "MODEL");
+							if (n != null) {
+								display += s + " [" + n.getName() + "]";
+							}
+						} else {
+							NumberCode n = NumberCodeHelper.manager.getNumberCode(s, "MODEL");
+							if (n != null) {
+								display += s + " [" + n.getName() + "], ";
+							}
+						}
+					}
+				}
+			}
+
+			projectCell.putValue(display);
+
+			NumberCode period = NumberCodeHelper.manager.getNumberCode(ecrm.getPeriod(), "PRESERATION");
+			if (period != null) {
+				Cell periodCell = worksheet.getCells().get(rowIndex, 5);
+				periodCell.setStyle(center);
+				periodCell.putValue(period.getName());
+			}
+
+			Cell departCell = worksheet.getCells().get(rowIndex, 6);
+			departCell.setStyle(center);
+			departCell.putValue(ecrm.getCreateDepart());
+
+			Cell writerCell = worksheet.getCells().get(rowIndex, 7);
+			writerCell.setStyle(center);
+			writerCell.putValue(ecrm.getWriter());
+
+			Cell writeDateCell = worksheet.getCells().get(rowIndex, 8);
+			writeDateCell.setStyle(center);
+			writeDateCell.putValue(ecrm.getCreateDate());
+
+			Cell stateCell = worksheet.getCells().get(rowIndex, 9);
+			stateCell.setStyle(center);
+			stateCell.putValue(ecrm.getLifeCycleState().getDisplay());
+
+			Cell creatorCell = worksheet.getCells().get(rowIndex, 10);
+			creatorCell.setStyle(center);
+			creatorCell.putValue(ecrm.getCreatorFullName());
+
+			Cell createdDateCell = worksheet.getCells().get(rowIndex, 11);
+			createdDateCell.setStyle(center);
+			createdDateCell.putValue(ecrm.getCreateTimestamp().toString().substring(0, 10));
+
+			Cell approveDateCell = worksheet.getCells().get(rowIndex, 12);
+			approveDateCell.setStyle(center);
+			approveDateCell.putValue(ecrm.getEoApproveDate());
+
+			rowIndex++;
+		}
+
+		String fullPath = path + "/ECRM 리스트.xlsx";
+		workbook.save(fullPath);
+		result.put("name", newFile.getName());
+		return result;
+	}
+
+	/**
+	 * 변경구분 복수개로 인해서 처리 하는 함수
+	 */
+	public String displayToSection(String section) throws Exception {
+		String display = "";
+		if (section != null) {
+			String[] ss = section.split(",");
+			for (int i = 0; i < ss.length; i++) {
+				String s = ss[i];
+				if (ss.length - 1 == i) {
+					display += NumberCodeHelper.manager.getNumberCodeName(s, "CHANGESECTION");
+				} else {
+					display += NumberCodeHelper.manager.getNumberCodeName(s, "CHANGESECTION") + ",";
+				}
+			}
+		}
+		return display;
 	}
 }
