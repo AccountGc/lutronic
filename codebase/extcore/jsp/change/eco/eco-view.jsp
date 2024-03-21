@@ -405,7 +405,6 @@ Map<String, Object> contentMap = dto.getContentMap();
 			}
 		}, "GET");
 	}
-	}
 	
 	function sync() {
 		if (!confirm("프로젝트 코드를 동기화 하시겠습니까?")) {
