@@ -8,6 +8,10 @@
 <%@page import="com.e3ps.part.dto.PartDTO"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%
+String type = request.getParameter("type");
+if(!StringUtil.checkString(type)) {
+	type = "rohs";
+}
 String oid = request.getParameter("oid");
 String mode = request.getParameter("mode");
 boolean multi = Boolean.parseBoolean(request.getParameter("multi"));
@@ -149,7 +153,7 @@ if (header) {
 		}
 		myGridID91 = AUIGrid.create("#grid91", columnLayout, props);
 		<%if (view || update) {%>
-		AUIGrid.setGridData(myGridID91, <%=AUIGridUtil.include(oid, "doc")%>);
+		AUIGrid.setGridData(myGridID91, <%=AUIGridUtil.include(oid, "<%=type%>")%>);
 		<%}%>
 	}
 
