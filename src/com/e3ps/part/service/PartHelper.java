@@ -1750,7 +1750,7 @@ public class PartHelper {
 		String wtHome = WTProperties.getServerProperties().getProperty("wt.home");
 		String path = WTProperties.getServerProperties().getProperty("wt.temp");
 
-		File orgFile = new File(wtHome + "/codebase/com/e3ps/part/dto/doc_list.xlsx");
+		File orgFile = new File(wtHome + "/codebase/com/e3ps/part/dto/part_list.xlsx");
 
 		File newFile = CommonUtil.copyFile(orgFile, new File(path + "/품목 리스트.xlsx"));
 
