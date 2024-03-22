@@ -1691,14 +1691,15 @@ public class BomHelper {
 		headerCell.putValue(root.getNumber() + "_BOM 리스트");
 
 		int rowIndex = 4;
-
+		int idx = 1;
 		for (BomColumn dd : list) {
 
 			String[] endRtn = getDwgInfo(dd.getPart());
 
 			Cell rowCell = worksheet.getCells().get(rowIndex, 0);
 			rowCell.setStyle(center);
-			rowCell.putValue(rowIndex);
+			rowCell.putValue(idx);
+			idx++;
 
 			String _3dPath = get3DPath(dd.getPart());
 
@@ -1842,7 +1843,7 @@ public class BomHelper {
 		Representation representation = PublishUtils.getRepresentation(epm);
 		if (representation != null) {
 			QueryResult result = ContentHelper.service.getContentsByRole(representation,
-					ContentRoleType.THUMBNAIL_SMALL);
+					ContentRoleType.THUMBNAIL);
 			if (result.hasMoreElements()) {
 				ApplicationData data = (ApplicationData) result.nextElement();
 				byte[] buffer = new byte[10240];
@@ -1903,12 +1904,13 @@ public class BomHelper {
 		headerCell.putValue(root.getNumber() + "_BOM 리스트");
 
 		int rowIndex = 4;
-
+		int idx = 1;
 		for (BomColumn dd : list) {
 
 			Cell rowCell = worksheet.getCells().get(rowIndex, 0);
 			rowCell.setStyle(center);
-			rowCell.putValue(rowIndex);
+			rowCell.putValue(idx);
+			idx++;
 
 			Cell levelCell = worksheet.getCells().get(rowIndex, 1);
 			levelCell.setStyle(center);
