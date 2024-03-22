@@ -1826,7 +1826,7 @@ public class BomHelper {
 		File file = null;
 		Representation representation = PublishUtils.getRepresentation(part);
 		if (representation != null) {
-			QueryResult result = ContentHelper.service.getContentsByRole(representation, ContentRoleType.THUMBNAIL3D);
+			QueryResult result = ContentHelper.service.getContentsByRole(representation, ContentRoleType.THUMBNAIL);
 			if (result.hasMoreElements()) {
 				ApplicationData data = (ApplicationData) result.nextElement();
 				byte[] buffer = new byte[10240];
