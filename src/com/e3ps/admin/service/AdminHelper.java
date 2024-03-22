@@ -90,8 +90,15 @@ public class AdminHelper {
 		if (type != null && type.trim().length() > 0) {
 			if (qs.getConditionCount() > 0)
 				qs.appendAnd();
-			qs.appendWhere(new SearchCondition(DownloadHistory.class, "persistReference.key.classname",
-					SearchCondition.EQUAL, type), new int[] { idx });
+
+			if (!"도면일괄 다운로드".equals(type)) {
+				qs.appendWhere(new SearchCondition(DownloadHistory.class, "persistReference.key.classname",
+						SearchCondition.EQUAL, type), new int[] { idx });
+			} else {
+				qs.appendWhere(new SearchCondition(DownloadHistory.class, DownloadHistory.NAME, SearchCondition.LIKE,
+						"%" + type + "%"), new int[] { idx });
+			}
+
 		}
 
 		if (userId.length() > 0) {
@@ -118,6 +125,8 @@ public class AdminHelper {
 		}
 		qs.appendOrderBy(new OrderBy(new ClassAttribute(DownloadHistory.class, "thePersistInfo.updateStamp"), true),
 				new int[] { idx });
+
+		System.out.println("qs=" + qs);
 
 		PageQueryUtils pager = new PageQueryUtils(params, qs);
 		PagingQueryResult result = pager.find();

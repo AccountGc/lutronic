@@ -32,7 +32,7 @@ import wt.util.WTException;
 
 				@GeneratedForeignKey(name = "HistoryUserLink", myRoleIsRoleA = false, foreignKeyRole = @ForeignKeyRole(name = "user", type = WTUser.class, constraints = @PropertyConstraints(required = true)), myRole = @MyRole(name = "history", cardinality = Cardinality.ONE)),
 
-				@GeneratedForeignKey(name = "PersistHistoryLink", myRoleIsRoleA = false, foreignKeyRole = @ForeignKeyRole(name = "persist", type = Persistable.class, constraints = @PropertyConstraints(required = true)), myRole = @MyRole(name = "history", cardinality = Cardinality.ONE)), }
+				@GeneratedForeignKey(name = "PersistHistoryLink", myRoleIsRoleA = false, foreignKeyRole = @ForeignKeyRole(name = "persist", type = Persistable.class, constraints = @PropertyConstraints(required = false)), myRole = @MyRole(name = "history", cardinality = Cardinality.ONE)), }
 
 )
 public class DownloadHistory extends _DownloadHistory {

@@ -87,11 +87,11 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 			</colgroup>
 			<tr>
 				<td valign="top">
-					<div id="grid_type" style="height: 675px; border-top: 1px solid #3180c3;"></div>
+					<div id="grid_type" style="height: 695px; border-top: 1px solid #3180c3;"></div>
 				</td>
 				<td valign="top">&nbsp;</td>
 				<td valign="top">
-					<div id="grid_wrap" style="height: 640px; border-top: 1px solid #3180c3;"></div>
+					<div id="grid_wrap" style="height: 660px; border-top: 1px solid #3180c3;"></div>
 					<div id="grid_paging" class="aui-grid-paging-panel my-grid-paging-panel"></div>
 					<%@include file="/extcore/jsp/common/aui-context.jsp"%>
 				</td>
@@ -108,7 +108,7 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 					filter : {
 						inline : false
 					},
-				},{
+				}, {
 					dataField : "userName",
 					headerText : "이름",
 					dataType : "string",
@@ -135,15 +135,15 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 						showIcon : true,
 						inline : true
 					},
-				}, {
-					dataField : "cnt",
-					headerText : "다운횟수",
-					dataType : "string",
-					width : 120,
-					filter : {
-						showIcon : true,
-						inline : true
-					},
+				// 				}, {
+				// 					dataField : "cnt",
+				// 					headerText : "다운횟수",
+				// 					dataType : "string",
+				// 					width : 120,
+				// 					filter : {
+				// 						showIcon : true,
+				// 						inline : true
+				// 					},
 				}, {
 					dataField : "createdDate_txt",
 					headerText : "다운시간",
@@ -168,7 +168,7 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 				const props = {
 					headerHeight : 30,
 					showRowNumColumn : false,
-					showRowCheckColumn : true,
+					// 					showRowCheckColumn : true,
 					rowNumHeaderText : "번호",
 					showAutoNoDataMessage : false,
 					selectionMode : "multipleCells",
@@ -193,7 +193,7 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 				});
 				AUIGrid.bind(myGridID, "sorting", auiSortingHandler);
 			}
-			
+
 			let sortCache = [];
 			let compField;
 			function auiSortingHandler(event) {
@@ -223,6 +223,7 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 				}
 				var url = getCallUrl("/admin/downLoadHistory");
 				parent.openLayer();
+				logger(params);
 				call(url, params, function(data) {
 					if (data.result) {
 						totalPage = Math.ceil(data.total / data.pageSize);
@@ -291,14 +292,16 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 							gotoView('wt.part.WTPart');
 						} else if (menuType == 'CR') {
 							gotoView('com.e3ps.change.EChangeRequest');
-						} else if(menuType == 'EO/ECO') {
+						} else if (menuType == 'EO/ECO') {
 							gotoView('com.e3ps.change.EChangeOrder');
-						} else if(menuType == 'ECPR') {
+						} else if (menuType == 'ECPR') {
 							gotoView('com.e3ps.change.ECPRRequest');
-						} else if(menuType == 'ECRM') {
+						} else if (menuType == 'ECRM') {
 							gotoView('com.e3ps.change.ECRMRequest');
 						} else if (menuType == '문서관리') {
 							gotoView('wt.doc.WTDocument');
+						} else if(menuType == '도면일괄 다운로드') {
+							gotoView('도면일괄 다운로드');
 						}
 					}
 				},
@@ -330,6 +333,8 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 					"menuType" : "ECRM"
 				}, {
 					"menuType" : "문서관리"
+				}, {
+					"menuType" : "도면일괄 다운로드"
 				} ];
 
 				AUIGrid.setGridData(typeGridID, typeList);

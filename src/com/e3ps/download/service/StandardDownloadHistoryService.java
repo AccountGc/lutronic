@@ -66,7 +66,11 @@ public class StandardDownloadHistoryService extends StandardManager implements D
 			DownloadHistory history = DownloadHistory.newDownloadHistory();
 			WTUser user = CommonUtil.sessionUser();
 			history.setName(name + " [" + message + "]");
-			history.setPersist(per);
+			if ("도면일괄 다운로드".equals(message)) {
+				history.setPersist(null);
+			} else {
+				history.setPersist(per);
+			}
 			history.setCnt(1);
 			history.setUser(user);
 			PersistenceHelper.manager.save(history);

@@ -5,7 +5,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 import com.e3ps.common.util.CommonUtil;
-import com.e3ps.common.util.QuerySpecUtils;
 import com.e3ps.common.util.WCUtil;
 
 import net.sf.json.JSONObject;
@@ -15,7 +14,6 @@ import wt.enterprise.CopyObjectInfo;
 import wt.enterprise.EnterpriseHelper;
 import wt.enterprise.RevisionControlled;
 import wt.fc.PersistenceHelper;
-import wt.fc.QueryResult;
 import wt.folder.Folder;
 import wt.folder.FolderEntry;
 import wt.folder.FolderHelper;
@@ -25,7 +23,6 @@ import wt.part.WTPart;
 import wt.part.WTPartMaster;
 import wt.part.WTPartUsageLink;
 import wt.pom.Transaction;
-import wt.query.QuerySpec;
 import wt.services.StandardManager;
 import wt.util.WTException;
 import wt.vc.wip.CheckoutLink;

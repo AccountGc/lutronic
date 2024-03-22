@@ -1643,7 +1643,7 @@ public class BomHelper {
 
 		result.put("name", nn);
 
-		DownloadHistoryHelper.service.create(oid, nn, n + "도면 일괄 다운로드");
+		DownloadHistoryHelper.service.create(oid, nn, n + "도면일괄 다운로드");
 
 		return result;
 	}
