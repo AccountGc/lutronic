@@ -1831,9 +1831,8 @@ public class BomHelper {
 
 	private String get2DPath(String oid) throws Exception {
 
-		String signPath = WTProperties.getLocalProperties().getProperty("wt.temp") + File.separator + "sign";
+		String signPath = WTProperties.getLocalProperties().getProperty("wt.temp") + File.separator + "bom";
 		File f = new File(signPath);
-		File file = null;
 		if (!f.exists()) {
 			f.mkdirs();
 		}
@@ -1848,7 +1847,7 @@ public class BomHelper {
 				ApplicationData data = (ApplicationData) result.nextElement();
 				byte[] buffer = new byte[10240];
 				InputStream is = ContentServerHelper.service.findLocalContentStream(data);
-				file = new File(signPath + File.separator + id + ".png");
+				file = new File(signPath + File.separator + epm.getNumber() + ".png");
 				FileOutputStream fos = new FileOutputStream(file);
 				int j = 0;
 				while ((j = is.read(buffer, 0, 10240)) > 0) {
