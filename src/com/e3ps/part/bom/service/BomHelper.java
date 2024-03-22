@@ -9,7 +9,10 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.regex.Pattern;
 
+import com.aspose.cells.BackgroundType;
 import com.aspose.cells.Cell;
+import com.aspose.cells.Color;
+import com.aspose.cells.Font;
 import com.aspose.cells.Picture;
 import com.aspose.cells.PlacementType;
 import com.aspose.cells.Style;
@@ -32,6 +35,7 @@ import com.e3ps.org.service.OrgHelper;
 import com.e3ps.part.bom.column.BomColumn;
 import com.e3ps.part.bom.util.BomComparator;
 import com.e3ps.part.service.PartHelper;
+import com.ptc.wvs.server.util.FileHelper;
 import com.ptc.wvs.server.util.PublishUtils;
 
 import net.sf.json.JSONArray;
@@ -58,6 +62,7 @@ import wt.part.WTPartUsageLink;
 import wt.query.ClassAttribute;
 import wt.query.QuerySpec;
 import wt.query.SearchCondition;
+import wt.representation.Representable;
 import wt.representation.Representation;
 import wt.services.ServiceFactory;
 import wt.session.SessionHelper;
@@ -1666,22 +1671,36 @@ public class BomHelper {
 		Style center = workbook.createStyle();
 		center.setHorizontalAlignment(TextAlignmentType.CENTER);
 
+		Style headerStyle = workbook.createStyle();
+		headerStyle.setHorizontalAlignment(TextAlignmentType.CENTER);
+		headerStyle.setForegroundColor(Color.getLightBlue());
+		headerStyle.setPattern(BackgroundType.SOLID);
+
+		Font font = headerStyle.getFont();
+		font.setSize(25);
+		font.setBold(true);
+
 		Style left = workbook.createStyle();
 		left.setHorizontalAlignment(TextAlignmentType.LEFT);
 
 		ArrayList<BomColumn> list = descendants(root);
 
 		Cell headerCell = worksheet.getCells().get(0, 0);
-		headerCell.setStyle(center);
-		headerCell.putValue(root.getNumber());
+		worksheet.getCells().setRowHeight(0, 50);
+		headerCell.setStyle(headerStyle);
+		headerCell.putValue(root.getNumber() + "_BOM 리스트");
 
 		int rowIndex = 4;
 
 		for (BomColumn dd : list) {
 
+			String[] endRtn = getDwgInfo(dd.getPart());
+
 			Cell rowCell = worksheet.getCells().get(rowIndex, 0);
 			rowCell.setStyle(center);
 			rowCell.putValue(rowIndex);
+
+			String _3dPath = get3DPath(dd.getPart());
 
 			Cell _3dCell = worksheet.getCells().get(rowIndex, 1);
 			_3dCell.setStyle(center);
@@ -1710,9 +1729,28 @@ public class BomHelper {
 ////				picture.setUpperDeltaY(deltaY);
 //			}
 
-			Cell _2dCell = worksheet.getCells().get(rowIndex, 2);
-			_2dCell.setStyle(center);
-			_2dCell.putValue("");
+			if (endRtn[1] != null) {
+				String _2dPath = get2DPath(endRtn[1]);
+				if (_2dPath != null) {
+					int picIndex = worksheet.getPictures().add(rowIndex, 2, _2dPath);
+					Picture picture = worksheet.getPictures().get(picIndex);
+					picture.setHeightCM(1);
+					picture.setWidthCM(1);
+					picture.setAutoSize(true);
+
+					int cellColumnIndex = 2; // Specify the column index of the cell
+					int cellWidth = worksheet.getCells().getColumnWidthPixel(cellColumnIndex);
+					int imageWidth = (int) picture.getWidthInch() * 96; // Convert width from cm to pixels
+					int deltaX = (cellWidth - imageWidth) / 2;
+					picture.setPlacement(PlacementType.FREE_FLOATING);
+					picture.setUpperDeltaX(deltaX);
+				}
+
+			} else {
+				Cell _2dCell = worksheet.getCells().get(rowIndex, 2);
+				_2dCell.setStyle(center);
+				_2dCell.putValue("");
+			}
 
 			Cell levelCell = worksheet.getCells().get(rowIndex, 3);
 			levelCell.setStyle(center);
@@ -1721,8 +1759,6 @@ public class BomHelper {
 			Cell numberCell = worksheet.getCells().get(rowIndex, 4);
 			numberCell.setStyle(center);
 			numberCell.putValue(dd.getNumber());
-
-			String[] endRtn = getDwgInfo(dd.getPart());
 
 			Cell dwgNoCell = worksheet.getCells().get(rowIndex, 5);
 			dwgNoCell.setStyle(center);
@@ -1788,6 +1824,46 @@ public class BomHelper {
 		return result;
 	}
 
+	private String get3DPath(WTPart part) throws Exception {
+
+		return null;
+	}
+
+	private String get2DPath(String oid) throws Exception {
+
+		String signPath = WTProperties.getLocalProperties().getProperty("wt.temp") + File.separator + "sign";
+		File f = new File(signPath);
+		File file = null;
+		if (!f.exists()) {
+			f.mkdirs();
+		}
+
+		EPMDocument epm = (EPMDocument) CommonUtil.getObject(oid);
+		File file = null;
+		Representation representation = PublishUtils.getRepresentation(epm);
+		if (representation != null) {
+			QueryResult result = ContentHelper.service.getContentsByRole(representation,
+					ContentRoleType.THUMBNAIL_SMALL);
+			if (result.hasMoreElements()) {
+				ApplicationData data = (ApplicationData) result.nextElement();
+				byte[] buffer = new byte[10240];
+				InputStream is = ContentServerHelper.service.findLocalContentStream(data);
+				file = new File(signPath + File.separator + id + ".png");
+				FileOutputStream fos = new FileOutputStream(file);
+				int j = 0;
+				while ((j = is.read(buffer, 0, 10240)) > 0) {
+					fos.write(buffer, 0, j);
+				}
+				fos.close();
+				is.close();
+			}
+		}
+		if (file == null) {
+			return null;
+		}
+		return file.getPath();
+	}
+
 	public Map<String, Object> nonViewList(String oid) throws Exception {
 		long start = System.currentTimeMillis() / 1000;
 		System.out.println("BOM 시작 = " + start);
@@ -1805,6 +1881,15 @@ public class BomHelper {
 		Worksheet worksheet = workbook.getWorksheets().get(0);
 		worksheet.setName(root.getNumber() + "_BOM_리스트"); // 시트 이름
 
+		Style headerStyle = workbook.createStyle();
+		headerStyle.setHorizontalAlignment(TextAlignmentType.CENTER);
+		headerStyle.setForegroundColor(Color.getLightBlue());
+		headerStyle.setPattern(BackgroundType.SOLID);
+
+		Font font = headerStyle.getFont();
+		font.setSize(25);
+		font.setBold(true);
+
 		Style center = workbook.createStyle();
 		center.setHorizontalAlignment(TextAlignmentType.CENTER);
 
@@ -1814,8 +1899,9 @@ public class BomHelper {
 		ArrayList<BomColumn> list = descendants(root);
 
 		Cell headerCell = worksheet.getCells().get(0, 0);
-		headerCell.setStyle(center);
-		headerCell.putValue(root.getNumber());
+		worksheet.getCells().setRowHeight(0, 50);
+		headerCell.setStyle(headerStyle);
+		headerCell.putValue(root.getNumber() + "_BOM 리스트");
 
 		int rowIndex = 4;
 

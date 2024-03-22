@@ -1970,8 +1970,9 @@ public class EcoHelper {
 
 		if ("E".equals(r_type)) {
 			rs.put("isValidate", false);
-			rs.put("r_msg", r_msg);
-			throw new Exception("SAP 검증 에러 : " + r_msg);
+			rs.put("r_msg", "SAP 검증 에러 : " + r_msg);
+			return rs;
+//			throw new Exception("SAP 검증 에러 : " + r_msg);
 		} else {
 			rs.put("isValidate", true);
 		}
