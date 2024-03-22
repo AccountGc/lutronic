@@ -1646,7 +1646,9 @@ public class BomHelper {
 		return result;
 	}
 
-	public Map<String, Object> excelList(String oid) throws Exception {
+	public Map<String, Object> viewList(String oid) throws Exception {
+		long start = System.currentTimeMillis() / 1000;
+		System.out.println("BOM(뷰) 시작 = " + start);
 		Map<String, Object> result = new HashMap<>();
 
 		WTPart root = (WTPart) CommonUtil.getObject(oid);
@@ -1661,8 +1663,6 @@ public class BomHelper {
 		Worksheet worksheet = workbook.getWorksheets().get(0);
 		worksheet.setName(root.getNumber() + "_BOM_리스트"); // 시트 이름
 
-		int rowIndex = 4;
-
 		Style center = workbook.createStyle();
 		center.setHorizontalAlignment(TextAlignmentType.CENTER);
 
@@ -1675,6 +1675,8 @@ public class BomHelper {
 		headerCell.setStyle(center);
 		headerCell.putValue(root.getNumber());
 
+		int rowIndex = 4;
+
 		for (BomColumn dd : list) {
 
 			Cell rowCell = worksheet.getCells().get(rowIndex, 0);
@@ -1684,7 +1686,7 @@ public class BomHelper {
 			Cell _3dCell = worksheet.getCells().get(rowIndex, 1);
 			_3dCell.setStyle(center);
 			_3dCell.putValue("");
-			
+
 //			String signPath = OrgHelper.manager.getSignPath(eco.getCreatorName());
 //			if (signPath != null) {
 //				int picIndex = worksheet.getPictures().add(15, 8, signPath);
@@ -1707,8 +1709,6 @@ public class BomHelper {
 //				picture.setUpperDeltaX(deltaX);
 ////				picture.setUpperDeltaY(deltaY);
 //			}
-			
-			
 
 			Cell _2dCell = worksheet.getCells().get(rowIndex, 2);
 			_2dCell.setStyle(center);
@@ -1783,6 +1783,119 @@ public class BomHelper {
 		String fullPath = path + "/" + root.getNumber() + "_BOM_리스트.xlsx";
 		workbook.save(fullPath);
 		result.put("name", newFile.getName());
+		long end = System.currentTimeMillis() / 1000;
+		System.out.println("BOM(뷰) 종료 = " + end + ", 걸린 시간 = " + (end - start));
+		return result;
+	}
+
+	public Map<String, Object> nonViewList(String oid) throws Exception {
+		long start = System.currentTimeMillis() / 1000;
+		System.out.println("BOM 시작 = " + start);
+		Map<String, Object> result = new HashMap<>();
+
+		WTPart root = (WTPart) CommonUtil.getObject(oid);
+		String wtHome = WTProperties.getServerProperties().getProperty("wt.home");
+		String path = WTProperties.getServerProperties().getProperty("wt.temp");
+
+		File orgFile = new File(wtHome + "/codebase/com/e3ps/part/bom/column/bom_non_list.xlsx");
+
+		File newFile = CommonUtil.copyFile(orgFile, new File(path + "/" + root.getNumber() + "_BOM_리스트.xlsx"));
+
+		Workbook workbook = new Workbook(newFile.getPath());
+		Worksheet worksheet = workbook.getWorksheets().get(0);
+		worksheet.setName(root.getNumber() + "_BOM_리스트"); // 시트 이름
+
+		Style center = workbook.createStyle();
+		center.setHorizontalAlignment(TextAlignmentType.CENTER);
+
+		Style left = workbook.createStyle();
+		left.setHorizontalAlignment(TextAlignmentType.LEFT);
+
+		ArrayList<BomColumn> list = descendants(root);
+
+		Cell headerCell = worksheet.getCells().get(0, 0);
+		headerCell.setStyle(center);
+		headerCell.putValue(root.getNumber());
+
+		int rowIndex = 4;
+
+		for (BomColumn dd : list) {
+
+			Cell rowCell = worksheet.getCells().get(rowIndex, 0);
+			rowCell.setStyle(center);
+			rowCell.putValue(rowIndex);
+
+			Cell levelCell = worksheet.getCells().get(rowIndex, 1);
+			levelCell.setStyle(center);
+			levelCell.putValue(dd.getLevel());
+
+			Cell numberCell = worksheet.getCells().get(rowIndex, 2);
+			numberCell.setStyle(center);
+			numberCell.putValue(dd.getNumber());
+
+			String[] endRtn = getDwgInfo(dd.getPart());
+
+			Cell dwgNoCell = worksheet.getCells().get(rowIndex, 3);
+			dwgNoCell.setStyle(center);
+			dwgNoCell.putValue(endRtn[0]);
+
+			Cell nameCell = worksheet.getCells().get(rowIndex, 4);
+			left.setIndentLevel(dd.getLevel());
+			nameCell.setStyle(left);
+			nameCell.putValue(dd.getName());
+
+			Cell revCell = worksheet.getCells().get(rowIndex, 5);
+			revCell.setStyle(center);
+			revCell.putValue(dd.getRev());
+
+			Cell oemCell = worksheet.getCells().get(rowIndex, 6);
+			oemCell.setStyle(center);
+			oemCell.putValue(dd.getOemInfo());
+
+			Cell stateCell = worksheet.getCells().get(rowIndex, 7);
+			stateCell.setStyle(center);
+			stateCell.putValue(dd.getState());
+
+			Cell modifierCell = worksheet.getCells().get(rowIndex, 8);
+			modifierCell.setStyle(center);
+			modifierCell.putValue(dd.getModifier());
+
+			Cell specCell = worksheet.getCells().get(rowIndex, 9);
+			specCell.setStyle(center);
+			specCell.putValue(dd.getSpec());
+
+			Cell qtyCell = worksheet.getCells().get(rowIndex, 10);
+			qtyCell.setStyle(center);
+			qtyCell.putValue(dd.getQty() + "개");
+
+			Cell ecoCell = worksheet.getCells().get(rowIndex, 11);
+			ecoCell.setStyle(center);
+			ecoCell.putValue(dd.getEcoNo());
+
+			Cell projectCell = worksheet.getCells().get(rowIndex, 12);
+			projectCell.setStyle(center);
+			projectCell.putValue(dd.getProjectCode());
+
+			Cell deptCell = worksheet.getCells().get(rowIndex, 13);
+			deptCell.setStyle(center);
+			deptCell.putValue(dd.getDept());
+
+			Cell manuCell = worksheet.getCells().get(rowIndex, 14);
+			manuCell.setStyle(center);
+			manuCell.putValue(dd.getManufacture());
+
+			Cell methodCell = worksheet.getCells().get(rowIndex, 15);
+			methodCell.setStyle(center);
+			methodCell.putValue(dd.getMethod());
+
+			rowIndex++;
+		}
+
+		String fullPath = path + "/" + root.getNumber() + "_BOM_리스트.xlsx";
+		workbook.save(fullPath);
+		result.put("name", newFile.getName());
+		long end = System.currentTimeMillis() / 1000;
+		System.out.println("BOM 종료 = " + end + ", 걸린 시간 = " + (end - start));
 		return result;
 	}
 

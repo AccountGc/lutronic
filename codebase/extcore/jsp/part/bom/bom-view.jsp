@@ -99,12 +99,12 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 			<font color="red">
 				<b>썸네일(X)</b>
 			</font>
-			<img src="/Windchill/extcore/images/fileicon/file_excel.gif" title="엑셀 다운로드" onclick="exportExcel();">
+			<img src="/Windchill/extcore/images/fileicon/file_excel.gif" title="엑셀 다운로드" onclick="excel('false');">
 			&nbsp;&nbsp;&nbsp;
 			<font color="blue">
 				<b>썸네일(O)</b>
 			</font>
-			<img src="/Windchill/extcore/images/fileicon/file_excel.gif" title="엑셀 다운로드" onclick="excel();">
+			<img src="/Windchill/extcore/images/fileicon/file_excel.gif" title="엑셀 다운로드" onclick="excel('true');">
 		</td>
 		<td class="right">
 			<select name="baseline" id="baseline" class="AXSelect width-150" onchange="reloadTree();">
@@ -644,14 +644,14 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 		_popup(url, 500, 350, "n");
 	}
 
-	function excel() {
+	function excel(isView) {
 
-		if (!confirm("BOM 엑셀(뷰포함) 리스트를 다운받습니다.")) {
+		if (!confirm("BOM 엑셀 리스트를 다운받습니다.")) {
 			return false;
 		}
 
 		const oid = document.getElementById("oid").value;
-		const url = getCallUrl("/bom/excelList?oid=" + oid);
+		const url = getCallUrl("/bom/excelList?oid=" + oid + "&isView=" + isView);
 		parent.openLayer();
 		call(url, null, function(data) {
 			if (data.result) {
