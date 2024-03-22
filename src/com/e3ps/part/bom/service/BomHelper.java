@@ -1702,33 +1702,20 @@ public class BomHelper {
 			idx++;
 
 			String _3dPath = get3DPath(dd.getPart());
+			if (_3dPath != null) {
+				int picIndex = worksheet.getPictures().add(rowIndex, 1, _3dPath);
+				Picture picture = worksheet.getPictures().get(picIndex);
+				picture.setHeightCM(1);
+				picture.setWidthCM(1);
+				picture.setAutoSize(true);
 
-			Cell _3dCell = worksheet.getCells().get(rowIndex, 1);
-			_3dCell.setStyle(center);
-			_3dCell.putValue("");
-
-//			String signPath = OrgHelper.manager.getSignPath(eco.getCreatorName());
-//			if (signPath != null) {
-//				int picIndex = worksheet.getPictures().add(15, 8, signPath);
-//				Picture picture = worksheet.getPictures().get(picIndex);
-//				picture.setHeightCM(2.5);
-//				picture.setWidthCM(2.5);
-//				picture.setAutoSize(true);
-//
-//				int cellRowIndex = 15; // Specify the row index of the cell
-//				int cellColumnIndex = 8; // Specify the column index of the cell
-//				int cellWidth = worksheet.getCells().getColumnWidthPixel(cellColumnIndex);
-//				int cellHeight = worksheet.getCells().getRowHeightPixel(cellRowIndex);
-//				int imageWidth = (int) picture.getWidthInch() * 96; // Convert width from cm to pixels
-//				int imageHeight = (int) picture.getHeightInch() * 96; // Convert height from cm to pixels
-//
-//				int deltaX = (cellWidth - imageWidth) / 2;
-////				int deltaY = (cellHeight - imageHeight) / 2;
-//
-//				picture.setPlacement(PlacementType.FREE_FLOATING);
-//				picture.setUpperDeltaX(deltaX);
-////				picture.setUpperDeltaY(deltaY);
-//			}
+				int cellColumnIndex = 1; // Specify the column index of the cell
+				int cellWidth = worksheet.getCells().getColumnWidthPixel(cellColumnIndex);
+				int imageWidth = (int) picture.getWidthInch() * 96; // Convert width from cm to pixels
+				int deltaX = (cellWidth - imageWidth) / 2;
+				picture.setPlacement(PlacementType.FREE_FLOATING);
+				picture.setUpperDeltaX(deltaX);
+			}
 
 			if (endRtn[1] != null) {
 				String _2dPath = get2DPath(endRtn[1]);
@@ -1825,14 +1812,51 @@ public class BomHelper {
 		return result;
 	}
 
+	/**
+	 * 3D 썸네일 경로
+	 */
 	private String get3DPath(WTPart part) throws Exception {
 
-		return null;
+		String signPath = WTProperties.getLocalProperties().getProperty("wt.temp") + File.separator + "bom3d";
+		File f = new File(signPath);
+		if (!f.exists()) {
+			f.mkdirs();
+		}
+
+		File file = null;
+		Representation representation = PublishUtils.getRepresentation(part);
+		if (representation != null) {
+			QueryResult result = ContentHelper.service.getContentsByRole(representation, ContentRoleType.THUMBNAIL3D);
+			if (result.hasMoreElements()) {
+				ApplicationData data = (ApplicationData) result.nextElement();
+				byte[] buffer = new byte[10240];
+				InputStream is = ContentServerHelper.service.findLocalContentStream(data);
+				file = new File(signPath + File.separator + part.getNumber() + ".png");
+				FileOutputStream fos = new FileOutputStream(file);
+				int j = 0;
+				while ((j = is.read(buffer, 0, 10240)) > 0) {
+					fos.write(buffer, 0, j);
+				}
+				fos.close();
+				is.close();
+			}
+		}
+		if (file == null) {
+			return null;
+		}
+		return file.getPath();
 	}
 
+	/**
+	 * 2D 썸네일 경로
+	 */
 	private String get2DPath(String oid) throws Exception {
 
-		String signPath = WTProperties.getLocalProperties().getProperty("wt.temp") + File.separator + "bom";
+		if (!StringUtil.checkString(oid)) {
+			return null;
+		}
+
+		String signPath = WTProperties.getLocalProperties().getProperty("wt.temp") + File.separator + "bom2d";
 		File f = new File(signPath);
 		if (!f.exists()) {
 			f.mkdirs();
@@ -1842,8 +1866,7 @@ public class BomHelper {
 		File file = null;
 		Representation representation = PublishUtils.getRepresentation(epm);
 		if (representation != null) {
-			QueryResult result = ContentHelper.service.getContentsByRole(representation,
-					ContentRoleType.THUMBNAIL);
+			QueryResult result = ContentHelper.service.getContentsByRole(representation, ContentRoleType.THUMBNAIL);
 			if (result.hasMoreElements()) {
 				ApplicationData data = (ApplicationData) result.nextElement();
 				byte[] buffer = new byte[10240];
