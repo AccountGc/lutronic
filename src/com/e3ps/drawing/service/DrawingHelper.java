@@ -33,6 +33,7 @@ import com.e3ps.common.util.WCUtil;
 import com.e3ps.drawing.EpmLocation;
 import com.e3ps.drawing.beans.EpmData;
 import com.e3ps.drawing.column.EpmColumn;
+import com.e3ps.part.PartLocation;
 import com.e3ps.part.service.PartHelper;
 import com.ptc.wvs.server.util.PublishUtils;
 
@@ -1029,6 +1030,28 @@ public class DrawingHelper {
 
 		QuerySpec query = new QuerySpec();
 		int idx = query.appendClassList(EPMDocument.class, true);
+
+		String location = "/Default/PART_Drawing";
+
+		if (StringUtil.checkString(location)) {
+			int l = location.indexOf(PART_ROOT);
+
+			if (l >= 0) {
+				if (query.getConditionCount() > 0) {
+					query.appendAnd();
+				}
+				location = location.substring((l + PART_ROOT.length()));
+				// Folder Search
+				int folder_idx = query.addClassList(EpmLocation.class, false);
+				query.appendWhere(new SearchCondition(EpmLocation.class, EpmLocation.EPM, EPMDocument.class,
+						"thePersistInfo.theObjectIdentifier.id"), new int[] { folder_idx, idx });
+				query.appendAnd();
+
+				query.appendWhere(new SearchCondition(EpmLocation.class, "loc", SearchCondition.LIKE, location + "%"),
+						new int[] { folder_idx });
+			}
+		}
+
 		QuerySpecUtils.toLatest(query, idx, EPMDocument.class);
 		QuerySpecUtils.toOrderBy(query, idx, EPMDocument.class, EPMDocument.CREATE_TIMESTAMP, false);
 		QueryResult qr = PersistenceHelper.manager.find(query);

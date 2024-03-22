@@ -1760,6 +1760,26 @@ public class PartHelper {
 
 		QuerySpec query = new QuerySpec();
 		int idx = query.appendClassList(WTPart.class, true);
+
+		String location = "/Default/PART_Drawing";
+
+		int l = location.indexOf(PART_ROOT);
+
+		if (l >= 0) {
+			if (query.getConditionCount() > 0) {
+				query.appendAnd();
+			}
+			location = location.substring((l + PART_ROOT.length()));
+			// Folder Search
+			int folder_idx = query.addClassList(PartLocation.class, false);
+			query.appendWhere(new SearchCondition(PartLocation.class, PartLocation.PART, WTPart.class,
+					"thePersistInfo.theObjectIdentifier.id"), new int[] { folder_idx, idx });
+			query.appendAnd();
+
+			query.appendWhere(new SearchCondition(PartLocation.class, "loc", SearchCondition.LIKE, location + "%"),
+					new int[] { folder_idx });
+		}
+
 		QuerySpecUtils.toLatest(query, idx, WTPart.class);
 		QuerySpecUtils.toOrderBy(query, idx, WTPart.class, WTPart.CREATE_TIMESTAMP, false);
 		QueryResult qr = PersistenceHelper.manager.find(query);

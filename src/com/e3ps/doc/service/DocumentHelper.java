@@ -1285,6 +1285,28 @@ public class DocumentHelper {
 				new SearchCondition(WTDocument.class, WTDocument.DOC_TYPE, SearchCondition.NOT_EQUAL, "$$ROHS"),
 				new int[] { idx });
 		query.appendCloseParen();
+
+		String location = "/Default/문서";
+
+		if (StringUtil.checkString(location)) {
+			if (location.length() > 0) {
+				int l = location.indexOf(DOCUMENT_ROOT);
+				if (l >= 0) {
+					if (query.getConditionCount() > 0) {
+						query.appendAnd();
+					}
+					location = location.substring((l + DOCUMENT_ROOT.length()));
+					int folder_idx = query.addClassList(DocLocation.class, false);
+					query.appendWhere(new SearchCondition(DocLocation.class, DocLocation.DOC, WTDocument.class,
+							"thePersistInfo.theObjectIdentifier.id"), new int[] { folder_idx, idx });
+					query.appendAnd();
+					query.appendWhere(
+							new SearchCondition(DocLocation.class, "loc", SearchCondition.LIKE, location + "%"),
+							new int[] { folder_idx });
+				}
+			}
+		}
+
 		QuerySpecUtils.toLatest(query, idx, WTDocument.class);
 		QuerySpecUtils.toOrderBy(query, idx, WTDocument.class, WTDocument.CREATE_TIMESTAMP, false);
 		QueryResult qr = PersistenceHelper.manager.find(query);
