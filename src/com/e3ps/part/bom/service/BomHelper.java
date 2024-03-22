@@ -1696,6 +1696,8 @@ public class BomHelper {
 
 			String[] endRtn = getDwgInfo(dd.getPart());
 
+			worksheet.getCells().setRowHeight(rowIndex, 29);
+			
 			Cell rowCell = worksheet.getCells().get(rowIndex, 0);
 			rowCell.setStyle(center);
 			rowCell.putValue(idx);
