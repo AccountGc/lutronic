@@ -50,7 +50,7 @@ public class EcoController extends BaseController {
 		}
 		return result;
 	}
-	
+
 	@Description(value = "ECO 완제품 동기화")
 	@ResponseBody
 	@GetMapping(value = "/complete")
@@ -404,6 +404,7 @@ public class EcoController extends BaseController {
 		try {
 			EChangeOrder eco = (EChangeOrder) CommonUtil.getObject(oid);
 			SAPHelper.service.resendSapToEco(eco);
+			result.put("msg", "SAP 전송이 완료 되었습니다.");
 			result.put("result", SUCCESS);
 		} catch (Exception e) {
 			e.printStackTrace();

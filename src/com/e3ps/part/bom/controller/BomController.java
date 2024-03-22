@@ -266,22 +266,22 @@ public class BomController extends BaseController {
 		return model;
 	}
 
-	@Description(value = "BOM 첨부파일, 도면 일괄 다운로드")
-	@PostMapping(value = "/batch")
-	@ResponseBody
-	public Map<String, Object> batch(@RequestBody Map<String, Object> params) throws Exception {
-		Map<String, Object> result = new HashMap<>();
-		try {
-			File f = BomHelper.manager.batch(params);
-			result.put("url", f.getPath());
-			result.put("result", SUCCESS);
-		} catch (Exception e) {
-			e.printStackTrace();
-			result.put("msg", e.toString());
-			result.put("result", false);
-		}
-		return result;
-	}
+//	@Description(value = "BOM 첨부파일, 도면 일괄 다운로드")
+//	@PostMapping(value = "/batch")
+//	@ResponseBody
+//	public Map<String, Object> batch(@RequestBody Map<String, Object> params) throws Exception {
+//		Map<String, Object> result = new HashMap<>();
+//		try {
+//			File f = BomHelper.manager.batch(params);
+//			result.put("url", f.getPath());
+//			result.put("result", SUCCESS);
+//		} catch (Exception e) {
+//			e.printStackTrace();
+//			result.put("msg", e.toString());
+//			result.put("result", false);
+//		}
+//		return result;
+//	}
 
 	@Description(value = "BOM 에디터")
 	@GetMapping(value = "/editor")
@@ -380,14 +380,16 @@ public class BomController extends BaseController {
 	@Description(value = "BOM(뷰) 리스트 엑셀 다운로드")
 	@ResponseBody
 	@GetMapping(value = "/excelList")
-	public Map<String, Object> excelList(@RequestParam String oid, @RequestParam String isView) throws Exception {
+	public Map<String, Object> excelList(@RequestParam String oid, @RequestParam String isView,
+			@RequestParam String skip) throws Exception {
 		Map<String, Object> result = new HashMap<>();
 		try {
 			boolean view = Boolean.parseBoolean(isView);
+			boolean isSkip = Boolean.parseBoolean(skip);
 			if (view) {
-				result = BomHelper.manager.viewList(oid);
+				result = BomHelper.manager.viewList(oid, isSkip);
 			} else {
-				result = BomHelper.manager.nonViewList(oid);
+				result = BomHelper.manager.nonViewList(oid, isSkip);
 			}
 			result.put("result", SUCCESS);
 		} catch (Exception e) {

@@ -656,7 +656,8 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 		}
 
 		const oid = document.getElementById("oid").value;
-		const url = getCallUrl("/bom/excelList?oid=" + oid + "&isView=" + isView);
+		const skip = document.querySelector("input[name=skip]").checked;
+		const url = getCallUrl("/bom/excelList?oid=" + oid + "&isView=" + isView + "&skip=" + skip);
 		parent.openLayer();
 		call(url, null, function(data) {
 			if (data.result) {
@@ -686,44 +687,44 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 	}
 
 	function exportExcel() {
-// 		const sort = document.getElementById("sort").value;
-// 		const skip = document.querySelector("input[name=skip]").checked;
-// 		const baseline = document.getElementById("baseline").value;
-// 		openLayer();
-// 		setTimeout(function() {
-// 			const grid = AUIGrid.getItemsByValue(myGridID, "_$depth", 1);
-// 			for (let j = 0; j < grid.length; j++) {
-// 				const item = grid[j];
-// 				const isLazy = item.isLazy;
-// 				// 				if (isLazy) {
-// 				const oid = item.oid;
-// 				const level = item.level;
-// 				const params = {
-// 					oid : oid,
-// 					skip : JSON.parse(skip),
-// 					level : level,
-// 					desc : JSON.parse(sort),
-// 					baseline : baseline
-// 				};
+		// 		const sort = document.getElementById("sort").value;
+		// 		const skip = document.querySelector("input[name=skip]").checked;
+		// 		const baseline = document.getElementById("baseline").value;
+		// 		openLayer();
+		// 		setTimeout(function() {
+		// 			const grid = AUIGrid.getItemsByValue(myGridID, "_$depth", 1);
+		// 			for (let j = 0; j < grid.length; j++) {
+		// 				const item = grid[j];
+		// 				const isLazy = item.isLazy;
+		// 				// 				if (isLazy) {
+		// 				const oid = item.oid;
+		// 				const level = item.level;
+		// 				const params = {
+		// 					oid : oid,
+		// 					skip : JSON.parse(skip),
+		// 					level : level,
+		// 					desc : JSON.parse(sort),
+		// 					baseline : baseline
+		// 				};
 
-// 				const url = getCallUrl("/bom/lazyLoad")
-// 				call(url, params, function(data) {
-// 					grid[j].children = data.list;
-// 					grid[j] = _recursion(grid[j], skip, sort, baseline);
-// 					const rowIndex = AUIGrid.rowIdToIndex(myGridID, grid[j]._$uid);
-// 					AUIGrid.updateRow(myGridID, grid[j], rowIndex);
-// 				}, "POST", false);
-// 			}
-// 			closeLayer();
-// 			const tree = AUIGrid.getTreeGridData(myGridID);
-// 			AUIGrid.setGridData(myGridID, tree);
-// 			AUIGrid.expandAll(myGridID);
-// 		}, 1000);
+		// 				const url = getCallUrl("/bom/lazyLoad")
+		// 				call(url, params, function(data) {
+		// 					grid[j].children = data.list;
+		// 					grid[j] = _recursion(grid[j], skip, sort, baseline);
+		// 					const rowIndex = AUIGrid.rowIdToIndex(myGridID, grid[j]._$uid);
+		// 					AUIGrid.updateRow(myGridID, grid[j], rowIndex);
+		// 				}, "POST", false);
+		// 			}
+		// 			closeLayer();
+		// 			const tree = AUIGrid.getTreeGridData(myGridID);
+		// 			AUIGrid.setGridData(myGridID, tree);
+		// 			AUIGrid.expandAll(myGridID);
+		// 		}, 1000);
 
-// 		setTimeout(function() {
-			const sessionName = document.getElementById("sessionName").value;
-			const number = document.getElementById("number").value;
-			exportToExcel(number + "_BOM 리스트", number + "_BOM 리스트", number + "_BOM 리스트", [ "thumb_2d", "thumb_3d" ], sessionName);
-// 		}, 1000);
+		// 		setTimeout(function() {
+		const sessionName = document.getElementById("sessionName").value;
+		const number = document.getElementById("number").value;
+		exportToExcel(number + "_BOM 리스트", number + "_BOM 리스트", number + "_BOM 리스트", [ "thumb_2d", "thumb_3d" ], sessionName);
+		// 		}, 1000);
 	}
 </script>

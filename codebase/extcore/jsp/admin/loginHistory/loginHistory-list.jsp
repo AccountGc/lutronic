@@ -73,21 +73,13 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 				</td>
 			</tr>
 		</table>
-		<div id="grid_wrap" style="height: 640px; border-top: 1px solid #3180c3;"></div>
+		<div id="grid_wrap" style="height: 660px; border-top: 1px solid #3180c3;"></div>
 		<div id="grid_paging" class="aui-grid-paging-panel my-grid-paging-panel"></div>
 		<%@include file="/extcore/jsp/common/aui-context.jsp"%>
 		<script type="text/javascript">
 			let myGridID;
 			function _layout() {
 				return [ {
-					dataField : "rowNum",
-					headerText : "번호",
-					width : 40,
-					dataType : "numeric",
-					filter : {
-						inline : false
-					},
-				},{
 					dataField : "ip",
 					headerText : "접속 IP",
 					dataType : "string",
@@ -137,7 +129,7 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 					filterItemMoreMessage : "필터링 검색이 너무 많습니다. 검색을 이용해주세요.",
 				};
 				myGridID = AUIGrid.create("#grid_wrap", columnLayout, props);
-// 				loadGridData();
+				// 				loadGridData();
 				AUIGrid.bind(myGridID, "contextMenu", auiContextMenuHandler);
 				AUIGrid.bind(myGridID, "vScrollChange", function(event) {
 					hideContextMenu();
@@ -167,9 +159,9 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 					}
 				}
 			}
-			
+
 			function loadGridData(movePage) {
-				if(movePage === undefined) {
+				if (movePage === undefined) {
 					document.getElementById("sessionid").value = 0;
 					document.getElementById("curPage").value = 1;
 				}

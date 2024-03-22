@@ -31,11 +31,9 @@ import com.e3ps.common.util.StringUtil;
 import com.e3ps.common.util.ThumbnailUtil;
 import com.e3ps.common.util.ZipUtil;
 import com.e3ps.download.service.DownloadHistoryHelper;
-import com.e3ps.org.service.OrgHelper;
 import com.e3ps.part.bom.column.BomColumn;
 import com.e3ps.part.bom.util.BomComparator;
 import com.e3ps.part.service.PartHelper;
-import com.ptc.wvs.server.util.FileHelper;
 import com.ptc.wvs.server.util.PublishUtils;
 
 import net.sf.json.JSONArray;
@@ -62,7 +60,6 @@ import wt.part.WTPartUsageLink;
 import wt.query.ClassAttribute;
 import wt.query.QuerySpec;
 import wt.query.SearchCondition;
-import wt.representation.Representable;
 import wt.representation.Representation;
 import wt.services.ServiceFactory;
 import wt.session.SessionHelper;
@@ -1651,7 +1648,7 @@ public class BomHelper {
 		return result;
 	}
 
-	public Map<String, Object> viewList(String oid) throws Exception {
+	public Map<String, Object> viewList(String oid, boolean isSkip) throws Exception {
 		long start = System.currentTimeMillis() / 1000;
 		System.out.println("BOM(뷰) 시작 = " + start);
 		Map<String, Object> result = new HashMap<>();
@@ -1683,7 +1680,7 @@ public class BomHelper {
 		Style left = workbook.createStyle();
 		left.setHorizontalAlignment(TextAlignmentType.LEFT);
 
-		ArrayList<BomColumn> list = descendants(root);
+		ArrayList<BomColumn> list = descendants(root, isSkip);
 
 		Cell headerCell = worksheet.getCells().get(0, 0);
 		worksheet.getCells().setRowHeight(0, 50);
@@ -1697,7 +1694,7 @@ public class BomHelper {
 			String[] endRtn = getDwgInfo(dd.getPart());
 
 			worksheet.getCells().setRowHeight(rowIndex, 29);
-			
+
 			Cell rowCell = worksheet.getCells().get(rowIndex, 0);
 			rowCell.setStyle(center);
 			rowCell.putValue(idx);
@@ -1889,7 +1886,7 @@ public class BomHelper {
 		return file.getPath();
 	}
 
-	public Map<String, Object> nonViewList(String oid) throws Exception {
+	public Map<String, Object> nonViewList(String oid, boolean isSkip) throws Exception {
 		long start = System.currentTimeMillis() / 1000;
 		System.out.println("BOM 시작 = " + start);
 		Map<String, Object> result = new HashMap<>();
@@ -1921,7 +1918,7 @@ public class BomHelper {
 		Style left = workbook.createStyle();
 		left.setHorizontalAlignment(TextAlignmentType.LEFT);
 
-		ArrayList<BomColumn> list = descendants(root);
+		ArrayList<BomColumn> list = descendants(root, isSkip);
 
 		Cell headerCell = worksheet.getCells().get(0, 0);
 		worksheet.getCells().setRowHeight(0, 50);
@@ -2011,7 +2008,7 @@ public class BomHelper {
 		return result;
 	}
 
-	public ArrayList<BomColumn> descendants(WTPart part) throws Exception {
+	public ArrayList<BomColumn> descendants(WTPart part, boolean isSkip) throws Exception {
 		ArrayList<BomColumn> list = new ArrayList<BomColumn>();
 		BomColumn root = new BomColumn(part);
 		// root 추가
@@ -2032,15 +2029,22 @@ public class BomHelper {
 				continue;
 			}
 			WTPart p = (WTPart) obj[1];
+
+			if (isSkip) {
+				if (skip(p)) {
+					continue;
+				}
+			}
+
 			WTPartUsageLink link = (WTPartUsageLink) obj[0];
 			BomColumn dd = new BomColumn(p, link, level);
 			list.add(dd);
-			descendants(p, list, level + 1);
+			descendants(p, list, level + 1, isSkip);
 		}
 		return list;
 	}
 
-	private void descendants(WTPart p, ArrayList<BomColumn> list, int level) throws Exception {
+	private void descendants(WTPart p, ArrayList<BomColumn> list, int level, boolean isSkip) throws Exception {
 		String viewName = p.getViewName();
 		if (!StringUtil.checkString(viewName)) {
 			viewName = "Design";
@@ -2056,10 +2060,15 @@ public class BomHelper {
 				continue;
 			}
 			WTPart child = (WTPart) obj[1];
+			if (isSkip) {
+				if (skip(child)) {
+					continue;
+				}
+			}
 			WTPartUsageLink link = (WTPartUsageLink) obj[0];
 			BomColumn dd = new BomColumn(child, link, level);
 			list.add(dd);
-			descendants(child, list, level + 1);
+			descendants(child, list, level + 1, isSkip);
 		}
 	}
 }

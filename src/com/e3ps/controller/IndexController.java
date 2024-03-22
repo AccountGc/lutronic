@@ -1,6 +1,7 @@
 package com.e3ps.controller;
 
 import java.util.ArrayList;
+import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -38,6 +39,26 @@ import wt.org.WTUser;
 
 @Controller
 public class IndexController extends BaseController {
+
+	@Description(value = "접속 이력 생성")
+	@PostMapping(value = "/loginHistory")
+	@ResponseBody
+	public Map<String, Object> loginHistory(HttpServletRequest request, @RequestBody Map<String, Object> params)
+			throws Exception {
+		System.out.println("여기 실행???");
+		Map<String, Object> map = new HashMap<>();
+		String j_username = (String) params.get("j_username");
+		try {
+			LoginHistoryHelper.service.create(j_username, request);
+			map.put("result", true);
+		} catch (Exception e) {
+			e.printStackTrace();
+			map.put("result", false);
+			map.put("msg", e.toString());
+		}
+		return map;
+
+	}
 
 	@Description(value = "로그인")
 	@PostMapping(value = "/login")

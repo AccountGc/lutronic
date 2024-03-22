@@ -5,12 +5,13 @@
 <head>
 <title>LUTRONIC PLM</title>
 <meta http-equiv="content-type" content="text/html; charset=UTF-8">
-<link rel="stylesheet" href="/Windchill/login/css/login.css" type="text/css">
+<link rel="stylesheet" href="/Windchill/login/css/login.css?v=1" type="text/css">
 <link rel="shortcut icon" href="/Windchill/extcore/images/icon/poongsan_icon.png">
 <script type="text/javascript" src="https://code.jquery.com/jquery-1.10.2.min.js" /></script>
 </head>
 <body>
-	<form method="post" action="j_security_check">
+	<!-- 	<form method="post" action="j_security_check"> -->
+	<form method="post">
 
 		<div id="form-container">
 			<div id="form-inner-container">
@@ -27,7 +28,7 @@
 					<input type="password" name="j_password" id="j_password" placeholder="&#9679;&#9679;&#9679;&#9679;&#9679;&#9679;">
 
 					<div id="form-controls">
-						<button type="submit">
+						<button type="button" onclick="_login();">
 							<b>로 그 인</b>
 						</button>
 					</div>
@@ -45,8 +46,36 @@
 
 <script type="text/javascript">
 	function _login() {
+		const j_username = document.getElementById("j_username");
+		document.forms[0].action = "/Windchill/login/loginHistory.jsp";
 		document.forms[0].submit();
-		$checkId = $("#checkId");
+// 		let params = {
+// 			j_username : j_username.value
+// 		};
+// 		params = JSON.stringify(params);
+// 		console.log(params);
+// 		$.ajax({
+// 			type : "POST",
+// 			url : "/Windchill/plm/loginHistory",
+// 			dataType : "JSON",
+// 			crossDomain : true,
+// 			data : params,
+// 			async : false,
+// 			contentType : "application/json; charset=UTF-8",
+// 			beforeSend : function() {
+// 			},
+// 			success : function(res) {
+// 				if (res.result) {
+// 					document.forms[0].action = "j_security_check";
+// 					document.forms[0].submit();
+// 					$checkId = $("#checkId");
+// 				}
+// 			},
+// 			error : function(res) {
+// 				console.log(res);
+// 				alert("C");
+// 			}
+// 		})
 	}
 
 	document.addEventListener("keydown", function(event) {

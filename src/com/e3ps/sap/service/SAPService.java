@@ -22,12 +22,11 @@ public interface SAPService {
 	 * SAP ECO 전송
 	 */
 	public abstract void sendSapToEco(EChangeOrder e) throws Exception;
-	
+
 	/**
 	 * SAP ECO 재전송
 	 */
 	public abstract void resendSapToEco(EChangeOrder e) throws Exception;
-	
 
 	/**
 	 * SAP ECN 전송

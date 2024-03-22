@@ -34,8 +34,8 @@ public class LoginHistoryHelper {
 		QuerySpec query = new QuerySpec();
 		int idx = query.appendClassList(LoginHistory.class, true);
 
-		QuerySpecUtils.toLikeLeftAnd(query, idx, LoginHistory.class, "name", userName);
-		QuerySpecUtils.toLikeLeftAnd(query, idx, LoginHistory.class, "id", userId);
+		QuerySpecUtils.toLikeAnd(query, idx, LoginHistory.class, LoginHistory.NAME, userName);
+		QuerySpecUtils.toLikeAnd(query, idx, LoginHistory.class, LoginHistory.ID, userId);
 		QuerySpecUtils.toOrderBy(query, idx, LoginHistory.class, "thePersistInfo.createStamp", true);
 		PageQueryUtils pager = new PageQueryUtils(params, query);
 		PagingQueryResult result = pager.find();
@@ -44,7 +44,6 @@ public class LoginHistoryHelper {
 			LoginHistory history = (LoginHistory) o[0];
 			Map<String, Object> data = new HashMap<String, Object>();
 			WTUser user = OrganizationServicesMgr.getUser(history.getId());
-			System.out.println("user=" + user);
 			if (user != null) {
 				PeopleDTO dto = new PeopleDTO(user);
 				data.put("oid", history.getPersistInfo().getObjectIdentifier().toString());
