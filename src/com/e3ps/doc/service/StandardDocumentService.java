@@ -174,6 +174,14 @@ public class StandardDocumentService extends StandardManager implements Document
 
 			WTDocument doc = (WTDocument) CommonUtil.getObject(oid);
 
+			QueryResult qr = VersionControlHelper.service.allIterationsOf(doc.getMaster());
+			while (qr.hasMoreElements()) {
+				WTDocument d = (WTDocument) qr.nextElement();
+				removeAttach(d);
+				// 링크 정보 삭제
+				deleteLink(d);
+			}
+
 			WorkData dd = WorkDataHelper.manager.getWorkData(doc);
 			if (dd != null) {
 				PersistenceHelper.manager.delete(dd);
