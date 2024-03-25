@@ -10,6 +10,7 @@ import com.e3ps.system.PrintHistory;
 import com.e3ps.system.SAPInterfacePartLogger;
 import com.e3ps.system.dto.SendPartLoggerDTO;
 
+import wt.doc.WTDocument;
 import wt.fc.PagingQueryResult;
 import wt.query.QuerySpec;
 import wt.services.ServiceFactory;
@@ -39,6 +40,12 @@ public class SystemHelper {
 
 		QuerySpec query = new QuerySpec();
 		int idx = query.appendClassList(SAPInterfacePartLogger.class, true);
+
+		QuerySpecUtils.toLikeAnd(query, idx, SAPInterfacePartLogger.class, SAPInterfacePartLogger.MATNR, number);
+		QuerySpecUtils.toLikeAnd(query, idx, SAPInterfacePartLogger.class, SAPInterfacePartLogger.AENNR8, eoNumber);
+		QuerySpecUtils.toCreator(query, idx, SAPInterfacePartLogger.class, creatorOid);
+		QuerySpecUtils.toTimeGreaterAndLess(query, idx, SAPInterfacePartLogger.class,
+				SAPInterfacePartLogger.CREATE_TIMESTAMP, createdFrom, createdTo);
 
 		QuerySpecUtils.toOrderBy(query, idx, SAPInterfacePartLogger.class, SAPInterfacePartLogger.CREATE_TIMESTAMP,
 				true);

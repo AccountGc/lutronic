@@ -26,6 +26,7 @@ import wt.part.WTPart;
 @Setter
 public class DownloadDTO {
 
+	private int rowNum;
 	private String oid;
 	private String name;
 	private String info;

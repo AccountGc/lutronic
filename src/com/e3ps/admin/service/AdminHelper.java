@@ -1,6 +1,7 @@
 
 package com.e3ps.admin.service;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -17,6 +18,7 @@ import com.e3ps.common.util.DateUtil;
 import com.e3ps.common.util.PageQueryUtils;
 import com.e3ps.common.util.QuerySpecUtils;
 import com.e3ps.common.util.StringUtil;
+import com.e3ps.doc.column.DocumentColumn;
 import com.e3ps.download.DownloadHistory;
 import com.e3ps.download.dto.DownloadDTO;
 import com.e3ps.org.MailUser;
@@ -126,16 +128,18 @@ public class AdminHelper {
 		qs.appendOrderBy(new OrderBy(new ClassAttribute(DownloadHistory.class, "thePersistInfo.updateStamp"), true),
 				new int[] { idx });
 
-		System.out.println("qs=" + qs);
 
 		PageQueryUtils pager = new PageQueryUtils(params, qs);
 		PagingQueryResult result = pager.find();
 
 		ArrayList<DownloadDTO> list = new ArrayList<DownloadDTO>();
+		
+		int rowNum = (pager.getCpage() - 1) * pager.getPsize() + 1;
 		while (result.hasMoreElements()) {
 			Object obj[] = (Object[]) result.nextElement();
 			DownloadHistory history = (DownloadHistory) obj[0];
 			DownloadDTO data = new DownloadDTO(history);
+			data.setRowNum(rowNum++);
 			list.add(data);
 		}
 		Map<String, Object> map = new HashMap<String, Object>();

@@ -34,6 +34,8 @@ import com.e3ps.controller.BaseController;
 import com.e3ps.download.service.DownloadHistoryHelper;
 
 import net.sf.json.JSONObject;
+import wt.access.AccessControlHelper;
+import wt.access.AccessPermission;
 import wt.content.ApplicationData;
 import wt.content.ContentHelper;
 import wt.content.ContentHolder;
@@ -82,6 +84,8 @@ public class ContentController extends BaseController {
 				} else if (h instanceof EPMDocument) {
 					EPMDocument e = (EPMDocument) h;
 
+					System.out.println("e=" + e.getCADName());
+
 					if (e.getAuthoringApplication().toString().equals("OTHER")) {
 						name = URLEncoder.encode(data.getFileName(), "UTF-8").replaceAll("\\+", "%20");
 					} else {
@@ -95,6 +99,11 @@ public class ContentController extends BaseController {
 			}
 
 			// 이름 치환
+
+			boolean isAccess = AccessControlHelper.manager.checkAccess(h, AccessPermission.DOWNLOAD);
+			if (!isAccess) {
+				throw new Exception("다운로드 권한이 없습니다.");
+			}
 
 			// 다운로드 이력 생성..
 			DownloadHistoryHelper.service.create(oid);

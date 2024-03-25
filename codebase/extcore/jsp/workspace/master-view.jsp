@@ -24,9 +24,7 @@ ApprovalLineDTO dto = (ApprovalLineDTO) request.getAttribute("dto");
 	<colgroup>
 		<col width="10%">
 		<col width="300">
-		<col width="130">
-		<col width="300">
-		<col width="130">
+		<col width="10%">
 		<col width="300">
 	</colgroup>
 	<tr>
@@ -43,7 +41,7 @@ ApprovalLineDTO dto = (ApprovalLineDTO) request.getAttribute("dto");
 	</tr>
 	<tr>
 		<th class="lb">결재의견</th>
-		<td class="indent5" colspan="5">
+		<td class="indent5" colspan="3">
 			<div class="textarea-auto">
 				<textarea name="description" id="description" rows="6" readonly="readonly"><%=dto.getDescription() != null ? dto.getDescription() : ""%></textarea>
 			</div>

@@ -153,14 +153,14 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 						showIcon : true,
 						inline : true
 					},
-				}, {
-					dataField : "describe",
-					headerText : "다운사유",
-					dataType : "string",
-					filter : {
-						showIcon : true,
-						inline : true
-					},
+// 				}, {
+// 					dataField : "describe",
+// 					headerText : "다운사유",
+// 					dataType : "string",
+// 					filter : {
+// 						showIcon : true,
+// 						inline : true
+// 					},
 				} ]
 			}
 

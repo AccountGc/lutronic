@@ -50,7 +50,7 @@ public class SendPartLoggerDTO {
 		setZdept(logger.getZdept());
 		setZdwgno(logger.getZdwgno());
 		setVersion(logger.getZeivr());
-		setZprepo(logger.getZprepo());
+		setZprepo(logger.getZprepo() == null ? "X" : "O");
 		setBrgew(logger.getBrgew());
 		setZmatlt(logger.getZmatlt());
 		setZpostp(logger.getZpostp());
