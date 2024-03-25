@@ -68,7 +68,7 @@ NoticeDTO dto = (NoticeDTO) request.getAttribute("dto");
 				<input type="checkbox" name="checkId" id="checkId" onclick="setCookie();">
 				<div class="state p-success">
 					<label>
-						<b>더 이상 열지 않기</b>
+						<b>일주일 간 열지 않기</b>
 					</label>
 				</div>
 			</div>
@@ -81,7 +81,7 @@ NoticeDTO dto = (NoticeDTO) request.getAttribute("dto");
 <script>
 	function setCookie() {
 		const oid = document.getElementById("oid").value;
-		const cDay = 365;
+		const cDay = 7;
 		let expire = new Date();
 
 		expire.setDate(expire.getDate() + cDay);

@@ -140,9 +140,9 @@ int eca = (int) request.getAttribute("eca");
 							</span>
 						</a>
 					</li>
-					<li>
-						<a onclick="moveToPage(this, '/temprary/list', '> 나의업무 > 임시저장함');">임시저장함</a>
-					</li>
+<!-- 					<li> -->
+<!-- 						<a onclick="moveToPage(this, '/temprary/list', '> 나의업무 > 임시저장함');">임시저장함</a> -->
+<!-- 					</li> -->
 					<li>
 						<a onclick="_popup('/Windchill/plm/groupware/password', 800, 300, 'n');">비밀번호 변경</a>
 					</li>
@@ -580,6 +580,7 @@ int eca = (int) request.getAttribute("eca");
 				const list = data.list;
 				for (let i = 0; i < list.length; i++) {
 					const oid = list[i].oid;
+					logger(check(oid));
 					if (check(oid)) {
 						const callUrl = getCallUrl("/notice/popup?oid=" + oid);
 						_popup(callUrl, 1000, 600, "n");
@@ -603,9 +604,7 @@ int eca = (int) request.getAttribute("eca");
 
 	function getCookie(name) {
 		name = name + "=";
-		// 		logger(name);
 		const cookie = document.cookie;
-		logger(cookie);
 		let start = cookie.indexOf(name);
 		let value = "";
 		if (start !== -1) {
