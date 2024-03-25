@@ -213,26 +213,32 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 					}
 				}
 			}
-
+			
+			
 			function loadGridData(movePage) {
-				var params = new Object();
+				if (movePage === undefined) {
+					document.getElementById("sessionid").value = 0;
+					document.getElementById("curPage").value = 1;
+				}
+
+				let params = new Object();
 				const field = [ "managerOid", "createdFrom", "createdTo", "type" ];
 				params = toField(params, field);
 				if (params.type == "") {
 					params.type = "wt.epm.EPMDocument";
 				}
-				var url = getCallUrl("/admin/downLoadHistory");
+				const url = getCallUrl("/admin/downLoadHistory");
+				AUIGrid.showAjaxLoader(myGridID);
 				parent.openLayer();
 				logger(params);
 				call(url, params, function(data) {
+					AUIGrid.removeAjaxLoader(myGridID);
 					if (data.result) {
 						totalPage = Math.ceil(data.total / data.pageSize);
-						document.getElementById("sessionid").value = data.sessionid;
-						createPagingNavigator(data.total, data.curPage);
+						createPagingNavigator(data.total, data.curPage, data.sessionid);
 						AUIGrid.setGridData(myGridID, data.list);
-						if (movePage === undefined) {
+						if (sortCache.length > 0) {
 							AUIGrid.setSorting(myGridID, sortCache);
-							compField = null;
 						}
 					} else {
 						alert(data.msg);
@@ -240,6 +246,33 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 					parent.closeLayer();
 				});
 			}
+
+// 			function loadGridData(movePage) {
+// 				var params = new Object();
+// 				const field = [ "managerOid", "createdFrom", "createdTo", "type" ];
+// 				params = toField(params, field);
+// 				if (params.type == "") {
+// 					params.type = "wt.epm.EPMDocument";
+// 				}
+// 				var url = getCallUrl("/admin/downLoadHistory");
+// 				parent.openLayer();
+// 				logger(params);
+// 				call(url, params, function(data) {
+// 					if (data.result) {
+// 						totalPage = Math.ceil(data.total / data.pageSize);
+// 						document.getElementById("sessionid").value = data.sessionid;
+// 						createPagingNavigator(data.total, data.curPage);
+// 						AUIGrid.setGridData(myGridID, data.list);
+// 						if (movePage === undefined) {
+// 							AUIGrid.setSorting(myGridID, sortCache);
+// 							compField = null;
+// 						}
+// 					} else {
+// 						alert(data.msg);
+// 					}
+// 					parent.closeLayer();
+// 				});
+// 			}
 
 			document.addEventListener("DOMContentLoaded", function() {
 				const columns = loadColumnLayout("downloadHistory-list");
@@ -344,7 +377,7 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 				$("#type").val(type);
 				$("#sortValue").val("");
 				$("#sortCheck").val("");
-				$("#sessionId").val("");
+// 				$("#sessionId").val("");
 				$("#page").val(1);
 				loadGridData();
 			}
