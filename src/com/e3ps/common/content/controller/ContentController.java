@@ -32,6 +32,7 @@ import com.e3ps.common.util.StringUtil;
 import com.e3ps.common.web.WebUtil;
 import com.e3ps.controller.BaseController;
 import com.e3ps.download.service.DownloadHistoryHelper;
+import com.google.inject.servlet.RequestParameters;
 
 import net.sf.json.JSONObject;
 import wt.access.AccessControlHelper;
@@ -46,6 +47,7 @@ import wt.content.FormatContentHolder;
 import wt.content.URLData;
 import wt.doc.WTDocument;
 import wt.epm.EPMDocument;
+import wt.fc.Persistable;
 import wt.fc.QueryResult;
 import wt.fc.ReferenceFactory;
 import wt.util.FileUtil;
@@ -54,6 +56,32 @@ import wt.viewmarkup.DerivedImage;
 @Controller
 @RequestMapping(value = "/content/**")
 public class ContentController extends BaseController {
+
+	@Description(value = "권한 체크")
+	@GetMapping(value = "/auth")
+	@ResponseBody
+	public Map<String, Object> auth(@RequestParam String oid) throws Exception {
+		Map<String, Object> map = new HashMap<>();
+		try {
+			boolean isAccess = false;
+			try {
+				Persistable p = CommonUtil.getObject(oid);
+				isAccess = AccessControlHelper.manager.checkAccess(p, AccessPermission.DOWNLOAD);
+				System.out.println("isAccess=" + isAccess);
+			} catch (Exception e) {
+//				throw new Exception("다운로드 권한이 없습니다.");
+				map.put("result", false);
+				map.put("result", "다운로드 권한이 없습니다.");
+				return map;
+			}
+			map.put("result", true);
+		} catch (Exception e) {
+			e.printStackTrace();
+			map.put("result", false);
+			map.put("result", "권한 체크 중 에러가 발생하였습니다.");
+		}
+		return map;
+	}
 
 	@Description(value = "파일 다운로드")
 	@GetMapping(value = "/download")
@@ -84,8 +112,6 @@ public class ContentController extends BaseController {
 				} else if (h instanceof EPMDocument) {
 					EPMDocument e = (EPMDocument) h;
 
-					System.out.println("e=" + e.getCADName());
-
 					if (e.getAuthoringApplication().toString().equals("OTHER")) {
 						name = URLEncoder.encode(data.getFileName(), "UTF-8").replaceAll("\\+", "%20");
 					} else {
@@ -99,18 +125,6 @@ public class ContentController extends BaseController {
 			}
 
 			// 이름 치환
-
-			boolean isAccess = false;
-			try {
-				isAccess = AccessControlHelper.manager.checkAccess(h, AccessPermission.DOWNLOAD);
-				System.out.println("isAccess=" + isAccess);
-			} catch (Exception e) {
-				throw new Exception("다운로드 권한이 없습니다.");
-			}
-
-			if (!isAccess) {
-
-			}
 
 			// 다운로드 이력 생성..
 			DownloadHistoryHelper.service.create(oid);
