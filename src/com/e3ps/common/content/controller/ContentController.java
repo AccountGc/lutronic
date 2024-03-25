@@ -100,9 +100,16 @@ public class ContentController extends BaseController {
 
 			// 이름 치환
 
-			boolean isAccess = AccessControlHelper.manager.checkAccess(h, AccessPermission.DOWNLOAD);
-			if (!isAccess) {
+			boolean isAccess = false;
+			try {
+				isAccess = AccessControlHelper.manager.checkAccess(h, AccessPermission.DOWNLOAD);
+				System.out.println("isAccess=" + isAccess);
+			} catch (Exception e) {
 				throw new Exception("다운로드 권한이 없습니다.");
+			}
+
+			if (!isAccess) {
+
 			}
 
 			// 다운로드 이력 생성..
