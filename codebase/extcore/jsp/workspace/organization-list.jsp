@@ -218,6 +218,7 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 					headerText : "부서",
 					dataType : "string",
 					width : 150,
+					sortable : false,
 					renderer : {
 						type : "IconRenderer",
 						iconWidth : 16,

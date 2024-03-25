@@ -225,7 +225,6 @@ public class DocumentHelper {
 			}
 		}
 
-
 		// 최신 이터레이션.
 		if (latest) {
 			QuerySpecUtils.toLatest(query, idx, WTDocument.class);
@@ -234,6 +233,7 @@ public class DocumentHelper {
 		boolean sort = QuerySpecUtils.toSort(sortType);
 		QuerySpecUtils.toOrderBy(query, idx, WTDocument.class, toSortKey(sortKey), sort);
 
+		System.out.println("qr=" + query);
 		PageQueryUtils pager = new PageQueryUtils(params, query);
 		PagingQueryResult result = pager.find();
 		int rowNum = (pager.getCpage() - 1) * pager.getPsize() + 1;

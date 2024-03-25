@@ -1,10 +1,13 @@
 package com.e3ps.download.service;
 
+import java.net.URLEncoder;
+
 import com.e3ps.common.util.CommonUtil;
 import com.e3ps.download.DownloadHistory;
 
 import wt.content.ApplicationData;
 import wt.content.HolderToContent;
+import wt.epm.EPMDocument;
 import wt.fc.Persistable;
 import wt.fc.PersistenceHelper;
 import wt.fc.QueryResult;
@@ -30,13 +33,20 @@ public class StandardDownloadHistoryService extends StandardManager implements D
 			ApplicationData data = (ApplicationData) CommonUtil.getObject(oid);
 			QueryResult result = PersistenceHelper.manager.navigate(data, "theContentHolder", HolderToContent.class);
 			Persistable per = null;
+			String name = data.getFileName();
 			if (result.hasMoreElements()) {
 				per = (Persistable) result.nextElement();
+				if (per instanceof EPMDocument) {
+					EPMDocument e = (EPMDocument) per;
+					if (!e.getAuthoringApplication().toString().equals("OTHER")) {
+						name = e.getCADName();
+					}
+				}
 			}
 			// 링크인데.. 중복으로 나올 가능성은 적어 보이는데..
 			DownloadHistory history = DownloadHistory.newDownloadHistory();
 			WTUser user = CommonUtil.sessionUser();
-			history.setName(data.getFileName());
+			history.setName(name);
 			history.setPersist(per);
 			history.setCnt(1);
 			history.setUser(user);
