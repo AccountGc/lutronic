@@ -362,15 +362,15 @@ function download(holder, oid) {
 			return false;
 		}
 	}
-
-	const url = getCallUrl("/content/auth?oid=" + oid);
-	call(url, null, function(data) {
-		if(data.result) {
-document.location.href = "/Windchill/plm/content/download?oid=" + oid;			
-		} else {
-			alert(data.msg);
-		}
-	}, "GET");
+	document.location.href = "/Windchill/plm/content/download?oid=" + oid;
+	//	const url = getCallUrl("/content/auth?oid=" + oid);
+	//	call(url, null, function(data) {
+	//		if (data.result) {
+	//			
+	//		} else {
+	//			alert(data.msg);
+	//		}
+	//	}, "GET");
 }
 
 // 권한관리 호출

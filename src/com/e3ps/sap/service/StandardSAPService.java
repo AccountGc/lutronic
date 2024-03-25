@@ -33,10 +33,12 @@ import com.e3ps.common.util.StringUtil;
 import com.e3ps.common.util.WCUtil;
 import com.e3ps.part.service.PartHelper;
 import com.e3ps.sap.conn.SAPConnection;
+import com.e3ps.sap.conn.SAPDev600Connection;
 import com.e3ps.sap.conn.SAPConnection;
 import com.e3ps.sap.dto.SAPBomDTO;
 import com.e3ps.sap.dto.SAPSendBomDTO;
 import com.e3ps.sap.util.SAPUtil;
+import com.e3ps.system.SAPInterfaceBOMLogger;
 import com.e3ps.system.service.SystemHelper;
 import com.sap.conn.jco.JCoDestination;
 import com.sap.conn.jco.JCoDestinationManager;
@@ -66,6 +68,7 @@ import wt.series.MultilevelSeries;
 import wt.series.Series;
 import wt.services.StandardManager;
 import wt.util.WTException;
+import wt.util.WTProperties;
 import wt.vc.IterationIdentifier;
 import wt.vc.VersionControlHelper;
 import wt.vc.VersionIdentifier;
@@ -73,6 +76,19 @@ import wt.vc.views.View;
 import wt.vc.views.ViewHelper;
 
 public class StandardSAPService extends StandardManager implements SAPService {
+
+	private static final String prodHost = "pdm.lutronic.com";
+	private static final String devHost = "pdm.lutronic.com";
+
+	private static String hostName = null;
+
+	static {
+		try {
+			hostName = WTProperties.getLocalProperties().getProperty("wt.rmi.server.hostname");
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
 
 	public static StandardSAPService newStandardSAPService() throws WTException {
 		StandardSAPService instance = new StandardSAPService();
@@ -98,7 +114,12 @@ public class StandardSAPService extends StandardManager implements SAPService {
 	 */
 	private void sendToSapEoBom(EChangeOrder e, ArrayList<EOCompletePartLink> completeParts) throws Exception {
 		System.out.println("시작 SAP 인터페이스 - EO BOM FUN : ZPPIF_PDM_002");
-		JCoDestination destination = JCoDestinationManager.getDestination(SAPConnection.DESTINATION_NAME);
+		JCoDestination destination = null;
+		if (prodHost.equals(hostName)) {
+			destination = JCoDestinationManager.getDestination(SAPConnection.DESTINATION_NAME);
+		} else {
+			destination = JCoDestinationManager.getDestination(SAPDev600Connection.DESTINATION_NAME);
+		}
 		JCoFunction function = destination.getRepository().getFunction("ZPPIF_PDM_002");
 		if (function == null) {
 			throw new RuntimeException("STFC_CONNECTION not found in SAP.");
@@ -183,7 +204,14 @@ public class StandardSAPService extends StandardManager implements SAPService {
 	 */
 	private void sendToSapEoPart(EChangeOrder e, ArrayList<EOCompletePartLink> completeParts) throws Exception {
 		System.out.println("시작 SAP 인터페이스 - EO 자재마스터 FUN : ZPPIF_PDM_001");
-		JCoDestination destination = JCoDestinationManager.getDestination(SAPConnection.DESTINATION_NAME);
+		JCoDestination destination = null;
+
+		if (prodHost.equals(hostName)) {
+			destination = JCoDestinationManager.getDestination(SAPConnection.DESTINATION_NAME);
+		} else {
+			destination = JCoDestinationManager.getDestination(SAPDev600Connection.DESTINATION_NAME);
+		}
+
 		System.out.println("destination=" + destination);
 		JCoFunction function = destination.getRepository().getFunction("ZPPIF_PDM_001");
 		if (function == null) {
@@ -344,7 +372,12 @@ public class StandardSAPService extends StandardManager implements SAPService {
 	private void sendToSapEcoBom(EChangeOrder eco) throws Exception {
 		System.out.println("시작 SAP 인터페이스 - ECO BOM FUN : ZPPIF_PDM_002");
 		// 결재완료 안에서 동작하기에 트랜젝션 제외
-		JCoDestination destination = JCoDestinationManager.getDestination(SAPConnection.DESTINATION_NAME);
+		JCoDestination destination = null;
+		if (prodHost.equals(hostName)) {
+			destination = JCoDestinationManager.getDestination(SAPConnection.DESTINATION_NAME);
+		} else {
+			destination = JCoDestinationManager.getDestination(SAPDev600Connection.DESTINATION_NAME);
+		}
 		JCoFunction function = destination.getRepository().getFunction("ZPPIF_PDM_002");
 		if (function == null) {
 			throw new RuntimeException("STFC_CONNECTION not found in SAP.");
@@ -432,10 +465,17 @@ public class StandardSAPService extends StandardManager implements SAPService {
 						if (!addKey.contains(key)) {
 							addKey.add(key);
 							sendList.add(addDto);
-						}
 
-						link.setSendType("ADD");
-						PersistenceHelper.manager.modify(link);
+							SAPInterfaceBOMLogger logger = SAPInterfaceBOMLogger.newSAPInterfaceBOMLogger();
+							logger.setNewParentNumber(next_part.getNumber());
+							logger.setNewParentVersion(next_part.getVersionIdentifier().getSeries().getValue());
+							logger.setNewChildNumber(addPart.getNumber());
+							logger.setNewChildVersion(addPart.getVersionIdentifier().getSeries().getValue());
+							logger.setSendType("추가");
+							logger.setOwnership(CommonUtil.sessionOwner());
+							logger.setQty(String.valueOf((int) add.get("qty")));
+							PersistenceHelper.manager.save(logger);
+						}
 					}
 
 					ArrayList<String> removeKey = new ArrayList<>();
@@ -458,32 +498,26 @@ public class StandardSAPService extends StandardManager implements SAPService {
 						if (!removeKey.contains(key)) {
 							removeKey.add(key);
 							sendList.add(removeDto);
-						}
 
-//						EcoPartLink removeLink = EcoPartLink.newEcoPartLink((WTPartMaster) removePart.getMaster(), eco);
-//						removeLink.setSendType("REMOVE");
-//						removeLink.setVersion(removePart.getVersionIdentifier().getSeries().getValue());
-//						removeLink.setBaseline(true);
-//						removeLink.setPreOrder(false);
-//						removeLink.setRightPart(false);
-//						removeLink.setLeftPart(true);
-//						removeLink.setPast(false);
-//						PersistenceHelper.manager.save(removeLink);
-						// 삭제품 저장
+							SAPInterfaceBOMLogger logger = SAPInterfaceBOMLogger.newSAPInterfaceBOMLogger();
+							logger.setOldParentNumber(pre_part.getNumber());
+							logger.setOldParentVersion(pre_part.getVersionIdentifier().getSeries().getValue());
+							logger.setOldChildNumber(removePart.getNumber());
+							logger.setOldChildVersion(removePart.getVersionIdentifier().getSeries().getValue());
+							logger.setSendType("삭제");
+							logger.setOwnership(CommonUtil.sessionOwner());
+							logger.setQty(String.valueOf((int) remove.get("qty")));
+							PersistenceHelper.manager.save(logger);
+						}
 					}
 
 					// 변경 대상 리스트..
 					ArrayList<SAPSendBomDTO> changeList = SAPHelper.manager.getOneLevel(next_part, eco);
 					Iterator<SAPSendBomDTO> iterator = changeList.iterator();
 					List<SAPSendBomDTO> itemsToRemove = new ArrayList<>();
-//					ArrayList<String> changeKey = new ArrayList<String>();
 					while (iterator.hasNext()) {
 						SAPSendBomDTO dto = iterator.next();
 						String c = dto.getChildPartNumber();
-						// 자식품
-//						if (c.startsWith("8")) {
-//							itemsToRemove.add(dto);
-//						}
 
 						dto.setSendType("변경품");
 						String compNum = dto.getNewChildPartNumber();
@@ -501,6 +535,23 @@ public class StandardSAPService extends StandardManager implements SAPService {
 
 					// itemsToRemove에 해당하는 모든 아이템을 changeList에서 제거
 					changeList.removeAll(itemsToRemove);
+
+					for (SAPSendBomDTO change : changeList) {
+
+						SAPInterfaceBOMLogger logger = SAPInterfaceBOMLogger.newSAPInterfaceBOMLogger();
+						logger.setOwnership(CommonUtil.sessionOwner());
+						logger.setNewParentNumber(change.getNewParentPartNumber());
+						logger.setNewParentVersion(change.getNewParentPartVersion());
+						logger.setNewChildNumber(change.getNewChildPartNumber());
+						logger.setNewChildVersion(change.getNewChildPartVersion());
+						logger.setOldParentNumber(change.getParentPartNumber());
+						logger.setOldParentVersion(change.getParentPartVersion());
+						logger.setOldChildNumber(change.getChildPartNumber());
+						logger.setOldChildVersion(change.getChildPartVersion());
+						logger.setSendType("변경");
+						logger.setQty(String.valueOf(change.getQty()));
+						PersistenceHelper.manager.save(logger);
+					}
 
 					// 위의 반복문에서 변경된 changeList를 sendList에 추가
 					sendList.addAll(changeList);
@@ -558,7 +609,12 @@ public class StandardSAPService extends StandardManager implements SAPService {
 	 */
 	private void sendToSapEcoPart(EChangeOrder eco) throws Exception {
 		System.out.println("시작 SAP 인터페이스 - ECO 자재마스터 FUN : ZPPIF_PDM_001");
-		JCoDestination destination = JCoDestinationManager.getDestination(SAPConnection.DESTINATION_NAME);
+		JCoDestination destination = null;
+		if (prodHost.equals(hostName)) {
+			destination = JCoDestinationManager.getDestination(SAPConnection.DESTINATION_NAME);
+		} else {
+			destination = JCoDestinationManager.getDestination(SAPDev600Connection.DESTINATION_NAME);
+		}
 		JCoFunction function = destination.getRepository().getFunction("ZPPIF_PDM_001");
 		if (function == null) {
 			throw new RuntimeException("STFC_CONNECTION not found in SAP.");
@@ -697,7 +753,13 @@ public class StandardSAPService extends StandardManager implements SAPService {
 		System.out.println("시작 SAP 인터페이스 - ECN 확정인허가일 FUN : ZPPIF_PDM_003");
 		String oid = (String) params.get("oid");
 
-		JCoDestination destination = JCoDestinationManager.getDestination(SAPConnection.DESTINATION_NAME);
+		JCoDestination destination = null;
+
+		if (prodHost.equals(hostName)) {
+			destination = JCoDestinationManager.getDestination(SAPConnection.DESTINATION_NAME);
+		} else {
+			destination = JCoDestinationManager.getDestination(SAPDev600Connection.DESTINATION_NAME);
+		}
 		JCoFunction function = destination.getRepository().getFunction("ZPPIF_PDM_003");
 		if (function == null) {
 			throw new RuntimeException("STFC_CONNECTION not found in SAP.");

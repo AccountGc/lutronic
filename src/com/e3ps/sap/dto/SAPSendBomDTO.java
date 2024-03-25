@@ -31,37 +31,32 @@ public class SAPSendBomDTO {
 	private String unit;
 	private String sendType;
 	private String key;
-	
+
 	public SAPSendBomDTO() {
-		
+
 	}
 
 	public SAPSendBomDTO(WTPart child, WTPart parent, WTPartUsageLink link, EChangeOrder eco) throws Exception {
-//		WTPart parent = link.getUsedBy();
-		// 이전 부모
 		WTPart pre_parent = SAPHelper.manager.getPre(parent, eco);
-//		WTPartMaster child = link.getUses();
-		// 이전 자식
 		WTPart pre_child = SAPHelper.manager.getPre(child, eco);
 
-//		if (pre_child != null) {
-//			System.out.println("child + " + child.getNumber() + ", pre_child=" + pre_child.getNumber());
-//		} else {
-//			System.out.println("child + " + child.getNumber() + ", pre_child=" + pre_child);
-//		}
-
 		setNewParentPartNumber(parent.getNumber());
+		setNewParentPartVersion(parent.getVersionIdentifier().getSeries().getValue());
 		setNewChildPartNumber(child.getNumber());
+		setNewChildPartVersion(child.getVersionIdentifier().getSeries().getValue());
 		if (pre_parent != null) {
 			setParentPartNumber(pre_parent.getNumber());
+			setParentPartVersion(pre_parent.getVersionIdentifier().getSeries().getValue());
 		} else {
-			// 최상위 까지 가면 기존꺼가 들어간다..
 			setParentPartNumber(parent.getNumber());
+			setParentPartVersion(parent.getVersionIdentifier().getSeries().getValue());
 		}
 		if (pre_child != null) {
 			setChildPartNumber(pre_child.getNumber());
+			setChildPartVersion(pre_child.getVersionIdentifier().getSeries().getValue());
 		} else {
 			setChildPartNumber(child.getNumber());
+			setChildPartVersion(child.getVersionIdentifier().getSeries().getValue());
 		}
 		setQty((int) link.getQuantity().getAmount());
 		setUnit(link.getQuantity().getUnit().toString().toUpperCase());

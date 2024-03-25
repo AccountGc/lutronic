@@ -11,6 +11,7 @@ import wt.doc.WTDocument;
 @Setter
 public class SendPartLoggerDTO {
 
+	private int rowNum;
 	private String number;
 	private String eoNumber;
 	private String name;
