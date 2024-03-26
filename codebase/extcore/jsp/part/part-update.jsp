@@ -132,7 +132,7 @@ QuantityUnit[] unitList = (QuantityUnit[]) request.getAttribute("unitList");
 				<%
 				for (NumberCode productmethod : productmethodList) {
 				%>
-				<option value="<%=productmethod.getCode()%>" <%if (data.getProductmethod().equals(productmethod.getCode())) {%> selected <%}%>><%=productmethod.getName()%></option>
+				<option value="<%=productmethod.getCode()%>" <%if (productmethod.getCode().equals(data.getProductmethod())) {%> selected <%}%>><%=productmethod.getName()%></option>
 				<%
 				}
 				%>

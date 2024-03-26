@@ -76,6 +76,11 @@ boolean popup = Boolean.parseBoolean((String) request.getParameter("popup"));
 			type : "TemplateRenderer"
 		},
 	}, {
+		dataField : "state",
+		headerText : "상태",
+		dataType : "string",
+		width : 100,
+	}, {
 		dataField : "creator",
 		headerText : "등록자",
 		dataType : "string",
