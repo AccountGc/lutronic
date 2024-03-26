@@ -47,6 +47,11 @@ String oid = request.getParameter("oid");
 			}
 		},
 	}, {
+		dataField : "state",
+		headerText : "상태",
+		dataType : "string",
+		width : 100,
+	}, {
 		dataField : "version",
 		headerText : "REV",
 		dataType : "string",

@@ -427,6 +427,7 @@ public class DocumentHelper {
 			map.put("interalnumber", dto.getInteralnumber());
 			map.put("number", dto.getNumber());
 			map.put("version", dto.getVersion());
+			map.put("state", dto.getState());
 			map.put("creator", dto.getCreator());
 			map.put("createdDate", dto.getCreatedDate_txt());
 			map.put("modifier", dto.getModifier());

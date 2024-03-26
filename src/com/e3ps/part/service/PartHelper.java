@@ -386,6 +386,7 @@ public class PartHelper {
 			map.put("number", p.getNumber());
 			map.put("version", p.getVersionIdentifier().getSeries().getValue() + "."
 					+ p.getIterationIdentifier().getSeries().getValue());
+			map.put("state", p.getLifeCycleState().getDisplay());
 			map.put("creator", p.getCreatorFullName());
 			map.put("createdDate", p.getCreateTimestamp().toString().substring(0, 10));
 			map.put("modifier", p.getModifierName());

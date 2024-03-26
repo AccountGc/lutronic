@@ -56,15 +56,15 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 						</div>
 					</div>
 					&nbsp;
-					<div class="pretty p-switch">
-						<input type="radio" name="state" value="COMPLETE">
-						<div class="state p-success">
-							<label>
-								<b>완료</b>
-							</label>
-						</div>
-					</div>
-					&nbsp;
+<!-- 					<div class="pretty p-switch"> -->
+<!-- 						<input type="radio" name="state" value="COMPLETE"> -->
+<!-- 						<div class="state p-success"> -->
+<!-- 							<label> -->
+<!-- 								<b>완료</b> -->
+<!-- 							</label> -->
+<!-- 						</div> -->
+<!-- 					</div> -->
+<!-- 					&nbsp; -->
 					<div class="pretty p-switch">
 						<input type="radio" name="state" value="START" checked="checked">
 						<div class="state p-success">
@@ -74,14 +74,14 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 						</div>
 					</div>
 					&nbsp;
-					<div class="pretty p-switch">
-						<input type="radio" name="state" value="REJECT">
-						<div class="state p-success">
-							<label>
-								<b>반려</b>
-							</label>
-						</div>
-					</div>
+<!-- 					<div class="pretty p-switch"> -->
+<!-- 						<input type="radio" name="state" value="REJECT"> -->
+<!-- 						<div class="state p-success"> -->
+<!-- 							<label> -->
+<!-- 								<b>반려</b> -->
+<!-- 							</label> -->
+<!-- 						</div> -->
+<!-- 					</div> -->
 				</td>
 			</tr>
 			<tr>

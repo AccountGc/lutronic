@@ -634,6 +634,7 @@ public class DrawingHelper {
 			map.put("number", data.getNumber());
 			map.put("version", data.getVersion());
 			map.put("creator", data.getCreator());
+			map.put("state", data.getState());
 			map.put("createdDate", data.getCreateDate());
 			map.put("modifier", data.getModifier());
 			map.put("modifiedDate", data.getModifyDate());
