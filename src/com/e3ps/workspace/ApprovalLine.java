@@ -25,6 +25,8 @@ import wt.util.WTException;
 				@GeneratedProperty(name = "reads", type = Boolean.class, javaDoc = "결재 확인 여부", initialValue = "false"),
 
 				@GeneratedProperty(name = "description", type = String.class, javaDoc = "결재 의견", constraints = @PropertyConstraints(upperLimit = 2000)),
+				
+				@GeneratedProperty(name="mig", type=String.class)
 
 		},
 

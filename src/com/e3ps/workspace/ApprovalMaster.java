@@ -4,6 +4,7 @@ import com.ptc.windchill.annotations.metadata.Cardinality;
 import com.ptc.windchill.annotations.metadata.ForeignKeyRole;
 import com.ptc.windchill.annotations.metadata.GenAsPersistable;
 import com.ptc.windchill.annotations.metadata.GeneratedForeignKey;
+import com.ptc.windchill.annotations.metadata.GeneratedProperty;
 import com.ptc.windchill.annotations.metadata.MyRole;
 import com.ptc.windchill.annotations.metadata.PropertyConstraints;
 
@@ -14,6 +15,8 @@ import wt.util.WTException;
 @GenAsPersistable(superClass = WTObject.class, interfaces = { ApprovalImpl.class },
 
 		properties = {
+
+				@GeneratedProperty(name = "mig", type = String.class)
 
 		},
 

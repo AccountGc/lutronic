@@ -492,7 +492,7 @@ $(".partName").focusout(function () {
 		name += $('#partName4').val();
 	}
 	
-	$('#displayName').html(name);
+// 	$('#displayName').html(name);
 })
 
 // 무게 입력 메서드
