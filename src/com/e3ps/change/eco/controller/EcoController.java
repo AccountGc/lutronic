@@ -413,4 +413,22 @@ public class EcoController extends BaseController {
 		}
 		return result;
 	}
+	
+	@Description(value = "ECO SAP(품질) 전송")
+	@ResponseBody
+	@GetMapping(value = "/qa")
+	public Map<String, Object> qa(@RequestParam String oid) throws Exception {
+		Map<String, Object> result = new HashMap<>();
+		try {
+			EChangeOrder eco = (EChangeOrder) CommonUtil.getObject(oid);
+			SAPHelper.service.qaSapToEco(eco);
+			result.put("msg", "SAP 전송이 완료 되었습니다.");
+			result.put("result", SUCCESS);
+		} catch (Exception e) {
+			e.printStackTrace();
+			result.put("result", FAIL);
+			result.put("msg", e.toString());
+		}
+		return result;
+	}
 }

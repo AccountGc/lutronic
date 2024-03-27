@@ -20,63 +20,48 @@
 <%@page import="com.e3ps.groupware.workprocess.WFItem"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%
-String oid = "com.e3ps.groupware.workprocess.WFItem:1891717";
-WFItem item = (WFItem) CommonUtil.getObject(oid);
-WTObject wtobj = item.getWfObject();
-String v = item.getObjectVersion();
-ArrayList<WFItemUserLink> list = get(item);
+String oid = "com.e3ps.change.EChangeOrder:197979115";
+Persistable per = CommonUtil.getObject(oid);
+WFItem item = getWFItem(per);
 
-String name = WorkspaceHelper.manager.getName((Persistable) wtobj);
-String state = item.getObjectState();
+if (item != null) {
+	String v = item.getObjectVersion();
+	ArrayList<WFItemUserLink> list = get(item);
 
-// 마스터 생성
-ApprovalMaster master = ApprovalMaster.newApprovalMaster();
-master.setName(name);
-master.setCompleteTime(null);
-master.setOwnership(item.getOwnership());
-master.setPersist((Persistable) wtobj);
-master.setStartTime(startTime);
+	String name = WorkspaceHelper.manager.getName(per);
+	String state = item.getObjectState();
 
-if ("INWORK".equals(state)) {
-
-} else if ("APPROVED".equals(state)) {
-
-} else if ("APPROVING".equals(state)) {
-
-} else if ("RETURN".equals(state)) {
-
-}
-
-master = (ApprovalMaster) PersistenceHelper.manager.save(master);
-
-for (WFItemUserLink link : list) {
-	if (wtobj instanceof EChangeOrder) {
-		EChangeOrder eco = (EChangeOrder) wtobj;
+	for (WFItemUserLink link : list) {
+		EChangeOrder eco = (EChangeOrder) per;
+		int processOrder = link.getpro
 		WTUser user = link.getUser(); // 사용자...
 		String actName = link.getActivityName(); // 기안,결재,합의,수신
 		String comment = (String) link.getComment(); // 읩견
 		Timestamp completeDate = link.getProcessDate();
 
-		out.println("ECO 번호 = " + eco.getEoNumber() + ", 결재자 = " + user.getFullName() + ", 활동명 = " + actName + ", 의견 = "
-		+ comment + ", 완료일 = " + completeDate + "<br>");
+		out.println("상태 = " + state + ", ECO 번호 = " + eco.getEoNumber() + ", 결재자 = " + user.getFullName() + ", 활동명 = "
+		+ actName + ", 의견 = " + comment + ", 완료일 = " + completeDate + "<br>");
 
+		
+		
+		
+		
 		if ("기안".equals(actName.trim())) {
-			
-			ApprovalLine startLine = ApprovalLine.newApprovalLine();
-			startLine.setName(name);
-			startLine.setOwnership(item.getOwnership());
-			startLine.setMaster(master);
-			startLine.setReads(true);
-			startLine.setSort(-50);
-			startLine.setStartTime(completeDate);
-			startLine.setType(WorkspaceHelper.SUBMIT_LINE);
-			startLine.setRole(WorkspaceHelper.WORKING_SUBMITTER);
-			startLine.setDescription(item.getOwnership().getOwner().getFullName() + " 사용자가 결재를 기안하였습니다.");
-			startLine.setState(WorkspaceHelper.STATE_SUBMIT_COMPLETE);
-			startLine.setCompleteTime(completeDate);
+	// 		ApprovalLine startLine = ApprovalLine.newApprovalLine();
+	// 		startLine.setName(name);
+	// 		startLine.setOwnership(item.getOwnership());
+	// 		startLine.setMaster(master);
+	// 		startLine.setReads(true);
+	// 		startLine.setSort(-50);
+	// 		startLine.setStartTime(completeDate);
+	// 		startLine.setType(WorkspaceHelper.SUBMIT_LINE);
+	// 		startLine.setRole(WorkspaceHelper.WORKING_SUBMITTER);
+	// 		startLine.setDescription(item.getOwnership().getOwner().getFullName() + " 사용자가 결재를 기안하였습니다.");
+	// 		startLine.setState(WorkspaceHelper.STATE_SUBMIT_COMPLETE);
+	// 		startLine.setCompleteTime(completeDate);
 
-			PersistenceHelper.manager.save(startLine);
-			
+	// 		PersistenceHelper.manager.save(startLine);
+
 		} else if ("결재".equals(actName.trim())) {
 
 		} else if ("수신".equals(actName.trim())) {
@@ -89,6 +74,20 @@ for (WFItemUserLink link : list) {
 }
 %>
 
+<%!public static WFItem getWFItem(Persistable per) throws Exception {
+		long id = per.getPersistInfo().getObjectIdentifier().getId();
+
+		QuerySpec query = new QuerySpec();
+		int idx = query.appendClassList(WFItem.class, true);
+		SearchCondition sc = new SearchCondition(WFItem.class, "wfObjectReference.key.id", "=", id);
+		query.appendWhere(sc, new int[] { idx });
+		QueryResult qr = PersistenceHelper.manager.find(query);
+		if (qr.hasMoreElements()) {
+			Object[] obj = (Object[]) qr.nextElement();
+			return (WFItem) obj[0];
+		}
+		return null;
+	}%>
 
 <%!public static ArrayList<WFItemUserLink> get(WFItem item) throws Exception {
 		ArrayList<WFItemUserLink> list = new ArrayList<WFItemUserLink>();
@@ -103,8 +102,9 @@ for (WFItemUserLink link : list) {
 		sc = new SearchCondition(WFItemUserLink.class, WFItemUserLink.DISABLED, SearchCondition.IS_FALSE);
 		qs.appendWhere(sc, new int[] { idx_l });
 
-		ClassAttribute ca = new ClassAttribute(WFItemUserLink.class, WFItemUserLink.CREATE_TIMESTAMP);
-		OrderBy by = new OrderBy(ca, true);
+		ClassAttribute ca = new ClassAttribute(WFItemUserLink.class, WFItemUserLink.PROCESS_ORDER);
+		OrderBy by = new OrderBy(ca, false);
+		qs.appendOrderBy(by, new int[] { idx_l });
 		QueryResult rs = PersistenceHelper.manager.find(qs);
 		while (rs.hasMoreElements()) {
 			Object[] obj = (Object[]) rs.nextElement();

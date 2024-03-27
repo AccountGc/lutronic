@@ -33,4 +33,9 @@ public interface SAPService {
 	 */
 	public abstract void sendSapToEcn(Map<String, Object> params) throws Exception;
 
+	
+	/**
+	 * SAP ECO 재전송
+	 */
+	public abstract void qaSapToEco(EChangeOrder e) throws Exception;
 }

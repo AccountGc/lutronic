@@ -27,6 +27,13 @@ Map<String, Object> contentMap = dto.getContentMap();
 				<option value="INWORK">작업 중</option>
 				<option value="APPROVED">승인됨</option>
 			</select>
+			<%
+				if(isAdmin) {
+			%>
+			<input type="button" value="SAP전송(품질)" title="SAP전송(품질)"" class="blue" onclick="qa();">
+			<%
+				}
+			%>
 			<input type="button" value="SAP재전송" title="SAP재전송" class="red" onclick="resend();">
 			<%
 			}
@@ -447,6 +454,24 @@ Map<String, Object> contentMap = dto.getContentMap();
 				clsoeLayer();
 			}
 		}, "DELETE");
+	}
+	
+	
+	function qa() {
+		if (!confirm("SAP(품질) 전송을 하시겠습니까?")) {
+			return false;
+		}
+		
+		const oid = document.getElementById("oid").value;
+		const url = getCallUrl("/eco/qa?oid=" + oid);
+		openLayer();
+		call(url, null, function(data) {
+			alert(data.msg);
+			if (data.result) {
+				document.location.reload();
+			}
+			closeLayer();
+		}, "GET");
 	}
 	
 	function resend() {
