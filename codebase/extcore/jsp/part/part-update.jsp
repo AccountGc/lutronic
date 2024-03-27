@@ -149,7 +149,7 @@ QuantityUnit[] unitList = (QuantityUnit[]) request.getAttribute("unitList");
 				<%
 				for (NumberCode deptcode : deptcodeList) {
 				%>
-				<option value="<%=deptcode.getCode()%>" <%if (data.getDeptcode().equals(deptcode.getCode())) {%> selected <%}%>><%=deptcode.getName()%></option>
+				<option value="<%=deptcode.getCode()%>" <%if (deptcode.getCode().equals(data.getDeptcode())) {%> selected <%}%>><%=deptcode.getName()%></option>
 				<%
 				}
 				%>

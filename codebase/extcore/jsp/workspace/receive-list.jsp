@@ -41,21 +41,21 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 			</colgroup>
 			<tr>
 				<th>결재 제목</th>
-				<td class="indent5">
+				<td class="indent5" colspan="3">
 					<input type="text" name="name" id="name" class="width-300">
 				</td>
-				<th>상태</th>
-				<td>
-					&nbsp;
-					<div class="pretty p-switch">
-						<input type="radio" name="state" value="ALL">
-						<div class="state p-success">
-							<label>
-								<b>전체</b>
-							</label>
-						</div>
-					</div>
-					&nbsp;
+<!-- 				<th>상태</th> -->
+<!-- 				<td> -->
+<!-- 					&nbsp; -->
+<!-- 					<div class="pretty p-switch"> -->
+<!-- 						<input type="radio" name="state" value="ALL"> -->
+<!-- 						<div class="state p-success"> -->
+<!-- 							<label> -->
+<!-- 								<b>전체</b> -->
+<!-- 							</label> -->
+<!-- 						</div> -->
+<!-- 					</div> -->
+<!-- 					&nbsp; -->
 <!-- 					<div class="pretty p-switch"> -->
 <!-- 						<input type="radio" name="state" value="COMPLETE"> -->
 <!-- 						<div class="state p-success"> -->
@@ -65,14 +65,14 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 <!-- 						</div> -->
 <!-- 					</div> -->
 <!-- 					&nbsp; -->
-					<div class="pretty p-switch">
-						<input type="radio" name="state" value="START" checked="checked">
-						<div class="state p-success">
-							<label>
-								<b>수신확인중</b>
-							</label>
-						</div>
-					</div>
+<!-- 					<div class="pretty p-switch"> -->
+<!-- 						<input type="radio" name="state" value="START" checked="checked"> -->
+<!-- 						<div class="state p-success"> -->
+<!-- 							<label> -->
+<!-- 								<b>수신확인중</b> -->
+<!-- 							</label> -->
+<!-- 						</div> -->
+<!-- 					</div> -->
 					&nbsp;
 <!-- 					<div class="pretty p-switch"> -->
 <!-- 						<input type="radio" name="state" value="REJECT"> -->
@@ -82,7 +82,7 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 <!-- 							</label> -->
 <!-- 						</div> -->
 <!-- 					</div> -->
-				</td>
+<!-- 				</td> -->
 			</tr>
 			<tr>
 				<th>기안자</th>

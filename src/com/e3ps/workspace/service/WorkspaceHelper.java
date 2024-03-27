@@ -279,20 +279,20 @@ public class WorkspaceHelper {
 
 		QuerySpecUtils.toInnerJoin(query, ApprovalLine.class, ApprovalMaster.class, "masterReference.key.id",
 				WTAttributeNameIfc.ID_NAME, idx, idx_master);
-		if ("ALL".equals(state)) {
-			query.appendAnd();
-			query.appendOpenParen();
-			QuerySpecUtils.toEquals(query, idx, ApprovalLine.class, ApprovalLine.STATE, STATE_RECEIVE_START);
-			QuerySpecUtils.toEqualsOr(query, idx, ApprovalLine.class, ApprovalLine.STATE, STATE_RECEIVE_COMPLETE);
-			QuerySpecUtils.toEqualsOr(query, idx, ApprovalLine.class, ApprovalLine.STATE, STATE_RECEIVE_REJECT);
-			query.appendCloseParen();
-		} else if ("START".equals(state)) {
+//		if ("ALL".equals(state)) {
+//			query.appendAnd();
+//			query.appendOpenParen();
+//			QuerySpecUtils.toEquals(query, idx, ApprovalLine.class, ApprovalLine.STATE, STATE_RECEIVE_START);
+//			QuerySpecUtils.toEqualsOr(query, idx, ApprovalLine.class, ApprovalLine.STATE, STATE_RECEIVE_COMPLETE);
+//			QuerySpecUtils.toEqualsOr(query, idx, ApprovalLine.class, ApprovalLine.STATE, STATE_RECEIVE_REJECT);
+//			query.appendCloseParen();
+//		} else if ("START".equals(state)) {
 			QuerySpecUtils.toEqualsAnd(query, idx, ApprovalLine.class, ApprovalLine.STATE, STATE_RECEIVE_START);
-		} else if ("COMPLETE".equals(state)) {
-			QuerySpecUtils.toEqualsAnd(query, idx, ApprovalLine.class, ApprovalLine.STATE, STATE_RECEIVE_COMPLETE);
-		} else if ("REJECT".equals(state)) {
-			QuerySpecUtils.toEqualsAnd(query, idx, ApprovalLine.class, ApprovalLine.STATE, STATE_RECEIVE_REJECT);
-		}
+//		} else if ("COMPLETE".equals(state)) {
+//			QuerySpecUtils.toEqualsAnd(query, idx, ApprovalLine.class, ApprovalLine.STATE, STATE_RECEIVE_COMPLETE);
+//		} else if ("REJECT".equals(state)) {
+//			QuerySpecUtils.toEqualsAnd(query, idx, ApprovalLine.class, ApprovalLine.STATE, STATE_RECEIVE_REJECT);
+//		}
 
 		QuerySpecUtils.toNotEqualsAnd(query, idx, ApprovalLine.class, ApprovalLine.STATE, STATE_RECEIVE_READY);
 		QuerySpecUtils.toEqualsAnd(query, idx, ApprovalLine.class, ApprovalLine.TYPE, RECEIVE_LINE);
