@@ -285,9 +285,12 @@ public class ActivityHelper {
 		QuerySpecUtils.toTimeGreaterAndLess(query, idx_eca, EChangeActivity.class, EChangeActivity.CREATE_TIMESTAMP,
 				receiveFrom, receiveTo);
 		QuerySpecUtils.toOrderBy(query, idx_eca, EChangeActivity.class, EChangeActivity.CREATE_TIMESTAMP, true);
-		
+
 		boolean sort = QuerySpecUtils.toSort(sortType);
 		QuerySpecUtils.toOrderBy(query, idx_eca, EChangeActivity.class, toSortKey(sortKey), sort);
+
+		System.out.println(query);
+
 		PageQueryUtils pager = new PageQueryUtils(params, query);
 		PagingQueryResult result = pager.find();
 		int rowNum = (pager.getCpage() - 1) * pager.getPsize() + 1;
@@ -320,8 +323,8 @@ public class ActivityHelper {
 		return map;
 	}
 
-	private String toSortKey(String sortKey) throws Exception{
-		if("activityName".equals(sortKey)) {
+	private String toSortKey(String sortKey) throws Exception {
+		if ("activityName".equals(sortKey)) {
 			return EChangeActivity.ACTIVE_TYPE;
 		}
 		return EChangeActivity.CREATE_TIMESTAMP;
