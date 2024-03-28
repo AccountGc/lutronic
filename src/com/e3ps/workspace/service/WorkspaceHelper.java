@@ -287,7 +287,7 @@ public class WorkspaceHelper {
 //			QuerySpecUtils.toEqualsOr(query, idx, ApprovalLine.class, ApprovalLine.STATE, STATE_RECEIVE_REJECT);
 //			query.appendCloseParen();
 //		} else if ("START".equals(state)) {
-			QuerySpecUtils.toEqualsAnd(query, idx, ApprovalLine.class, ApprovalLine.STATE, STATE_RECEIVE_START);
+		QuerySpecUtils.toEqualsAnd(query, idx, ApprovalLine.class, ApprovalLine.STATE, STATE_RECEIVE_START);
 //		} else if ("COMPLETE".equals(state)) {
 //			QuerySpecUtils.toEqualsAnd(query, idx, ApprovalLine.class, ApprovalLine.STATE, STATE_RECEIVE_COMPLETE);
 //		} else if ("REJECT".equals(state)) {
@@ -797,13 +797,16 @@ public class WorkspaceHelper {
 		ArrayList<Map<String, String>> list = new ArrayList<>();
 		ApprovalMaster master = getMaster(per);
 
+		String n = getName(per);
+
 		if (master != null) {
 			ApprovalLine submit = getSubmitLine(master);
 			Map<String, String> data = new HashMap<>();
 			data.put("oid", submit.getPersistInfo().getObjectIdentifier().getStringValue());
 			data.put("type", submit.getType());
 			data.put("role", submit.getRole());
-			data.put("name", submit.getName());
+//			data.put("name", submit.getName());
+			data.put("name", n);
 			data.put("state", submit.getState());
 			data.put("owner", submit.getOwnership().getOwner().getFullName());
 			data.put("receiveDate_txt",
@@ -819,7 +822,9 @@ public class WorkspaceHelper {
 				map.put("oid", agreeLine.getPersistInfo().getObjectIdentifier().getStringValue());
 				map.put("type", agreeLine.getType());
 				map.put("role", agreeLine.getRole());
-				map.put("name", agreeLine.getName());
+//				map.put("name", agreeLine.getName());
+//				data.put("name", n);
+				map.put("name", n);
 				map.put("state", agreeLine.getState());
 				map.put("owner", agreeLine.getOwnership().getOwner().getFullName());
 				map.put("receiveDate_txt",
@@ -837,7 +842,8 @@ public class WorkspaceHelper {
 				map.put("oid", approvalLine.getPersistInfo().getObjectIdentifier().getStringValue());
 				map.put("type", approvalLine.getType());
 				map.put("role", approvalLine.getRole());
-				map.put("name", approvalLine.getName());
+//				map.put("name", approvalLine.getName());
+				map.put("name", n);
 				map.put("state", approvalLine.getState());
 				map.put("owner", approvalLine.getOwnership().getOwner().getFullName());
 				map.put("receiveDate_txt",
@@ -857,7 +863,8 @@ public class WorkspaceHelper {
 				map.put("oid", receiveLine.getPersistInfo().getObjectIdentifier().getStringValue());
 				map.put("type", receiveLine.getType());
 				map.put("role", receiveLine.getRole());
-				map.put("name", receiveLine.getName());
+//				map.put("name", receiveLine.getName());
+				map.put("name", n);
 				map.put("state", receiveLine.getState());
 				map.put("owner", receiveLine.getOwnership().getOwner().getFullName());
 				map.put("receiveDate_txt",
