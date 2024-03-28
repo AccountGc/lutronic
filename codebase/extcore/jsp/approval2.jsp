@@ -1,3 +1,4 @@
+<%@page import="java.io.StreamCorruptedException"%>
 <%@page import="wt.epm.build.EPMBuildRule"%>
 <%@page import="com.e3ps.common.util.StringUtil"%>
 <%@page import="wt.ownership.Ownership"%>
@@ -29,10 +30,15 @@
 QuerySpec query = new QuerySpec();
 int idx = query.appendClassList(EChangeOrder.class, true);
 QueryResult qr = PersistenceHelper.manager.find(query);
-out.println("전체 개수 = " + qr.size());
+out.println("시작!!!!");
+System.out.println("시작!!!!");
+int count = 0;
 while (qr.hasMoreElements()) {
+	count++;
 	Object[] obj = (Object[]) qr.nextElement();
 	Persistable per = (Persistable) obj[0];
+	EChangeOrder eco = (EChangeOrder) per;
+	System.out.println("COUNT = " + count + ", ECO = " + eco.getEoNumber());
 	WFItem item = getWFItem(per);
 	ApprovalMaster master = null;
 	if (item != null) {
@@ -45,13 +51,12 @@ while (qr.hasMoreElements()) {
 		if ("APPROVED".equals(state)) {
 
 	for (WFItemUserLink link : list) {
-		EChangeOrder eco = (EChangeOrder) per;
 		int processOrder = link.getProcessOrder();
 		WTUser user = link.getUser(); // 사용자...
 		String actName = link.getActivityName(); // 기안,결재,합의,수신
 		String comment = (String) link.getComment(); // 읩견
 		String lineState = link.getState();
-		
+
 		if (!StringUtil.checkString(lineState)) {
 			continue;
 		}
@@ -123,6 +128,8 @@ while (qr.hasMoreElements()) {
 		}
 	}
 }
+out.println("정상 종료 시작!!!!" + count);
+System.out.println("정상 종료 시작!!!!" + count);
 %>
 
 <%!public static WFItem getWFItem(Persistable per) throws Exception {

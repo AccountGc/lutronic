@@ -58,6 +58,7 @@ public class ApprovalLineColumn {
 	}
 
 	public ApprovalLineColumn(ApprovalLine line, String column) throws Exception {
+		String name = WorkspaceHelper.manager.getName(line.getMaster().getPersist());
 		ApprovalMaster master = line.getMaster();
 		// 결재함
 		if (APPROVAL_COLUMN.equals(column)) {
@@ -65,7 +66,8 @@ public class ApprovalLineColumn {
 			setReads(line.getReads());
 			setType(line.getType());
 			setRole(line.getRole());
-			setName(line.getName());
+//			setName(line.getName());
+			setName(name);
 			setCreator(line.getMaster().getOwnership().getOwner().getFullName());
 			setState(line.getState());
 			setSubmiter(master.getOwnership().getOwner().getFullName());
@@ -75,7 +77,8 @@ public class ApprovalLineColumn {
 			setOid(line.getPersistInfo().getObjectIdentifier().getStringValue());
 			setReads(line.getReads());
 			setType(line.getType());
-			setName(line.getName());
+//			setName(line.getName());
+			setName(name);
 			setCreator(line.getMaster().getOwnership().getOwner().getFullName());
 			setRole(line.getRole());
 			setSubmiter(master.getOwnership().getOwner().getFullName());
@@ -86,7 +89,8 @@ public class ApprovalLineColumn {
 			setOid(line.getPersistInfo().getObjectIdentifier().getStringValue());
 			setReads(line.getReads());
 			setType(line.getType());
-			setName(line.getName());
+//			setName(line.getName());
+			setName(name);
 			setRole(line.getRole());
 			setState(line.getState());
 			setSubmiter(master.getOwnership().getOwner().getFullName());
@@ -97,10 +101,12 @@ public class ApprovalLineColumn {
 	}
 
 	public ApprovalLineColumn(ApprovalMaster master, String column) throws Exception {
+		String name = WorkspaceHelper.manager.getName(master.getPersist());
 		if (PROGRESS_COLUMN.equals(column)) {
 			// 진행함
 			setOid(master.getPersistInfo().getObjectIdentifier().getStringValue());
-			setName(master.getName());
+//			setName(master.getName());
+			setName(name);
 			setCreatedDate(master.getCreateTimestamp());
 			setSubmiter(master.getOwnership().getOwner().getFullName());
 			setState(master.getState());
@@ -108,7 +114,8 @@ public class ApprovalLineColumn {
 		} else if (COMPLETE_COLUMN.equals("COMPLETE_COLUMN")) {
 			setOid(master.getPersistInfo().getObjectIdentifier().getStringValue());
 			setType(master.getType());
-			setName(master.getName());
+//			setName(master.getName());
+			setName(name);
 			setSubmiter(master.getOwnership().getOwner().getFullName());
 			setState(master.getState());
 			setCreatedDate(master.getCreateTimestamp());
@@ -116,7 +123,8 @@ public class ApprovalLineColumn {
 		} else if (REJECT_COLUMN.equals("REJECT_COLUMN")) {
 			// 반려함
 			setOid(master.getPersistInfo().getObjectIdentifier().getStringValue());
-			setName(master.getName());
+//			setName(master.getName());
+			setName(name);
 			setCreatedDate(master.getCreateTimestamp());
 			setSubmiter(master.getOwnership().getOwner().getFullName());
 			setState(master.getState());

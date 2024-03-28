@@ -260,7 +260,7 @@ public class ActivityHelper {
 		Map<String, Object> map = new HashMap<>();
 		ArrayList<Map<String, Object>> list = new ArrayList<>();
 		WTUser sessionUser = CommonUtil.sessionUser();
-		String name = (String) params.get("name");
+		String number = (String) params.get("number");
 		String submiterOid = (String) params.get("submiterOid");
 		String receiveFrom = (String) params.get("receiveFrom");
 		String receiveTo = (String) params.get("receiveTo");
@@ -280,7 +280,7 @@ public class ActivityHelper {
 					sessionUser);
 		}
 		QuerySpecUtils.toEqualsAnd(query, idx_eca, EChangeActivity.class, "state.state", "INWORK");
-		QuerySpecUtils.toLikeAnd(query, idx_eco, EChangeOrder.class, EChangeOrder.EO_NAME, name);
+		QuerySpecUtils.toLikeAnd(query, idx_eco, EChangeOrder.class, EChangeOrder.EO_NUMBER, number);
 		QuerySpecUtils.toCreatorQuery(query, idx_eca, EChangeActivity.class, submiterOid);
 		QuerySpecUtils.toTimeGreaterAndLess(query, idx_eca, EChangeActivity.class, EChangeActivity.CREATE_TIMESTAMP,
 				receiveFrom, receiveTo);

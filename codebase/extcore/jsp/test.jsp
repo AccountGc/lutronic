@@ -30,38 +30,41 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%
 //http://pdm.lutronic.com/Windchill/plm/eco/view?oid=com.e3ps.change.EChangeOrder:239335886
-String oid = "com.e3ps.change.EChangeOrder:239335886";
+String oid = "com.e3ps.change.EChangeOrder:200380370";
 EChangeOrder eco = (EChangeOrder) CommonUtil.getObject(oid);
 
 QueryResult qr = PersistenceHelper.manager.navigate(eco, "part", EcoPartLink.class, false);
-System.out.println("정전개 대상 몇번인가 = " + qr.size());
+out.println("개수 = " + qr.size());
+// System.out.println("정전개 대상 몇번인가 = " + qr.size());
 while (qr.hasMoreElements()) {
 	EcoPartLink link = (EcoPartLink) qr.nextElement();
-	WTPartMaster master = link.getPart();
-	String version = link.getVersion();
-	WTPart target = PartHelper.manager.getPart(master.getNumber(), version);
-	boolean isPast = link.getPast();
-
-	WTPart next_part = null;
-	WTPart pre_part = null;
-
-	out.println(isPast);
-	if (!isPast) { // 과거 아닐경우 과거 데이터는 어떻게 할지..???
-		boolean isRight = link.getRightPart();
-		boolean isLeft = link.getLeftPart();
-		// 오른쪽이면 다음 버전 품목을 전송해야한다.. 이게 맞는듯
-		if (isLeft) {
-	// 왼쪽이면 승인됨 데이터..그니깐 개정후 데이터를 보낸다 근데 변경점이 없지만 PDM상에서 버전은 올라간 상태
-	next_part = (WTPart) EChangeUtils.manager.getNext(target);
-	pre_part = target;
-		} else if (isRight) {
-	// 오른쪽 데이터면 애시당초 바귄 대상 품번 그대로 넣어준다..
-	next_part = target;
-	pre_part = SAPHelper.manager.getPre(target, eco);
-		}
-	}
-
-	out.println("next_part = " + next_part + ", pre_part = " + pre_part + "<br>");
-
+	PersistenceHelper.manager.delete(link);
 }
+// 	WTPartMaster master = link.getPart();
+// 	String version = link.getVersion();
+// 	WTPart target = PartHelper.manager.getPart(master.getNumber(), version);
+// 	boolean isPast = link.getPast();
+
+// 	WTPart next_part = null;
+// 	WTPart pre_part = null;
+
+// 	out.println(isPast);
+// 	if (!isPast) { // 과거 아닐경우 과거 데이터는 어떻게 할지..???
+// 		boolean isRight = link.getRightPart();
+// 		boolean isLeft = link.getLeftPart();
+// 		// 오른쪽이면 다음 버전 품목을 전송해야한다.. 이게 맞는듯
+// 		if (isLeft) {
+// 	// 왼쪽이면 승인됨 데이터..그니깐 개정후 데이터를 보낸다 근데 변경점이 없지만 PDM상에서 버전은 올라간 상태
+// 	next_part = (WTPart) EChangeUtils.manager.getNext(target);
+// 	pre_part = target;
+// 		} else if (isRight) {
+// 	// 오른쪽 데이터면 애시당초 바귄 대상 품번 그대로 넣어준다..
+// 	next_part = target;
+// 	pre_part = SAPHelper.manager.getPre(target, eco);
+// 		}
+// 	}
+
+// 	out.println("next_part = " + next_part + ", pre_part = " + pre_part + "<br>");
+
+// }
 %>

@@ -39,9 +39,9 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 				<col width="*">
 			</colgroup>
 			<tr>
-				<th>EO/ECO 제목</th>
+				<th>EO/ECO 번호</th>
 				<td colspan="3" class="indent5">
-					<input type="text" name="name" id="name" class="width-300">
+					<input type="text" name="number" id="number" class="width-300">
 				</td>
 			</tr>
 			<tr>
