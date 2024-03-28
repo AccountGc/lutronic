@@ -217,7 +217,7 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 				}
 				let params = new Object();
 				const url = getCallUrl("/activity/eca");
-				const field = [ "sortType", "sortKey", "name", "submiterOid", "receiveFrom", "receiveTo" ];
+				const field = [ "sortType", "sortKey", "number", "submiterOid", "receiveFrom", "receiveTo" ];
 				params = toField(params, field);
 				AUIGrid.showAjaxLoader(myGridID);
 				parent.openLayer();
@@ -239,7 +239,7 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 			}
 
 			document.addEventListener("DOMContentLoaded", function() {
-				toFocus("name");
+				toFocus("number");
 				const columns = loadColumnLayout("eca-list");
 				const contenxtHeader = genColumnHtml(columns);
 				$("#h_item_ul").append(contenxtHeader);
