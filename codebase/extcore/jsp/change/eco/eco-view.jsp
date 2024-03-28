@@ -30,7 +30,7 @@ Map<String, Object> contentMap = dto.getContentMap();
 			<%
 				if(isAdmin) {
 			%>
-			<input type="button" value="SAP전송(품질)" title="SAP전송(품질)"" class="blue" onclick="qa();">
+<!-- 			<input type="button" value="SAP전송(품질)" title="SAP전송(품질)"" class="blue" onclick="qa();"> -->
 			<%
 				}
 			%>

@@ -300,11 +300,11 @@ public class WorkspaceHelper {
 				receiveTo);
 		QuerySpecUtils.toCreator(query, idx_master, ApprovalMaster.class, submiterOid);
 
-//		if (!CommonUtil.isAdmin()) {
-//			WTUser sessionUser = CommonUtil.sessionUser();
-//			QuerySpecUtils.toCreator(query, idx, ApprovalLine.class,
-//					sessionUser.getPersistInfo().getObjectIdentifier().getStringValue());
-//		}
+		if (!CommonUtil.isAdmin()) {
+			WTUser sessionUser = CommonUtil.sessionUser();
+			QuerySpecUtils.toCreator(query, idx, ApprovalLine.class,
+					sessionUser.getPersistInfo().getObjectIdentifier().getStringValue());
+		}
 
 		QuerySpecUtils.toLikeAnd(query, idx, ApprovalLine.class, ApprovalLine.NAME, name);
 		QuerySpecUtils.toOrderBy(query, idx, ApprovalLine.class, ApprovalLine.START_TIME, true);

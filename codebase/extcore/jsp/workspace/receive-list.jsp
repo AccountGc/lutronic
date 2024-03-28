@@ -276,10 +276,10 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 				}
 				let params = new Object();
 				const url = getCallUrl("/workspace/receive");
-				const state = document.querySelector("input[name=state]:checked").value;
+// 				const state = document.querySelector("input[name=state]:checked").value;
 				const field = [ "sortKey", "sortType", "name", "receiveFrom", "receiveTo", "submiterOid" ];
 				params = toField(params, field);
-				params.state = state;
+// 				params.state = state;
 				AUIGrid.showAjaxLoader(myGridID);
 				parent.openLayer();
 				call(url, params, function(data) {
