@@ -201,65 +201,11 @@ boolean isAdmin = (boolean) request.getAttribute("isAdmin");
 					width : 100,
 					editable : false,
 				}, {
-					dataField : "worker_oid",
+					dataField : "worker_name",
 					headerText : "담당자",
 					dateType : "string",
 					width : 100,
-					editable : true,
-					renderer : {
-						type : "IconRenderer",
-						iconWidth : 16,
-						iconHeight : 16,
-						iconPosition : "aisleRight",
-						iconTableRef : {
-							"default" : "/Windchill/extcore/component/AUIGrid/images/list-icon.png"
-						},
-						onClick : function(event) {
-							AUIGrid.openInputer(event.pid);
-						}
-					},
-					labelFunction : function(rowIndex, columnIndex, value, headerText, item) {
-						let retStr = "";
-						for (let i = 0, len = list.length; i < len; i++) {
-							if (list[i]["key"] == value) {
-								retStr = list[i]["value"];
-								break;
-							}
-						}
-						return retStr == "" ? value : retStr;
-					},
-					editRenderer : {
-						type : "ComboBoxRenderer",
-						list : list,
-						matchFromFirst : false,
-						autoCompleteMode : true, // 자동완성 모드 설정
-						autoEasyMode : true, // 자동완성 모드일 때 자동 선택할지 여부 (기본값 : false)
-						showEditorBtnOver : true, // 마우스 오버 시 에디터버턴 보이기
-						keyField : "key",
-						valueField : "value",
-						validator : function(oldValue, newValue, item, dataField, fromClipboard, which) {
-							let isValid = false;
-							if (!fromClipboard) {
-								for (let i = 0, len = list.length; i < len; i++) {
-									if (list[i]["value"] == newValue) {
-										isValid = true;
-										break;
-									}
-								}
-							} else {
-								for (let i = 0, len = list.length; i < len; i++) {
-									if (list[i]["key"] == newValue) {
-										isValid = true;
-										break;
-									}
-								}
-							}
-							return {
-								"validate" : isValid,
-								"message" : "리스트에 있는 값만 선택(입력) 가능합니다."
-							};
-						}
-					},
+// 					editable : true,
 // 				}, {
 // 					dataField : "creator",
 // 					headerText : "등록자",
@@ -301,7 +247,7 @@ boolean isAdmin = (boolean) request.getAttribute("isAdmin");
 				myGridID = AUIGrid.create("#grid_wrap", columnLayout, props);
 // 				loadGridData();
 				AUIGrid.bind(myGridID, "contextMenu", auiContextMenuHandler);
-				AUIGrid.bind(myGridID, "cellEditBegin", auiCellEditBeginHandler);
+// 				AUIGrid.bind(myGridID, "cellEditBegin", auiCellEditBeginHandler);
 				AUIGrid.bind(myGridID, "vScrollChange", function(event) {
 					hideContextMenu();
 				});
@@ -343,6 +289,7 @@ boolean isAdmin = (boolean) request.getAttribute("isAdmin");
 				AUIGrid.showAjaxLoader(myGridID);
 				parent.openLayer();
 				call(url, params, function(data) {
+					logger(data);
 					AUIGrid.removeAjaxLoader(myGridID);
 					if (data.result) {
 						totalPage = Math.ceil(data.total / data.pageSize);

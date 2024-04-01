@@ -182,7 +182,10 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 			}, {
 				key : "C",
 				value : "전용(C)"
-			}, ];
+			}, {
+				key : "N/A",
+				value : "N/A"
+			}];
 			const list =
 		<%=clist%>
 			const columns = [ {
@@ -866,6 +869,7 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 					alert(data.msg);
 					if (data.result) {
 						parent.updateActivity();
+						parent.updateHeader();
 						document.location.href = getCallUrl("/activity/eca");
 					}
 					parent.closeLayer();

@@ -18,14 +18,6 @@ boolean validate = dto.isValidate();
 	<form>
 		<input type="hidden" name="oid" id="oid" value="<%=dto.getOid()%>">
 		<input type="hidden" name="poid" id="poid" value="<%=dto.getPoid()%>">
-		<%
-		if (dto.isValidate()) {
-			// 검증..
-		%>
-		<input type="hidden" name="validate" id="validate">
-		<%
-		}
-		%>
 
 		<table class="button-table">
 			<tr>
