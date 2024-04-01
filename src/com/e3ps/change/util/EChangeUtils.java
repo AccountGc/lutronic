@@ -225,7 +225,10 @@ public class EChangeUtils {
 		System.out.println("ECO 대상품목 개수 = " + ecoParts.size());
 
 		// ECO 정보로 ECN 자동 생성
-		EcnHelper.service.create(eco, ecoParts, completeParts);
+
+		if (eco.getSendType().equals("SCO")) {
+			EcnHelper.service.create(eco, ecoParts, completeParts);
+		}
 
 		SAPHelper.service.sendSapToEco(eco);
 
@@ -324,7 +327,6 @@ public class EChangeUtils {
 		return pre_part;
 	}
 
-	
 	/**
 	 * ECO와 연관 시켜 개정품 이력 품목
 	 */
@@ -347,7 +349,6 @@ public class EChangeUtils {
 		return next_part;
 	}
 
-	
 	/**
 	 * ECO 관련 목품 그룹핑 정보
 	 */
