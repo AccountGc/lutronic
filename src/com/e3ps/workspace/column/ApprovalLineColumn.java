@@ -85,7 +85,7 @@ public class ApprovalLineColumn {
 			setState(line.getState());
 			setReceiveTime(line.getCreateTimestamp());
 			setComplete(line.getCompleteTime() != null ? true : false);
-		} else if(AGREE_COLUMN.equals("AGREE_COLUMN")) {
+		} else if (AGREE_COLUMN.equals("AGREE_COLUMN")) {
 			setOid(line.getPersistInfo().getObjectIdentifier().getStringValue());
 			setReads(line.getReads());
 			setType(line.getType());
@@ -143,7 +143,7 @@ public class ApprovalLineColumn {
 		ApprovalLine submitLine = WorkspaceHelper.manager.getSubmitLine(master);
 
 		String point = "<img src='/Windchill/extcore/images/process-nleft.gif' class='line'><span class='inactive'><span class='text'>"
-				+ submitLine.getOwnership().getOwner().getFullName() + "</span></span>"
+				+ submitLine.getOwnership().getOwner().getFullName() + "(기안)</span></span>"
 				+ "<img src='/Windchill/extcore/images/process-nright.gif' class='line'>";
 
 		point += "<img src='/Windchill/extcore/images/process-line.gif' class='line dot'>";
@@ -153,11 +153,11 @@ public class ApprovalLineColumn {
 			ApprovalLine approvalLine = (ApprovalLine) approvalLines.get(i);
 			if (approvalLine.getState().equals(WorkspaceHelper.STATE_APPROVAL_APPROVING)) {
 				point += "<img src='/Windchill/extcore/images/process-sleft.gif' class='line'><span class='active'><span class='text'>"
-						+ approvalLine.getOwnership().getOwner().getFullName() + "</span></span>"
+						+ approvalLine.getOwnership().getOwner().getFullName() + "(결재)</span></span>"
 						+ "<img src='/Windchill/extcore/images/process-sright.gif' class='line'>";
 			} else {
 				point += "<img src='/Windchill/extcore/images/process-nleft.gif' class='line'><span class='inactive'><span class='text'>"
-						+ approvalLine.getOwnership().getOwner().getFullName() + "</span></span>"
+						+ approvalLine.getOwnership().getOwner().getFullName() + "(결재대기)</span></span>"
 						+ "<img src='/Windchill/extcore/images/process-nright.gif' class='line'>";
 			}
 
@@ -165,6 +165,21 @@ public class ApprovalLineColumn {
 				point += "<img src='/Windchill/extcore/images/process-line.gif' class='line dot'>";
 			}
 		}
+
+		point += "<img src='/Windchill/extcore/images/process-line.gif' class='line dot'>";
+		
+		ArrayList<ApprovalLine> agreeLines = WorkspaceHelper.manager.getAgreeLine(master);
+		for (int i = 0; i < agreeLines.size(); i++) {
+			ApprovalLine agreeLine = (ApprovalLine) agreeLines.get(i);
+			point += "<img src='/Windchill/extcore/images/process-nleft.gif' class='line'><span class='inactive'><span class='text'>"
+					+ agreeLine.getOwnership().getOwner().getFullName() + "(합의)</span></span>"
+					+ "<img src='/Windchill/extcore/images/process-nright.gif' class='line'>";
+			if (i != agreeLines.size() - 1) {
+				point += "<img src='/Windchill/extcore/images/process-line.gif' class='line dot'>";
+			}
+		}
+
+
 
 		setPoint(point);
 	}

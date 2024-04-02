@@ -148,6 +148,7 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 					filter : {
 						inline : false
 					},
+					sortable : false
 				}, {
 					dataField : "type",
 					headerText : "구분",
@@ -162,6 +163,7 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 							_popup(url, 1500, 800);
 						}
 					},
+					sortable : false
 				}, {
 					dataField : "role",
 					headerText : "역할",
@@ -176,6 +178,7 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 							_popup(url, 1500, 800);
 						}
 					},
+					sortable : false
 				}, {
 					dataField : "name",
 					headerText : "결재 제목",
@@ -207,11 +210,13 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 					headerText : "기안자",
 					dataType : "string",
 					width : 100,
+					sortable : false
 				}, {
 					dataField : "state",
 					headerText : "상태",
 					dataType : "string",
 					width : 80,
+					sortable : false
 				}, {
 					dataField : "receiveTime",
 					headerText : "수신일",
@@ -260,20 +265,28 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 			let sortCache = [];
 			function auiSortingHandler(event) {
 				const sortingFields = event.sortingFields;
+				logger(event);
 				const key = sortingFields[0].dataField;
 				const sortType = sortingFields[0].sortType; // 오름차순 1 내림 -1
 				sortCache[0] = {
 					dataField : key,
 					sortType : sortType
 				};
-				document.getElementById("sortKey").value = key;
-				document.getElementById("sortType").value = sortType;
+
+				const _sortType = document.getElementById("sortType").value;
+				if (Number(_sortType) !== Number(sortType)) {
+					document.getElementById("sortKey").value = key;
+					document.getElementById("sortType").value = sortType;
+					loadGridData();
+				}
 			}
 
 			function loadGridData(movePage) {
 				if (movePage === undefined) {
 					document.getElementById("sessionid").value = 0;
+					document.getElementById("curPage").value = 1;
 				}
+
 				let params = new Object();
 				const url = getCallUrl("/workspace/receive");
 // 				const state = document.querySelector("input[name=state]:checked").value;

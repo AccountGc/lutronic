@@ -100,6 +100,7 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 					headerText : "결재 제목",
 					dataType : "string",
 					style : "aui-left",
+					width : 200,
 					renderer : {
 						type : "LinkRenderer",
 						baseUrl : "javascript",

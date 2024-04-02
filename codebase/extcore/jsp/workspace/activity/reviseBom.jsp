@@ -1109,6 +1109,17 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 					alert("이전품목을 삭제할 행을 선택하세요.");
 					return false;
 				}
+				
+				for(let i=0; i<checkedItems.length; i++) {
+					const item = checkedItems[i].item;
+					const part_oid = item.part_oid;
+					const next_number = item.next_number;
+					if(part_oid === "") {
+						alert(next_number + "품목의 이전 품목이 없습니다.");
+						return false;
+					}
+				}
+				
 				AUIGrid.removeCheckedRows(myGridID);
 			}
 			
