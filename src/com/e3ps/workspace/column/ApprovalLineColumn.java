@@ -166,20 +166,28 @@ public class ApprovalLineColumn {
 			}
 		}
 
-		point += "<img src='/Windchill/extcore/images/process-line.gif' class='line dot'>";
-		
 		ArrayList<ApprovalLine> agreeLines = WorkspaceHelper.manager.getAgreeLine(master);
 		for (int i = 0; i < agreeLines.size(); i++) {
+
+			if (i == 0) {
+				point += "<img src='/Windchill/extcore/images/process-line.gif' class='line dot'>";
+			}
 			ApprovalLine agreeLine = (ApprovalLine) agreeLines.get(i);
-			point += "<img src='/Windchill/extcore/images/process-nleft.gif' class='line'><span class='inactive'><span class='text'>"
-					+ agreeLine.getOwnership().getOwner().getFullName() + "(합의)</span></span>"
-					+ "<img src='/Windchill/extcore/images/process-nright.gif' class='line'>";
+			
+			
+			if (agreeLine.getState().equals(WorkspaceHelper.STATE_AGREE_COMPLETE)) {
+				point += "<img src='/Windchill/extcore/images/process-sleft.gif' class='line'><span class='active2'><span class='text'>"
+						+ agreeLine.getOwnership().getOwner().getFullName() + "(합의)</span></span>"
+						+ "<img src='/Windchill/extcore/images/process-sright.gif' class='line'>";
+			} else {
+				point += "<img src='/Windchill/extcore/images/process-nleft.gif' class='line'><span class='inactive'><span class='text'>"
+						+ agreeLine.getOwnership().getOwner().getFullName() + "(합의)</span></span>"
+						+ "<img src='/Windchill/extcore/images/process-nright.gif' class='line'>";
+			}
 			if (i != agreeLines.size() - 1) {
 				point += "<img src='/Windchill/extcore/images/process-line.gif' class='line dot'>";
 			}
 		}
-
-
 
 		setPoint(point);
 	}
