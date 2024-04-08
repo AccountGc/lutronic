@@ -32,7 +32,6 @@ import com.e3ps.common.util.StringUtil;
 import com.e3ps.common.web.WebUtil;
 import com.e3ps.controller.BaseController;
 import com.e3ps.download.service.DownloadHistoryHelper;
-import com.google.inject.servlet.RequestParameters;
 
 import net.sf.json.JSONObject;
 import wt.access.AccessControlHelper;
@@ -126,8 +125,6 @@ public class ContentController extends BaseController {
 
 			// 이름 치환
 
-			// 다운로드 이력 생성..
-			DownloadHistoryHelper.service.create(oid);
 
 			InputStream is = ContentServerHelper.service.findLocalContentStream(data);
 
@@ -144,6 +141,11 @@ public class ContentController extends BaseController {
 			headers.setContentLength(bytes.length);
 			headers.setContentDispositionFormData("attachment", name);
 
+			
+
+			// 다운로드 이력 생성..
+			DownloadHistoryHelper.service.create(oid);
+			
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
