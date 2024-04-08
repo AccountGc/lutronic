@@ -608,18 +608,20 @@ public class StandardDocumentService extends StandardManager implements Document
 
 			ApprovalMaster mm = WorkspaceHelper.manager.getMaster(doc);
 
+			WorkspaceHelper.service.deleteAllLines(mm);			
+			
 			// 일괄결재 일경우 결재선 지정을 안만든다..
 			if ("LC_Default_NonWF".equals(lifecycle)) {
 				workCopy = (WTDocument) PersistenceHelper.manager.refresh(workCopy);
 				LifeCycleHelper.service.setLifeCycleState(workCopy, State.toState("BATCHAPPROVAL"));
 			} else {
-				System.out.println("mm=" + mm);
-				if (mm == null) {
+//				System.out.println("mm=" + mm);
+//				if (mm == null) {
 					WorkDataHelper.service.create(workCopy);
-				} else {
-					mm.setPersist(workCopy);
-					PersistenceHelper.manager.modify(mm);
-				}
+//				} else {
+//					mm.setPersist(workCopy);
+//					PersistenceHelper.manager.modify(mm);
+//				}
 			}
 
 			// 첨부 파일 클리어
