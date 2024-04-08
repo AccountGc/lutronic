@@ -179,6 +179,10 @@ public class ApprovalLineColumn {
 				point += "<img src='/Windchill/extcore/images/process-sleft.gif' class='line'><span class='active'><span class='text'>"
 						+ approvalLine.getOwnership().getOwner().getFullName() + "(결재)</span></span>"
 						+ "<img src='/Windchill/extcore/images/process-sright.gif' class='line'>";
+			} else if (approvalLine.getState().equals(WorkspaceHelper.STATE_APPROVAL_COMPLETE)) {
+				point += "<img src='/Windchill/extcore/images/process-nleft.gif' class='line'><span class='inactive'><span class='text'>"
+						+ approvalLine.getOwnership().getOwner().getFullName() + "(결재완료)</span></span>"
+						+ "<img src='/Windchill/extcore/images/process-nright.gif' class='line'>";
 			} else {
 				point += "<img src='/Windchill/extcore/images/process-nleft.gif' class='line'><span class='inactive'><span class='text'>"
 						+ approvalLine.getOwnership().getOwner().getFullName() + "(결재대기)</span></span>"
