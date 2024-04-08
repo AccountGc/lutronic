@@ -1381,9 +1381,9 @@ public class StandardWorkspaceService extends StandardManager implements Workspa
 			// 기안 라인 가져오기 - 변경없음...
 
 			// 합의 라인 가져오기
+
 			for (Map<String, String> agreeMap : agreeRows) {
 				String oid = agreeMap.get("oid");
-				System.out.println("oid=" + oid);
 				String gridState = agreeMap.get("gridState");
 				if (StringUtil.checkString(oid)) {
 					// 기존껀 수정
@@ -1400,7 +1400,6 @@ public class StandardWorkspaceService extends StandardManager implements Workspa
 					}
 				} else {
 					// 새로온거는 생성
-					System.out.println("새로운거 생성 안함??");
 					String woid = agreeMap.get("woid");
 					WTUser wtuser = (WTUser) CommonUtil.getObject(woid);
 					ApprovalLine agreeLine = ApprovalLine.newApprovalLine();
@@ -1416,7 +1415,6 @@ public class StandardWorkspaceService extends StandardManager implements Workspa
 					agreeLine.setCompleteTime(null);
 					agreeLine.setState(WorkspaceHelper.STATE_AGREE_START);
 					PersistenceHelper.manager.save(agreeLine);
-					System.out.println("agreeLine=" + agreeLine.getState());
 				}
 			}
 
@@ -1524,12 +1522,13 @@ public class StandardWorkspaceService extends StandardManager implements Workspa
 
 			boolean isAgreeApprovalLine = WorkspaceHelper.manager.isAgreeApprovalLine(appMaster);
 			// 합의가 모두 끝난 상태..
+			System.out.println("isAgreeApprovalLine=" + isAgreeApprovalLine);
 			if (!isAgreeApprovalLine) {
 				ArrayList<ApprovalLine> aList = WorkspaceHelper.manager.getApprovalLines(appMaster);
 				for (ApprovalLine line : aList) {
-
 					if (line.getCompleteTime() != null) {
 						int idx = line.getSort();
+						System.out.println("idx=" + idx);
 						ApprovalLine nextLine = WorkspaceHelper.manager.getNextAppLine(appMaster, idx + 2);
 						System.out.println("nextLine=" + nextLine);
 						if (nextLine != null) {
