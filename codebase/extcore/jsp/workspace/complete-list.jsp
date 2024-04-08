@@ -102,18 +102,18 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 							_popup(url, 1500, 800, "n");
 						}
 					},
-				}, {
-					dataField : "point",
-					headerText : "진행단계",
-					dataType : "string",
-					style : "right",
-					renderer : {
-						type : "TemplateRenderer"
-					},
-					filter : {
-						inline : false
-					},
-					sortable : false
+// 				}, {
+// 					dataField : "point",
+// 					headerText : "진행단계",
+// 					dataType : "string",
+// 					style : "right",
+// 					renderer : {
+// 						type : "TemplateRenderer"
+// 					},
+// 					filter : {
+// 						inline : false
+// 					},
+// 					sortable : false
 				}, {
 					dataField : "submiter",
 					headerText : "기안자",
