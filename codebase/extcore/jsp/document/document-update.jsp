@@ -350,8 +350,12 @@ iframe {
 		call(url, params, function(data) {
 			alert(data.msg);
 			if (data.result) {
-				opener.parent.updateHeader();
-				opener.loadGridData();
+				if (opener.parent && typeof opener.parent.updateHeader === 'function') {
+					opener.parent.updateHeader();
+				}
+				if (opener && typeof opener.loadGridData === 'function') {
+					opener.loadGridData();
+				}
 				self.close();
 			} else {
 				closeLayer();
