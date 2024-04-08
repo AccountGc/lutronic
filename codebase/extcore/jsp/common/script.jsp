@@ -6,7 +6,7 @@
 <!-- jsonfn -->
 <script type="text/javascript" src="/Windchill/extcore/component/jsonfn/jsonfn.js"></script>
 <!-- 공통 SCRIPT -->
-<script type="text/javascript" src="/Windchill/extcore/js/base.js?v=10233110"></script>
+<script type="text/javascript" src="/Windchill/extcore/js/base.js?v=102332110"></script>
 <!-- asixj -->
 <script type="text/javascript" src="/Windchill/extcore/component/axisj/AXJ.all.js"></script>
 <!-- 공통 js -->
