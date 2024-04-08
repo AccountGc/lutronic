@@ -398,7 +398,7 @@ public class EcrmHelper {
 		String wtHome = WTProperties.getServerProperties().getProperty("wt.home");
 		String path = WTProperties.getServerProperties().getProperty("wt.temp");
 
-		File orgFile = new File(wtHome + "/codebase/com/e3ps/change/ecrm/dto/cr_list.xlsx");
+		File orgFile = new File(wtHome + "/codebase/com/e3ps/change/ecrm/dto/ecrm_list.xlsx");
 
 		File newFile = CommonUtil.copyFile(orgFile, new File(path + "/ECRM 리스트.xlsx"));
 

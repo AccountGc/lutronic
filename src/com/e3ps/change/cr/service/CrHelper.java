@@ -535,7 +535,7 @@ public class CrHelper {
 
 		QuerySpec query = new QuerySpec();
 		int idx = query.appendClassList(EChangeRequest.class, true);
-		QuerySpecUtils.toOrderBy(query, idx, EChangeOrder.class, EChangeOrder.CREATE_TIMESTAMP, false);
+		QuerySpecUtils.toOrderBy(query, idx, EChangeRequest.class, EChangeRequest.CREATE_TIMESTAMP, false);
 		QueryResult qr = PersistenceHelper.manager.find(query);
 
 		int rowIndex = 1;

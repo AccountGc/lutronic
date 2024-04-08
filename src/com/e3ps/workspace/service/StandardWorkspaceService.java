@@ -620,7 +620,7 @@ public class StandardWorkspaceService extends StandardManager implements Workspa
 				description = sessionUser.getFullName() + " 사용자의 합의반려로 인해 모든 결재가 반려 처리 되었습니다.";
 			}
 			line.setDescription(description);
-			line.setState(WorkspaceHelper.manager.STATE_APPROVAL_REJECT);
+			line.setState(WorkspaceHelper.STATE_APPROVAL_REJECT);
 			line.setCompleteTime(new Timestamp(new Date().getTime()));
 			PersistenceHelper.manager.modify(line);
 
@@ -1025,6 +1025,9 @@ public class StandardWorkspaceService extends StandardManager implements Workspa
 			}
 
 			ApprovalLine line = (ApprovalLine) CommonUtil.getObject(oid);
+			line.setDescription(description);
+			PersistenceHelper.manager.modify(line);
+
 			ApprovalMaster m = line.getMaster();
 			// 기안라인 제외
 			ArrayList<ApprovalLine> list = WorkspaceHelper.manager.getAllLines(m, true);
@@ -1041,7 +1044,7 @@ public class StandardWorkspaceService extends StandardManager implements Workspa
 					l.setState(WorkspaceHelper.STATE_RECEIVE_REJECT);
 				}
 				l.setCompleteTime(new Timestamp(new Date().getTime()));
-				l.setDescription(description);
+//				l.setDescription(description);
 
 				PersistenceHelper.manager.modify(l);
 			}
