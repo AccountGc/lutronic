@@ -608,7 +608,7 @@ public class StandardDocumentService extends StandardManager implements Document
 
 			ApprovalMaster mm = WorkspaceHelper.manager.getMaster(doc);
 
-			WorkspaceHelper.service.deleteAllLines(mm);			
+						
 			
 			// 일괄결재 일경우 결재선 지정을 안만든다..
 			if ("LC_Default_NonWF".equals(lifecycle)) {
@@ -618,11 +618,15 @@ public class StandardDocumentService extends StandardManager implements Document
 //				System.out.println("mm=" + mm);
 //				if (mm == null) {
 					WorkDataHelper.service.create(workCopy);
+					// 기존 결재선 복사하기...
+					WorkspaceHelper.service.copyLines(workCopy, mm);
 //				} else {
 //					mm.setPersist(workCopy);
 //					PersistenceHelper.manager.modify(mm);
 //				}
 			}
+			
+			WorkspaceHelper.service.deleteAllLines(mm);
 
 			// 첨부 파일 클리어
 			removeAttach(workCopy);

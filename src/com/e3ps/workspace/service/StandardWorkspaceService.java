@@ -18,6 +18,7 @@ import com.e3ps.common.mail.MailHtmlContentTemplate;
 import com.e3ps.common.mail.MailUtil;
 import com.e3ps.common.mail.MailUtils;
 import com.e3ps.common.util.CommonUtil;
+import com.e3ps.common.util.DateUtil;
 import com.e3ps.common.util.QuerySpecUtils;
 import com.e3ps.common.util.StringUtil;
 import com.e3ps.doc.service.DocumentHelper;
@@ -1569,6 +1570,112 @@ public class StandardWorkspaceService extends StandardManager implements Workspa
 				ApprovalLine l = (ApprovalLine) CommonUtil.getObject(oid);
 				PersistenceHelper.manager.delete(l);
 			}
+
+			trs.commit();
+			trs = null;
+		} catch (Exception e) {
+			e.printStackTrace();
+			trs.rollback();
+			throw e;
+		} finally {
+			if (trs != null)
+				trs.rollback();
+		}
+	}
+
+	@Override
+	public void copyLines(Persistable per, ApprovalMaster mm) throws Exception {
+		Transaction trs = new Transaction();
+		try {
+			trs.start();
+
+			ApprovalMaster master = ApprovalMaster.newApprovalMaster();
+			master.setName(mm.getName());
+			master.setCompleteTime(mm.getCompleteTime());
+			master.setOwnership(mm.getOwnership());
+			master.setPersist(per);
+			master.setStartTime(mm.getStartTime());
+			master.setState(mm.getState());
+			master = (ApprovalMaster) PersistenceHelper.manager.save(master);
+
+			master = (ApprovalMaster) PersistenceHelper.manager.refresh(master);
+
+			WorkData wd = WorkDataHelper.manager.getWorkData(per);
+			// 마스터 세팅
+			wd.setAppMaster(master);
+			PersistenceHelper.manager.modify(wd);
+
+			// 기안 라인
+
+			ApprovalLine copyStartLine = WorkspaceHelper.manager.getSubmitLine(mm);
+
+			ApprovalLine startLine = ApprovalLine.newApprovalLine();
+			startLine.setName(copyStartLine.getName());
+			startLine.setOwnership(copyStartLine.getOwnership());
+			startLine.setMaster(master);
+			startLine.setReads(true);
+			startLine.setSort(-50);
+			startLine.setStartTime(copyStartLine.getStartTime());
+			startLine.setType(WorkspaceHelper.SUBMIT_LINE);
+			startLine.setRole(WorkspaceHelper.WORKING_SUBMITTER);
+			startLine.setDescription(copyStartLine.getDescription());
+			startLine.setState(copyStartLine.getState());
+			startLine.setCompleteTime(copyStartLine.getStartTime());
+
+			PersistenceHelper.manager.save(startLine);
+
+			ArrayList<ApprovalLine> copyAgreeLines = WorkspaceHelper.manager.getAgreeLine(mm);
+			for (ApprovalLine copyAgreeLine : copyAgreeLines) {
+				ApprovalLine agreeLine = ApprovalLine.newApprovalLine();
+				agreeLine.setName(copyAgreeLine.getName());
+				agreeLine.setOwnership(copyAgreeLine.getOwnership());
+				agreeLine.setMaster(master);
+				agreeLine.setReads(false);
+				agreeLine.setSort(0);
+				agreeLine.setStartTime(copyAgreeLine.getStartTime());
+				agreeLine.setType(WorkspaceHelper.AGREE_LINE);
+				agreeLine.setRole(WorkspaceHelper.WORKING_AGREE);
+				agreeLine.setDescription(copyAgreeLine.getDescription());
+				agreeLine.setCompleteTime(copyAgreeLine.getCompleteTime());
+				agreeLine.setState(copyAgreeLine.getState());
+				PersistenceHelper.manager.save(agreeLine);
+			}
+
+			ArrayList<ApprovalLine> copyApprovalLines = WorkspaceHelper.manager.getApprovalLines(mm);
+			for (ApprovalLine copyApprovalLine : copyApprovalLines) {
+				// 결재 라인 생성
+				ApprovalLine approvalLine = ApprovalLine.newApprovalLine();
+				approvalLine.setName(copyApprovalLine.getName());
+				approvalLine.setOwnership(copyApprovalLine.getOwnership());
+				approvalLine.setMaster(master);
+				approvalLine.setReads(false);
+				approvalLine.setSort(copyApprovalLine.getSort());
+				approvalLine.setType(WorkspaceHelper.APPROVAL_LINE);
+				approvalLine.setRole(WorkspaceHelper.WORKING_APPROVAL);
+				approvalLine.setDescription(copyApprovalLine.getDescription());
+				approvalLine.setStartTime(copyApprovalLine.getStartTime());
+				approvalLine.setState(copyApprovalLine.getState());
+				approvalLine.setCompleteTime(copyApprovalLine.getCompleteTime());
+				PersistenceHelper.manager.save(approvalLine);
+			}
+
+			ArrayList<ApprovalLine> copyReceiveLines = WorkspaceHelper.manager.getReceiveLines(mm);
+			for (ApprovalLine copyReceiveLine : copyReceiveLines) {
+				ApprovalLine receiveLine = ApprovalLine.newApprovalLine();
+				receiveLine.setName(copyReceiveLine.getName());
+				receiveLine.setOwnership(copyReceiveLine.getOwnership());
+				receiveLine.setMaster(master);
+				receiveLine.setReads(false);
+				receiveLine.setSort(0);
+				receiveLine.setStartTime(copyReceiveLine.getStartTime());
+				receiveLine.setType(WorkspaceHelper.RECEIVE_LINE);
+				receiveLine.setRole(WorkspaceHelper.WORKING_RECEIVE);
+				receiveLine.setDescription(copyReceiveLine.getDescription());
+				receiveLine.setCompleteTime(copyReceiveLine.getCompleteTime());
+				receiveLine.setState(copyReceiveLine.getState());
+				PersistenceHelper.manager.save(receiveLine);
+			}
+//			afterRegisterAction(master);
 
 			trs.commit();
 			trs = null;

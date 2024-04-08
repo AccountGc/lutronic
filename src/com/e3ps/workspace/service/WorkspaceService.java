@@ -148,4 +148,9 @@ public interface WorkspaceService {
 	 * 중복 결재선 삭제
 	 */
 	public abstract void removeLine(Map<String, Object> params) throws Exception;
+
+	/**
+	 * 결재선 복사
+	 */
+	public abstract void copyLines(Persistable per, ApprovalMaster mm) throws Exception;
 }
