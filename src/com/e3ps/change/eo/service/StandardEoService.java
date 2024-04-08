@@ -351,9 +351,8 @@ public class StandardEoService extends StandardManager implements EoService {
 
 			WorkDataHelper.service.create(eo);
 			// 기존 결재선 복사하기...
-			WorkspaceHelper.service.copyLines(eo, mm);
-
 			if (mm != null) {
+				WorkspaceHelper.service.copyLines(eo, mm);
 				// 모든 결재선 삭제
 				WorkspaceHelper.service.deleteAllLines(mm);
 			}

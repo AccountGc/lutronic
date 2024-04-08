@@ -274,9 +274,8 @@ public class StandardEcrmService extends StandardManager implements EcrmService 
 
 			WorkDataHelper.service.create(ecrm);
 			// 기존 결재선 복사하기...
-			WorkspaceHelper.service.copyLines(ecrm, mm);
-
 			if (mm != null) {
+				WorkspaceHelper.service.copyLines(ecrm, mm);
 				// 모든 결재선 삭제
 				WorkspaceHelper.service.deleteAllLines(mm);
 			}

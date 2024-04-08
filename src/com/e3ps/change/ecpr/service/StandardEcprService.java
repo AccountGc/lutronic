@@ -105,7 +105,7 @@ public class StandardEcprService extends StandardManager implements EcprService 
 			ecpr.setEoName(name);
 			ecpr.setEoNumber(number);
 			ecpr.setPeriod(period);
-			
+
 			Timestamp today = new Timestamp(currentDate.getTime());
 			ecpr.setCreateDate(today.toString().substring(0, 10));
 			ecpr.setWriter(sessionUser.getFullName());
@@ -311,13 +311,12 @@ public class StandardEcprService extends StandardManager implements EcprService 
 
 			WorkDataHelper.service.create(ecpr);
 			// 기존 결재선 복사하기...
-			WorkspaceHelper.service.copyLines(ecpr, mm);
-
 			if (mm != null) {
+				WorkspaceHelper.service.copyLines(ecpr, mm);
 				// 모든 결재선 삭제
 				WorkspaceHelper.service.deleteAllLines(mm);
 			}
-			
+
 			trs.commit();
 			trs = null;
 		} catch (Exception e) {

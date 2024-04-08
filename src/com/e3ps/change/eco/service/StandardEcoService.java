@@ -331,9 +331,8 @@ public class StandardEcoService extends StandardManager implements EcoService {
 
 			WorkDataHelper.service.create(eco);
 			// 기존 결재선 복사하기...
-			WorkspaceHelper.service.copyLines(eco, mm);
-
 			if (mm != null) {
+				WorkspaceHelper.service.copyLines(eco, mm);
 				// 모든 결재선 삭제
 				WorkspaceHelper.service.deleteAllLines(mm);
 			}
