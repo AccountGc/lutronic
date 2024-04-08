@@ -1598,6 +1598,10 @@ public class StandardWorkspaceService extends StandardManager implements Workspa
 		try {
 			trs.start();
 
+			if (mm == null) {
+				return;
+			}
+
 			ApprovalMaster master = ApprovalMaster.newApprovalMaster();
 			master.setName(mm.getName());
 			master.setCompleteTime(mm.getCompleteTime());

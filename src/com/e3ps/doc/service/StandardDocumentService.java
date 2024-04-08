@@ -622,6 +622,7 @@ public class StandardDocumentService extends StandardManager implements Document
 //					mm.setPersist(workCopy);
 //					PersistenceHelper.manager.modify(mm);
 				}
+				
 			}
 
 			if (mm != null) {
