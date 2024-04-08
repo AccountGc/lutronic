@@ -1525,12 +1525,21 @@ public class StandardWorkspaceService extends StandardManager implements Workspa
 			System.out.println("isAgreeApprovalLine=" + isAgreeApprovalLine);
 			if (!isAgreeApprovalLine) {
 				ArrayList<ApprovalLine> aList = WorkspaceHelper.manager.getApprovalLines(appMaster);
+				int start = 0;
 				for (ApprovalLine line : aList) {
+					int idx = line.getSort();
+					System.out.println("idx=" + idx);
+					ApprovalLine nextLine = WorkspaceHelper.manager.getNextAppLine(appMaster, idx + 2);
+					System.out.println("nextLine=" + nextLine);
+					if (line.getCompleteTime() == null && start == 0) {
+						nextLine.setStartTime(new Timestamp(new Date().getTime()));
+						nextLine.setState(WorkspaceHelper.STATE_APPROVAL_APPROVING);
+						nextLine = (ApprovalLine) PersistenceHelper.manager.modify(nextLine);
+						start++;
+						break;
+					}
+
 					if (line.getCompleteTime() != null) {
-						int idx = line.getSort();
-						System.out.println("idx=" + idx);
-						ApprovalLine nextLine = WorkspaceHelper.manager.getNextAppLine(appMaster, idx + 2);
-						System.out.println("nextLine=" + nextLine);
 						if (nextLine != null) {
 							if (nextLine.getCompleteTime() != null) {
 								continue;
