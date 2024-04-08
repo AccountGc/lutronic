@@ -63,7 +63,7 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 		<table class="button-table">
 			<tr>
 				<td class="left">
-					<img src="/Windchill/extcore/images/fileicon/file_excel.gif" title="엑셀 다운로드" onclick="exportExcel();">
+					<img src="/Windchill/extcore/images/fileicon/file_excel.gif" title="엑셀 다운로드" onclick="excel();">
 					<img src="/Windchill/extcore/images/save.gif" title="테이블 저장" onclick="saveColumnLayout('downloadHistory-list');">
 					<img src="/Windchill/extcore/images/redo.gif" title="테이블 초기화" onclick="resetColumnLayout('downloadHistory-list');">
 				</td>
@@ -385,6 +385,23 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 			function exportExcel() {
 				const sessionName = document.getElementById("sessionName").value;
 				exportToExcel("다운로드 이력관리 리스트", "다운로드 이력관리", "다운로드 이력관리 리스트", [], sessionName);
+			}
+			
+			function excel() {
+
+				if (!confirm("다운로드이력 리스트를 다운받습니다.")) {
+					return false;
+				}
+
+				const url = getCallUrl("/admin/excelList");
+				parent.openLayer();
+				call(url, null, function(data) {
+					if (data.result) {
+						const n = data.name;
+						document.location.href = '/Windchill/extcore/jsp/common/content/FileDownload.jsp?fileName=' + n + '&originFileName=' + n;
+					}
+					parent.closeLayer();
+				}, "GET");
 			}
 		</script>
 	</form>

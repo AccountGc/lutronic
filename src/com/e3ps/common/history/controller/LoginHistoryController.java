@@ -12,7 +12,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
-import com.e3ps.admin.service.AdminHelper;
 import com.e3ps.common.history.service.LoginHistoryHelper;
 import com.e3ps.controller.BaseController;
 
@@ -44,4 +43,19 @@ public class LoginHistoryController extends BaseController {
 		return result;
 	}
 
+	@Description(value = "접속이력 리스트 엑셀 다운로드")
+	@ResponseBody
+	@GetMapping(value = "/excelList")
+	public Map<String, Object> excelList() throws Exception {
+		Map<String, Object> result = new HashMap<>();
+		try {
+			result = LoginHistoryHelper.manager.excelList();
+			result.put("result", SUCCESS);
+		} catch (Exception e) {
+			e.printStackTrace();
+			result.put("result", FAIL);
+			result.put("msg", e.toString());
+		}
+		return result;
+	}
 }

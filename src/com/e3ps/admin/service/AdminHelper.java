@@ -1,12 +1,18 @@
 
 package com.e3ps.admin.service;
 
+import java.io.File;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.aspose.cells.Cell;
+import com.aspose.cells.Style;
+import com.aspose.cells.TextAlignmentType;
+import com.aspose.cells.Workbook;
+import com.aspose.cells.Worksheet;
 import com.e3ps.admin.dto.MailUserDTO;
 import com.e3ps.change.EChangeActivityDefinition;
 import com.e3ps.common.code.NumberCodeType;
@@ -22,14 +28,19 @@ import com.e3ps.doc.column.DocumentColumn;
 import com.e3ps.download.DownloadHistory;
 import com.e3ps.download.dto.DownloadDTO;
 import com.e3ps.org.MailUser;
+import com.e3ps.org.dto.PeopleDTO;
 
 import wt.fc.PagingQueryResult;
+import wt.fc.PersistenceHelper;
+import wt.fc.QueryResult;
+import wt.org.OrganizationServicesMgr;
 import wt.org.WTUser;
 import wt.query.ClassAttribute;
 import wt.query.OrderBy;
 import wt.query.QuerySpec;
 import wt.query.SearchCondition;
 import wt.services.ServiceFactory;
+import wt.util.WTProperties;
 
 public class AdminHelper {
 	public static final AdminService service = ServiceFactory.getService(AdminService.class);
@@ -128,12 +139,11 @@ public class AdminHelper {
 		qs.appendOrderBy(new OrderBy(new ClassAttribute(DownloadHistory.class, "thePersistInfo.updateStamp"), true),
 				new int[] { idx });
 
-
 		PageQueryUtils pager = new PageQueryUtils(params, qs);
 		PagingQueryResult result = pager.find();
 
 		ArrayList<DownloadDTO> list = new ArrayList<DownloadDTO>();
-		
+
 		int rowNum = (pager.getCpage() - 1) * pager.getPsize() + 1;
 		while (result.hasMoreElements()) {
 			Object obj[] = (Object[]) result.nextElement();
@@ -210,5 +220,66 @@ public class AdminHelper {
 		map.put("sessionid", pager.getSessionId());
 		map.put("curPage", pager.getCpage());
 		return map;
+	}
+
+	public Map<String, Object> excelList() throws Exception {
+		Map<String, Object> result = new HashMap<>();
+
+		String wtHome = WTProperties.getServerProperties().getProperty("wt.home");
+		String path = WTProperties.getServerProperties().getProperty("wt.temp");
+
+		File orgFile = new File(wtHome + "/codebase/com/e3ps/admin/dto/download_list.xlsx");
+
+		File newFile = CommonUtil.copyFile(orgFile, new File(path + "/다운로드이력 리스트.xlsx"));
+
+		Workbook workbook = new Workbook(newFile.getPath());
+		Worksheet worksheet = workbook.getWorksheets().get(0);
+		worksheet.setName("다운로드이력 리스트"); // 시트 이름
+
+		QuerySpec qs = new QuerySpec();
+		int idx = qs.appendClassList(DownloadHistory.class, true);
+		qs.appendOrderBy(new OrderBy(new ClassAttribute(DownloadHistory.class, "thePersistInfo.updateStamp"), true),
+				new int[] { idx });
+		QueryResult qr = PersistenceHelper.manager.find(qs);
+
+		int rowIndex = 1;
+
+		Style center = workbook.createStyle();
+		center.setHorizontalAlignment(TextAlignmentType.CENTER);
+
+		Style left = workbook.createStyle();
+		left.setHorizontalAlignment(TextAlignmentType.LEFT);
+
+		while (qr.hasMoreElements()) {
+			Object[] obj = (Object[]) qr.nextElement();
+			DownloadHistory history = (DownloadHistory) obj[0];
+			DownloadDTO data = new DownloadDTO(history);
+
+			Cell rowCell = worksheet.getCells().get(rowIndex, 0);
+			rowCell.setStyle(center);
+			rowCell.putValue(rowIndex);
+
+			Cell nameCell = worksheet.getCells().get(rowIndex, 1);
+			nameCell.setStyle(center);
+			nameCell.putValue(data.getName());
+
+			Cell idCell = worksheet.getCells().get(rowIndex, 2);
+			idCell.setStyle(center);
+			idCell.putValue(data.getId());
+
+			Cell infoCell = worksheet.getCells().get(rowIndex, 3);
+			infoCell.setStyle(left);
+			infoCell.putValue(data.getInfo());
+
+			Cell createdDateCell = worksheet.getCells().get(rowIndex, 4);
+			createdDateCell.setStyle(center);
+			createdDateCell.putValue(data.getCreatedDate_txt());
+			rowIndex++;
+		}
+
+		String fullPath = path + "/다운로드이력 리스트.xlsx";
+		workbook.save(fullPath);
+		result.put("name", newFile.getName());
+		return result;
 	}
 }

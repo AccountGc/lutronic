@@ -37,7 +37,6 @@ import com.e3ps.change.ecpr.column.EcprColumn;
 import com.e3ps.change.eo.column.EoColumn;
 import com.e3ps.common.aspose.AsposeUtils;
 import com.e3ps.common.code.NumberCode;
-import com.e3ps.common.code.service.NumberCodeHelper;
 import com.e3ps.common.iba.IBAUtil;
 import com.e3ps.common.iba.IBAUtils;
 import com.e3ps.common.util.AUIGridUtil;
@@ -233,7 +232,6 @@ public class DocumentHelper {
 		boolean sort = QuerySpecUtils.toSort(sortType);
 		QuerySpecUtils.toOrderBy(query, idx, WTDocument.class, toSortKey(sortKey), sort);
 
-		System.out.println("qr=" + query);
 		PageQueryUtils pager = new PageQueryUtils(params, query);
 		PagingQueryResult result = pager.find();
 		int rowNum = (pager.getCpage() - 1) * pager.getPsize() + 1;

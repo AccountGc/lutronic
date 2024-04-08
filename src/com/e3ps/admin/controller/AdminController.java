@@ -26,6 +26,7 @@ import com.e3ps.common.message.Message;
 import com.e3ps.common.util.CommonUtil;
 import com.e3ps.common.util.StringUtil;
 import com.e3ps.controller.BaseController;
+import com.e3ps.doc.service.DocumentHelper;
 import com.e3ps.org.Department;
 import com.e3ps.org.dto.CompanyState;
 import com.e3ps.org.service.MailUserHelper;
@@ -188,6 +189,22 @@ public class AdminController extends BaseController {
 		ModelAndView model = new ModelAndView();
 		model.setViewName("/extcore/jsp/admin/adminDownLoadHistory.jsp");
 		return model;
+	}
+	
+	@Description(value = "다운로드 이력관리 엑셀 다운로드")
+	@ResponseBody
+	@GetMapping(value = "/excelList")
+	public Map<String, Object> excelList() throws Exception {
+		Map<String, Object> result = new HashMap<>();
+		try {
+			result = AdminHelper.manager.excelList();
+			result.put("result", SUCCESS);
+		} catch (Exception e) {
+			e.printStackTrace();
+			result.put("result", FAIL);
+			result.put("msg", e.toString());
+		}
+		return result;
 	}
 
 	/*
