@@ -62,16 +62,18 @@ public class DownloadDTO {
 	 */
 	private void setUserInfo(DownloadHistory history) throws Exception {
 		WTUser user = history.getUser();
-		People people = null;
-		QueryResult result = PersistenceHelper.manager.navigate(user, "people", WTUserPeopleLink.class);
-		if (result.hasMoreElements()) {
-			people = (People) result.nextElement();
-		}
-		if (people != null) {
-			setId(people.getId());
-			setUserName(people.getName());
-			setDuty(people.getDuty() != null ? people.getDuty() : "지정안됨");
-			setDepartment_name(people.getDepartment() != null ? people.getDepartment().getName() : "지정안됨");
+		if (user != null) {
+			People people = null;
+			QueryResult result = PersistenceHelper.manager.navigate(user, "people", WTUserPeopleLink.class);
+			if (result.hasMoreElements()) {
+				people = (People) result.nextElement();
+			}
+			if (people != null) {
+				setId(people.getId());
+				setUserName(people.getName());
+				setDuty(people.getDuty() != null ? people.getDuty() : "지정안됨");
+				setDepartment_name(people.getDepartment() != null ? people.getDepartment().getName() : "지정안됨");
+			}
 		}
 	}
 

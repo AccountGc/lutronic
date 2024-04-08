@@ -236,7 +236,7 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 					return false;
 				}
 
-				const url = getCallUrl("/doc/excelList");
+				const url = getCallUrl("/loginHistory/excelList");
 				parent.openLayer();
 				call(url, null, function(data) {
 					if (data.result) {
