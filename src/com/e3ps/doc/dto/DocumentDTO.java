@@ -252,7 +252,13 @@ public class DocumentDTO {
 	private void setIBAAttributes(WTDocument doc) throws Exception {
 		// 작성자
 		String writer = IBAUtil.getStringValue(doc, "DSGN");
-		setWriter(writer);
+
+		if (StringUtil.checkString(writer)) {
+			setWriter(writer);
+		} else {
+			setWriter(doc.getCreatorFullName());
+		}
+
 		// 프로젝트 코드
 		String model_code = IBAUtil.getStringValue(doc, "MODEL");
 		String model_name = keyToValue(model_code, "MODEL");
