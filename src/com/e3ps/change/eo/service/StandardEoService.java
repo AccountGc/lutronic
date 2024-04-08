@@ -24,6 +24,7 @@ import com.e3ps.common.util.WCUtil;
 import com.e3ps.doc.DocumentEOLink;
 import com.e3ps.org.service.MailUserHelper;
 import com.e3ps.part.service.PartHelper;
+import com.e3ps.workspace.ApprovalMaster;
 import com.e3ps.workspace.WorkData;
 import com.e3ps.workspace.service.WorkDataHelper;
 import com.e3ps.workspace.service.WorkspaceHelper;
@@ -345,6 +346,17 @@ public class StandardEoService extends StandardManager implements EoService {
 //					WorkDataHelper.service.create(eo);
 //				}
 //			}
+
+			ApprovalMaster mm = WorkspaceHelper.manager.getMaster(eo);
+
+			WorkDataHelper.service.create(eo);
+			// 기존 결재선 복사하기...
+			WorkspaceHelper.service.copyLines(eo, mm);
+
+			if (mm != null) {
+				// 모든 결재선 삭제
+				WorkspaceHelper.service.deleteAllLines(mm);
+			}
 
 			trs.commit();
 			trs = null;

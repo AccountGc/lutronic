@@ -29,6 +29,7 @@ import com.e3ps.common.util.StringUtil;
 import com.e3ps.common.util.WCUtil;
 import com.e3ps.org.dto.PeopleDTO;
 import com.e3ps.org.service.MailUserHelper;
+import com.e3ps.workspace.ApprovalMaster;
 import com.e3ps.workspace.WorkData;
 import com.e3ps.workspace.service.WorkDataHelper;
 import com.e3ps.workspace.service.WorkspaceHelper;
@@ -111,7 +112,7 @@ public class StandardEcrmService extends StandardManager implements EcrmService 
 			ecrm.setEoName(name);
 			ecrm.setEoNumber(number);
 			ecrm.setPeriod(period);
-			
+
 			Timestamp today = new Timestamp(currentDate.getTime());
 			ecrm.setCreateDate(today.toString().substring(0, 10));
 			ecrm.setWriter(sessionUser.getFullName());
@@ -269,6 +270,16 @@ public class StandardEcrmService extends StandardManager implements EcrmService 
 			deleteLink(ecrm);
 			saveLink(ecrm, dto);
 
+			ApprovalMaster mm = WorkspaceHelper.manager.getMaster(ecrm);
+
+			WorkDataHelper.service.create(ecrm);
+			// 기존 결재선 복사하기...
+			WorkspaceHelper.service.copyLines(ecrm, mm);
+
+			if (mm != null) {
+				// 모든 결재선 삭제
+				WorkspaceHelper.service.deleteAllLines(mm);
+			}
 			trs.commit();
 			trs = null;
 		} catch (Exception e) {

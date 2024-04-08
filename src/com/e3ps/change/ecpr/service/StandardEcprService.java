@@ -23,6 +23,7 @@ import com.e3ps.common.util.StringUtil;
 import com.e3ps.common.util.WCUtil;
 import com.e3ps.org.dto.PeopleDTO;
 import com.e3ps.org.service.MailUserHelper;
+import com.e3ps.workspace.ApprovalMaster;
 import com.e3ps.workspace.WorkData;
 import com.e3ps.workspace.service.WorkDataHelper;
 import com.e3ps.workspace.service.WorkspaceHelper;
@@ -306,6 +307,17 @@ public class StandardEcprService extends StandardManager implements EcprService 
 			deleteLink(ecpr);
 			saveLink(ecpr, dto);
 
+			ApprovalMaster mm = WorkspaceHelper.manager.getMaster(ecpr);
+
+			WorkDataHelper.service.create(ecpr);
+			// 기존 결재선 복사하기...
+			WorkspaceHelper.service.copyLines(ecpr, mm);
+
+			if (mm != null) {
+				// 모든 결재선 삭제
+				WorkspaceHelper.service.deleteAllLines(mm);
+			}
+			
 			trs.commit();
 			trs = null;
 		} catch (Exception e) {
