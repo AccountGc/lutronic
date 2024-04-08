@@ -1594,10 +1594,7 @@ public class StandardWorkspaceService extends StandardManager implements Workspa
 
 	@Override
 	public void copyLines(Persistable per, ApprovalMaster mm) throws Exception {
-		Transaction trs = new Transaction();
 		try {
-			trs.start();
-
 			if (mm == null) {
 				return;
 			}
@@ -1688,17 +1685,10 @@ public class StandardWorkspaceService extends StandardManager implements Workspa
 				receiveLine.setState(copyReceiveLine.getState());
 				PersistenceHelper.manager.save(receiveLine);
 			}
-//			afterRegisterAction(master);
 
-			trs.commit();
-			trs = null;
 		} catch (Exception e) {
 			e.printStackTrace();
-			trs.rollback();
 			throw e;
-		} finally {
-			if (trs != null)
-				trs.rollback();
 		}
 	}
 }
