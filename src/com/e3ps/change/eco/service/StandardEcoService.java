@@ -30,6 +30,7 @@ import com.e3ps.common.util.WCUtil;
 import com.e3ps.doc.DocumentECOLink;
 import com.e3ps.org.service.MailUserHelper;
 import com.e3ps.part.service.PartHelper;
+import com.e3ps.workspace.ApprovalMaster;
 import com.e3ps.workspace.WorkData;
 import com.e3ps.workspace.service.WorkDataHelper;
 import com.e3ps.workspace.service.WorkspaceHelper;
@@ -324,6 +325,17 @@ public class StandardEcoService extends StandardManager implements EcoService {
 			if (rows200.size() > 0) {
 //				ActivityHelper.service.deleteActivity(eco);
 				ActivityHelper.service.saveActivity(eco, rows200);
+			}
+
+			ApprovalMaster mm = WorkspaceHelper.manager.getMaster(eco);
+
+			WorkDataHelper.service.create(eco);
+			// 기존 결재선 복사하기...
+			WorkspaceHelper.service.copyLines(eco, mm);
+
+			if (mm != null) {
+				// 모든 결재선 삭제
+				WorkspaceHelper.service.deleteAllLines(mm);
 			}
 
 			trs.commit();
@@ -839,8 +851,6 @@ public class StandardEcoService extends StandardManager implements EcoService {
 		Transaction trs = new Transaction();
 		try {
 			trs.start();
-			
-			
 
 			trs.commit();
 			trs = null;
