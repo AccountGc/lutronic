@@ -25,6 +25,7 @@ import com.e3ps.common.code.service.NumberCodeHelper;
 import com.e3ps.common.util.CommonUtil;
 import com.e3ps.common.util.StringUtil;
 import com.e3ps.controller.BaseController;
+import com.e3ps.doc.service.DocumentHelper;
 import com.e3ps.rohs.ROHSMaterial;
 import com.e3ps.rohs.dto.RohsData;
 import com.e3ps.rohs.service.RohsHelper;
@@ -638,5 +639,22 @@ public class RohsController extends BaseController {
 		}
 
 		return returnData;
+	}
+	
+
+	@Description(value = "ROHS 리스트 엑셀 다운로드")
+	@ResponseBody
+	@GetMapping(value = "/excelList")
+	public Map<String, Object> excelList() throws Exception {
+		Map<String, Object> result = new HashMap<>();
+		try {
+			result = RohsHelper.manager.excelList();
+			result.put("result", SUCCESS);
+		} catch (Exception e) {
+			e.printStackTrace();
+			result.put("result", FAIL);
+			result.put("msg", e.toString());
+		}
+		return result;
 	}
 }

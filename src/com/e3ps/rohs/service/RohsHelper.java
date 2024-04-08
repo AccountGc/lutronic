@@ -1,5 +1,6 @@
 package com.e3ps.rohs.service;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -7,7 +8,13 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.aspose.cells.Cell;
+import com.aspose.cells.Style;
+import com.aspose.cells.TextAlignmentType;
+import com.aspose.cells.Workbook;
+import com.aspose.cells.Worksheet;
 import com.e3ps.common.iba.AttributeKey;
+import com.e3ps.common.iba.IBAUtils;
 import com.e3ps.common.message.Message;
 import com.e3ps.common.util.AUIGridUtil;
 import com.e3ps.common.util.CommonUtil;
@@ -15,6 +22,7 @@ import com.e3ps.common.util.DateUtil;
 import com.e3ps.common.util.PageQueryUtils;
 import com.e3ps.common.util.QuerySpecUtils;
 import com.e3ps.common.util.StringUtil;
+import com.e3ps.doc.DocLocation;
 import com.e3ps.part.dto.ObjectComarator;
 import com.e3ps.part.dto.PartDTO;
 import com.e3ps.part.service.PartHelper;
@@ -30,6 +38,7 @@ import com.e3ps.workspace.ApprovalLine;
 
 import net.sf.json.JSONArray;
 import wt.content.ApplicationData;
+import wt.doc.WTDocument;
 import wt.enterprise.RevisionControlled;
 import wt.fc.PagingQueryResult;
 import wt.fc.PersistenceHelper;
@@ -47,6 +56,7 @@ import wt.query.OrderBy;
 import wt.query.QuerySpec;
 import wt.query.SearchCondition;
 import wt.services.ServiceFactory;
+import wt.util.WTProperties;
 import wt.vc.VersionControlHelper;
 import wt.vc.config.ConfigHelper;
 import wt.vc.config.LatestConfigSpec;
@@ -999,6 +1009,84 @@ public class RohsHelper {
 			}
 		}
 		result.put("checker", false);
+		return result;
+	}
+
+	public Map<String, Object> excelList() throws Exception {
+		Map<String, Object> result = new HashMap<>();
+
+		String wtHome = WTProperties.getServerProperties().getProperty("wt.home");
+		String path = WTProperties.getServerProperties().getProperty("wt.temp");
+
+		File orgFile = new File(wtHome + "/codebase/com/e3ps/rohs/dto/rohs-list.xlsx");
+
+		File newFile = CommonUtil.copyFile(orgFile, new File(path + "/ROHS 리스트.xlsx"));
+
+		Workbook workbook = new Workbook(newFile.getPath());
+		Worksheet worksheet = workbook.getWorksheets().get(0);
+		worksheet.setName("ROHS 리스트"); // 시트 이름
+
+		QuerySpec query = new QuerySpec();
+		int idx = query.appendClassList(ROHSMaterial.class, true);
+
+		QuerySpecUtils.toLatest(query, idx, ROHSMaterial.class);
+		QuerySpecUtils.toOrderBy(query, idx, ROHSMaterial.class, ROHSMaterial.CREATE_TIMESTAMP, false);
+		QueryResult qr = PersistenceHelper.manager.find(query);
+
+		int rowIndex = 1;
+
+		Style center = workbook.createStyle();
+		center.setHorizontalAlignment(TextAlignmentType.CENTER);
+
+		Style left = workbook.createStyle();
+		left.setHorizontalAlignment(TextAlignmentType.LEFT);
+
+		while (qr.hasMoreElements()) {
+			Object[] obj = (Object[]) qr.nextElement();
+			ROHSMaterial rohs = (ROHSMaterial) obj[0];
+			RohsData dd = new RohsData(rohs);
+
+			Cell rowCell = worksheet.getCells().get(rowIndex, 0);
+			rowCell.setStyle(center);
+			rowCell.putValue(rowIndex);
+
+			Cell numberCell = worksheet.getCells().get(rowIndex, 1);
+			numberCell.setStyle(center);
+			numberCell.putValue(dd.getNumber());
+
+			Cell manufactureCell = worksheet.getCells().get(rowIndex, 2);
+			manufactureCell.setStyle(center);
+			manufactureCell.putValue(dd.getManufactureDisplay());
+
+			Cell nameCell = worksheet.getCells().get(rowIndex, 3);
+			nameCell.setStyle(left);
+			nameCell.putValue(dd.getName());
+
+			Cell revCell = worksheet.getCells().get(rowIndex, 4);
+			revCell.setStyle(center);
+			revCell.putValue(dd.getVersion());
+
+			Cell stateCell = worksheet.getCells().get(rowIndex, 5);
+			stateCell.setStyle(center);
+			stateCell.putValue(dd.getStateDisplay());
+
+			Cell creatorCell = worksheet.getCells().get(rowIndex, 6);
+			creatorCell.setStyle(center);
+			creatorCell.putValue(dd.getCreator());
+
+			Cell createdDateCell = worksheet.getCells().get(rowIndex, 7);
+			createdDateCell.setStyle(center);
+			createdDateCell.putValue(dd.getCreateDate());
+
+			Cell modifyCell = worksheet.getCells().get(rowIndex, 8);
+			modifyCell.setStyle(center);
+			modifyCell.putValue(dd.getModifyDate());
+			rowIndex++;
+		}
+
+		String fullPath = path + "/ROHS 리스트.xlsx";
+		workbook.save(fullPath);
+		result.put("name", newFile.getName());
 		return result;
 	}
 }

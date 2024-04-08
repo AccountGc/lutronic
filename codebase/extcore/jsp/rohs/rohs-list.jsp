@@ -121,7 +121,7 @@ List<Map<String, String>> lifecycleList = (List<Map<String, String>>) request.ge
 		<table class="button-table">
 			<tr>
 				<td class="left">
-					<img src="/Windchill/extcore/images/fileicon/file_excel.gif" title="엑셀 다운로드" onclick="exportExcel();">
+					<img src="/Windchill/extcore/images/fileicon/file_excel.gif" title="엑셀 다운로드" onclick="excel();">
 					<img src="/Windchill/extcore/images/save.gif" title="테이블 저장" onclick="saveColumnLayout('rohs-list');">
 					<img src="/Windchill/extcore/images/redo.gif" title="테이블 초기화" onclick="resetColumnLayout('rohs-list');">
 				</td>
@@ -453,6 +453,23 @@ List<Map<String, String>> lifecycleList = (List<Map<String, String>>) request.ge
 			function exportExcel() {
 				const sessionName = document.getElementById("sessionName").value;
 				exportToExcel("물질 리스트", "물질", "물질 리스트", [], sessionName);
+			}
+			
+			function excel() {
+
+				if (!confirm("ROHS 리스트를 다운받습니다.")) {
+					return false;
+				}
+
+				const url = getCallUrl("/rohs/excelList");
+				parent.openLayer();
+				call(url, null, function(data) {
+					if (data.result) {
+						const n = data.name;
+						document.location.href = '/Windchill/extcore/jsp/common/content/FileDownload.jsp?fileName=' + n + '&originFileName=' + n;
+					}
+					parent.closeLayer();
+				}, "GET");
 			}
 		</script>
 	</form>
