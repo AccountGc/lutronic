@@ -493,7 +493,9 @@ function withdraw(remove) {
 	call(url, null, function(data) {
 		alert(data.msg);
 		if (data.result) {
-			opener.loadGridData();
+			if (typeof opener !== 'undefined' && typeof opener.loadGridData === 'function') {
+				opener.loadGridData();
+			}
 			self.close();
 		}
 		closeLayer();
