@@ -603,8 +603,8 @@ public class StandardDocumentService extends StandardManager implements Document
 			Folder folder = FolderTaskLogic.getFolder(location, WCUtil.getWTContainerRef());
 			FolderHelper.service.changeFolder((FolderEntry) workCopy, folder);
 			// 라이프사이클 재지정
-			LifeCycleHelper.service.reassign(workCopy,
-					LifeCycleHelper.service.getLifeCycleTemplateReference(lifecycle, WCUtil.getWTContainerRef())); // Lifecycle
+//			LifeCycleHelper.service.reassign(workCopy,
+//					LifeCycleHelper.service.getLifeCycleTemplateReference(lifecycle, WCUtil.getWTContainerRef())); // Lifecycle
 
 			ApprovalMaster mm = WorkspaceHelper.manager.getMaster(doc);
 
