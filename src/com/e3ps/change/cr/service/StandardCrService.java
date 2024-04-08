@@ -303,8 +303,10 @@ public class StandardCrService extends StandardManager implements CrService {
 			}
 
 			ApprovalMaster mm = WorkspaceHelper.manager.getMaster(cr);
-			// 모든 결재선 삭제
-			WorkspaceHelper.service.deleteAllLines(mm);
+			if (mm != null) {
+				// 모든 결재선 삭제
+				WorkspaceHelper.service.deleteAllLines(mm);
+			}
 
 			WorkDataHelper.service.create(cr);
 
