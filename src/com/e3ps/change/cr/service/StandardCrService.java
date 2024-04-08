@@ -20,6 +20,7 @@ import com.e3ps.common.util.StringUtil;
 import com.e3ps.common.util.WCUtil;
 import com.e3ps.org.dto.PeopleDTO;
 import com.e3ps.org.service.MailUserHelper;
+import com.e3ps.workspace.ApprovalMaster;
 import com.e3ps.workspace.WorkData;
 import com.e3ps.workspace.service.WorkDataHelper;
 import com.e3ps.workspace.service.WorkspaceHelper;
@@ -37,6 +38,7 @@ import wt.folder.Folder;
 import wt.folder.FolderEntry;
 import wt.folder.FolderHelper;
 import wt.lifecycle.LifeCycleHelper;
+import wt.lifecycle.State;
 import wt.org.WTUser;
 import wt.pom.Transaction;
 import wt.services.StandardManager;
@@ -293,6 +295,18 @@ public class StandardCrService extends StandardManager implements CrService {
 			// 링크 삭제
 			deleteLink(cr);
 			saveLink(cr, dto);
+
+			WorkData wd = WorkDataHelper.manager.getWorkData(cr);
+			if (wd != null) {
+				System.out.println("기존 결재선 삭제(CR)!");
+				PersistenceHelper.manager.delete(wd);
+			}
+
+			ApprovalMaster mm = WorkspaceHelper.manager.getMaster(cr);
+			// 모든 결재선 삭제
+			WorkspaceHelper.service.deleteAllLines(mm);
+
+			WorkDataHelper.service.create(cr);
 
 			trs.commit();
 			trs = null;
