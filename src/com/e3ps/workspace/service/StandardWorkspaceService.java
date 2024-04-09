@@ -12,6 +12,7 @@ import com.e3ps.change.ECPRRequest;
 import com.e3ps.change.ECRMRequest;
 import com.e3ps.change.EChangeOrder;
 import com.e3ps.change.EChangeRequest;
+import com.e3ps.change.eco.service.EcoHelper;
 import com.e3ps.change.eo.service.EoHelper;
 import com.e3ps.change.util.EChangeUtils;
 import com.e3ps.common.mail.MailHtmlContentTemplate;
@@ -590,6 +591,10 @@ public class StandardWorkspaceService extends StandardManager implements Workspa
 					System.out.println("ECO 결재 완료");
 //					EcoHelper.manager.postAfterAction(hash);
 					EChangeUtils.afterEcoAction(hash);
+					
+					// 프로젝트 코드 동기화 시작
+					
+					EcoHelper.service.sync(e.getPersistInfo().getObjectIdentifier().getStringValue());			
 					// EO
 				} else {
 					Map<String, Object> s = EoHelper.manager.checkCheckout(e);
@@ -601,6 +606,8 @@ public class StandardWorkspaceService extends StandardManager implements Workspa
 //					EoHelper.manager.postAfterAction(e);
 					EChangeUtils.afterEoAction(hash);
 				}
+				
+
 			}
 		}
 	}
